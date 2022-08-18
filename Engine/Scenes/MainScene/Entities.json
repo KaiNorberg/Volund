@@ -1,0 +1,10 @@
+[
+  [
+    {
+      "Name": "Transform3D",
+      "Postition": [ 0, 0, 0 ],
+      "Scale": [ 0, 0, 0 ],
+      "Euler": [ 0, 0, 0 ]
+    }
+  ]
+]
