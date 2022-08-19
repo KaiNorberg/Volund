@@ -1,0 +1,14 @@
+{
+  "Window": 
+  {
+    "Height": 500,
+    "Width": 500,
+    "Title": "Test Title",
+    "FullScreen": false,
+    "Monitor": 0
+  },
+  "Engine": 
+  {
+    "MainScene": "Scenes/MainScene"
+  }
+}

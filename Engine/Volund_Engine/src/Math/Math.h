@@ -3,6 +3,7 @@
 #include "Vec/Vec2.h"
 #include "Vec/Vec3.h"
 #include "Vec/Vec4.h"
+#include "Mat/Mat4x4.h"
 
 namespace Volund
 {

@@ -10,6 +10,8 @@ namespace Volund
 
 		bool Error();
 
+		Scene() = default;
+
 		Scene(std::filesystem::path FilePath);
 
 	private:

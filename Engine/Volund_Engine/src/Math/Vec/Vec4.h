@@ -181,7 +181,26 @@ namespace Volund
 			this->W = Other.W;
 		}
 
-		T operator[](uint32_t i) const
+		T& operator[](uint32_t i)
+		{
+			assert(i >= 0 && i < this->Length());
+
+			switch (i)
+			{
+			case 0:
+				return X;
+			case 1:
+				return Y;
+			case 2:
+				return Z;
+			case 3:
+				return W;
+			}
+
+			return 0;
+		}
+
+		T const& operator[](uint32_t i) const
 		{
 			assert(i >= 0 && i < this->Length());
 

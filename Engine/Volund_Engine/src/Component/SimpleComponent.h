@@ -6,6 +6,10 @@ namespace Volund
 	{
 	public:
 
+		virtual void Start();
+
+		virtual void Update();
+
 		virtual const std::string Name();
 
 	private:

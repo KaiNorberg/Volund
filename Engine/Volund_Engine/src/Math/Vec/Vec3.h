@@ -162,7 +162,7 @@ namespace Volund
 			this->Z = Other.Z;
 		}
 
-		T operator[](uint32_t i) const
+		T& operator[](uint32_t i)
 		{
 			assert(i >= 0 && i < this->Length());
 
@@ -175,6 +175,25 @@ namespace Volund
 			case 2:
 				return Z;
 			}
+
+			return 0;
+		}
+
+		T const& operator[](uint32_t i) const
+		{
+			assert(i >= 0 && i < this->Length());
+
+			switch (i)
+			{
+			case 0:
+				return X;
+			case 1:
+				return Y;
+			case 2:
+				return Z;
+			}
+
+			return 0;
 		}
 
 		constexpr uint32_t Length() const

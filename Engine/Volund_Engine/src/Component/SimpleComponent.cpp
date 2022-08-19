@@ -4,6 +4,16 @@
 
 namespace Volund
 {
+	void SimpleComponent::Start()
+	{
+		
+	}
+
+	void SimpleComponent::Update()
+	{
+
+	}
+
 	const std::string SimpleComponent::Name()
 	{
 		return "SimpleComponent";

@@ -23171,6 +23171,23 @@ class basic_json // NOLINT(cppcoreguidelines-special-member-functions,hicpp-spec
 #endif  // JSON_NO_IO
     /// @}
 
+    /////////////////////
+    // Custom Function //
+    /////////////////////
+
+    JSON_HEDLEY_WARN_UNUSED_RESULT
+        static basic_json Load(std::string const& FilePath)
+    {
+        basic_json result; 
+        std::ifstream File(FilePath);		
+        if (!File.is_open())
+        {
+            JSON_ASSERT(false);
+        }
+        result = basic_json::parse(File);
+        return result;
+    }
+
 
     /////////////////////
     // deserialization //

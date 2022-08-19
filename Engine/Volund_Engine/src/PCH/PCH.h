@@ -9,6 +9,8 @@
 
 #define VOLUND_START_WINDOWED
 
+#define CONFIG_JSON "Config.json"
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -20,6 +22,7 @@
 #include <memory>
 
 #include <Include/json/json.hpp>
+#include <Include/GLFW/glfw3.h>
 
 #include "Console/Console.h"
 

@@ -1,12 +1,15 @@
 #pragma once
 
 #include "Component/SimpleComponent.h"
+#include "Component/NativeComponents/NativeComponents.h"
 
 namespace Volund
 {
 	class Entity
 	{
 	public:
+	
+		std::string Name;
 
 		bool Error();
 

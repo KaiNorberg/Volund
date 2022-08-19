@@ -1,10 +1,36 @@
 [
-  [
-    {
-      "Name": "Transform3D",
-      "Postition": [ 0, 0, 0 ],
-      "Scale": [ 0, 0, 0 ],
-      "Euler": [ 0, 0, 0 ]
-    }
-  ]
+  {
+    "Name": "Entity3D",
+    "Components": 
+    [
+      {
+        "Name": "Transform3D",
+        "Postition": [ 0, 0, 0 ],
+        "Scale": [ 0, 0, 0 ],
+        "Euler": [ 0, 0, 0 ]
+      }
+    ]
+  },
+
+  {
+    "Name": "Entity2D_1",
+    "Components": [
+      {
+        "Name": "Transform2D",
+        "Position": [ 1, 0 ],
+        "Scale": [ 1, 1 ]
+      }
+    ]
+  },
+
+  {
+    "Name": "Entity2D_2",
+    "Components": [
+      {
+        "Name": "Transform2D",
+        "Position": [ 5, 2 ],
+        "Scale": [ 1, 1 ]
+      }
+    ]
+  }
 ]

@@ -2,8 +2,6 @@
 
 #include "Entity.h"
 
-#include "Component/NativeComponents/NativeComponents.h"
-
 namespace Volund
 {
 	bool Entity::Error()
@@ -28,6 +26,10 @@ namespace Volund
 		if (Name == "Transform3D")
 		{
 			this->Components[Name] = new Transform3D(this, ComponentJSON);
+		}
+		else if (Name == "Transform2D")
+		{
+			this->Components[Name] = new Transform2D(this, ComponentJSON);
 		}
 		else
 		{
@@ -69,9 +71,16 @@ namespace Volund
 
 	Entity::Entity(JSON EntityJSON)
 	{
-		for (JSON Entry : EntityJSON)
+		if (EntityJSON.contains("Name") && EntityJSON["Name"].is_string())
 		{
-			this->AddComponent(Entry);
+			this->Name = EntityJSON["Name"].get<std::string>();
 		}
+		if (EntityJSON.contains("Components") && EntityJSON["Components"].is_array())
+		{
+			for (JSON Entry : EntityJSON["Components"])
+			{
+				this->AddComponent(Entry);
+			}
+		}		
 	}
 }
