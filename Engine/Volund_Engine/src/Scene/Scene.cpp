@@ -13,7 +13,7 @@ namespace Volund
 	{
 		this->Name = FilePath.filename().string();
 
-		JSON EntitiesJSON = JSON::Load(FilePath.string() + "\\Entities.json");
+		/*JSON EntitiesJSON = JSON::Load(FilePath.string() + "\\Entities.json");
 
 		for (JSON Entry : EntitiesJSON)
 		{
@@ -23,14 +23,6 @@ namespace Volund
 			{
 				this->Entities.push_back(NewEntity);
 			}
-		}
-
-		for (int i = 0; i < Entities.size(); i++)
-		{
-			if (Entities[i].HasComponent("Transform2D"))
-			{
-				Console::Log(((Transform2D*)(Entities[i].GetComponent("Transform2D")))->Position);
-			}
-		}
+		}*/
 	}
 }

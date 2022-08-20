@@ -36,7 +36,7 @@
     <ClInclude Include="Volund_Engine\src\Component\NativeComponent.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Volund_Engine\src\Component\NativeComponents\Transform3D.h">
+    <ClInclude Include="Volund_Engine\src\Component\NativeComponents\Transform.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Volund_Engine\src\Component\NativeComponents\NativeComponents.h">
@@ -63,10 +63,10 @@
     <ClInclude Include="Volund_Engine\src\Math\Mat\Mat4x4.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Volund_Engine\src\Component\NativeComponents\Transform2D.h">
+    <ClInclude Include="Volund_Engine\src\Window\Window.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Volund_Engine\src\Window\Window.h">
+    <ClInclude Include="Volund_Engine\src\Component\NativeComponents\Renderer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -95,16 +95,16 @@
     <ClCompile Include="Volund_Engine\src\Component\NativeComponent.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Volund_Engine\src\Component\NativeComponents\Transform3D.cpp">
+    <ClCompile Include="Volund_Engine\src\Component\NativeComponents\Transform.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Volund_Engine\src\Math\Math.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Volund_Engine\src\Component\NativeComponents\Transform2D.cpp">
+    <ClCompile Include="Volund_Engine\src\Window\Window.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Volund_Engine\src\Window\Window.cpp">
+    <ClCompile Include="Volund_Engine\src\Component\NativeComponents\Renderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

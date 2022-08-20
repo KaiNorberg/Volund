@@ -2,6 +2,11 @@
 
 #include <GL/glew.h>
 
+#define BIND_WINDOW_BUFFER()\
+{\
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);\
+}\
+
 namespace Volund
 {
 	/// <summary>

@@ -23,13 +23,14 @@ namespace Volund
 			return false;
 		}
 	
-		if (Name == "Transform3D")
+		if (Name == TRANSFORM_COMPONENT)
 		{
-			this->Components[Name] = new Transform3D(this, ComponentJSON);
+			this->Components[Name] = new Transform(this, ComponentJSON);
 		}
-		else if (Name == "Transform2D")
+		else		
+			if (Name == RENDERER_COMPONENT)
 		{
-			this->Components[Name] = new Transform2D(this, ComponentJSON);
+			this->Components[Name] = new Renderer(this, ComponentJSON);
 		}
 		else
 		{

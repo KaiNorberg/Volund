@@ -21,9 +21,21 @@
 #include <filesystem>
 #include <memory>
 
+#include <Include/glm/glm.hpp>
+#include <Include/glm/vec2.hpp>
+#include <Include/glm/vec3.hpp>
+#include <Include/glm/vec4.hpp>
+#include <Include/glm/mat4x4.hpp>
+#include <Include/glm/mat3x3.hpp>
+#include <Include/glm/gtc/matrix_transform.hpp>
+#include <Include/glm/gtc/type_ptr.hpp>
+#include <Include/glm/gtc/quaternion.hpp>
+
 #include <Include/json/json.hpp>
 #include <Include/GLFW/glfw3.h>
 
-#include "Console/Console.h"
+using Vec3 = glm::vec3;
 
 using JSON = nlohmann::json;
+
+#include "Console/Console.h"
