@@ -1,8 +1,3 @@
-Volund-QT.exe
-DeployedProjects
-Projects
+*/.vs
 .vs
-Engine/.vs
-Engine/Debug
-Engine/Release
-Engine/x64
+bin
