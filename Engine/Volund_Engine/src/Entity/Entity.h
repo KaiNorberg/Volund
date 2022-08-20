@@ -5,29 +5,90 @@
 
 namespace Volund
 {
+	class Scene;
+
 	class Entity
 	{
 	public:
 	
-		std::string Name;
+		Scene* GetParent();
+
+		std::string GetName();
 
 		bool Error();
 
-		bool AddComponent(JSON ComponentJSON);
+		SimpleComponent* AddComponent(JSON ComponentJSON);
 
-		bool RemoveComponent(std::string const& Name);
+		bool RemoveComponent(std::string const& Type);
 
-		SimpleComponent* GetComponent(std::string const& Name);
+		SimpleComponent* GetComponent(std::string const& Type);
 
-		bool HasComponent(std::string const& Name) const;
+		bool HasComponent(std::string const& Type) const;
 
-		Entity(JSON EntityJSON);
+		template<typename T>
+		bool RemoveComponent();
+
+		template<typename T>
+		T* GetComponent();
+
+		template<typename T>
+		bool HasComponent() const;
+
+		void Update();
+
+		Entity() = default;
+
+		Entity(Scene* Parent, JSON EntityJSON);
+
+		~Entity();
 
 	private:
 
+		Scene* Parent;
+
+		std::string Name;
+
 		bool ErrorOccured = false;
 
-		std::unordered_map<std::string, SimpleComponent*> Components;
-	};	
+		std::unordered_map<uint64_t, SimpleComponent*> Components;
+
+		static std::unordered_map<std::string, uint64_t> ComponentTypeIDs;
+	};			
+	
+	template<typename T>
+	bool Entity::RemoveComponent()
+	{
+		if (!this->HasComponent<T>())
+		{
+			Console::LogWarning("Cant remove a component from a entity without that component.");
+			return false;
+		}
+
+		uint64_t Hash = typeid(T).hash_code();
+		delete this->Components[Hash];
+		this->Components.erase(Hash);
+
+		return true;
+	}
+
+	template<typename T>
+	T* Entity::GetComponent()
+	{
+		if (!this->HasComponent<T>())
+		{
+			Console::LogWarning("Cant get a component from a entity without that component.");
+			return nullptr;
+		}
+
+		uint64_t Hash = typeid(T).hash_code();
+		return this->Components[Hash];
+	}
+
+	template<typename T>
+	bool Entity::HasComponent() const
+	{
+		uint64_t Hash = typeid(T).hash_code();
+		return this->Components.find(Hash) != this->Components.end();
+	}
 }
 

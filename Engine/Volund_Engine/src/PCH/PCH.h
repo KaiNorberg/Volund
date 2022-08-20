@@ -35,6 +35,8 @@
 #include <Include/GLFW/glfw3.h>
 
 using Vec3 = glm::vec3;
+using Quat = glm::quat;
+using Mat4x4 = glm::mat4x4;
 
 using JSON = nlohmann::json;
 

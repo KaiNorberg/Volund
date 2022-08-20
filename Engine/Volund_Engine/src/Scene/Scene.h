@@ -10,9 +10,21 @@ namespace Volund
 
 		bool Error();
 
+		Entity* AddEntity(JSON EntityJSON);
+
+		bool RemoveEntity(std::string const& Name);
+
+		Entity* GetEntity(std::string const& Name);
+
+		bool HasEntity(std::string const& Name) const;
+
+		void Update();
+
 		Scene() = default;
 
 		Scene(std::filesystem::path FilePath);
+
+		~Scene();
 
 	private:
 
@@ -20,7 +32,7 @@ namespace Volund
 
 		bool ErrorOccured = false;
 	
-		std::vector<Entity> Entities;
+		std::unordered_map<std::string, Entity*> Entities;
 	};
 }
 

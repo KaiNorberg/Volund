@@ -20,7 +20,7 @@ namespace Volund
 
 		void Loop();
 
-		Scene CurrentScene;
-
+		Scene* CurrentScene;
 	};
 }
+

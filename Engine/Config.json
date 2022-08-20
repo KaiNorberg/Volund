@@ -10,5 +10,9 @@
   "Engine": 
   {
     "MainScene": "Scenes/MainScene"
+  },
+  "Scene": 
+  {
+    "EntitiesJSON": "Entities.json"
   }
 }

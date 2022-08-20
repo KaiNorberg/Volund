@@ -14,7 +14,7 @@ namespace Volund
 
 	}
 
-	const std::string SimpleComponent::Name()
+	const std::string SimpleComponent::Type()
 	{
 		return "SimpleComponent";
 	}

@@ -15,6 +15,11 @@
 
 namespace Volund
 {
+	void WindowCloseCallback(GLFWwindow* WindowObject)
+	{
+		exit(EXIT_SUCCESS);
+	}
+
 	void Window::Clear()
 	{
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -68,6 +73,9 @@ namespace Volund
 		JSON ConfigFile = JSON::Load(CONFIG_JSON);
 
 		this->WindowObject = glfwCreateWindow(ConfigFile["Window"]["Width"], ConfigFile["Window"]["Height"], ((std::string)ConfigFile["Window"]["Title"]).c_str(), NULL, NULL);
+		GLFW_ERROR_CHECK();
+
+		glfwSetWindowCloseCallback(this->WindowObject, WindowCloseCallback);
 		GLFW_ERROR_CHECK();
 
 		if (ConfigFile["Window"]["FullScreen"] == true)

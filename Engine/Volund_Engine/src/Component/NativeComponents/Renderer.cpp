@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-	const std::string Renderer::Name()
+	const std::string Renderer::Type()
 	{
 		return RENDERER_COMPONENT;
 	}

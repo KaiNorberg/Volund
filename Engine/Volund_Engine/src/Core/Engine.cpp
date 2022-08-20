@@ -8,7 +8,12 @@ namespace Volund
 	{
 		Console::Log("Loading scene (", FilePath, ")...");
 
-		this->CurrentScene = Scene((std::filesystem::path)FilePath);
+		if (this->CurrentScene != nullptr)
+		{
+			delete this->CurrentScene;
+		}
+
+		this->CurrentScene = new Scene((std::filesystem::path)FilePath);
 
 		this->Loop();
 	}	
@@ -19,6 +24,10 @@ namespace Volund
 		{
 			this->EngineWindow.Clear();
 
+			if (this->CurrentScene != nullptr)
+			{
+				this->CurrentScene->Update();
+			}
 
 			this->EngineWindow.SwapBuffers();
 			this->EngineWindow.PollEvents();
@@ -29,9 +38,9 @@ namespace Volund
 	{
 		Console::Log("Initializing Engine...");
 
-		/*if (!glfwInit())
+		/*if (!glewinit())
 		{
-			Console::LogError("GLFW init failed.");
+			Console::LogError("GLEW init failed.");
 		}
 
 		glEnable(GL_BLEND);
@@ -48,8 +57,5 @@ namespace Volund
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, NULL);*/
-
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
-		this->LoadScene(ConfigFile["Engine"]["MainScene"].get<std::string>());
 	}
 }

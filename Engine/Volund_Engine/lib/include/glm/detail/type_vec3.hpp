@@ -15,7 +15,7 @@ namespace glm
 {
 	template<typename T, qualifier Q>
 	struct vec<3, T, Q>
-	{
+	{		
 		// -- Implementation detail --
 
 		typedef T value_type;

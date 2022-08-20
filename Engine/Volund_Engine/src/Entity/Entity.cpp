@@ -4,77 +4,102 @@
 
 namespace Volund
 {
+	std::unordered_map<std::string, uint64_t> Entity::ComponentTypeIDs =
+	{
+		{TRANSFORM_COMPONENT, typeid(Transform).hash_code()},
+		{RENDERER_COMPONENT, typeid(Renderer).hash_code()},
+	};
+
+	Scene* Entity::GetParent()
+	{
+		return this->Parent;
+	}
+
+	std::string Entity::GetName()
+	{
+		return this->Name;
+	}
+
 	bool Entity::Error()
 	{
 		return ErrorOccured;
 	}
 
-	bool Entity::AddComponent(JSON ComponentJSON)
+	SimpleComponent* Entity::AddComponent(JSON ComponentJSON)
 	{
-		if (!ComponentJSON.contains("Name"))
+		if (!ComponentJSON.contains("Type"))
 		{
 			Console::LogWarning("Component without specified type found");
-			return false;
+			return nullptr;
 		}
-		std::string Name = ComponentJSON["Name"];
-		if (this->HasComponent(Name))
+		std::string Type = ComponentJSON["Type"];
+		if (this->HasComponent(Type))
 		{
 			Console::LogWarning("Cant give an entity a component that it already has.");
-			return false;
+			return nullptr;
 		}
 	
-		if (Name == TRANSFORM_COMPONENT)
+		if (Type == TRANSFORM_COMPONENT)
 		{
-			this->Components[Name] = new Transform(this, ComponentJSON);
+			this->Components[ComponentTypeIDs[Type]] = new Transform(this, ComponentJSON);
 		}
-		else		
-			if (Name == RENDERER_COMPONENT)
+		else if (Type == RENDERER_COMPONENT)
 		{
-			this->Components[Name] = new Renderer(this, ComponentJSON);
+			this->Components[ComponentTypeIDs[Type]] = new Renderer(this, ComponentJSON);
 		}
 		else
 		{
-			return false;
+			return nullptr;
 		}
 
-		return true;
+		return this->Components[ComponentTypeIDs[Type]];
 	}
 
-	bool Entity::RemoveComponent(std::string const& Name)
+	bool Entity::RemoveComponent(std::string const& Type)
 	{
-		if (!HasComponent(Name))
+		if (!HasComponent(Type))
 		{
 			Console::LogWarning("Cant remove a component from a object without that component.");
 			return false;
 		}
 
-		delete this->Components[Name];
-		this->Components.erase(Name);
+		delete this->Components[ComponentTypeIDs[Type]];
+		this->Components.erase(ComponentTypeIDs[Type]);
 
 		return true;
 	}
 
-	SimpleComponent* Entity::GetComponent(std::string const& Name)
+	SimpleComponent* Entity::GetComponent(std::string const& Type)
 	{
-		if (!HasComponent(Name))
+		if (!HasComponent(Type))
 		{
 			Console::LogWarning("Cant get a component from a object without that component.");
 			return nullptr;
 		}
 
-		return this->Components.at(Name);
+		return this->Components[ComponentTypeIDs[Type]];
 	}
 
-	bool Entity::HasComponent(std::string const& Name) const
+	bool Entity::HasComponent(std::string const& Type) const
 	{
-		return this->Components.find(Name) != this->Components.end();
+		return this->Components.find(ComponentTypeIDs[Type]) != this->Components.end();
 	}
 
-	Entity::Entity(JSON EntityJSON)
+	void Entity::Update()
 	{
-		if (EntityJSON.contains("Name") && EntityJSON["Name"].is_string())
+		for (auto const& [TypeID, Component] : this->Components)
 		{
-			this->Name = EntityJSON["Name"].get<std::string>();
+			Component->Update();
+		}
+	}
+
+	Entity::Entity(Scene* Parent, JSON EntityJSON)
+	{
+		this->Parent = Parent;
+
+		if (EntityJSON.contains("Type") && EntityJSON["Type"].is_string())
+		{
+			this->Name = EntityJSON["Type"].get<std::string>();
 		}
 		if (EntityJSON.contains("Components") && EntityJSON["Components"].is_array())
 		{
@@ -83,5 +108,13 @@ namespace Volund
 				this->AddComponent(Entry);
 			}
 		}		
+	}
+
+	Entity::~Entity()
+	{
+		for (auto const& [TypeID, Component] : this->Components)
+		{
+			delete Component;
+		}
 	}
 }

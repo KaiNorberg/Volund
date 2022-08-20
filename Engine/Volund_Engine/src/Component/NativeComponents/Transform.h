@@ -13,7 +13,7 @@ namespace Volund
 	class Transform : public NativeComponent
 	{
 	public:
-		/*
+
 		/// <summary>
 		/// Sets the rotation of the entity.
 		/// </summary>
@@ -30,19 +30,19 @@ namespace Volund
 		void AddRotation(Vec3 const& Rotation);
 
 		/// <summary>
-		/// The vector pointing forward, (Read only)
+		/// Returns a vector pointing forward.
 		/// </summary>
-		const Vec3& Front = Front_P;
+		Vec3 GetFront();
 
 		/// <summary>
-		/// The vector pointing right, (Read only)
+		/// Returns a vector pointing right.
 		/// </summary>
-		const Vec3& Right = Right_P;
+		Vec3 GetRight();
 
 		/// <summary>
-		/// The vector pointing up, (Read only)
+		/// Returns a vector pointing up.
 		/// </summary>
-		const Vec3& Up = Up_P;*/
+		Vec3 GetUp();
 
 		/// <summary>
 		/// The position of the entity.
@@ -57,9 +57,11 @@ namespace Volund
 		/// <summary>
 		/// The quaternion representing the rotation of the entity.
 		/// </summary>
-		/*Quat Quaternion = Quat(Vec3(0.0f)); */
+		Quat Quaternion = Quat(Vec3(0.0f));
 
-		const std::string Name() override;
+		void Update() override;
+
+		const std::string Type() override;
 
 		Transform() = default;
 
@@ -67,13 +69,13 @@ namespace Volund
 
 	private:
 
-		/*Vec3 Front_P = glm::vec3(0.0f);
-
-		Vec3 Right_P = glm::vec3(0.0f);
-
-		Vec3 Up_P = glm::vec3(0.0f);*/
-
 		Entity* Parent;
+
+		Vec3 Front = glm::vec3(0.0f);
+
+		Vec3 Right = glm::vec3(0.0f);
+
+		Vec3 Up = glm::vec3(0.0f);
 	};
 }
 

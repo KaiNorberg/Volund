@@ -10,7 +10,7 @@ namespace Volund
 
 		virtual void Update();
 
-		virtual const std::string Name();
+		virtual const std::string Type();
 
 	private:
 

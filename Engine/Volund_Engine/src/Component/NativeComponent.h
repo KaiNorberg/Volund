@@ -8,7 +8,7 @@ namespace Volund
 	{
 	public:
 
-		const std::string Name() override;
+		const std::string Type() override;
 
 	private:
 

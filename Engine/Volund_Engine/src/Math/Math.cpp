@@ -2,7 +2,10 @@
 
 #include "Math.h"
 
-namespace Volund
+namespace Volund::Math
 {
-
+	Vec3 Euler(Quat const& Q)
+	{
+		return ToDegrees(glm::eulerAngles(Q));
+	}
 }
