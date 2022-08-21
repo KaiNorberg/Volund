@@ -69,13 +69,13 @@ namespace Volund
 
 	private:
 
-		Entity* Parent;
+		Entity* _Parent;
 
-		Vec3 Front = glm::vec3(0.0f);
+		Vec3 _Front = glm::vec3(0.0f);
 
-		Vec3 Right = glm::vec3(0.0f);
+		Vec3 _Right = glm::vec3(0.0f);
 
-		Vec3 Up = glm::vec3(0.0f);
+		Vec3 _Up = glm::vec3(0.0f);
 	};
 }
 

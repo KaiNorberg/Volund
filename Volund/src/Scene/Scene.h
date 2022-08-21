@@ -28,11 +28,11 @@ namespace Volund
 
 	private:
 
-		std::string Name;
+		std::string _Name;
 
-		bool ErrorOccured = false;
+		bool _ErrorOccured = false;
 	
-		std::unordered_map<std::string, Entity*> Entities;
+		std::unordered_map<std::string, Entity*> _Entities;
 	};
 }
 

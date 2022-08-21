@@ -44,15 +44,15 @@ namespace Volund
 
 	private:
 
-		Scene* Parent;
+		Scene* _Parent;
 
-		std::string Name;
+		std::string _Name;
 
-		bool ErrorOccured = false;
+		bool _ErrorOccured = false;
 
-		std::unordered_map<uint64_t, SimpleComponent*> Components;
+		std::unordered_map<uint64_t, SimpleComponent*> _Components;
 
-		static std::unordered_map<std::string, uint64_t> ComponentTypeIDs;
+		static std::unordered_map<std::string, uint64_t> _ComponentTypeIDs;
 	};			
 	
 	template<typename T>
@@ -65,8 +65,8 @@ namespace Volund
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
-		delete this->Components[Hash];
-		this->Components.erase(Hash);
+		delete this->_Components[Hash];
+		this->_Components.erase(Hash);
 
 		return true;
 	}
@@ -81,14 +81,14 @@ namespace Volund
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
-		return this->Components[Hash];
+		return this->_Components[Hash];
 	}
 
 	template<typename T>
 	bool Entity::HasComponent() const
 	{
 		uint64_t Hash = typeid(T).hash_code();
-		return this->Components.find(Hash) != this->Components.end();
+		return this->_Components.find(Hash) != this->_Components.end();
 	}
 }
 

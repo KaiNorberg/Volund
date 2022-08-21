@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-	std::unordered_map<std::string, uint64_t> Entity::ComponentTypeIDs =
+	std::unordered_map<std::string, uint64_t> Entity::_ComponentTypeIDs =
 	{
 		{TRANSFORM_COMPONENT, typeid(Transform).hash_code()},
 		{RENDERER_COMPONENT, typeid(Renderer).hash_code()},
@@ -12,17 +12,17 @@ namespace Volund
 
 	Scene* Entity::GetParent()
 	{
-		return this->Parent;
+		return this->_Parent;
 	}
 
 	std::string Entity::GetName()
 	{
-		return this->Name;
+		return this->_Name;
 	}
 
 	bool Entity::Error()
 	{
-		return ErrorOccured;
+		return _ErrorOccured;
 	}
 
 	SimpleComponent* Entity::AddComponent(JSON ComponentJSON)
@@ -41,18 +41,18 @@ namespace Volund
 	
 		if (Type == TRANSFORM_COMPONENT)
 		{
-			this->Components[ComponentTypeIDs[Type]] = new Transform(this, ComponentJSON);
+			this->_Components[_ComponentTypeIDs[Type]] = new Transform(this, ComponentJSON);
 		}
 		else if (Type == RENDERER_COMPONENT)
 		{
-			this->Components[ComponentTypeIDs[Type]] = new Renderer(this, ComponentJSON);
+			this->_Components[_ComponentTypeIDs[Type]] = new Renderer(this, ComponentJSON);
 		}
 		else
 		{
 			return nullptr;
 		}
 
-		return this->Components[ComponentTypeIDs[Type]];
+		return this->_Components[_ComponentTypeIDs[Type]];
 	}
 
 	bool Entity::RemoveComponent(std::string const& Type)
@@ -63,8 +63,8 @@ namespace Volund
 			return false;
 		}
 
-		delete this->Components[ComponentTypeIDs[Type]];
-		this->Components.erase(ComponentTypeIDs[Type]);
+		delete this->_Components[_ComponentTypeIDs[Type]];
+		this->_Components.erase(_ComponentTypeIDs[Type]);
 
 		return true;
 	}
@@ -77,17 +77,17 @@ namespace Volund
 			return nullptr;
 		}
 
-		return this->Components[ComponentTypeIDs[Type]];
+		return this->_Components[_ComponentTypeIDs[Type]];
 	}
 
 	bool Entity::HasComponent(std::string const& Type) const
 	{
-		return this->Components.find(ComponentTypeIDs[Type]) != this->Components.end();
+		return this->_Components.find(_ComponentTypeIDs[Type]) != this->_Components.end();
 	}
 
 	void Entity::Update()
 	{
-		for (auto const& [TypeID, Component] : this->Components)
+		for (auto const& [TypeID, Component] : this->_Components)
 		{
 			Component->Update();
 		}
@@ -95,11 +95,11 @@ namespace Volund
 
 	Entity::Entity(Scene* Parent, JSON EntityJSON)
 	{
-		this->Parent = Parent;
+		this->_Parent = Parent;
 
 		if (EntityJSON.contains("Type") && EntityJSON["Type"].is_string())
 		{
-			this->Name = EntityJSON["Type"].get<std::string>();
+			this->_Name = EntityJSON["Type"].get<std::string>();
 		}
 		if (EntityJSON.contains("Components") && EntityJSON["Components"].is_array())
 		{
@@ -112,7 +112,7 @@ namespace Volund
 
 	Entity::~Entity()
 	{
-		for (auto const& [TypeID, Component] : this->Components)
+		for (auto const& [TypeID, Component] : this->_Components)
 		{
 			delete Component;
 		}

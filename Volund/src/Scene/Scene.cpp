@@ -6,7 +6,7 @@ namespace Volund
 {
 	bool Scene::Error()
 	{
-		return ErrorOccured;
+		return _ErrorOccured;
 	}
 
 	Entity* Scene::AddEntity(JSON EntityJSON)
@@ -23,9 +23,9 @@ namespace Volund
 			return nullptr;
 		}
 
-		this->Entities[NewEntity->GetName()] = NewEntity;
+		this->_Entities[NewEntity->GetName()] = NewEntity;
 
-		return this->Entities[NewEntity->GetName()];
+		return this->_Entities[NewEntity->GetName()];
 	}
 
 	bool Scene::RemoveEntity(std::string const& Name)
@@ -36,7 +36,7 @@ namespace Volund
 			return false;
 		}
 
-		this->Entities.erase(Name);
+		this->_Entities.erase(Name);
 
 		return true;
 	}
@@ -49,17 +49,17 @@ namespace Volund
 			return nullptr;
 		}
 
-		return this->Entities[Name];
+		return this->_Entities[Name];
 	}
 
 	bool Scene::HasEntity(std::string const& Name) const
 	{
-		return this->Entities.find(Name) != this->Entities.end();
+		return this->_Entities.find(Name) != this->_Entities.end();
 	}
 
 	void Scene::Update()
 	{
-		for (auto const& [Name, EntityPointer] : this->Entities)
+		for (auto const& [Name, EntityPointer] : this->_Entities)
 		{
 			EntityPointer->Update();
 		}
@@ -67,7 +67,7 @@ namespace Volund
 
 	Scene::Scene(std::filesystem::path FilePath)
 	{
-		this->Name = FilePath.filename().string();
+		this->_Name = FilePath.filename().string();
 
 		JSON ConfigFile = LoadJSON(CONFIG_JSON);
 		JSON EntitiesJSON = LoadJSON(FilePath.string() + "\\" + ConfigFile["Scene"]["EntitiesJSON"].get<std::string>());
@@ -80,7 +80,7 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (auto const& [Name, EntityPointer] : this->Entities)
+		for (auto const& [Name, EntityPointer] : this->_Entities)
 		{
 			delete EntityPointer;
 		}

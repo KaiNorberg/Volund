@@ -1,9 +1,17 @@
 #pragma once
 
-struct GLFWwindow;
+#include "EventDispatcher/EventDispatcher.h"
 
 namespace Volund
 {
+    struct WindowData
+    {
+        uint32_t Width;
+        uint32_t Height;
+
+        EventDispatcher* Dispatcher;
+    };
+
     class VOLUND_API Window
     {
     public:
@@ -18,14 +26,17 @@ namespace Volund
 
         void MakeFullscreen();
 
-        Window();
+        void SetVSync(bool Enabled);
+        
+        Window(EventDispatcher* Dispatcher);
 
         ~Window();
 
     private:
 
-        GLFWwindow* WindowObject;
+        WindowData _Data;
 
+        GLFWwindow* _WindowObject;
     };
 
 } //namespace Volund

@@ -10,12 +10,12 @@ namespace Volund
 	{
 		Console::Log("Loading scene (", FilePath, ")...");
 
-		if (this->CurrentScene != nullptr)
+		if (this->_LoadedScene != nullptr)
 		{
-			delete this->CurrentScene;
+			delete this->_LoadedScene;
 		}
 
-		this->CurrentScene = new Scene((std::filesystem::path)FilePath);
+		this->_LoadedScene = new Scene((std::filesystem::path)FilePath);
 
 		this->Loop();
 	}	
@@ -36,17 +36,19 @@ namespace Volund
 	
 	void Application::Loop()
 	{
-		while (!this->EngineWindow.ShouldClose())
+		while (!this->_Window.ShouldClose())
 		{
-			this->EngineWindow.Clear();
+			this->_Window.Clear();
 
-			if (this->CurrentScene != nullptr)
+			if (this->_LoadedScene != nullptr)
 			{
-				this->CurrentScene->Update();
+				this->_LoadedScene->Update();
 			}
 
-			this->EngineWindow.SwapBuffers();
-			this->EngineWindow.PollEvents();
+			this->_Window.SwapBuffers();
+			this->_Window.PollEvents();
+
+			this->_EventDispatcher.Dispatch();
 		}
 	}
 

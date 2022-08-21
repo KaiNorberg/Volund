@@ -5,7 +5,8 @@
     "Width": 500,
     "Title": "Test Title",
     "FullScreen": false,
-    "Monitor": 0
+    "Monitor": 0,
+    "VSync": true
   },
   "Engine": 
   {

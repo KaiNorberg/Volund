@@ -21,24 +21,24 @@ namespace Volund
 
 	Vec3 Transform::GetFront()
 	{
-		return this->Front;
+		return this->_Front;
 	}
 
 	Vec3 Transform::GetRight()
 	{
-		return this->Right;
+		return this->_Right;
 	}
 
 	Vec3 Transform::GetUp()
 	{
-		return this->Up;
+		return this->_Up;
 	}
 
 	void Transform::Update()
 	{
-		this->Front = this->Quaternion * Math::Back; //Dont ask
-		this->Right = this->Quaternion * Math::Right;
-		this->Up = this->Quaternion * Math::Up;
+		this->_Front = this->Quaternion * Math::Back; //Dont ask
+		this->_Right = this->Quaternion * Math::Right;
+		this->_Up = this->Quaternion * Math::Up;
 	}
 
 	const std::string Transform::Type()
@@ -48,7 +48,7 @@ namespace Volund
 
 	Transform::Transform(Entity* Parent, JSON ComponentJSON)
 	{
-		this->Parent = Parent;
+		this->_Parent = Parent;
 
 		if (ComponentJSON.contains("Position"))
 		{
