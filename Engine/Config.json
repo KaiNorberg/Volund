@@ -8,12 +8,12 @@
     "Monitor": 0,
     "VSync": true
   },
-  "Engine": 
-  {
-    "MainScene": "Scenes/MainScene"
-  },
   "Scene": 
   {
     "EntitiesJSON": "Entities.json"
+  },
+  "Misc": 
+  {
+    "MainScene": "Scenes/MainScene"
   }
 }

@@ -61,19 +61,26 @@ project "Volund"
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
 		symbols "On"
+		runtime "Debug"
+		staticruntime "Off"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
 		optimize "On"
-		
+		runtime "Release"
+		staticruntime "Off"
+
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "On"
+		runtime "Release"
+		staticruntime "Off"
 
 project "Engine"
 	location "Engine"
 	kind "ConsoleApp"
 	language "C++"
+	staticruntime "Off"
 
 	dependson 
 	{
@@ -108,14 +115,20 @@ project "Engine"
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
 		symbols "On"
+		runtime "Debug"
+		staticruntime "Off"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
 		optimize "On"
-		
+		runtime "Release"
+		staticruntime "Off"
+
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "On"
+		runtime "Release"
+		staticruntime "Off"
 
 project "GLFW"
 	kind "StaticLib"

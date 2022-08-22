@@ -10,7 +10,7 @@ namespace Volund
 
 		if (!File.is_open())
 		{
-			Console::LogError("Unable to open JSON file (", FilePath, ")");
+			VOLUND_CORE_ERROR("Unable to open JSON file (%s)", FilePath);
 		}
 
 		return nlohmann::json::parse(File);

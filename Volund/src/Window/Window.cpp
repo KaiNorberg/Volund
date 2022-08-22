@@ -9,7 +9,7 @@
 	int Code = glfwGetError(&Description);\
 	if(Description)\
 	{\
-		Console::LogError(Description);\
+		VOLUND_CORE_ERROR(Description);\
 	}\
 }\
 
@@ -120,7 +120,7 @@ namespace Volund
 
 	Window::Window(EventDispatcher* Dispatcher)
 	{
-		Console::Log("Creating window...");
+		VOLUND_CORE_INFO("Creating window...");
 
 		JSON ConfigFile = LoadJSON(CONFIG_JSON);
 

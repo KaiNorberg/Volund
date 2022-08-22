@@ -59,7 +59,7 @@ namespace Volund
 		/// </summary>
 		Quat Quaternion = Quat(Vec3(0.0f));
 
-		void Update() override;
+		void OnUpdate() override;
 
 		const std::string Type() override;
 

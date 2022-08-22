@@ -1,9 +1,7 @@
 #include "PCH/PCH.h"
-
-#include "SimpleComponent.h"
+#include "Layer.h"
 
 namespace Volund
 {
 
 }
-

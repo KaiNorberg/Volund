@@ -8,23 +8,23 @@ namespace Volund
 	{
 	public:
 
-		bool Error();
+		VOLUND_API bool Error();
 
-		Entity* AddEntity(JSON EntityJSON);
+		VOLUND_API Entity* AddEntity(JSON EntityJSON);
 
-		bool RemoveEntity(std::string const& Name);
+		VOLUND_API bool RemoveEntity(std::string const& Name);
 
-		Entity* GetEntity(std::string const& Name);
+		VOLUND_API Entity* GetEntity(std::string const& Name);
 
-		bool HasEntity(std::string const& Name) const;
+		VOLUND_API bool HasEntity(std::string const& Name) const;
 
-		void Update();
+		VOLUND_API void OnUpdate();
 
-		Scene() = default;
+		VOLUND_API Scene() = default;
 
-		Scene(std::filesystem::path FilePath);
+		VOLUND_API Scene(std::filesystem::path FilePath);
 
-		~Scene();
+		VOLUND_API ~Scene();
 
 	private:
 
@@ -32,7 +32,7 @@ namespace Volund
 
 		bool _ErrorOccured = false;
 	
-		std::unordered_map<std::string, Entity*> _Entities;
+		std::vector<Entity*> _Entities;
 	};
 }
 

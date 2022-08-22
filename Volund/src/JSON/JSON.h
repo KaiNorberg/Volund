@@ -4,5 +4,5 @@ namespace Volund
 {
 	using JSON = nlohmann::json;
 
-	JSON LoadJSON(std::string const& FilePath);
+	VOLUND_API JSON LoadJSON(std::string const& FilePath);
 }

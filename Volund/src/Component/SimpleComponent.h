@@ -6,11 +6,13 @@ namespace Volund
 	{
 	public:
 
-		virtual void Start();
+		virtual void OnInit() {};
 
-		virtual void Update();
+		virtual void OnRemove() {};
 
-		virtual const std::string Type();
+		virtual void OnUpdate() {};
+
+		virtual const std::string Type() { return "SimpleComponent"; }
 
 	private:
 

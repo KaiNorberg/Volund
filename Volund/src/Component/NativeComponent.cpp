@@ -4,9 +4,6 @@
 
 namespace Volund
 {
-	const std::string NativeComponent::Type()
-	{
-		return "NativeComponent";
-	}
+
 }
 

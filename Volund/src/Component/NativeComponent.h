@@ -8,7 +8,7 @@ namespace Volund
 	{
 	public:
 
-		const std::string Type() override;
+		const std::string Type() override { return "NativeComponent"; };
 
 	private:
 

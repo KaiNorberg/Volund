@@ -2,14 +2,11 @@
 
 #include "Event.h"
 
-#pragma warning( push )
-#pragma warning(disable : 4251)
-
 namespace Volund
 {
 	using EventHandler = void(*)(Volund::Event*);
 
-	class VOLUND_API EventDispatcher
+	class EventDispatcher
 	{
 	public:
 
@@ -26,5 +23,3 @@ namespace Volund
 		std::unordered_map<EventType, EventHandler> _EventHandlers;
 	};
 }
-
-#pragma warning( pop )

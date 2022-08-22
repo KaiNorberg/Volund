@@ -2,13 +2,14 @@
 
 #include "Engine.h"
 
+#include "EngineLayer.h"
+
 namespace Volund
 {
-	class Engine : public Volund::Application
+	Engine::Engine()
 	{
-
-	};
-
+		this->AttachLayer(new EngineLayer());
+	}
 }
 
 Volund::Application* Volund::CreateApplication()

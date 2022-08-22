@@ -29,13 +29,13 @@ namespace Volund
 	{
 		if (!ComponentJSON.contains("Type"))
 		{
-			Console::LogWarning("Component without specified type found");
+			VOLUND_CORE_WARNING("Component without specified type found");
 			return nullptr;
 		}
 		std::string Type = ComponentJSON["Type"];
 		if (this->HasComponent(Type))
 		{
-			Console::LogWarning("Cant give an entity a component that it already has.");
+			VOLUND_CORE_WARNING("Cant give an entity a component that it already has.");
 			return nullptr;
 		}
 	
@@ -59,7 +59,7 @@ namespace Volund
 	{
 		if (!HasComponent(Type))
 		{
-			Console::LogWarning("Cant remove a component from a object without that component.");
+			VOLUND_CORE_WARNING("Cant remove a component from a object without that component.");
 			return false;
 		}
 
@@ -73,7 +73,7 @@ namespace Volund
 	{
 		if (!HasComponent(Type))
 		{
-			Console::LogWarning("Cant get a component from a object without that component.");
+			VOLUND_CORE_WARNING("Cant get a component from a object without that component.");
 			return nullptr;
 		}
 
@@ -85,11 +85,11 @@ namespace Volund
 		return this->_Components.find(_ComponentTypeIDs[Type]) != this->_Components.end();
 	}
 
-	void Entity::Update()
+	void Entity::OnUpdate()
 	{
 		for (auto const& [TypeID, Component] : this->_Components)
 		{
-			Component->Update();
+			Component->OnUpdate();
 		}
 	}
 
@@ -107,7 +107,7 @@ namespace Volund
 			{
 				this->AddComponent(Entry);
 			}
-		}		
+		}
 	}
 
 	Entity::~Entity()

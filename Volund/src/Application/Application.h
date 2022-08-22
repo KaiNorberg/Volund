@@ -2,22 +2,22 @@
 
 #include "Window/Window.h"
 #include "EventDispatcher/EventDispatcher.h"
+#include "Layer/Layer.h"
+#include "Scene/Scene.h"
 
 namespace Volund
 {
-	class Scene;
-
-	class VOLUND_API Application
+	class Application
 	{
 	public:
 
-		void LoadScene(std::string const& FilePath);
+		VOLUND_API void Run();
 
-		void Run();
+		VOLUND_API void AttachLayer(Layer* L);
 
-		Application();
+		VOLUND_API Application();
 			
-		virtual ~Application() = default;
+		VOLUND_API virtual ~Application();
 
 	protected:
 
@@ -25,9 +25,9 @@ namespace Volund
 
 		Window _Window = Window(&_EventDispatcher);
 
-		Scene* _LoadedScene = nullptr;
-
 	private:
+
+		std::vector<Layer*> _LayerStack;
 
 		void Loop();
 	};

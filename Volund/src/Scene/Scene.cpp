@@ -19,49 +19,62 @@ namespace Volund
 		}
 		if (this->HasEntity(NewEntity->GetName()))
 		{
-			Console::LogWarning("Duplicate entity detected");
+			VOLUND_CORE_WARNING("Duplicate entity detected");
 			return nullptr;
 		}
 
-		this->_Entities[NewEntity->GetName()] = NewEntity;
+		this->_Entities.push_back(NewEntity);
 
-		return this->_Entities[NewEntity->GetName()];
+		return NewEntity;
 	}
 
 	bool Scene::RemoveEntity(std::string const& Name)
 	{
-		if (!this->HasEntity(Name))
+		for (int i = 0; i < this->_Entities.size(); i++)
 		{
-			Console::LogWarning("Entity not found (", Name, ")");
-			return false;
+			if (this->_Entities[i]->GetName() == Name)
+			{
+				this->_Entities.erase(this->_Entities.begin() + i);		
+				return true;
+			}
 		}
 
-		this->_Entities.erase(Name);
-
-		return true;
+		VOLUND_CORE_WARNING("Entity not found (%s)", Name);
+		return false;
 	}
 
 	Entity* Scene::GetEntity(std::string const& Name)
 	{
-		if (!this->HasEntity(Name))
+		for (int i = 0; i < this->_Entities.size(); i++)
 		{
-			Console::LogWarning("Entity not found (", Name, ")");
-			return nullptr;
+			if (this->_Entities[i]->GetName() == Name)
+			{
+				return this->_Entities[i];
+			}
 		}
 
-		return this->_Entities[Name];
+		VOLUND_CORE_WARNING("Entity not found (%s)", Name);
+		return nullptr;
 	}
 
 	bool Scene::HasEntity(std::string const& Name) const
 	{
-		return this->_Entities.find(Name) != this->_Entities.end();
+		for (int i = 0; i < this->_Entities.size(); i++)
+		{
+			if (this->_Entities[i]->GetName() == Name)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 
-	void Scene::Update()
+	void Scene::OnUpdate()
 	{
-		for (auto const& [Name, EntityPointer] : this->_Entities)
+		for (auto const& EntityPointer : this->_Entities)
 		{
-			EntityPointer->Update();
+			EntityPointer->OnUpdate();
 		}
 	}
 
@@ -80,7 +93,7 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (auto const& [Name, EntityPointer] : this->_Entities)
+		for (auto const& EntityPointer : this->_Entities)
 		{
 			delete EntityPointer;
 		}

@@ -7,6 +7,8 @@
 #define STB_IMAGE_WRITE_STATIC
 #define GLEW_STATIC
 
+#include "Core/Core.h"
+
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -20,8 +22,10 @@
 #include <fstream>
 #include <filesystem>
 #include <memory>
+#include <cstdarg>
 
 #include <glfw/include/GLFW/glfw3.h>
+
 #include <json/single_include/nlohmann/json.hpp>
 #include "JSON/JSON.h"
 
@@ -41,5 +45,5 @@ using Quat = glm::quat;
 using Mat4x4 = glm::mat4x4;
 ///////////////////////////////
 
-#include "Console/Console.h"
 #include "Core/Core.h"
+#include "Logger/Logger.h"

@@ -34,7 +34,7 @@ namespace Volund
 		template<typename T>
 		bool HasComponent() const;
 
-		void Update();
+		void OnUpdate();
 
 		Entity() = default;
 
@@ -60,7 +60,7 @@ namespace Volund
 	{
 		if (!this->HasComponent<T>())
 		{
-			Console::LogWarning("Cant remove a component from a entity without that component.");
+			VOLUND_CORE_WARNING("Cant remove a component from a entity without that component.");
 			return false;
 		}
 
@@ -76,7 +76,7 @@ namespace Volund
 	{
 		if (!this->HasComponent<T>())
 		{
-			Console::LogWarning("Cant get a component from a entity without that component.");
+			VOLUND_CORE_WARNING("Cant get a component from a entity without that component.");
 			return nullptr;
 		}
 

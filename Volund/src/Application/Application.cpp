@@ -6,43 +6,26 @@
 
 namespace Volund
 {
-	void Application::LoadScene(std::string const& FilePath)
-	{
-		Console::Log("Loading scene (", FilePath, ")...");
-
-		if (this->_LoadedScene != nullptr)
-		{
-			delete this->_LoadedScene;
-		}
-
-		this->_LoadedScene = new Scene((std::filesystem::path)FilePath);
-
-		this->Loop();
-	}	
-
 	void Application::Run()
 	{
-		JSON ConfigFile = LoadJSON(CONFIG_JSON);
-
-		if (ConfigFile.contains("Engine") && ConfigFile["Engine"].contains("MainScene"))
-		{
-			this->LoadScene(ConfigFile["Engine"]["MainScene"].get<std::string>());
-		}
-		else
-		{
-			Console::LogError("Config file does not define a MainScene");
-		}
+		this->Loop();
 	}
-	
+
+	void Application::AttachLayer(Layer* L)
+	{
+		this->_LayerStack.push_back(L);
+		L->OnAttach();
+	}
+
 	void Application::Loop()
 	{
 		while (!this->_Window.ShouldClose())
 		{
 			this->_Window.Clear();
 
-			if (this->_LoadedScene != nullptr)
+			for (Layer* L : _LayerStack)
 			{
-				this->_LoadedScene->Update();
+				L->OnUpdate();
 			}
 
 			this->_Window.SwapBuffers();
@@ -54,11 +37,11 @@ namespace Volund
 
 	Application::Application()
 	{
-		Console::Log("Initializing Volund...");
+		VOLUND_CORE_INFO("Initializing application...");
 
 		/*if (!glewinit())
 		{
-			Console::LogError("GLEW init failed.");
+			//VOLUND_CORE_ERROR("GLEW init failed.");
 		}
 
 		glEnable(GL_BLEND);
@@ -75,5 +58,14 @@ namespace Volund
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, NULL);*/
+	}
+
+	Application::~Application()
+	{
+		for (auto const& L : this->_LayerStack)
+		{
+			L->OnDetach();
+			delete L;
+		}
 	}
 }
