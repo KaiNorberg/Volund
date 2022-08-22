@@ -39,25 +39,10 @@ namespace Volund
 	{
 		VOLUND_CORE_INFO("Initializing application...");
 
-		/*if (!glewinit())
+		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
 		{
-			//VOLUND_CORE_ERROR("GLEW init failed.");
+			VOLUND_CORE_ERROR("Failed to initialize OpenGL context");
 		}
-
-		glEnable(GL_BLEND);
-		glEnable(GL_DEPTH_TEST);
-
-		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-		glFrontFace(GL_CCW);
-
-		glDepthFunc(GL_LEQUAL);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(ErrorCallback, NULL);*/
 	}
 
 	Application::~Application()

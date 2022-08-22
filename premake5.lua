@@ -17,7 +17,8 @@ project "Volund"
 
 	dependson 
 	{
-		"GLFW"
+		"GLFW",
+		"Glad"
 	}
 
 	targetdir ("bin/" .. outputdir)
@@ -32,7 +33,8 @@ project "Volund"
 	includedirs
 	{
 		"%{prj.name}/src",
-		"vendor"
+		"vendor",
+		"vendor/GLAD/include"
 	}
 
 	libdirs
@@ -43,7 +45,8 @@ project "Volund"
 	links
 	{
 		"OpenGL32.lib",
-		"GLFW.lib"
+		"GLFW.lib",
+		"Glad.lib"
 	}
 
 	cppdialect "C++20"
@@ -178,6 +181,37 @@ project "GLFW"
 		"_GLFW_WIN32",
 		"_CRT_SECURE_NO_WARNINGS"
 	}
+
+	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "on"
+
+project "Glad"
+	kind "StaticLib"
+	language "C"
+	location "vendor/glad"
+
+	targetdir ("bin/" .. outputdir)
+	objdir ("bin/" .. outputdir .. "/%{prj.name}_int")
+
+	includedirs
+	{
+		"vendor/GLAD/include"
+	}
+
+	files
+	{
+		"vendor/GLAD/include/glad/glad.h",
+		"vendor/GLAD/include/KHR/khrplatform.h",
+		"vendor/GLAD/src/glad.c"
+	}
+	
+	systemversion "latest"
+	staticruntime "On"
 
 	filter "configurations:Debug"
 		runtime "Debug"
