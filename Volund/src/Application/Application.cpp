@@ -37,7 +37,16 @@ namespace Volund
 
 	Application::Application()
 	{
-		VOLUND_CORE_INFO("Initializing application...");
+
+#ifdef VOLUND_DEBUG
+		VOLUND_CORE_INFO("Initializing application (Debug)...");
+#elif VOLUND_RELEASE
+		VOLUND_CORE_INFO("Initializing application (Release)...");
+#elif VOLUND_DIST
+		VOLUND_CORE_INFO("Initializing application (Distribution)...");
+#else 		
+		VOLUND_CORE_WARNING("Initializing application (Unknown)...");
+#endif
 
 		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) 
 		{
