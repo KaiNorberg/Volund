@@ -41,14 +41,14 @@ namespace Volund
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
 
-		Data->Dispatcher->PushEvent(new KeyEvent(Key, Scancode, Action, Mods));
+		Data->Dispatcher->PushEvent(new KeyEvent(Key, (bool)Action));
 	}
 
 	void MouseButtonCallback(GLFWwindow* WindowObject, int32_t Button, int32_t Action, int32_t Mods)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
 
-		Data->Dispatcher->PushEvent(new MouseButtonEvent(Button, Action, Mods));
+		Data->Dispatcher->PushEvent(new MouseButtonEvent(Button, (bool)Action));
 	}
 
 	void ScrollCallback(GLFWwindow* WindowObject, double xOffset, double yOffset)

@@ -4,6 +4,8 @@
 
 #include "Scene/Scene.h"
 
+#include "Input/Input.h"
+
 namespace Volund
 {
 	void Application::Run()
@@ -32,6 +34,8 @@ namespace Volund
 			this->_Window.PollEvents();
 
 			this->_EventDispatcher.Dispatch();
+
+			VOLUND_CORE_INFO("%d", Input::IsMouseButtonHeld(0));
 		}
 	}
 

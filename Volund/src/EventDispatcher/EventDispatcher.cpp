@@ -1,6 +1,7 @@
 #include "PCH/PCH.h"
 
 #include "EventDispatcher.h"
+#include "Input/Input.h"
 
 namespace Volund
 {
@@ -22,12 +23,16 @@ namespace Volund
 	{
 		KeyEvent* KE = (KeyEvent*)E;
 
+		Input::SendKeyEvent(KE);
+
 		//TODO
 	}
 
 	void MouseButtonHandler(Event* E)
 	{
 		MouseButtonEvent* MBE = (MouseButtonEvent*)E;
+
+		Input::SendMouseButtonEvent(MBE);
 
 		//TODO
 	}

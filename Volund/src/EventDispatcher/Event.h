@@ -51,19 +51,13 @@ namespace Volund
 
 		uint32_t GetKey() { return _Key; }
 
-		uint32_t GetScancode() { return _Scancode; }
+		bool GetIsDown() { return _IsDown; }
 
-		uint32_t GetAction() { return _Action; }
-
-		uint32_t GetMods() { return _Mods; }
-
-		KeyEvent(int32_t Key, int32_t Scancode, int32_t Action, uint32_t Mods) : _Key(Key), _Scancode(Scancode), _Action(Action), _Mods(Mods) {};
+		KeyEvent(int32_t Key, bool IsDown) : _Key(Key), _IsDown(IsDown) {};
 
 	private:
 		int32_t _Key;
-		int32_t _Scancode;
-		int32_t _Action;
-		int32_t _Mods;
+		bool _IsDown;
 	};
 
 	class MouseButtonEvent : public Event
@@ -74,16 +68,13 @@ namespace Volund
 
 		uint32_t GetButton() { return _Button; }
 
-		uint32_t GetAction() { return _Action; }
+		uint32_t GetIsDown() { return _IsDown; }
 
-		uint32_t GetMods() { return _Mods; }
-
-		MouseButtonEvent(int32_t Button, int32_t Action, uint32_t Mods) : _Button(Button), _Action(Action), _Mods(Mods) {};
+		MouseButtonEvent(int32_t Button, bool IsDown) : _Button(Button), _IsDown(IsDown) {};
 
 	private:
 		int32_t _Button;
-		int32_t _Action;
-		int32_t _Mods;
+		bool _IsDown;
 	};
 
 	class ScrollEvent : public Event
