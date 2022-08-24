@@ -17,16 +17,16 @@ namespace Volund
 {
 	static bool GLFWInitialized = false;
 	
-	void WindowCloseCallback(GLFWwindow* WindowObject)
+	void WindowCloseCallback(GLFWwindow* WindowHandle)
 	{
-		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
+		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
 		Data->Dispatcher->PushEvent(new WindowCloseEvent());
 	}
 
-	void WindowSizeCallback(GLFWwindow* WindowObject, int32_t Width, int32_t Height)
+	void WindowSizeCallback(GLFWwindow* WindowHandle, int32_t Width, int32_t Height)
 	{
-		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
+		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 		
 		if (Data->Width != Width || Data->Height != Height)
 		{
@@ -37,30 +37,30 @@ namespace Volund
 		}
 	}
 
-	void KeyCallback(GLFWwindow* WindowObject, int32_t Key, int32_t Scancode, int32_t Action, int32_t Mods)
+	void KeyCallback(GLFWwindow* WindowHandle, int32_t Key, int32_t Scancode, int32_t Action, int32_t Mods)
 	{
-		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
+		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
 		Data->Dispatcher->PushEvent(new KeyEvent(Key, (bool)Action));
 	}
 
-	void MouseButtonCallback(GLFWwindow* WindowObject, int32_t Button, int32_t Action, int32_t Mods)
+	void MouseButtonCallback(GLFWwindow* WindowHandle, int32_t Button, int32_t Action, int32_t Mods)
 	{
-		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
+		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
 		Data->Dispatcher->PushEvent(new MouseButtonEvent(Button, (bool)Action));
 	}
 
-	void ScrollCallback(GLFWwindow* WindowObject, double xOffset, double yOffset)
+	void ScrollCallback(GLFWwindow* WindowHandle, double xOffset, double yOffset)
 	{
-		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
+		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
 		Data->Dispatcher->PushEvent(new ScrollEvent(xOffset, yOffset));
 	}
 
-	void CursorPosCallback(GLFWwindow* WindowObject, double xPos, double yPos)
+	void CursorPosCallback(GLFWwindow* WindowHandle, double xPos, double yPos)
 	{
-		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowObject);
+		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
 		Data->Dispatcher->PushEvent(new CursorPosEvent(xPos, yPos));
 	}
@@ -74,7 +74,7 @@ namespace Volund
 
 	void Window::SwapBuffers()
 	{
-		glfwSwapBuffers(this->_WindowObject);
+		glfwSwapBuffers(this->_WindowHandle);
 	}
 
 	void Window::PollEvents()
@@ -84,7 +84,7 @@ namespace Volund
 
 	bool Window::ShouldClose()
 	{
-		return glfwWindowShouldClose(this->_WindowObject);
+		return glfwWindowShouldClose(this->_WindowHandle);
 	}
 
 	void Window::MakeFullscreen()
@@ -110,12 +110,22 @@ namespace Volund
 		glfwWindowHint(GLFW_BLUE_BITS, Mode->blueBits);
 		glfwWindowHint(GLFW_REFRESH_RATE, Mode->refreshRate); 
 		
-		glfwSetWindowMonitor(this->_WindowObject, Monitors[SelectedMonitor], 0, 0, Mode->width, Mode->height, Mode->refreshRate);
+		glfwSetWindowMonitor(this->_WindowHandle, Monitors[SelectedMonitor], 0, 0, Mode->width, Mode->height, Mode->refreshRate);
 	}
 
 	void Window::SetVSync(bool Enabled)
 	{
 		glfwSwapInterval(Enabled);
+	}
+
+	Vec2 Window::GetSize()
+	{
+		return Vec2(this->_Data.Width, this->_Data.Height);
+	}
+
+	GLFWwindow* Window::GetWindowHandle()
+	{
+		return this->_WindowHandle;
 	}
 
 	Window::Window(EventDispatcher* Dispatcher)
@@ -135,10 +145,10 @@ namespace Volund
 			GLFWInitialized = true;
 		}
 
-		this->_WindowObject = glfwCreateWindow(this->_Data.Width, this->_Data.Height, ((std::string)ConfigFile["Window"]["Title"]).c_str(), NULL, NULL);
+		this->_WindowHandle = glfwCreateWindow(this->_Data.Width, this->_Data.Height, ((std::string)ConfigFile["Window"]["Title"]).c_str(), NULL, NULL);
 		GLFW_ERROR_CHECK();
 
-		glfwMakeContextCurrent(_WindowObject);
+		glfwMakeContextCurrent(_WindowHandle);
 		GLFW_ERROR_CHECK();
 
 		//Read settings
@@ -150,20 +160,20 @@ namespace Volund
 		this->SetVSync(ConfigFile["Window"]["VSync"].get<bool>());
 
 		//Set callbacks
-		glfwSetWindowUserPointer(this->_WindowObject, &this->_Data);
-		glfwSetWindowCloseCallback(this->_WindowObject, WindowCloseCallback);
-		glfwSetWindowSizeCallback(this->_WindowObject, WindowSizeCallback);
-		glfwSetKeyCallback(this->_WindowObject, KeyCallback);
-		glfwSetMouseButtonCallback(this->_WindowObject, MouseButtonCallback);
-		glfwSetScrollCallback(this->_WindowObject, ScrollCallback);
-		glfwSetCursorPosCallback(this->_WindowObject, CursorPosCallback);
+		glfwSetWindowUserPointer(this->_WindowHandle, &this->_Data);
+		glfwSetWindowCloseCallback(this->_WindowHandle, WindowCloseCallback);
+		glfwSetWindowSizeCallback(this->_WindowHandle, WindowSizeCallback);
+		glfwSetKeyCallback(this->_WindowHandle, KeyCallback);
+		glfwSetMouseButtonCallback(this->_WindowHandle, MouseButtonCallback);
+		glfwSetScrollCallback(this->_WindowHandle, ScrollCallback);
+		glfwSetCursorPosCallback(this->_WindowHandle, CursorPosCallback);
 
 		GLFW_ERROR_CHECK();
 	}
 
 	Window::~Window()
 	{
-		glfwDestroyWindow(_WindowObject);
+		glfwDestroyWindow(_WindowHandle);
 
 		glfwTerminate();
 	

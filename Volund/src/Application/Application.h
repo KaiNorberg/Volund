@@ -5,6 +5,8 @@
 #include "Layer/Layer.h"
 #include "Scene/Scene.h"
 
+#include "Context/Context.h"
+
 namespace Volund
 {
 	class Application
@@ -20,6 +22,8 @@ namespace Volund
 		VOLUND_API virtual ~Application();
 
 	protected:
+
+		Context* _Context;
 
 		EventDispatcher _EventDispatcher;
 

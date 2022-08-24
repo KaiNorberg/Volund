@@ -27,7 +27,11 @@ namespace Volund
         void MakeFullscreen();
 
         void SetVSync(bool Enabled);
-        
+
+        Vec2 GetSize();
+
+        GLFWwindow* GetWindowHandle();
+
         Window(EventDispatcher* Dispatcher);
 
         ~Window();
@@ -36,7 +40,7 @@ namespace Volund
 
         WindowData _Data;
 
-        GLFWwindow* _WindowObject;
+        GLFWwindow* _WindowHandle;
     };
 
 } //namespace Volund
