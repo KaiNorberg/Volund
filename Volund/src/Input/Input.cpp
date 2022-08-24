@@ -8,6 +8,9 @@ namespace Volund
 	int8_t Input::Keys[KEY_AMOUNT];
 	int8_t Input::MouseButtons[MOUSE_BUTTON_AMOUNT];
 
+	int32_t Input::ScrollOffset = 0;
+	Vec2 Input::MousePosition;
+
 	bool Input::IsHeld(char KeyCode)
 	{
 		return Keys[KeyCode];
@@ -34,6 +37,18 @@ namespace Volund
 		return IsDown;
 	}
 
+	int32_t Input::GetScrollOffset()
+	{
+		uint32_t TEMP = ScrollOffset;
+		ScrollOffset = 0;
+		return TEMP;
+	}
+
+	Vec2 Input::GetCursorPosition()
+	{
+		return MousePosition;
+	}
+
 	void Input::SendKeyEvent(KeyEvent* KE)
 	{		
 		Keys[KE->GetKey()] += KE->GetIsDown();
@@ -46,5 +61,15 @@ namespace Volund
 		MouseButtons[MBE->GetButton()] += MBE->GetIsDown();
 		MouseButtons[MBE->GetButton()] *= MBE->GetIsDown();
 		MouseButtons[MBE->GetButton()] = Math::Min(MouseButtons[MBE->GetButton()], (int8_t)100);
+	}
+
+	void Input::SendScrollEvent(ScrollEvent* SE)
+	{
+		ScrollOffset += SE->GetYOffset();
+	}
+
+	void Input::SendCursorPosEvent(CursorPosEvent* CPE)
+	{
+		MousePosition = Vec2(CPE->GetXPos(), CPE->GetYPos());
 	}
 }

@@ -34,8 +34,6 @@ namespace Volund
 			this->_Window.PollEvents();
 
 			this->_EventDispatcher.Dispatch();
-
-			VOLUND_CORE_INFO("%d", Input::IsMouseButtonHeld(0));
 		}
 	}
 

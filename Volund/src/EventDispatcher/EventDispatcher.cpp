@@ -41,12 +41,16 @@ namespace Volund
 	{
 		ScrollEvent* SE = (ScrollEvent*)E;
 
+		Input::SendScrollEvent(SE);
+
 		//TODO
 	}
 
 	void CursorPosHandler(Event* E)
 	{
 		CursorPosEvent* CPE = (CursorPosEvent*)E;
+
+		Input::SendCursorPosEvent(CPE);
 
 		//TODO
 	}

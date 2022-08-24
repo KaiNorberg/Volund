@@ -41,6 +41,7 @@
 #include <glm/glm/gtc/type_ptr.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
 
+using Vec2 = glm::vec2;
 using Vec3 = glm::vec3;
 using Quat = glm::quat;
 using Mat4x4 = glm::mat4x4;
