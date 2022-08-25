@@ -103,13 +103,18 @@ namespace Volund
 	OpenGLContext::OpenGLContext(Window* window)
 	{
 		this->_Window = window;		
-		
-		if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+		VOLUND_CORE_INFO("Creating OpenGL context...");
+
+		if (!gladLoadGLLoader((GLADloadproc)window->GetProcAddress))
 		{
 			VOLUND_CORE_ERROR("Failed to initialize OpenGL context");
 		}
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, NULL);
+
+		VOLUND_CORE_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
+		VOLUND_CORE_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));
+		VOLUND_CORE_INFO("OpenGL Vendor: %s", (const char*)glGetString(GL_VENDOR));
 	}
 }

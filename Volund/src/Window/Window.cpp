@@ -3,6 +3,8 @@
 #include "PCH/PCH.h"
 #include "Window.h"
 
+#include <glfw/include/GLFW/glfw3.h>
+
 #define GLFW_ERROR_CHECK()\
 {\
 	const char* Description;\
@@ -128,6 +130,11 @@ namespace Volund
 		return this->_WindowHandle;
 	}
 
+	void* Window::GetProcAddress(const char* Name)
+	{
+		return glfwGetProcAddress(Name);
+	}
+
 	Window::Window(EventDispatcher* Dispatcher)
 	{
 		VOLUND_CORE_INFO("Creating window...");
@@ -169,6 +176,8 @@ namespace Volund
 		glfwSetCursorPosCallback(this->_WindowHandle, CursorPosCallback);
 
 		GLFW_ERROR_CHECK();
+
+		VOLUND_CORE_INFO("GLFW Version: %s", glfwGetVersionString());
 	}
 
 	Window::~Window()

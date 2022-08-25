@@ -54,11 +54,6 @@ namespace Volund
 #endif
 
 		this->_Context = new OpenGLContext(&this->_Window);
-
-		VOLUND_CORE_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
-		VOLUND_CORE_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));
-		VOLUND_CORE_INFO("OpenGL Vendor: %s", (const char*)glGetString(GL_VENDOR));
-		VOLUND_CORE_INFO("GLFW Version: %s", glfwGetVersionString());
 	}
 
 	Application::~Application()

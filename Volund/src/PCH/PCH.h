@@ -25,7 +25,6 @@
 #include <cstdarg>
 
 #include <glad/include/glad/glad.h>
-#include <glfw/include/GLFW/glfw3.h>
 
 #include <json/single_include/nlohmann/json.hpp>
 #include "JSON/JSON.h"

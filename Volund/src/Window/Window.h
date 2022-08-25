@@ -2,6 +2,8 @@
 
 #include "EventDispatcher/EventDispatcher.h"
 
+struct GLFWwindow;
+
 namespace Volund
 {
     struct WindowData
@@ -12,7 +14,7 @@ namespace Volund
         EventDispatcher* Dispatcher;
     };
 
-    class  Window
+    class Window
     {
     public:
 
@@ -31,6 +33,8 @@ namespace Volund
         Vec2 GetSize();
 
         GLFWwindow* GetWindowHandle();
+
+        static void* GetProcAddress(const char* Name);
 
         Window(EventDispatcher* Dispatcher);
 

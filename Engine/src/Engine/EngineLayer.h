@@ -85,7 +85,7 @@ namespace Volund
 		{		
 			///////////////////////////////////////////////////////////////////////////
 
-			glClearColor(0.5, 0, 0, 1);
+			glClearColor(0, 0, 0, 1);
 
 			TestShader.Use();
 
