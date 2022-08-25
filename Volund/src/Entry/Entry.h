@@ -1,7 +1,8 @@
 #pragma once
 
 namespace Volund
-{
+{		
+	//Needs to be defined by the client.
 	extern Application* CreateApplication();
 }
 

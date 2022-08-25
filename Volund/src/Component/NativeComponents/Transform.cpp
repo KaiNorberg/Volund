@@ -50,25 +50,19 @@ namespace Volund
 	{
 		this->_Parent = Parent;
 
-		if (ComponentJSON.contains("Position"))
+		if (ComponentJSON.Contains("Position"))
 		{
 			JSON JSONPosition = ComponentJSON["Position"];
-			if (JSONPosition.is_array() && JSONPosition.size() == 3)
-			{
-				this->Position.x = JSONPosition[0];
-				this->Position.y = JSONPosition[1];				
-				this->Position.z = JSONPosition[2];
-			}
+			this->Position.x = JSONPosition[0];
+			this->Position.y = JSONPosition[1];
+			this->Position.z = JSONPosition[2];
 		}
-		if (ComponentJSON.contains("Scale"))
+		if (ComponentJSON.Contains("Scale"))
 		{
 			JSON JSONScale = ComponentJSON["Scale"];
-			if (JSONScale.is_array() && JSONScale.size() == 3)
-			{
-				this->Scale.x = JSONScale[0];
-				this->Scale.y = JSONScale[1];				
-				this->Scale.z = JSONScale[2];
-			}
+			this->Scale.x = JSONScale[0];
+			this->Scale.y = JSONScale[1];
+			this->Scale.z = JSONScale[2];
 		}
 	}
 }

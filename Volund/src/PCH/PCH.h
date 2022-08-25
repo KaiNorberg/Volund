@@ -26,7 +26,6 @@
 
 #include <glad/include/glad/glad.h>
 
-#include <json/single_include/nlohmann/json.hpp>
 #include "JSON/JSON.h"
 
 ///////////TEMPORARY///////////

@@ -82,12 +82,12 @@ namespace Volund
 	{
 		this->_Name = FilePath.filename().string();
 
-		JSON ConfigFile = LoadJSON(CONFIG_JSON);
-		JSON EntitiesJSON = LoadJSON(FilePath.string() + "\\" + ConfigFile["Scene"]["EntitiesJSON"].get<std::string>());
+		JSON ConfigFile = JSON::Load(CONFIG_JSON);
+		JSON EntitiesJSON = JSON::Load(FilePath.string() + "\\" + ConfigFile["Scene"]["EntitiesJSON"].GetAs<std::string>());
 
-		for (JSON Entry : EntitiesJSON)
+		for (int i = 0; i < EntitiesJSON.Size(); i++)
 		{
-			this->AddEntity(Entry);
+			this->AddEntity(EntitiesJSON[i]);
 		}
 	}
 

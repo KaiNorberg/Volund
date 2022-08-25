@@ -3,7 +3,7 @@
 namespace Volund
 {
     /// <summary>
-    /// A shader object that contains code that describes how to render a mesh to the screen.
+    /// A shader object that Contains code that describes how to render a mesh to the screen.
     /// </summary>
     class Shader
     {
@@ -55,6 +55,8 @@ namespace Volund
         /// Sets a matrix4 shader uniform.
         /// </summary>
         virtual void SetMat4x4(Mat4x4 const& Value, std::string const& Name, bool Transpose = false) = 0;
+
+        static Shader* Create(std::string const& FilePath);
 
     protected:
 

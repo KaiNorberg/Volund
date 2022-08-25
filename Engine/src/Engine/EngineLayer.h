@@ -13,13 +13,13 @@ namespace Volund
 
 		uint32_t IndexBuffer;
 
-		OpenGLShader TestShader;
+		Shader* TestShader;
 
 		///////////////////////////////////////////////////////////////////////////
 
 		void LoadScene(std::string const& FilePath)
 		{
-			VOLUND_CLIENT_INFO("Loading scene (%s)...", FilePath.c_str());
+			VOLUND_CLIENT_INFO("Loading Scene (%s)...", FilePath.c_str());
 
 			if (this->_LoadedScene != nullptr)
 			{
@@ -31,20 +31,13 @@ namespace Volund
 
 		void OnAttach() override
 		{
-			JSON ConfigFile = LoadJSON(CONFIG_JSON);
+			JSON ConfigFile = JSON::Load(CONFIG_JSON);
 
-			if (ConfigFile.contains("Misc") && ConfigFile["Misc"].contains("MainScene"))
-			{
-				this->LoadScene(ConfigFile["Misc"]["MainScene"].get<std::string>());
-			}
-			else
-			{
-				VOLUND_CLIENT_ERROR("Config file does not define a MainScene");
-			}		
+			this->LoadScene(ConfigFile["Misc"]["MainScene"].GetAs<std::string>());
 
 			///////////////////////////////////////////////////////////////////////////
 
-			TestShader.Init("Shaders/Test.shader");
+			TestShader = Shader::Create("Shaders/Test.shader");
 
 			glGenVertexArrays(1, &VertexArray);			
 			glBindVertexArray(VertexArray);
@@ -74,7 +67,16 @@ namespace Volund
 		}
 
 		void OnDetach() override
-		{
+		{			
+			///////////////////////////////////////////////////////////////////////////
+
+			if (TestShader != nullptr)
+			{
+				delete TestShader;
+			}
+
+			///////////////////////////////////////////////////////////////////////////
+
 			if (_LoadedScene != nullptr)
 			{
 				delete _LoadedScene;
@@ -87,7 +89,7 @@ namespace Volund
 
 			glClearColor(0, 0, 0, 1);
 
-			TestShader.Use();
+			TestShader->Use();
 
 			glBindVertexArray(VertexArray);
 			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);

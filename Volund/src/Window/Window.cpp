@@ -94,7 +94,7 @@ namespace Volund
 		int32_t Count;
 		GLFWmonitor** Monitors = glfwGetMonitors(&Count);
 
-		JSON ConfigFile = LoadJSON(CONFIG_JSON);
+		JSON ConfigFile = JSON::Load(CONFIG_JSON);
 
 		int32_t SelectedMonitor = ConfigFile["Window"]["Monitor"];
 		if (SelectedMonitor >= Count)
@@ -139,11 +139,11 @@ namespace Volund
 	{
 		VOLUND_CORE_INFO("Creating window...");
 
-		JSON ConfigFile = LoadJSON(CONFIG_JSON);
+		JSON ConfigFile = JSON::Load(CONFIG_JSON);
 
 		this->_Data.Dispatcher = Dispatcher;
-		this->_Data.Width = ConfigFile["Window"]["Width"];
-		this->_Data.Height = ConfigFile["Window"]["Height"];
+		this->_Data.Width = ConfigFile["Window"]["Width"].GetAs<uint32_t>();
+		this->_Data.Height = ConfigFile["Window"]["Height"].GetAs<uint32_t>();
 
 		if (!GLFWInitialized)
 		{
@@ -152,7 +152,7 @@ namespace Volund
 			GLFWInitialized = true;
 		}
 
-		this->_WindowHandle = glfwCreateWindow(this->_Data.Width, this->_Data.Height, ((std::string)ConfigFile["Window"]["Title"]).c_str(), NULL, NULL);
+		this->_WindowHandle = glfwCreateWindow(this->_Data.Width, this->_Data.Height, ConfigFile["Window"]["Title"].GetAs<std::string>().c_str(), NULL, NULL);
 		GLFW_ERROR_CHECK();
 
 		glfwMakeContextCurrent(_WindowHandle);
@@ -164,7 +164,7 @@ namespace Volund
 		{
 			this->MakeFullscreen();
 		}
-		this->SetVSync(ConfigFile["Window"]["VSync"].get<bool>());
+		this->SetVSync(ConfigFile["Window"]["VSync"]);
 
 		//Set callbacks
 		glfwSetWindowUserPointer(this->_WindowHandle, &this->_Data);

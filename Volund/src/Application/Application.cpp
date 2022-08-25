@@ -6,8 +6,6 @@
 
 #include "Input/Input.h"
 
-#include "Context/OpenGLContext.h"
-
 #include "Time/Time.h"
 
 namespace Volund
@@ -50,7 +48,6 @@ namespace Volund
 
 	Application::Application()
 	{
-
 #ifdef VOLUND_DEBUG
 		VOLUND_CORE_INFO("Initializing application (Debug)...");
 #elif VOLUND_RELEASE
@@ -61,7 +58,7 @@ namespace Volund
 		VOLUND_CORE_WARNING("Initializing application (Unknown)...");
 #endif
 
-		this->_Context = new OpenGLContext(&this->_Window);
+		this->_Context = Context::Create(&this->_Window);
 	}
 
 	Application::~Application()
@@ -70,6 +67,13 @@ namespace Volund
 		{
 			L->OnDetach();
 			delete L;
+		}
+		this->_LayerStack.clear();
+
+		if (this->_Context != nullptr)
+		{
+			delete this->_Context;
+			this->_Context = nullptr;
 		}
 	}
 }

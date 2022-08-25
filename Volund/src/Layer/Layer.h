@@ -7,6 +7,7 @@ namespace Volund
 	class Layer
 	{
 	public:
+
 		virtual void OnAttach() {};
 
 		virtual void OnDetach() {};

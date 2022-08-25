@@ -8,17 +8,17 @@ namespace Volund
 	Logger Logger::_CoreLogger = Logger("VOLUND");
 	Logger Logger::_ClientLogger = Logger("CLIENT");
 
-	 Logger& Logger::GetCoreLogger()
+	Logger& Logger::GetCoreLogger()
 	{
 		return _CoreLogger;
 	}
 
-	 Logger& Logger::GetClientLogger()
+	Logger& Logger::GetClientLogger()
 	{
 		return _ClientLogger;
 	}
 
-	 void Logger::Info(const char* Format, ...)
+	void Logger::Info(const char* Format, ...)
 	{
 		std::va_list Args;
 		va_start(Args, Format);
@@ -52,6 +52,8 @@ namespace Volund
 		printf("\n");
 
 		va_end(Args);
+
+		while (true) { _sleep(1000); }
 	}
 
 	Logger::Logger(std::string const& Name)

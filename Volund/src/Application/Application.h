@@ -23,13 +23,13 @@ namespace Volund
 
 	protected:
 
-		Context* _Context;
+	private:
+
+		Context* _Context = nullptr;
 
 		EventDispatcher _EventDispatcher;
 
 		Window _Window = Window(&_EventDispatcher);
-
-	private:
 
 		std::vector<Layer*> _LayerStack;
 

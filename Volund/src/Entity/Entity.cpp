@@ -27,7 +27,7 @@ namespace Volund
 
 	SimpleComponent* Entity::AddComponent(JSON ComponentJSON)
 	{
-		if (!ComponentJSON.contains("Type"))
+		if (!ComponentJSON.Contains("Type"))
 		{
 			VOLUND_CORE_WARNING("Component without specified type found");
 			return nullptr;
@@ -97,15 +97,15 @@ namespace Volund
 	{
 		this->_Parent = Parent;
 
-		if (EntityJSON.contains("Type") && EntityJSON["Type"].is_string())
+		if (EntityJSON.Contains("Type"))
 		{
-			this->_Name = EntityJSON["Type"].get<std::string>();
+			this->_Name = EntityJSON["Type"].GetAs<std::string>();
 		}
-		if (EntityJSON.contains("Components") && EntityJSON["Components"].is_array())
+		if (EntityJSON.Contains("Components"))
 		{
-			for (JSON Entry : EntityJSON["Components"])
+			for (int i = 0; i < EntityJSON["Components"].Size(); i++)
 			{
-				this->AddComponent(Entry);
+				this->AddComponent(EntityJSON["Components"][i]);
 			}
 		}
 	}

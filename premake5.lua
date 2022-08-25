@@ -115,6 +115,9 @@ project "Engine"
 		"GLFW.lib",
 		"Glad.lib"
 	}
+		
+	pchheader "PCH/PCH.h"
+	pchsource "%{prj.name}/src/PCH/PCH.cpp"
 
 	cppdialect "C++20"
 	systemversion "latest"
