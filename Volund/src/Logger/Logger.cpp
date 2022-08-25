@@ -8,17 +8,17 @@ namespace Volund
 	Logger Logger::_CoreLogger = Logger("VOLUND");
 	Logger Logger::_ClientLogger = Logger("CLIENT");
 
-	VOLUND_API Logger& Logger::GetCoreLogger()
+	 Logger& Logger::GetCoreLogger()
 	{
 		return _CoreLogger;
 	}
 
-	VOLUND_API Logger& Logger::GetClientLogger()
+	 Logger& Logger::GetClientLogger()
 	{
 		return _ClientLogger;
 	}
 
-	VOLUND_API void Logger::Info(const char* Format, ...)
+	 void Logger::Info(const char* Format, ...)
 	{
 		std::va_list Args;
 		va_start(Args, Format);

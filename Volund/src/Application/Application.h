@@ -13,13 +13,13 @@ namespace Volund
 	{
 	public:
 
-		VOLUND_API void Run();
+		 void Run();
 
-		VOLUND_API void AttachLayer(Layer* L);
+		 void AttachLayer(Layer* L);
 
-		VOLUND_API Application();
+		 Application();
 			
-		VOLUND_API virtual ~Application();
+		 virtual ~Application();
 
 	protected:
 

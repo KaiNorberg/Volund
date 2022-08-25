@@ -94,8 +94,9 @@ namespace Volund
 		}
 	}
 
-	void OpenGLContext::SwapBuffers()
+	void OpenGLContext::Flush()
 	{
+		glViewport(0, 0, (GLsizei)this->_Window->GetSize().x, (GLsizei)this->_Window->GetSize().y);
 		_Window->SwapBuffers();
 	}
 

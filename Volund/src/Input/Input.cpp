@@ -8,7 +8,7 @@ namespace Volund
 	int8_t Input::Keys[KEY_AMOUNT];
 	int8_t Input::MouseButtons[MOUSE_BUTTON_AMOUNT];
 
-	int32_t Input::ScrollOffset = 0;
+	double Input::ScrollOffset = 0;
 	Vec2 Input::MousePosition;
 
 	bool Input::IsHeld(char KeyCode)
@@ -37,7 +37,7 @@ namespace Volund
 		return IsDown;
 	}
 
-	int32_t Input::GetScrollOffset()
+	double Input::GetScrollOffset()
 	{
 		uint32_t TEMP = ScrollOffset;
 		ScrollOffset = 0;

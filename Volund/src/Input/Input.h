@@ -28,7 +28,7 @@ namespace Volund
 		static bool IsMouseButtonHeld(char Button);
 		static bool IsMouseButtonPressed(char Button);
 
-		static int32_t GetScrollOffset();
+		static double GetScrollOffset();
 
 		static Vec2 GetCursorPosition();
 
@@ -46,7 +46,7 @@ namespace Volund
 
 		static Vec2 MousePosition;
 
-		static int32_t ScrollOffset;
+		static double ScrollOffset;
 
 		static int8_t MouseButtons[MOUSE_BUTTON_AMOUNT];
 		static int8_t Keys[KEY_AMOUNT];

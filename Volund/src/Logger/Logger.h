@@ -8,15 +8,15 @@ namespace Volund
     {
     public:
 
-        VOLUND_API static Logger& GetCoreLogger();
+         static Logger& GetCoreLogger();
 
-        VOLUND_API static Logger& GetClientLogger();
+         static Logger& GetClientLogger();
 
-        VOLUND_API void Info(const char* Format, ...);
+         void Info(const char* Format, ...);
         
-        VOLUND_API void Warning(const char* Format, ...);
+         void Warning(const char* Format, ...);
 
-        VOLUND_API void Error(const char* Format, ...);
+         void Error(const char* Format, ...);
 
         Logger(std::string const& Name);
 

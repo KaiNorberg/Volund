@@ -12,7 +12,7 @@ namespace Volund
         EventDispatcher* Dispatcher;
     };
 
-    class VOLUND_API Window
+    class  Window
     {
     public:
 

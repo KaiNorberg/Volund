@@ -12,8 +12,9 @@ outputdir = "%{cfg.buildcfg}_x64"
 
 project "Volund"
 	location "Volund"
-	kind "SharedLib"
+	kind "StaticLib"
 	language "C++"
+	staticruntime "on"
 
 	dependson 
 	{
@@ -50,7 +51,6 @@ project "Volund"
 	}
 
 	cppdialect "C++20"
-	staticruntime "On"
 	systemversion "latest"
 	
 	defines
@@ -65,25 +65,22 @@ project "Volund"
 		defines "VOLUND_DEBUG"
 		symbols "On"
 		runtime "Debug"
-		staticruntime "Off"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
 		optimize "On"
 		runtime "Release"
-		staticruntime "Off"
 
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"
-		staticruntime "Off"
 
 project "Engine"
 	location "Engine"
 	kind "ConsoleApp"
 	language "C++"
-	staticruntime "Off"
+	staticruntime "on"
 
 	dependson 
 	{
@@ -106,32 +103,36 @@ project "Engine"
 		"Volund/src"
 	}
 
+	libdirs
+	{
+		("bin/" .. outputdir)
+	}
+
 	links
 	{
-		"Volund"
+		"Volund",
+		"OpenGL32.lib",
+		"GLFW.lib",
+		"Glad.lib"
 	}
 
 	cppdialect "C++20"
-	staticruntime "On"
 	systemversion "latest"
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
 		symbols "On"
 		runtime "Debug"
-		staticruntime "Off"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
 		optimize "On"
 		runtime "Release"
-		staticruntime "Off"
 
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"
-		staticruntime "Off"
 
 project "GLFW"
 	kind "StaticLib"
@@ -173,7 +174,7 @@ project "GLFW"
 	}
 	
 	systemversion "latest"
-	staticruntime "On"
+	staticruntime "on"
 
 	defines 
 	{ 
@@ -211,7 +212,7 @@ project "Glad"
 	}
 	
 	systemversion "latest"
-	staticruntime "On"
+	staticruntime "on"
 
 	filter "configurations:Debug"
 		runtime "Debug"

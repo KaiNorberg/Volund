@@ -6,7 +6,7 @@ namespace Volund
 	{
 	public:
 
-		virtual void SwapBuffers() = 0;
+		virtual void Flush() = 0;
 
 	private:
 	};

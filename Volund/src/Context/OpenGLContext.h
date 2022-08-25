@@ -9,7 +9,7 @@ namespace Volund
 	{
 	public:
 
-		void SwapBuffers() override;
+		void Flush() override;
 
 		OpenGLContext(Window* window);
 
