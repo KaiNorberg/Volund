@@ -39,7 +39,7 @@ namespace Volund
 
 	double Input::GetScrollOffset()
 	{
-		uint32_t TEMP = ScrollOffset;
+		double TEMP = ScrollOffset;
 		ScrollOffset = 0;
 		return TEMP;
 	}

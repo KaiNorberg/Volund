@@ -45,8 +45,6 @@ namespace Volund
 			this->_Window.PollEvents();
 
 			this->_EventDispatcher.Dispatch();		
-			
-			_sleep(1000);
 		}
 	}
 
