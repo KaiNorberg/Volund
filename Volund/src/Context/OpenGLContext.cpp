@@ -73,23 +73,23 @@ namespace Volund
 		switch (severity)
 		{
 		case GL_DEBUG_SEVERITY_HIGH:
-			VOLUND_CORE_ERROR(output.c_str());
+			VOLUND_ERROR(output.c_str());
 			break;
 
 		case GL_DEBUG_SEVERITY_MEDIUM:
-			VOLUND_CORE_WARNING(output.c_str());
+			VOLUND_WARNING(output.c_str());
 			break;
 
 		case GL_DEBUG_SEVERITY_LOW:
-			VOLUND_CORE_WARNING(output.c_str());
+			VOLUND_WARNING(output.c_str());
 			break;
 
 		case GL_DEBUG_SEVERITY_NOTIFICATION:
-			VOLUND_CORE_INFO(output.c_str());
+			VOLUND_INFO(output.c_str());
 			break;
 
 		default:
-			VOLUND_CORE_ERROR(output.c_str());
+			VOLUND_ERROR(output.c_str());
 			break;
 		}
 	}
@@ -103,18 +103,18 @@ namespace Volund
 	OpenGLContext::OpenGLContext(Window* window)
 	{
 		this->_Window = window;		
-		VOLUND_CORE_INFO("Creating OpenGL context...");
+		VOLUND_INFO("Creating OpenGL context...");
 
 		if (!gladLoadGLLoader((GLADloadproc)window->GetProcAddress))
 		{
-			VOLUND_CORE_ERROR("Failed to initialize OpenGL context");
+			VOLUND_ERROR("Failed to initialize OpenGL context");
 		}
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, NULL);
 
-		VOLUND_CORE_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
-		VOLUND_CORE_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));
-		VOLUND_CORE_INFO("OpenGL Vendor: %s", (const char*)glGetString(GL_VENDOR));
+		VOLUND_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
+		VOLUND_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));
+		VOLUND_INFO("OpenGL Vendor: %s", (const char*)glGetString(GL_VENDOR));
 	}
 }

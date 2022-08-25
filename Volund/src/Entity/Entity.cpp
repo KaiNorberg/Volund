@@ -29,13 +29,13 @@ namespace Volund
 	{
 		if (!ComponentJSON.Contains("Type"))
 		{
-			VOLUND_CORE_WARNING("Component without specified type found");
+			VOLUND_WARNING("Component without specified type found");
 			return nullptr;
 		}
 		std::string Type = ComponentJSON["Type"];
 		if (this->HasComponent(Type))
 		{
-			VOLUND_CORE_WARNING("Cant give an entity a component that it already has.");
+			VOLUND_WARNING("Cant give an entity a component that it already has.");
 			return nullptr;
 		}
 	
@@ -59,7 +59,7 @@ namespace Volund
 	{
 		if (!HasComponent(Type))
 		{
-			VOLUND_CORE_WARNING("Cant remove a component from a object without that component.");
+			VOLUND_WARNING("Cant remove a component from a object without that component.");
 			return false;
 		}
 
@@ -73,7 +73,7 @@ namespace Volund
 	{
 		if (!HasComponent(Type))
 		{
-			VOLUND_CORE_WARNING("Cant get a component from a object without that component.");
+			VOLUND_WARNING("Cant get a component from a object without that component.");
 			return nullptr;
 		}
 

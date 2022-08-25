@@ -19,7 +19,7 @@ namespace Volund
 		}
 		if (this->HasEntity(NewEntity->GetName()))
 		{
-			VOLUND_CORE_WARNING("Duplicate entity detected");
+			VOLUND_WARNING("Duplicate entity detected");
 			return nullptr;
 		}
 
@@ -39,7 +39,7 @@ namespace Volund
 			}
 		}
 
-		VOLUND_CORE_WARNING("Entity not found (%s)", Name);
+		VOLUND_WARNING("Entity not found (%s)", Name);
 		return false;
 	}
 
@@ -53,7 +53,7 @@ namespace Volund
 			}
 		}
 
-		VOLUND_CORE_WARNING("Entity not found (%s)", Name);
+		VOLUND_WARNING("Entity not found (%s)", Name);
 		return nullptr;
 	}
 

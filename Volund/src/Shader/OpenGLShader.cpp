@@ -9,10 +9,10 @@ namespace Volund
 	{
 		if (this->ID != NULL)
 		{
-			VOLUND_CORE_INFO("Shader (%s) already initialized.", FilePath.c_str());
+			VOLUND_INFO("Shader (%s) already initialized.", FilePath.c_str());
 			return;
 		}
-		VOLUND_CORE_INFO("Loading shader (%s)...", FilePath.c_str());
+		VOLUND_INFO("Loading shader (%s)...", FilePath.c_str());
 
 		Source Source = this->ParseShader(FilePath);
 
@@ -129,7 +129,7 @@ namespace Volund
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = (char*)_malloca(length * (sizeof(char)));
 			glGetShaderInfoLog(id, length, &length, message);
-			VOLUND_CORE_WARNING("Failed to compile shader: %s", message);
+			VOLUND_WARNING("Failed to compile shader: %s", message);
 			glDeleteShader(id);
 			return 0;
 		}

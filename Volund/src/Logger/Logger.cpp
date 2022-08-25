@@ -53,7 +53,7 @@ namespace Volund
 
 		va_end(Args);
 
-		while (true) { _sleep(1000); }
+		abort();
 	}
 
 	Logger::Logger(std::string const& Name)

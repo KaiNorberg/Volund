@@ -15,7 +15,7 @@ namespace Volund
 
 		if (!File.is_open())
 		{
-			VOLUND_CORE_ERROR("Unable to open JSON file (%s)", FilePath);
+			VOLUND_ERROR("Unable to open JSON file (%s)", FilePath);
 		}
 
 		return JSON(nlohmann::json::parse(File));
@@ -29,7 +29,7 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_CORE_ERROR("Unable to find entry in json file (%s)!", Other);
+			VOLUND_ERROR("Unable to find entry in json file (%s)!", Other);
 			return JSON();
 		}
 	}	
@@ -42,7 +42,7 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_CORE_ERROR("Index exceeds boundary of JSON file (%d)!", Other);
+			VOLUND_ERROR("Index exceeds boundary of JSON file (%d)!", Other);
 			return JSON();
 		}
 	}

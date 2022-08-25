@@ -55,7 +55,7 @@ project "Volund"
 	
 	defines
 	{
-		"VOLUND_BUILD_DLL"
+		"VOLUND_"
 	}
 
 	pchheader "PCH/PCH.h"

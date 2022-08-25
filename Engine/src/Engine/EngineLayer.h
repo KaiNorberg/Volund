@@ -7,11 +7,10 @@ namespace Volund
 	public:
 		///////////////////////////////////////////////////////////////////////////
 
+		VertexBuffer* VBuffer;
+		IndexBuffer* IBuffer;
+
 		uint32_t VertexArray;
-
-		uint32_t VertexBuffer;
-
-		uint32_t IndexBuffer;
 
 		Shader* TestShader;
 
@@ -19,7 +18,7 @@ namespace Volund
 
 		void LoadScene(std::string const& FilePath)
 		{
-			VOLUND_CLIENT_INFO("Loading Scene (%s)...", FilePath.c_str());
+			VOLUND_INFO("Loading Scene (%s)...", FilePath.c_str());
 
 			if (this->_LoadedScene != nullptr)
 			{
@@ -33,7 +32,7 @@ namespace Volund
 		{
 			JSON ConfigFile = JSON::Load(CONFIG_JSON);
 
-			this->LoadScene(ConfigFile["Misc"]["MainScene"].GetAs<std::string>());
+			this->LoadScene(ConfigFile["Engine"]["MainScene"].GetAs<std::string>());
 
 			///////////////////////////////////////////////////////////////////////////
 
@@ -42,27 +41,19 @@ namespace Volund
 			glGenVertexArrays(1, &VertexArray);			
 			glBindVertexArray(VertexArray);
 
-			glGenBuffers(1, &VertexBuffer);
-			glBindBuffer(GL_ARRAY_BUFFER, VertexBuffer);
-
-			float Verticies[9] =
+			float Vertices[9] =
 			{
 				-0.5f, -0.5, 0.0,
 				0.5, -0.5, 0.0,
 				0.0, 0.5, 0.0
 			};
+			uint32_t Indices[3] = 
+			{ 0, 1, 2 };
 
-			glBufferData(GL_ARRAY_BUFFER, sizeof(Verticies), Verticies, GL_STATIC_DRAW);
-
+			VBuffer = VertexBuffer::Create(Vertices, 9);
+			IBuffer = IndexBuffer::Create(Indices, 3);		
 			glEnableVertexAttribArray(0);
 			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
-
-			glGenBuffers(1, &IndexBuffer);
-			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, IndexBuffer);
-
-			uint32_t Indices[3] = { 0, 1, 2 };
-			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);			
-			
 			///////////////////////////////////////////////////////////////////////////
 		}
 
@@ -73,6 +64,14 @@ namespace Volund
 			if (TestShader != nullptr)
 			{
 				delete TestShader;
+			}
+			if (VBuffer != nullptr)
+			{
+				delete VBuffer;
+			}
+			if (IBuffer != nullptr)
+			{
+				delete IBuffer;
 			}
 
 			///////////////////////////////////////////////////////////////////////////
@@ -92,7 +91,7 @@ namespace Volund
 			TestShader->Use();
 
 			glBindVertexArray(VertexArray);
-			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, IBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
 
 			///////////////////////////////////////////////////////////////////////////
 

@@ -1,13 +1,7 @@
 #pragma once
 
 #define _CRT_SECURE_NO_WARNINGS
-#define STB_IMAGE_IMPLEMENTATION
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#define STB_IMAGE_STATIC
-#define STB_IMAGE_WRITE_STATIC
 #define GLEW_STATIC
-
-#include "Core/Core.h"
 
 #include <iostream>
 #include <string>

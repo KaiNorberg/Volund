@@ -1,17 +1,23 @@
 #include "PCH/PCH.h"
-#include "Context.h"
 
-#include "OpenGLContext.h"
+#include "IndexBuffer.h"
+
+#include "OpenGLIndexBuffer.h"
 
 namespace Volund
 {
-	Context* Context::Create(Window* window)
+	uint32_t IndexBuffer::GetCount()
+	{
+		return this->_Count;
+	}
+
+	IndexBuffer* IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
 	{
 		JSON ConfigFile = JSON::Load(CONFIG_JSON);
-		
+
 		if (ConfigFile["Misc"]["GraphicsAPI"] == "OpenGL")
 		{
-			return new OpenGLContext(window);
+			return new OpenGLIndexBuffer(Indices, Size);
 		}
 		else
 		{

@@ -49,13 +49,13 @@ namespace Volund
 	Application::Application()
 	{
 #ifdef VOLUND_DEBUG
-		VOLUND_CORE_INFO("Initializing application (Debug)...");
+		VOLUND_INFO("Initializing application (Debug)...");
 #elif VOLUND_RELEASE
-		VOLUND_CORE_INFO("Initializing application (Release)...");
+		VOLUND_INFO("Initializing application (Release)...");
 #elif VOLUND_DIST
-		VOLUND_CORE_INFO("Initializing application (Distribution)...");
+		VOLUND_INFO("Initializing application (Distribution)...");
 #else 		
-		VOLUND_CORE_WARNING("Initializing application (Unknown)...");
+		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
 
 		this->_Context = Context::Create(&this->_Window);

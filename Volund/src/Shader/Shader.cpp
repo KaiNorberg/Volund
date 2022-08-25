@@ -16,7 +16,7 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_CORE_ERROR("Unknown GraphicsAPI (%s)", ConfigFile["Misc"]["GraphicsAPI"].GetAs<std::string>().c_str());
+			VOLUND_ERROR("Unknown GraphicsAPI (%s)", ConfigFile["Misc"]["GraphicsAPI"].GetAs<std::string>().c_str());
 			return nullptr;
 		}
 	}
@@ -27,7 +27,7 @@ namespace Volund
 
 		if (stream.fail())
 		{
-			VOLUND_CORE_INFO("Cant find shader: (%s).", FilePath.c_str());
+			VOLUND_INFO("Cant find shader: (%s).", FilePath.c_str());
 			return Source{};
 		}
 

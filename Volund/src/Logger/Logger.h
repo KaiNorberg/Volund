@@ -29,10 +29,12 @@ namespace Volund
     };
 }
 
-#define VOLUND_CORE_INFO(...) ::Volund::Logger::GetCoreLogger().Info(__VA_ARGS__)
-#define VOLUND_CORE_WARNING(...) ::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__)
-#define VOLUND_CORE_ERROR(...) ::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__)
-
-#define VOLUND_CLIENT_INFO(...) ::Volund::Logger::GetClientLogger().Info(__VA_ARGS__)
-#define VOLUND_CLIENT_WARNING(...) ::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__)
-#define VOLUND_CLIENT_ERROR(...) ::Volund::Logger::GetClientLogger().Error(__VA_ARGS__)
+#ifdef VOLUND_CORE
+    #define VOLUND_INFO(...) ::Volund::Logger::GetCoreLogger().Info(__VA_ARGS__)
+    #define VOLUND_WARNING(...) ::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__)
+    #define VOLUND_ERROR(...) ::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__)
+#else
+    #define VOLUND_INFO(...) ::Volund::Logger::GetClientLogger().Info(__VA_ARGS__)
+    #define VOLUND_WARNING(...) ::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__)
+    #define VOLUND_ERROR(...) ::Volund::Logger::GetClientLogger().Error(__VA_ARGS__)
+#endif

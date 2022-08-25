@@ -11,7 +11,7 @@
 	int Code = glfwGetError(&Description);\
 	if(Description)\
 	{\
-		VOLUND_CORE_ERROR(Description);\
+		VOLUND_ERROR(Description);\
 	}\
 }\
 
@@ -137,7 +137,7 @@ namespace Volund
 
 	Window::Window(EventDispatcher* Dispatcher)
 	{
-		VOLUND_CORE_INFO("Creating window...");
+		VOLUND_INFO("Creating window...");
 
 		JSON ConfigFile = JSON::Load(CONFIG_JSON);
 
@@ -177,7 +177,7 @@ namespace Volund
 
 		GLFW_ERROR_CHECK();
 
-		VOLUND_CORE_INFO("GLFW Version: %s", glfwGetVersionString());
+		VOLUND_INFO("GLFW Version: %s", glfwGetVersionString());
 	}
 
 	Window::~Window()

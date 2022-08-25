@@ -12,9 +12,12 @@
   {
     "EntitiesJSON": "Entities.json"
   },
+  "Engine": 
+  {
+    "MainScene": "Scenes/MainScene"
+  },
   "Misc": 
   {
-    "GraphicsAPI": "OpenGL",
-    "MainScene": "Scenes/MainScene"
+    "GraphicsAPI": "OpenGL"
   }
 }
