@@ -34,7 +34,7 @@ namespace Volund
 		template<typename T>
 		bool HasComponent() const;
 
-		void OnUpdate();
+		void OnUpdate(TimeStep TS);
 
 		Entity() = default;
 

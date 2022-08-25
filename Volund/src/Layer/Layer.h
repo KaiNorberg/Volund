@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Time/Time.h"
+
 namespace Volund
 {
 	class Layer
@@ -9,7 +11,7 @@ namespace Volund
 
 		virtual void OnDetach() {};
 
-		virtual void OnUpdate() {};
+		virtual void OnUpdate(TimeStep TS) {};
 	
 		virtual ~Layer() {}
 	};

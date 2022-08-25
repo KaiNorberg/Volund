@@ -18,7 +18,7 @@ namespace Volund
 
 		 bool HasEntity(std::string const& Name) const;
 
-		 void OnUpdate();
+		 void OnUpdate(TimeStep TS);
 
 		 Scene() = default;
 

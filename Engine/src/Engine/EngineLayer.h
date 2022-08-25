@@ -81,7 +81,7 @@ namespace Volund
 			}
 		}
 
-		void OnUpdate() override
+		void OnUpdate(TimeStep TS) override
 		{		
 			///////////////////////////////////////////////////////////////////////////
 
@@ -96,7 +96,7 @@ namespace Volund
 
 			if (_LoadedScene != nullptr)
 			{
-				this->_LoadedScene->OnUpdate();
+				this->_LoadedScene->OnUpdate(TS);
 			}
 		}
 

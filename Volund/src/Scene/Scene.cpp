@@ -70,11 +70,11 @@ namespace Volund
 		return false;
 	}
 
-	void Scene::OnUpdate()
+	void Scene::OnUpdate(TimeStep TS)
 	{
 		for (auto const& EntityPointer : this->_Entities)
 		{
-			EntityPointer->OnUpdate();
+			EntityPointer->OnUpdate(TS);
 		}
 	}
 

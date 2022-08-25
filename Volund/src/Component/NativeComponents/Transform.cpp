@@ -34,7 +34,7 @@ namespace Volund
 		return this->_Up;
 	}
 
-	void Transform::OnUpdate()
+	void Transform::OnUpdate(TimeStep TS)
 	{
 		this->_Front = this->Quaternion * Math::Back; //Dont ask
 		this->_Right = this->Quaternion * Math::Right;

@@ -8,6 +8,8 @@
 
 #include "Context/OpenGLContext.h"
 
+#include "Time/Time.h"
+
 namespace Volund
 {
 	void Application::Run()
@@ -23,20 +25,28 @@ namespace Volund
 
 	void Application::Loop()
 	{
+		std::chrono::time_point<std::chrono::steady_clock> OldTime = std::chrono::high_resolution_clock::now();
+
 		while (!this->_Window.ShouldClose())
 		{
+			std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - OldTime;
+			OldTime = std::chrono::high_resolution_clock::now();
+			TimeStep TS = TimeStep(Duration.count());
+
 			this->_Window.Clear();
 
 			for (Layer* L : _LayerStack)
 			{
-				L->OnUpdate();
+				L->OnUpdate(TS);
 			}
 
 			this->_Context->Flush();
 
 			this->_Window.PollEvents();
 
-			this->_EventDispatcher.Dispatch();
+			this->_EventDispatcher.Dispatch();		
+			
+			_sleep(1000);
 		}
 	}
 

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Time/Time.h"
+
 namespace Volund
 {
 	class SimpleComponent
@@ -10,7 +12,7 @@ namespace Volund
 
 		virtual void OnRemove() {};
 
-		virtual void OnUpdate() {};
+		virtual void OnUpdate(TimeStep TS) {};
 
 		virtual const std::string Type() { return "SimpleComponent"; }
 

@@ -85,11 +85,11 @@ namespace Volund
 		return this->_Components.find(_ComponentTypeIDs[Type]) != this->_Components.end();
 	}
 
-	void Entity::OnUpdate()
+	void Entity::OnUpdate(TimeStep TS)
 	{
 		for (auto const& [TypeID, Component] : this->_Components)
 		{
-			Component->OnUpdate();
+			Component->OnUpdate(TS);
 		}
 	}
 
