@@ -14,6 +14,23 @@ namespace Volund
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
+	void OpenGLVertexBuffer::SetLayout(VertexLayout const& Layout)
+	{
+		uint32_t Stride = 0;
+		for (int i = 0; i < Layout.size(); i++)
+		{
+			Stride += Layout[i].GetByteSize();
+		}
+
+		uint64_t Offset = 0;
+		for (int i = 0; i < Layout.size(); i++)
+		{
+			glEnableVertexAttribArray(i);
+			glVertexAttribPointer(i, Layout[i].GetElementCount(), Layout[i].GetDataType(), GL_FALSE, Stride, (const void*)Offset);
+			Offset += Layout[i].GetByteSize();
+		}
+	}
+
 	OpenGLVertexBuffer::OpenGLVertexBuffer(float Vertices[], uint32_t Count)
 	{
 		this->_Count = Count;

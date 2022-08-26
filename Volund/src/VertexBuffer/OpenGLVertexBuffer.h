@@ -12,6 +12,8 @@ namespace Volund
 
 		void Unbind() override;
 
+		void SetLayout(VertexLayout const& Layout) override;
+
 		OpenGLVertexBuffer(float Vertices[], uint32_t Count);
 
 	private:

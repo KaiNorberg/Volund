@@ -36,24 +36,30 @@ namespace Volund
 
 			///////////////////////////////////////////////////////////////////////////
 
+			float Vertices[] =
+			{
+				-0.5f, -0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
+				 0.5,  -0.5, 0.0,    0.0, 1.0, 0.0, 1.0,
+				 0.0,   0.5, 0.0,    0.0, 0.0, 1.0, 1.0
+			};
+			uint32_t Indices[] =
+			{ 0, 1, 2 };
+
 			TestShader = Shader::Create("Shaders/Test.shader");
 
 			glGenVertexArrays(1, &VertexArray);			
 			glBindVertexArray(VertexArray);
 
-			float Vertices[9] =
-			{
-				-0.5f, -0.5, 0.0,
-				0.5, -0.5, 0.0,
-				0.0, 0.5, 0.0
-			};
-			uint32_t Indices[3] = 
-			{ 0, 1, 2 };
+			VBuffer = VertexBuffer::Create(Vertices, sizeof(Vertices) / sizeof(float));
 
-			VBuffer = VertexBuffer::Create(Vertices, 9);
-			IBuffer = IndexBuffer::Create(Indices, 3);		
-			glEnableVertexAttribArray(0);
-			glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), nullptr);
+			VBuffer->SetLayout(
+			{
+				VertexAttributeType::OPENGL_FLOAT3,
+				VertexAttributeType::OPENGL_FLOAT4
+			});
+
+			IBuffer = IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t));
+
 			///////////////////////////////////////////////////////////////////////////
 		}
 

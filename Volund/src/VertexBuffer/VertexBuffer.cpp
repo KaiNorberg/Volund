@@ -6,6 +6,8 @@
 
 #include "Renderer/Renderer.h"
 
+#define BIT_MASK 0b1110000000111
+
 namespace Volund
 {
 	uint32_t VertexBuffer::GetCount()

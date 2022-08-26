@@ -1,5 +1,7 @@
 #pragma once
 
+#include "VertexLayout/VertexLayout.h"
+
 namespace Volund
 {
 	class VertexBuffer
@@ -9,6 +11,8 @@ namespace Volund
 		virtual void Bind() = 0;
 
 		virtual void Unbind() = 0;
+
+		virtual void SetLayout(VertexLayout const& Layout) = 0;
 
 		uint32_t GetCount();
 
