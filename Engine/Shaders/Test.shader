@@ -1,5 +1,5 @@
-﻿#Shader vertex
-#version FILL
+﻿#VOLUND_SHADER_TYPE VERTEX
+#VOLUND_SHADER_VERSION
 
 layout(location = 0) in vec3 vertex_position;
 
@@ -11,8 +11,8 @@ void main()
     gl_Position = vec4(vertex_position, 1.0f);
 };
 
-#Shader fragment
-#version FILL
+#VOLUND_SHADER_TYPE FRAGMENT
+#VOLUND_SHADER_VERSION
 
 in vec3 vs_position;
 

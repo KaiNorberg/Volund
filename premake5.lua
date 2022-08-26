@@ -55,7 +55,7 @@ project "Volund"
 	
 	defines
 	{
-		"VOLUND_"
+		"VOLUND_CORE"
 	}
 
 	pchheader "PCH/PCH.h"

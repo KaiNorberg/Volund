@@ -48,37 +48,34 @@ namespace Volund
 
 		std::string VersionString = "#version " + std::to_string(MajorVersion) + std::to_string(MinorVersion) + "0";
 
-		std::string line;
+		std::string Line;
 		std::stringstream ss[3];
-		ShaderType type = ShaderType::NONE;
+		ShaderType Type = ShaderType::NONE;
 
-		while (std::getline(stream, line))
+		while (std::getline(stream, Line))
 		{
-			if (line.find("#Shader") != std::string::npos)
+			if (Line.find("#VOLUND_SHADER_TYPE") != std::string::npos)
 			{
-				if (line.find("vertex") != std::string::npos)
+				if (Line.find("VERTEX") != std::string::npos)
 				{
-					type = ShaderType::VERTEX;
+					Type = ShaderType::VERTEX;
 				}
-				else if (line.find("fragment") != std::string::npos)
+				else if (Line.find("FRAGMENT") != std::string::npos)
 				{
-					type = ShaderType::FRAGMENT;
+					Type = ShaderType::FRAGMENT;
 				}
-				else if (line.find("geometry") != std::string::npos)
+				else if (Line.find("GEOMETRY") != std::string::npos)
 				{
-					type = ShaderType::GEOMETRY;
+					Type = ShaderType::GEOMETRY;
 				}
 			}
-			else
+			else if (Line.find("#VOLUND_SHADER_VERSION") != std::string::npos)
 			{
-				if ((int32_t)type != -1)
-				{
-					if (line.find("#version FILL") != std::string::npos)
-					{
-						line = VersionString;
-					}
-					ss[(int32_t)type] << line << '\n';
-				}
+				ss[(int32_t)Type] << VersionString << '\n';
+			}
+			else if ((int32_t)Type != -1)
+			{
+				ss[(int32_t)Type] << Line << '\n';
 			}
 		}
 
