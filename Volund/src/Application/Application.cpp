@@ -3,10 +3,9 @@
 #include "Application.h"
 
 #include "Scene/Scene.h"
-
 #include "Input/Input.h"
-
 #include "Time/Time.h"
+#include "Renderer/Renderer.h"
 
 namespace Volund
 {
@@ -57,6 +56,7 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
+		Renderer::LoadJSONSettings();
 
 		this->_Context = Context::Create(&this->_Window);
 	}

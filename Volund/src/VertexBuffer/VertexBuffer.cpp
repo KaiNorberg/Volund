@@ -4,6 +4,8 @@
 
 #include "OpenGLVertexBuffer.h"
 
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
 	uint32_t VertexBuffer::GetCount()
@@ -13,16 +15,19 @@ namespace Volund
 
 	VertexBuffer* VertexBuffer::Create(float Vertices[], uint32_t Count)
 	{
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
-
-		if (ConfigFile["Misc"]["GraphicsAPI"] == "OpenGL")
+		switch (Renderer::GetGraphicsAPI())
+		{
+		case GraphicsAPI::OPENGL:
 		{
 			return new OpenGLVertexBuffer(Vertices, Count);
 		}
-		else
+		break;
+		default:
 		{
-			VOLUND_ERROR("Unknown GraphicsAPI (%s)", ConfigFile["Misc"]["GraphicsAPI"].GetAs<std::string>().c_str());
+			VOLUND_ERROR("Creating a VertexBuffer without a specified GraphicsAPI!");
 			return nullptr;
+		}
+		break;
 		}
 	}
 }

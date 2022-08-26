@@ -3,20 +3,26 @@
 
 #include "OpenGLContext.h"
 
+#include "Time/Time.h"
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
 	Context* Context::Create(Window* window)
-	{
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
-		
-		if (ConfigFile["Misc"]["GraphicsAPI"] == "OpenGL")
+	{		
+		switch (Renderer::GetGraphicsAPI())
+		{
+		case GraphicsAPI::OPENGL:
 		{
 			return new OpenGLContext(window);
 		}
-		else
+		break;
+		default:
 		{
-			VOLUND_ERROR("Unknown GraphicsAPI (%s)", ConfigFile["Misc"]["GraphicsAPI"].GetAs<std::string>().c_str());
+			VOLUND_ERROR("Creating a Contex without a specified GraphicsAPI!");
 			return nullptr;
+		}
+		break;
 		}
 	}
 }

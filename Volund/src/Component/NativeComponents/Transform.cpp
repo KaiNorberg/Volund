@@ -43,7 +43,7 @@ namespace Volund
 
 	const std::string Transform::Type()
 	{
-		return TRANSFORM_COMPONENT;
+		return VOLUND_COMPONENT_TRANSFORM;
 	}
 
 	Transform::Transform(Entity* Parent, JSON ComponentJSON)

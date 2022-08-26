@@ -1,6 +1,5 @@
 {
-  "Window": 
-  {
+  "Window": {
     "Height": 500,
     "Width": 500,
     "Title": "Test Title",
@@ -8,16 +7,13 @@
     "Monitor": 0,
     "VSync": true
   },
-  "Scene": 
-  {
+  "Renderer": {
+    "GraphicsAPI": "OpenGL"
+  },
+  "Scene": {
     "EntitiesJSON": "Entities.json"
   },
-  "Engine": 
-  {
+  "Engine": {
     "MainScene": "Scenes/MainScene"
-  },
-  "Misc": 
-  {
-    "GraphicsAPI": "OpenGL"
   }
 }

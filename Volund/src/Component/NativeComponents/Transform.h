@@ -4,7 +4,7 @@
 
 #include "Math/Math.h"
 
-#define TRANSFORM_COMPONENT "Transform"
+#define VOLUND_COMPONENT_TRANSFORM "Transform"
 
 namespace Volund
 {

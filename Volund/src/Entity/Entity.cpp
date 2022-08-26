@@ -6,8 +6,7 @@ namespace Volund
 {
 	std::unordered_map<std::string, uint64_t> Entity::_ComponentTypeIDs =
 	{
-		{TRANSFORM_COMPONENT, typeid(Transform).hash_code()},
-		{RENDERER_COMPONENT, typeid(Renderer).hash_code()},
+		{VOLUND_COMPONENT_TRANSFORM, typeid(Transform).hash_code()}
 	};
 
 	Scene* Entity::GetParent()
@@ -39,13 +38,9 @@ namespace Volund
 			return nullptr;
 		}
 	
-		if (Type == TRANSFORM_COMPONENT)
+		if (Type == VOLUND_COMPONENT_TRANSFORM)
 		{
 			this->_Components[_ComponentTypeIDs[Type]] = new Transform(this, ComponentJSON);
-		}
-		else if (Type == RENDERER_COMPONENT)
-		{
-			this->_Components[_ComponentTypeIDs[Type]] = new Renderer(this, ComponentJSON);
 		}
 		else
 		{

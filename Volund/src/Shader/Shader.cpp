@@ -4,20 +4,26 @@
 #include "Shader.h"
 #include "OpenGLShader.h"
 
+#include "Time/Time.h"
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
 	Shader* Shader::Create(std::string const& FilePath)
 	{
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
-
-		if (ConfigFile["Misc"]["GraphicsAPI"] == "OpenGL")
+		switch (Renderer::GetGraphicsAPI())
+		{
+		case GraphicsAPI::OPENGL:
 		{
 			return new OpenGLShader(FilePath);
 		}
-		else
+		break;
+		default:
 		{
-			VOLUND_ERROR("Unknown GraphicsAPI (%s)", ConfigFile["Misc"]["GraphicsAPI"].GetAs<std::string>().c_str());
+			VOLUND_ERROR("Creating a Shader without a specified GraphicsAPI!");
 			return nullptr;
+		}
+		break;
 		}
 	}
 

@@ -4,6 +4,8 @@
 
 #include "OpenGLIndexBuffer.h"
 
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
 	uint32_t IndexBuffer::GetCount()
@@ -13,16 +15,19 @@ namespace Volund
 
 	IndexBuffer* IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
 	{
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
-
-		if (ConfigFile["Misc"]["GraphicsAPI"] == "OpenGL")
+		switch (Renderer::GetGraphicsAPI())
+		{
+		case GraphicsAPI::OPENGL:
 		{
 			return new OpenGLIndexBuffer(Indices, Size);
 		}
-		else
+		break;
+		default:
 		{
-			VOLUND_ERROR("Unknown GraphicsAPI (%s)", ConfigFile["Misc"]["GraphicsAPI"].GetAs<std::string>().c_str());
+			VOLUND_ERROR("Creating a IndexBuffer without a specified GraphicsAPI!");
 			return nullptr;
+		}
+		break;
 		}
 	}
 }
