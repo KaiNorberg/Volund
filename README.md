@@ -13,8 +13,7 @@ If you wish to use visual studio building Volund is as simple as cloning this re
 
 Visual studio 2022 is the only officially tested platform, however it should work with older version of VS and potentially other platforms.
 
-To use Visual studio these components need to be installed:
-
+Visual studio requires these components:  
 Desktop development with c++  
 C++ MFC (x86 & x64)  
 
