@@ -24,6 +24,6 @@ The main goal for Volund is to create a versatile application capable of being u
 - PBR 3D rendering
 - 3rd party 3D physics engine
 - Audio 
-- C# scripting
+- C++ and C# scripting
 - Fully editable JSON files for storing all information about a scene
 - A feature complete designer/editor

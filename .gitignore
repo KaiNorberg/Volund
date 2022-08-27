@@ -4,4 +4,4 @@
 *.vcxproj
 *.vcxproj.user
 *.vcxproj.filters
-bin/*_x64
+bin/

@@ -15,7 +15,7 @@ namespace Volund
 
 		if (!File.is_open())
 		{
-			VOLUND_ERROR("Unable to open JSON file (%s)", FilePath);
+			VOLUND_ERROR("Unable to open JSON file (%s)", FilePath.c_str());
 		}
 
 		return JSON(nlohmann::json::parse(File));

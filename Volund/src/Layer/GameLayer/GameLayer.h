@@ -1,8 +1,14 @@
 #pragma once
 
+#include "Layer/Layer.h"
+
+#include "Renderer/VertexArray/VertexArray.h"
+#include "Renderer/Shader/Shader.h"
+#include "Scene/Scene.h"
+
 namespace Volund
 {
-	class EngineLayer : public Layer
+	class GameLayer : public Layer
 	{
 	public:
 		///////////////////////////////////////////////////////////////////////////

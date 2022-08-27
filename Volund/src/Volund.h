@@ -5,6 +5,5 @@
 #include "PCH/PCH.h"
 
 #include "Application/Application.h"
-#include "Renderer/Shader/Shader.h"
-#include "Renderer/VertexArray/VertexArray.h"
+#include "Layer/GameLayer/GameLayer.h"
 #include "Entry/Entry.h"

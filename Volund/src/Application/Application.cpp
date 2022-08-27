@@ -50,8 +50,6 @@ namespace Volund
 			this->_Context->Flush();
 
 			this->_Window.PollEvents();
-
-			//this->_EventDispatcher.Dispatch();
 		}
 	}
 

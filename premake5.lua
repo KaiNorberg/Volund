@@ -23,7 +23,7 @@ project "Volund"
 	}
 
 	targetdir ("bin/" .. outputdir)
-	objdir ("bin/" .. outputdir .. "/%{prj.name}_int")
+	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -76,8 +76,8 @@ project "Volund"
 		optimize "On"
 		runtime "Release"
 
-project "Engine"
-	location "Engine"
+project "Editor"
+	location "Editor"
 	kind "ConsoleApp"
 	language "C++"
 	staticruntime "on"
@@ -88,7 +88,11 @@ project "Engine"
 	}
 
 	targetdir ("bin/" .. outputdir)
-	objdir ("bin/" .. outputdir .. "/%{prj.name}_int")
+	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
+
+	postbuildcommands {
+	  "{COPY} Data/** %{cfg.targetdir}"
+	}
 
 	files
 	{
@@ -143,8 +147,7 @@ project "GLFW"
 	location "vendor/glfw"
 
 	targetdir ("bin/" .. outputdir)
-	objdir ("bin/" .. outputdir .. "/%{prj.name}_int")
-
+	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
 
 	files
 	{
@@ -200,7 +203,7 @@ project "Glad"
 	location "vendor/glad"
 
 	targetdir ("bin/" .. outputdir)
-	objdir ("bin/" .. outputdir .. "/%{prj.name}_int")
+	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
 
 	includedirs
 	{
