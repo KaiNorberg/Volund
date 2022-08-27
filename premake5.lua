@@ -8,12 +8,15 @@ workspace "Volund"
 		"Dist"
 	}
 
-outputdir = "%{cfg.buildcfg}_x64"
+TargetDir = "bin\\%{cfg.buildcfg}_x64"
+ObjDir = "bin\\Intermediate\\%{cfg.buildcfg}_x64\\%{prj.name}"
 
 project "Volund"
 	location "Volund"
 	kind "StaticLib"
 	language "C++"
+	cppdialect "C++20"
+	systemversion "latest"
 	staticruntime "on"
 
 	dependson 
@@ -22,8 +25,8 @@ project "Volund"
 		"Glad"
 	}
 
-	targetdir ("bin/" .. outputdir)
-	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
+	targetdir (TargetDir)
+	objdir (ObjDir)
 
 	files
 	{
@@ -40,7 +43,7 @@ project "Volund"
 
 	libdirs
 	{
-		("bin/" .. outputdir)
+		TargetDir
 	}
 	
 	links
@@ -49,9 +52,6 @@ project "Volund"
 		"GLFW.lib",
 		"Glad.lib"
 	}
-
-	cppdialect "C++20"
-	systemversion "latest"
 	
 	defines
 	{
@@ -80,6 +80,8 @@ project "Editor"
 	location "Editor"
 	kind "ConsoleApp"
 	language "C++"
+	cppdialect "C++20"
+	systemversion "latest"
 	staticruntime "on"
 
 	dependson 
@@ -87,12 +89,12 @@ project "Editor"
 		"Volund"
 	}
 
-	targetdir ("bin/" .. outputdir)
-	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
+	targetdir (TargetDir)
+	objdir (ObjDir)
 	debugdir "%{prj.name}/Data"
 
 	postbuildcommands {
-	  "xcopy Data\\ ..\\bin\\" .. outputdir .. "\\ /E /C /Y"
+	  "xcopy Data\\ ..\\" .. TargetDir .. "\\ /E /C /Y"
 	}
 
 	files
@@ -110,7 +112,7 @@ project "Editor"
 
 	libdirs
 	{
-		("bin/" .. outputdir)
+		TargetDir
 	}
 
 	links
@@ -123,9 +125,6 @@ project "Editor"
 		
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
-
-	cppdialect "C++20"
-	systemversion "latest"
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
@@ -146,9 +145,11 @@ project "GLFW"
 	kind "StaticLib"
 	language "C"
 	location "vendor/glfw"
+	systemversion "latest"
+	staticruntime "on"
 
-	targetdir ("bin/" .. outputdir)
-	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
+	targetdir (TargetDir)
+	objdir (ObjDir)
 
 	files
 	{
@@ -179,9 +180,6 @@ project "GLFW"
 		"vendor/glfw/src/egl_context.c",
 		"vendor/glfw/src/osmesa_context.c"
 	}
-	
-	systemversion "latest"
-	staticruntime "on"
 
 	defines 
 	{ 
@@ -203,8 +201,8 @@ project "Glad"
 	language "C"
 	location "vendor/glad"
 
-	targetdir ("bin/" .. outputdir)
-	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
+	targetdir (TargetDir)
+	objdir (ObjDir)
 
 	includedirs
 	{
