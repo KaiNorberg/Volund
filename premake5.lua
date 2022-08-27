@@ -89,9 +89,10 @@ project "Editor"
 
 	targetdir ("bin/" .. outputdir)
 	objdir ("bin/Intermediate/" .. outputdir .. "/%{prj.name}")
+	debugdir "%{prj.name}/Data"
 
 	postbuildcommands {
-	  "{COPY} Data/** %{cfg.targetdir}"
+	  "xcopy Data\\ ..\\bin\\" .. outputdir .. "\\ /E /C /Y"
 	}
 
 	files

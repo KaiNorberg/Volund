@@ -17,8 +17,10 @@ namespace Volund
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::SetVertexBuffer(VertexBuffer* Buffer)
+	void OpenGLVertexArray::SetVertexBuffer(Ref<VertexBuffer>& Buffer)
 	{
+		this->_VertexBuffer = Buffer;
+
 		glBindVertexArray(this->_ID);
 		Buffer->Bind();
 
@@ -38,8 +40,10 @@ namespace Volund
 		}
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(IndexBuffer* Buffer)
+	void OpenGLVertexArray::SetIndexBuffer(Ref<IndexBuffer>& Buffer)
 	{
+		this->_IndexBuffer = Buffer;
+
 		glBindVertexArray(this->_ID);
 		Buffer->Bind();
 	}
@@ -47,6 +51,13 @@ namespace Volund
 	OpenGLVertexArray::OpenGLVertexArray()
 	{
 		glGenVertexArrays(1, &this->_ID);
+	}
+
+	OpenGLVertexArray::OpenGLVertexArray(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
+	{
+		glGenVertexArrays(1, &this->_ID);
+		this->SetVertexBuffer(VBuffer);
+		this->SetIndexBuffer(IBuffer);
 	}
 
 	OpenGLVertexArray::~OpenGLVertexArray()

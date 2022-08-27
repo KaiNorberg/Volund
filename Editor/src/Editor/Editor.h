@@ -1,11 +1,7 @@
 #pragma once
 
-namespace Volund
+class Editor : public Volund::Application
 {
-	class Editor : public Volund::Application
-	{
-	public:
-		Editor();
-	};
-
-}
+public:
+	Editor();
+};

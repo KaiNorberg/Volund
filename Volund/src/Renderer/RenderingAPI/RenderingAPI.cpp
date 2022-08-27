@@ -13,7 +13,7 @@ namespace Volund
 
 	void RenderingAPI::LoadJSONSettings()
 	{
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
+		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
 
 		std::string API = ConfigFile["Renderer"]["GraphicsAPI"];
 

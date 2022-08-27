@@ -73,6 +73,8 @@ namespace Volund
 	void EventDispatcher::Dispatch(Event* E)
 	{
 		this->_EventHandlers[E->GetType()](E, this->_Application);
+
+		delete E;
 	}
 
 	EventDispatcher::EventDispatcher(Application* App)

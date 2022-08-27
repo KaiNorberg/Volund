@@ -2,13 +2,11 @@
 
 #include "Editor.h"
 
-namespace Volund
+Editor::Editor()
 {
-	Editor::Editor()
-	{
-		this->AttachLayer(new GameLayer());
-	}
+	this->AttachLayer(new Volund::GameLayer());
 }
+
 
 Volund::Application* Volund::CreateApplication()
 {

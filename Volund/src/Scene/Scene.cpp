@@ -82,7 +82,7 @@ namespace Volund
 	{
 		this->_Name = FilePath.filename().string();
 
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
+		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
 		JSON EntitiesJSON = JSON::Load(FilePath.string() + "\\" + ConfigFile["Scene"]["EntitiesJSON"].GetAs<std::string>());
 
 		for (int i = 0; i < EntitiesJSON.Size(); i++)

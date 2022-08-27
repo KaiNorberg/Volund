@@ -40,7 +40,7 @@ namespace Volund
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());
 
-			this->_Window.Clear();
+			this->_Window->Clear();
 
 			for (Layer* L : _LayerStack)
 			{
@@ -49,7 +49,7 @@ namespace Volund
 
 			this->_Context->Flush();
 
-			this->_Window.PollEvents();
+			this->_Window->PollEvents();
 		}
 	}
 
@@ -66,7 +66,11 @@ namespace Volund
 #endif
 		RenderingAPI::LoadJSONSettings();
 
-		this->_Context = Context::Create(&this->_Window);
+		this->_EventDispatcher.reset(new EventDispatcher(this));
+		
+		this->_Window.reset(new Window(this->_EventDispatcher));
+
+		this->_Context.reset(Context::Create(this->_Window));
 	}
 
 	Application::~Application()
@@ -77,11 +81,5 @@ namespace Volund
 			delete L;
 		}
 		this->_LayerStack.clear();
-
-		if (this->_Context != nullptr)
-		{
-			delete this->_Context;
-			this->_Context = nullptr;
-		}
 	}
 }

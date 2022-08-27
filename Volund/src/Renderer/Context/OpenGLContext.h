@@ -11,13 +11,13 @@ namespace Volund
 
 		void Flush() override;
 
-		OpenGLContext(Window* window);
+		OpenGLContext(Ref<Window>& window);
 		
 		~OpenGLContext();
 
 	private:
 		
-		Window* _Window;
+		Ref<Window> _Window;
 	};
 }
 

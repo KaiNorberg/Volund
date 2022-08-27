@@ -94,7 +94,7 @@ namespace Volund
 		int32_t Count;
 		GLFWmonitor** Monitors = glfwGetMonitors(&Count);
 
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
+		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
 
 		int32_t SelectedMonitor = ConfigFile["Window"]["Monitor"];
 		if (SelectedMonitor >= Count)
@@ -135,11 +135,11 @@ namespace Volund
 		return glfwGetProcAddress(Name);
 	}
 
-	Window::Window(EventDispatcher* Dispatcher)
+	Window::Window(Ref<EventDispatcher>& Dispatcher)
 	{
 		VOLUND_INFO("Creating window...");
 
-		JSON ConfigFile = JSON::Load(CONFIG_JSON);
+		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
 
 		this->_Data.Dispatcher = Dispatcher;
 		this->_Data.Width = ConfigFile["Window"]["Width"].GetAs<uint32_t>();

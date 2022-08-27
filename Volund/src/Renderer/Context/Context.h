@@ -10,7 +10,7 @@ namespace Volund
 
 		virtual void Flush() = 0;
 
-		static Context* Create(Window* window);
+		static Context* Create(Ref<Window>& window);
 
 		virtual ~Context() = default;
 

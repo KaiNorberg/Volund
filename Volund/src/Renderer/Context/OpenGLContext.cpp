@@ -100,12 +100,12 @@ namespace Volund
 		_Window->SwapBuffers();
 	}
 
-	OpenGLContext::OpenGLContext(Window* window)
+	OpenGLContext::OpenGLContext(Ref<Window>& window)
 	{
 		this->_Window = window;		
 		VOLUND_INFO("Creating OpenGL context...");
 
-		if (!gladLoadGLLoader((GLADloadproc)window->GetProcAddress))
+		if (!gladLoadGLLoader((GLADloadproc)_Window->GetProcAddress))
 		{
 			VOLUND_ERROR("Failed to initialize OpenGL context");
 		}

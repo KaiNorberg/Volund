@@ -1,7 +1,5 @@
 #pragma once
 
-#define CONFIG_JSON "Config.json"
-
 #include "PCH/PCH.h"
 
 #include "Application/Application.h"

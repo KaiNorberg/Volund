@@ -31,11 +31,9 @@ namespace Volund
 
 	private:
 
-		Context* _Context = nullptr;
-
-		EventDispatcher _EventDispatcher = EventDispatcher(this);
-
-		Window _Window = Window(&_EventDispatcher);
+		Ref<Context> _Context;
+		Ref<EventDispatcher> _EventDispatcher;
+		Ref<Window> _Window;
 
 		std::vector<Layer*> _LayerStack;
 

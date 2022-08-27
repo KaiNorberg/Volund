@@ -11,7 +11,7 @@ namespace Volund
         uint32_t Width;
         uint32_t Height;
 
-        EventDispatcher* Dispatcher;
+        Ref<EventDispatcher> Dispatcher;
     };
 
     class Window
@@ -36,7 +36,7 @@ namespace Volund
 
         static void* GetProcAddress(const char* Name);
 
-        Window(EventDispatcher* Dispatcher);
+        Window(Ref<EventDispatcher>& Dispatcher);
 
         ~Window();
 

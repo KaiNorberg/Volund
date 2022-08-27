@@ -6,7 +6,7 @@ namespace Volund
 	extern Application* CreateApplication();
 }
 
-int main(void)
+int main(int argc, char* argv)
 {
 	Volund::Application* Application = Volund::CreateApplication();
 
@@ -15,4 +15,4 @@ int main(void)
 	delete Application;
 
 	return 0;
-}
+} 
