@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Shader/Shader.h"
+#include "Shader.h"
 
 namespace Volund
 {

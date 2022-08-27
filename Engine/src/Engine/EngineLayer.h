@@ -9,8 +9,7 @@ namespace Volund
 
 		VertexBuffer* VBuffer;
 		IndexBuffer* IBuffer;
-
-		uint32_t VertexArray;
+		VertexArray* VArray;
 
 		Shader* TestShader;
 
@@ -42,23 +41,18 @@ namespace Volund
 				 0.5,  -0.5, 0.0,    0.0, 1.0, 0.0, 1.0,
 				 0.0,   0.5, 0.0,    0.0, 0.0, 1.0, 1.0
 			};
-			uint32_t Indices[] =
-			{ 0, 1, 2 };
+			uint32_t Indices[] = { 0, 1, 2 };
 
 			TestShader = Shader::Create("Shaders/Test.shader");
 
-			glGenVertexArrays(1, &VertexArray);			
-			glBindVertexArray(VertexArray);
-
 			VBuffer = VertexBuffer::Create(Vertices, sizeof(Vertices) / sizeof(float));
-
-			VBuffer->SetLayout(
-			{
-				VertexAttributeType::OPENGL_FLOAT3,
-				VertexAttributeType::OPENGL_FLOAT4
-			});
+			VBuffer->SetLayout({VertexAttributeType::OPENGL_FLOAT3, VertexAttributeType::OPENGL_FLOAT4});
 
 			IBuffer = IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t));
+
+			VArray = VertexArray::Create();
+			VArray->SetIndexBuffer(IBuffer);
+			VArray->SetVertexBuffer(VBuffer);
 
 			///////////////////////////////////////////////////////////////////////////
 		}
@@ -74,6 +68,10 @@ namespace Volund
 			if (VBuffer != nullptr)
 			{
 				delete VBuffer;
+			}
+			if (VArray != nullptr)
+			{
+				delete VArray;
 			}
 			if (IBuffer != nullptr)
 			{
@@ -96,8 +94,8 @@ namespace Volund
 
 			TestShader->Use();
 
-			glBindVertexArray(VertexArray);
-			glDrawElements(GL_TRIANGLES, IBuffer->GetCount(), GL_UNSIGNED_INT, nullptr);
+			VArray->Bind();
+			glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
 
 			///////////////////////////////////////////////////////////////////////////
 

@@ -167,17 +167,17 @@ namespace Volund
 		this->SetVSync(ConfigFile["Window"]["VSync"]);
 
 		//Set callbacks
-		glfwSetWindowUserPointer(this->_WindowHandle, &this->_Data);
+		/*glfwSetWindowUserPointer(this->_WindowHandle, &this->_Data);
 		glfwSetWindowCloseCallback(this->_WindowHandle, WindowCloseCallback);
 		glfwSetWindowSizeCallback(this->_WindowHandle, WindowSizeCallback);
 		glfwSetKeyCallback(this->_WindowHandle, KeyCallback);
 		glfwSetMouseButtonCallback(this->_WindowHandle, MouseButtonCallback);
 		glfwSetScrollCallback(this->_WindowHandle, ScrollCallback);
-		glfwSetCursorPosCallback(this->_WindowHandle, CursorPosCallback);
+		glfwSetCursorPosCallback(this->_WindowHandle, CursorPosCallback);*/
 
 		GLFW_ERROR_CHECK();
 
-		VOLUND_INFO("GLFW Version: %s", glfwGetVersionString());
+		//VOLUND_INFO("GLFW Version: %s", glfwGetVersionString());
 	}
 
 	Window::~Window()

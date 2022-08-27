@@ -8,9 +8,11 @@ namespace Volund
 	{
 	public:
 
+		virtual void Flush() = 0;
+
 		static Context* Create(Window* window);
 
-		virtual void Flush() = 0;
+		virtual ~Context() = default;
 
 	private:
 	};

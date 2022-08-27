@@ -90,4 +90,13 @@ namespace Volund
 			{EventType::CURSOR_POS, CursorPosHandler}
 		};
 	}
+
+	EventDispatcher::~EventDispatcher()
+	{
+		for (int i = 0; i < this->_EventStack.size() ;i++)
+		{
+			delete this->_EventStack[i];
+		}
+		this->_EventStack.clear();
+	}
 }

@@ -18,7 +18,12 @@ namespace Volund
 	{
 		this->_Count = Count;
 		glCreateBuffers(1, &this->_Buffer);
-		this->Bind();
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, Count * sizeof(uint32_t), Indices, GL_STATIC_DRAW);
+		glBindBuffer(GL_ARRAY_BUFFER, this->_Buffer);
+		glBufferData(GL_ARRAY_BUFFER, Count * sizeof(uint32_t), Indices, GL_STATIC_DRAW);
+	}
+
+	OpenGLIndexBuffer::~OpenGLIndexBuffer()
+	{
+		glDeleteBuffers(1, &this->_Buffer);
 	}
 }

@@ -10,11 +10,6 @@
 
 namespace Volund
 {
-	uint32_t VertexBuffer::GetCount()
-	{
-		return this->_Count;
-	}
-
 	VertexBuffer* VertexBuffer::Create(float Vertices[], uint32_t Count)
 	{
 		switch (Renderer::GetGraphicsAPI())

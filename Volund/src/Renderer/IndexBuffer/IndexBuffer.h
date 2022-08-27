@@ -14,6 +14,8 @@ namespace Volund
 
 		static IndexBuffer* Create(uint32_t Indices[], uint32_t Size);
 
+		virtual ~IndexBuffer() = default;
+
 	protected:
 		uint32_t _Count;
 	};

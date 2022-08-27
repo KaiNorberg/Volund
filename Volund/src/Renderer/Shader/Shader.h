@@ -58,6 +58,8 @@ namespace Volund
 
         static Shader* Create(std::string const& FilePath);
 
+        virtual ~Shader() = default;
+
     protected:
 
         struct Source

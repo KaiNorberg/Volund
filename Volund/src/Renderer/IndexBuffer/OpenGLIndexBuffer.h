@@ -13,6 +13,8 @@ namespace Volund
 		void Unbind() override;
 
 		OpenGLIndexBuffer(uint32_t Indices[], uint32_t Count);
+		
+		~OpenGLIndexBuffer();
 
 	private:
 

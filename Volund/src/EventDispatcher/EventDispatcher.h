@@ -16,6 +16,8 @@ namespace Volund
 
 		EventDispatcher();
 
+		~EventDispatcher();
+
 	private:
 
 		std::vector<Event*> _EventStack;
