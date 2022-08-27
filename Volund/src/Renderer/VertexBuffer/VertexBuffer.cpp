@@ -4,7 +4,7 @@
 
 #include "OpenGLVertexBuffer.h"
 
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 #define BIT_MASK 0b1110000000111
 
@@ -12,9 +12,9 @@ namespace Volund
 {
 	VertexBuffer* VertexBuffer::Create(float Vertices[], uint32_t Count)
 	{
-		switch (Renderer::GetGraphicsAPI())
+		switch (RenderingAPI::GetAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case RenderingAPI::API::OPENGL:
 		{
 			return new OpenGLVertexBuffer(Vertices, Count);
 		}

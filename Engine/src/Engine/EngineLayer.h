@@ -90,8 +90,6 @@ namespace Volund
 		{		
 			///////////////////////////////////////////////////////////////////////////
 
-			glClearColor(0, 0, 0, 1);
-
 			TestShader->Use();
 
 			VArray->Bind();

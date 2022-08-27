@@ -5,13 +5,13 @@
 #include "Scene/Scene.h"
 #include "Input/Input.h"
 #include "Time/Time.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
 	void Application::Run()
 	{
-		this->Loop();
+		this->Loop();		
 	}
 
 	void Application::AttachLayer(Layer* L)
@@ -20,11 +20,21 @@ namespace Volund
 		L->OnAttach();
 	}
 
+	void Application::Terminate()
+	{
+		this->_ShouldRun = false;
+	}
+
+	bool Application::ShouldRun()
+	{
+		return this->_ShouldRun;
+	}
+
 	void Application::Loop()
 	{
 		std::chrono::time_point<std::chrono::steady_clock> OldTime = std::chrono::high_resolution_clock::now();
 
-		while (!this->_Window.ShouldClose())
+		while (this->_ShouldRun)
 		{
 			std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - OldTime;
 			OldTime = std::chrono::high_resolution_clock::now();
@@ -41,7 +51,7 @@ namespace Volund
 
 			this->_Window.PollEvents();
 
-			this->_EventDispatcher.Dispatch();		
+			//this->_EventDispatcher.Dispatch();
 		}
 	}
 
@@ -56,7 +66,7 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
-		Renderer::LoadJSONSettings();
+		RenderingAPI::LoadJSONSettings();
 
 		this->_Context = Context::Create(&this->_Window);
 	}

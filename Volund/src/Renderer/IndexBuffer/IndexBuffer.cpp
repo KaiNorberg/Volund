@@ -4,7 +4,7 @@
 
 #include "OpenGLIndexBuffer.h"
 
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
@@ -15,9 +15,9 @@ namespace Volund
 
 	IndexBuffer* IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
 	{
-		switch (Renderer::GetGraphicsAPI())
+		switch (RenderingAPI::GetAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case RenderingAPI::API::OPENGL:
 		{
 			return new OpenGLIndexBuffer(Indices, Size);
 		}

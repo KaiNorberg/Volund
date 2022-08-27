@@ -13,10 +13,12 @@
 
 namespace Volund
 {
-	void KeyHandler(Event* E);
-	void MouseButtonHandler(Event* E);
-	void ScrollHandler(Event* E);
-	void CursorPosHandler(Event* E);
+	class Application;
+
+	void KeyHandler(Event* E, Application* App);
+	void MouseButtonHandler(Event* E, Application* App);
+	void ScrollHandler(Event* E, Application* App);
+	void CursorPosHandler(Event* E, Application* App);
 
 	class Input
 	{
@@ -34,10 +36,10 @@ namespace Volund
 
 	private:
 		
-		friend void Volund::KeyHandler(Event* E);
-		friend void Volund::MouseButtonHandler(Event* E);
-		friend void Volund::ScrollHandler(Event* E);
-		friend void Volund::CursorPosHandler(Event* E);
+		friend void Volund::KeyHandler(Event* E, Application* App);
+		friend void Volund::MouseButtonHandler(Event* E, Application* App);
+		friend void Volund::ScrollHandler(Event* E, Application* App);
+		friend void Volund::CursorPosHandler(Event* E, Application* App);
 
 		static void SendKeyEvent(KeyEvent* KE);
 		static void SendMouseButtonEvent(MouseButtonEvent* MBE);

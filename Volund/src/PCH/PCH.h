@@ -36,6 +36,7 @@
 using Vec2 = glm::vec2;
 using Vec3 = glm::vec3; 
 using Vec4 = glm::vec4;
+using RGBA = glm::vec4;
 using Quat = glm::quat;
 using Mat3x3 = glm::mat3x3; 
 using Mat4x4 = glm::mat4x4;

@@ -4,15 +4,15 @@
 #include "OpenGLContext.h"
 
 #include "Time/Time.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
 	Context* Context::Create(Window* window)
 	{		
-		switch (Renderer::GetGraphicsAPI())
+		switch (RenderingAPI::GetAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case RenderingAPI::API::OPENGL:
 		{
 			return new OpenGLContext(window);
 		}

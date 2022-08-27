@@ -1,7 +1,7 @@
 #include "PCH/PCH.h"
 #include "VertexArray.h"
 
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 #include "OpenGLVertexArray.h"
 
@@ -9,9 +9,9 @@ namespace Volund
 {
 	VertexArray* VertexArray::Create()
 	{
-		switch (Renderer::GetGraphicsAPI())
+		switch (RenderingAPI::GetAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case RenderingAPI::API::OPENGL:
 		{
 			return new OpenGLVertexArray();
 		}

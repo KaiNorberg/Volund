@@ -5,15 +5,15 @@
 #include "OpenGLShader.h"
 
 #include "Time/Time.h"
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
 	Shader* Shader::Create(std::string const& FilePath)
 	{
-		switch (Renderer::GetGraphicsAPI())
+		switch (RenderingAPI::GetAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case RenderingAPI::API::OPENGL:
 		{
 			return new OpenGLShader(FilePath);
 		}

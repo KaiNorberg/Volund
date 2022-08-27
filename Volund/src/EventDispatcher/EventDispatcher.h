@@ -4,24 +4,24 @@
 
 namespace Volund
 {
-	using EventHandler = void(*)(Volund::Event*);
+	class Application;
+
+	using EventHandler = void(*)(Volund::Event*, Volund::Application*);
 
 	class EventDispatcher
 	{
 	public:
 
-		void Dispatch();
+		void Dispatch(Event* E);
 
-		void PushEvent(Event* E);
-
-		EventDispatcher();
+		EventDispatcher(Application* App);
 
 		~EventDispatcher();
 
 	private:
 
-		std::vector<Event*> _EventStack;
+		Application* _Application;
 
-		std::unordered_map<EventType, EventHandler> _EventHandlers;
+		static std::unordered_map<EventType, EventHandler> _EventHandlers;
 	};
 }

@@ -23,7 +23,7 @@ namespace Volund
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->PushEvent(new WindowCloseEvent());
+		Data->Dispatcher->Dispatch(new WindowCloseEvent());
 	}
 
 	void WindowSizeCallback(GLFWwindow* WindowHandle, int32_t Width, int32_t Height)
@@ -35,7 +35,7 @@ namespace Volund
 			Data->Width = Width;
 			Data->Height = Height;
 
-			Data->Dispatcher->PushEvent(new WindowSizeEvent(Width, Height));
+			Data->Dispatcher->Dispatch(new WindowSizeEvent(Width, Height));
 		}
 	}
 
@@ -43,28 +43,28 @@ namespace Volund
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->PushEvent(new KeyEvent(Key, (bool)Action));
+		Data->Dispatcher->Dispatch(new KeyEvent(Key, (bool)Action));
 	}
 
 	void MouseButtonCallback(GLFWwindow* WindowHandle, int32_t Button, int32_t Action, int32_t Mods)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->PushEvent(new MouseButtonEvent(Button, (bool)Action));
+		Data->Dispatcher->Dispatch(new MouseButtonEvent(Button, (bool)Action));
 	}
 
 	void ScrollCallback(GLFWwindow* WindowHandle, double xOffset, double yOffset)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->PushEvent(new ScrollEvent(xOffset, yOffset));
+		Data->Dispatcher->Dispatch(new ScrollEvent(xOffset, yOffset));
 	}
 
 	void CursorPosCallback(GLFWwindow* WindowHandle, double xPos, double yPos)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->PushEvent(new CursorPosEvent(xPos, yPos));
+		Data->Dispatcher->Dispatch(new CursorPosEvent(xPos, yPos));
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -167,17 +167,17 @@ namespace Volund
 		this->SetVSync(ConfigFile["Window"]["VSync"]);
 
 		//Set callbacks
-		/*glfwSetWindowUserPointer(this->_WindowHandle, &this->_Data);
+		glfwSetWindowUserPointer(this->_WindowHandle, &this->_Data);
 		glfwSetWindowCloseCallback(this->_WindowHandle, WindowCloseCallback);
 		glfwSetWindowSizeCallback(this->_WindowHandle, WindowSizeCallback);
 		glfwSetKeyCallback(this->_WindowHandle, KeyCallback);
 		glfwSetMouseButtonCallback(this->_WindowHandle, MouseButtonCallback);
 		glfwSetScrollCallback(this->_WindowHandle, ScrollCallback);
-		glfwSetCursorPosCallback(this->_WindowHandle, CursorPosCallback);*/
+		glfwSetCursorPosCallback(this->_WindowHandle, CursorPosCallback);
 
 		GLFW_ERROR_CHECK();
 
-		//VOLUND_INFO("GLFW Version: %s", glfwGetVersionString());
+		VOLUND_INFO("GLFW Version: %s", glfwGetVersionString());
 	}
 
 	Window::~Window()

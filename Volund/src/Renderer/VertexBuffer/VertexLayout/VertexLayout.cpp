@@ -2,7 +2,7 @@
 
 #include "VertexLayout.h"
 
-#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
@@ -28,9 +28,9 @@ namespace Volund
 
 	VertexAttribute::VertexAttribute(VertexAttributeType Type, std::string Name) : _Type(Type), _Name(Name)
 	{
-		switch (Renderer::GetGraphicsAPI())
+		switch (RenderingAPI::GetAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case RenderingAPI::API::OPENGL:
 		{
 			this->ByteSizeOffset = 3;
 			this->BitMask = 0b1110000000111;		

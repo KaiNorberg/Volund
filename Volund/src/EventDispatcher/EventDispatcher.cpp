@@ -3,23 +3,25 @@
 #include "EventDispatcher.h"
 #include "Input/Input.h"
 
+#include "Application/Application.h"
+
 namespace Volund
 {
-	void WindowCloseHandler(Event* E)
+	void WindowCloseHandler(Event* E, Application* App)
 	{
 		WindowCloseEvent* WCE = (WindowCloseEvent*)E;
 
-		exit(EXIT_SUCCESS);
+		App->Terminate();
 	}
 
-	void WindowSizeHandler(Event* E)
+	void WindowSizeHandler(Event* E, Application* App)
 	{
 		WindowSizeEvent* WSE = (WindowSizeEvent*)E;
 
 		//TODO
 	}
 
-	void KeyHandler(Event* E)
+	void KeyHandler(Event* E, Application* App)
 	{
 		KeyEvent* KE = (KeyEvent*)E;
 
@@ -28,7 +30,7 @@ namespace Volund
 		//TODO
 	}
 
-	void MouseButtonHandler(Event* E)
+	void MouseButtonHandler(Event* E, Application* App)
 	{
 		MouseButtonEvent* MBE = (MouseButtonEvent*)E;
 
@@ -37,7 +39,7 @@ namespace Volund
 		//TODO
 	}
 
-	void ScrollHandler(Event* E)
+	void ScrollHandler(Event* E, Application* App)
 	{
 		ScrollEvent* SE = (ScrollEvent*)E;
 
@@ -46,7 +48,7 @@ namespace Volund
 		//TODO
 	}
 
-	void CursorPosHandler(Event* E)
+	void CursorPosHandler(Event* E, Application* App)
 	{
 		CursorPosEvent* CPE = (CursorPosEvent*)E;
 
@@ -57,46 +59,29 @@ namespace Volund
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	void EventDispatcher::Dispatch()
+	std::unordered_map<EventType, EventHandler> EventDispatcher::_EventHandlers = 
 	{
-		while (this->_EventStack.size() != 0)
-		{
-			Event* E = this->_EventStack.back();
+		{EventType::NONE, nullptr},
+		{EventType::WINDOW_CLOSE, WindowCloseHandler},
+		{EventType::WINDOW_SIZE, WindowSizeHandler},
+		{EventType::KEY, KeyHandler},
+		{EventType::MOUSE_BUTTON, MouseButtonHandler},
+		{EventType::SCROLL, ScrollHandler},
+		{EventType::CURSOR_POS, CursorPosHandler}
+	};
 
-			this->_EventHandlers[E->GetType()](E);
-
-			this->_EventStack.pop_back();
-			delete E;
-		}
+	void EventDispatcher::Dispatch(Event* E)
+	{
+		this->_EventHandlers[E->GetType()](E, this->_Application);
 	}
 
-	void EventDispatcher::PushEvent(Event* E)
-	{	
-		this->_EventStack.push_back(E);
-	}
-
-	EventDispatcher::EventDispatcher()
+	EventDispatcher::EventDispatcher(Application* App)
 	{
-		this->_EventStack.reserve(16); 
-		
-		_EventHandlers =
-		{
-			{EventType::NONE, nullptr},
-			{EventType::WINDOW_CLOSE, WindowCloseHandler},
-			{EventType::WINDOW_SIZE, WindowSizeHandler},
-			{EventType::KEY, KeyHandler},
-			{EventType::MOUSE_BUTTON, MouseButtonHandler},
-			{EventType::SCROLL, ScrollHandler},
-			{EventType::CURSOR_POS, CursorPosHandler}
-		};
+		this->_Application = App;
 	}
 
 	EventDispatcher::~EventDispatcher()
 	{
-		for (int i = 0; i < this->_EventStack.size() ;i++)
-		{
-			delete this->_EventStack[i];
-		}
-		this->_EventStack.clear();
+
 	}
 }
