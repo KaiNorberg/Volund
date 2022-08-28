@@ -13,39 +13,25 @@ namespace Volund
 	{
 		std::ifstream File(FilePath);
 
-		if (!File.is_open())
-		{
-			VOLUND_ERROR("Unable to open JSON file (%s)", FilePath.c_str());
-		}
+		VOLUND_ASSERT(File.is_open(), "Unable to open JSON file (%s)", FilePath.c_str())
 
 		return JSON(nlohmann::json::parse(File));
 	}		
 
 	JSON JSON::operator[](const char* Other)
 	{
-		if (this->_JSONObject.contains(Other))
-		{
-			return JSON(this->_JSONObject[Other]);
-		}
-		else
-		{
-			VOLUND_ERROR("Unable to find entry in json file (%s)!", Other);
-			return JSON();
-		}
+		VOLUND_ASSERT(this->_JSONObject.contains(Other), "Unable to find entry in json file (%s)!", Other)
+
+		return JSON(this->_JSONObject[Other]);
 	}	
 		
 	JSON JSON::operator[](int32_t const& Other)
 	{
-		if (Other < this->_JSONObject.size())
-		{
-			return JSON(this->_JSONObject[Other]);
-		}
-		else
-		{
-			VOLUND_ERROR("Index exceeds boundary of JSON file (%d)!", Other);
-			return JSON();
-		}
+		VOLUND_ASSERT((bool)(Other < this->_JSONObject.size()), "Index exceeds boundary of JSON file (%d)!", Other)
+
+		return JSON(this->_JSONObject[Other]);
 	}
+
 	JSON::JSON(nlohmann::json const& JSONObject)
 	{
 		this->_JSONObject = JSONObject;

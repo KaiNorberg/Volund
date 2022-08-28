@@ -2,6 +2,8 @@
 
 #include "Transform.h"
 
+#include "Math/Math.h"
+
 namespace Volund
 {
 	void Transform::SetRotation(Vec3 const& Rotation)
@@ -41,9 +43,8 @@ namespace Volund
 		this->_Up = this->Quaternion * Math::Up;
 	}
 
-	Transform::Transform(Entity* Parent, Vec3 const& Position, Vec3 const& Scale)
+	Transform::Transform(Vec3 const& Position, Vec3 const& Scale)
 	{
-		this->_Parent = Parent;
 		this->Position = Position;
 		this->Scale = Scale;
 	}

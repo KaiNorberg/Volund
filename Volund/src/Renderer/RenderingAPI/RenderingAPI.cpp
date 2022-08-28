@@ -34,7 +34,6 @@ namespace Volund
 			{
 				VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", API.c_str());
 			}
-
 		}
 
 		switch (RenderingAPI::GetAPI())

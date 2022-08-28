@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Component/Components.h"
+#include "Component/Component.h"
 
 namespace Volund
 {
@@ -15,16 +15,16 @@ namespace Volund
 		Scene* GetParent();
 
 		template<typename T, class... ARGS>
-		T* AddComponent(ARGS&&... Args);
+		T* CreateComponent(ARGS&&... Args);
 
 		template<typename T>
-		bool RemoveComponent(uint32_t Index = 0);
+		bool DeleteComponent(uint32_t Index = 0);
 
 		template<typename T>
 		T* GetComponent(uint32_t Index = 0);
 
 		template<typename T>
-		bool HasComponent(uint32_t Index = 0) const;
+		bool HasComponent(uint32_t Index = 0);
 
 		void OnUpdate(TimeStep TS);
 
@@ -44,7 +44,7 @@ namespace Volund
 	};	
 
 	template<typename T, class... ARGS>
-	T* Entity::AddComponent(ARGS&&... Args)
+	T* Entity::CreateComponent(ARGS&&... Args)
 	{
 		uint64_t Hash = typeid(T).hash_code();
 
@@ -54,13 +54,15 @@ namespace Volund
 		}
 
 		T* NewComponent = new T(Args...);
+		NewComponent->SetParent(this);
+		NewComponent->OnCreate();
 		this->_Components[Hash].push_back(NewComponent);
 
 		return NewComponent;
 	}
 
 	template<typename T>
-	bool Entity::RemoveComponent(uint32_t Index)
+	bool Entity::DeleteComponent(uint32_t Index)
 	{
 		if (!this->HasComponent<T>(Index))
 		{
@@ -69,6 +71,7 @@ namespace Volund
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
+		this->_Components[Hash][Index]->OnDelete();
 		delete this->_Components[Hash][Index];
 		this->_Components[Hash].erase(Index);
 
@@ -85,11 +88,11 @@ namespace Volund
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
-		return this->_Components[Hash][Index];
+		return static_cast<T*>(this->_Components[Hash][Index]);
 	}
 
 	template<typename T>
-	bool Entity::HasComponent(uint32_t Index) const
+	bool Entity::HasComponent(uint32_t Index)
 	{
 		uint64_t Hash = typeid(T).hash_code();
 		return this->_Components.find(Hash) != this->_Components.end() && Index < this->_Components[Hash].size();

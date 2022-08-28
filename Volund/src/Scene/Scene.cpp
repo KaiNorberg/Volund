@@ -19,7 +19,7 @@ namespace Volund
 		return NewEntity;
 	}
 
-	bool Scene::RemoveEntity(std::string const& Name)
+	bool Scene::DeleteEntity(std::string const& Name)
 	{
 		for (int i = 0; i < this->_Entities.size(); i++)
 		{

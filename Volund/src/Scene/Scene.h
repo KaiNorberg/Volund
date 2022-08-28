@@ -10,7 +10,7 @@ namespace Volund
 
 		 Entity* CreateEntity(std::string const& Name);
 
-		 bool RemoveEntity(std::string const& Name);
+		 bool DeleteEntity(std::string const& Name);
 
 		 Entity* GetEntity(std::string const& Name);
 

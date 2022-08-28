@@ -4,18 +4,28 @@
 
 namespace Volund
 {
+	class Entity;
+
 	class Component
 	{
 	public:
 
-		virtual void OnInit() = 0;
+		Entity* GetParent();
 
-		virtual void OnRemove() = 0;
+		virtual void OnCreate() {};
 
-		virtual void OnUpdate(TimeStep TS) = 0;
+		virtual void OnUpdate(TimeStep TS) {};
+
+		virtual void OnDelete() {};
+
+		Component() = default;
 
 	private:
+		friend class Entity;
 
+		void SetParent(Entity* Parent);
+
+		Entity* _Parent;
 	};
 }
 

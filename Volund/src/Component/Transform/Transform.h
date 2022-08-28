@@ -2,12 +2,8 @@
 
 #include "Component/Component.h"
 
-#include "Math/Math.h"
-
 namespace Volund
 {
-	class Entity;
-
 	class Transform : public Component
 	{
 	public:
@@ -59,11 +55,9 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		Transform(Entity* Parent, Vec3 const& Position, Vec3 const& Scale);
+		Transform(Vec3 const& Position = Vec3(0.0f), Vec3 const& Scale = Vec3(0.0f));
 
 	private:
-
-		Entity* _Parent;
 
 		Vec3 _Front = glm::vec3(0.0f);
 

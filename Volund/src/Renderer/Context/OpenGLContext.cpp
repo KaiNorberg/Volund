@@ -107,10 +107,7 @@ namespace Volund
 		this->_Window = window;		
 		VOLUND_INFO("Creating OpenGL context...");
 
-		if (!gladLoadGLLoader((GLADloadproc)_Window->GetProcAddress))
-		{
-			VOLUND_ERROR("Failed to initialize OpenGL context");
-		}
+		VOLUND_ASSERT(gladLoadGLLoader((GLADloadproc)_Window->GetProcAddress), "Failed to initialize OpenGL context");
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, NULL);

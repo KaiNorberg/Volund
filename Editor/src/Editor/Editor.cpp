@@ -10,6 +10,13 @@ public:
 	{
 
 	}
+
+	TestScene()
+	{
+		Volund::Entity* Entity1 = this->CreateEntity("Entity1");
+
+		Entity1->CreateComponent<Volund::Camera>();
+	}
 };
 
 Editor::Editor()
@@ -18,7 +25,6 @@ Editor::Editor()
 	this->AttachLayer(NewLayer);
 	NewLayer->LoadScene<TestScene>();
 }
-
 
 Volund::Application* Volund::CreateApplication()
 {
