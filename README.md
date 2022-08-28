@@ -1,4 +1,4 @@
-# Volund [![License](https://img.shields.io/badge/licence-MIT-green)](https://github.com/Kaj9296/Volund/LICENCE)
+# Volund [![License](https://img.shields.io/badge/licence-MIT-green)](https://github.com/Kaj9296/Volund/blob/main/LICENSE)
 
 
 Volund is an OpenGL rendering engine designed for Windows 10/11.
