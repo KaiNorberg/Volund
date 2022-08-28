@@ -3,16 +3,33 @@
 #define VOLUND_GRAPHICSAPI_NONE "None"
 #define VOLUND_GRAPHICSAPI_OPENGL "OpenGL"
 
+#include "Renderer/VertexArray/VertexArray.h"
+#include "Scene/Scene.h"
+#include "RenderingAPI/RenderingAPI.h"
+#include "Context/Context.h"
+#include "Application/Application.h"
+
 namespace Volund
 {
-
 	class Renderer
 	{
 	public:
 
+		static void SubmitScene(Ref<Scene> const& scene);
 
-	private:
+		static void BeginScene();
+		static void EndScene();
 
+		static void Submit(Ref<VertexArray> const& VArray);
+
+	private:		
+		
+		friend Application::Application();
+
+		static void Init(Ref<Window>& window);
+
+		static Ref<RenderingAPI> _RenderingAPI;
+		static Ref<Context> _Context;
 	};
 }
 

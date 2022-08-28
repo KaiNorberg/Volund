@@ -2,6 +2,8 @@
 
 #include "OpenGLIndexBuffer.h"
 
+#include <glad/include/glad/glad.h>
+
 namespace Volund
 {
 	void OpenGLIndexBuffer::Bind()

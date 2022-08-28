@@ -2,6 +2,8 @@
 
 #include "OpenGLVertexBuffer.h"
 
+#include <glad/include/glad/glad.h>
+
 namespace Volund
 {
 	void OpenGLVertexBuffer::Bind()

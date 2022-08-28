@@ -18,8 +18,6 @@
 #include <memory>
 #include <cstdarg>
 
-#include <glad/include/glad/glad.h>
-
 #include "JSON/JSON.h"
 
 ///////////TEMPORARY///////////

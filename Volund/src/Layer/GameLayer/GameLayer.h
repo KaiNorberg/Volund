@@ -23,7 +23,9 @@ namespace Volund
 
 	private:
 
-		Ref<VertexArray> _VertexArray;
+		Ref<VertexArray> _TriangleVertexArray;		
+		Ref<VertexArray> _SquareVertexArray;
+
 		Ref<Shader> _TestShader;
 		Ref<Scene> _LoadedScene;
 	};
@@ -31,7 +33,7 @@ namespace Volund
 	template<typename T>
 	inline void GameLayer::LoadScene()
 	{
-		VOLUND_INFO("Loading Scene ...");
+		VOLUND_INFO("Loading Scene...");
 
 		this->_LoadedScene.reset(new T());
 	}

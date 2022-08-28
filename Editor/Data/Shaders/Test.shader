@@ -1,5 +1,5 @@
 ﻿#VOLUND_SHADER_TYPE VERTEX
-#VOLUND_SHADER_VERSION
+#version 460
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec4 vertex_color;
@@ -15,7 +15,7 @@ void main()
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT
-#VOLUND_SHADER_VERSION
+#version 460
 
 in vec3 vs_position;
 in vec4 vs_color;

@@ -5,14 +5,16 @@
 
 #include "OpenGLVertexArray.h"
 
+#include <glad/include/glad/glad.h>
+
 namespace Volund
 {
-	void OpenGLVertexArray::Bind()
+	void OpenGLVertexArray::Bind() const
 	{
 		glBindVertexArray(this->_ID);
 	}
 
-	void OpenGLVertexArray::Unbind()
+	void OpenGLVertexArray::Unbind() const
 	{
 		glBindVertexArray(0);
 	}

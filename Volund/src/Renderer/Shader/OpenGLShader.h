@@ -63,7 +63,13 @@ namespace Volund
 
     private:
 
+        uint32_t GetUniformLocation(std::string const& Name);
+
         uint32_t CompileShader(uint32_t Type, std::string const& Source);
+
+        std::unordered_map<std::string, uint32_t> UniformLocations;
+
+        uint32_t ID = 0;
     };
 
 } //namespace Volund

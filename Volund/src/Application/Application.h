@@ -31,7 +31,6 @@ namespace Volund
 
 	private:
 
-		Ref<Context> _Context;
 		Ref<EventDispatcher> _EventDispatcher;
 		Ref<Window> _Window;
 

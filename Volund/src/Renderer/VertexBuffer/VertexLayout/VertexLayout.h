@@ -1,24 +1,22 @@
 #pragma once
 
+#define VOLUND_ATTRIBUTE_FLOAT 0b10
+#define VOLUND_ATTRIBUTE_INT   0b01
+
 namespace Volund
 {
-	/// <summary>
-	/// Binary marked with an x specifiy type, binary marked with a y speccify data size.
-	/// xxxyyyyyyyxxx
-	/// Unsure if this system will work for an 
-	/// </summary>
 	enum class VertexAttributeType
 	{
-		OPENGL_FLOAT  = GL_FLOAT + (1 << 3),
-		OPENGL_FLOAT2 = GL_FLOAT + (2 << 3),
-		OPENGL_FLOAT3 = GL_FLOAT + (3 << 3),
-		OPENGL_FLOAT4 = GL_FLOAT + (4 << 3),
-		OPENGL_MAT3   = GL_FLOAT + (9 << 3),
-		OPENGL_MAT4   = GL_FLOAT + (12 << 3),
-		OPENGL_INT    = GL_INT + (1 << 3),
-		OPENGL_INT2   = GL_INT + (2 << 3),
-		OPENGL_INT3   = GL_INT + (3 << 3),
-		OPENGL_INT4   = GL_INT + (4 << 3)
+		FLOAT  = VOLUND_ATTRIBUTE_FLOAT + (1 << 2),
+		FLOAT2 = VOLUND_ATTRIBUTE_FLOAT + (2 << 2),
+		FLOAT3 = VOLUND_ATTRIBUTE_FLOAT + (3 << 2),
+		FLOAT4 = VOLUND_ATTRIBUTE_FLOAT + (4 << 2),
+		MAT3   = VOLUND_ATTRIBUTE_FLOAT + (9 << 2),
+		MAT4   = VOLUND_ATTRIBUTE_FLOAT + (12 << 2),
+		INT    = VOLUND_ATTRIBUTE_INT + (1 << 2),
+		INT2   = VOLUND_ATTRIBUTE_INT + (2 << 2),
+		INT3   = VOLUND_ATTRIBUTE_INT + (3 << 2),
+		INT4   = VOLUND_ATTRIBUTE_INT + (4 << 2)
 	};
 
 	class VertexAttribute
@@ -37,8 +35,8 @@ namespace Volund
 
 	private:
 
-		uint32_t ByteSizeOffset = 0;
-		uint32_t BitMask = 0;
+		uint32_t FloatID = 0;
+		uint32_t IntID = 0;
 
 		std::string _Name;
 

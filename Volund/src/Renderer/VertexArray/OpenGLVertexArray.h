@@ -8,9 +8,9 @@ namespace Volund
 	{
 	public:
 
-		void Bind() override;
+		void Bind() const override;
 
-		void Unbind() override;
+		void Unbind() const override;
 
 		void SetVertexBuffer(Ref<VertexBuffer>& Buffer) override;
 		void SetIndexBuffer(Ref<IndexBuffer>& Buffer) override;

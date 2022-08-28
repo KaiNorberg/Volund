@@ -7,6 +7,26 @@
 
 namespace Volund
 {
+	Ref<VertexBuffer> VertexArray::GetVertexBuffer()
+	{
+		return this->_VertexBuffer;
+	}
+
+	Ref<IndexBuffer> VertexArray::GetIndexBuffer()
+	{
+		return this->_IndexBuffer;
+	}
+
+	const Ref<VertexBuffer> VertexArray::GetVertexBuffer() const
+	{
+		return this->_VertexBuffer;
+	}
+
+	const Ref<IndexBuffer> VertexArray::GetIndexBuffer() const
+	{
+		return this->_IndexBuffer;
+	}
+
 	VertexArray* VertexArray::Create()
 	{
 		switch (RenderingAPI::GetAPI())

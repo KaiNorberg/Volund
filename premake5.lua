@@ -93,10 +93,6 @@ project "Editor"
 	objdir (ObjDir)
 	debugdir "%{prj.name}/Data"
 
-	postbuildcommands {
-	  "xcopy Data\\ ..\\" .. TargetDir .. "\\ /E /C /Y"
-	}
-
 	files
 	{
 		"%{prj.name}/src/**.h",
@@ -140,6 +136,9 @@ project "Editor"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"
+		postbuildcommands {
+		  "xcopy Data\\ ..\\" .. TargetDir .. "\\ /E /C /Y"
+		}
 
 project "GLFW"
 	kind "StaticLib"

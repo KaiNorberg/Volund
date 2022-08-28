@@ -3,6 +3,8 @@
 #include "PCH/PCH.h"
 #include "OpenGLShader.h"
 
+#include <glad/include/glad/glad.h>
+
 namespace Volund
 {
 	void OpenGLShader::Init(std::string const& FilePath)
@@ -135,6 +137,26 @@ namespace Volund
 		}
 
 		return id;
+	}
+
+	uint32_t OpenGLShader::GetUniformLocation(std::string const& Name)
+	{
+		if (UniformLocations.find(Name) != UniformLocations.end())
+		{
+			return UniformLocations[Name];
+		}
+
+		uint32_t Location = glGetUniformLocation(this->ID, Name.c_str());
+
+		if (Location == -1)
+		{
+			//Console::LogWarning("OpenGLShader (" + this->FilePath + ") does not have uniform (" + Name + ").");
+			return -1;
+		}
+
+		UniformLocations[Name] = Location;
+
+		return Location;
 	}
 
 	OpenGLShader::OpenGLShader(std::string const& FilePath)

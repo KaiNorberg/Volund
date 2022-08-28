@@ -2,25 +2,42 @@
 
 #include "GameLayer.h"
 
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
 	void GameLayer::OnAttach()
 	{
-		float Vertices[] =
+		float TriangleVertices[] =
 		{
 			-0.5f, -0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
 			 0.5,  -0.5, 0.0,    0.0, 1.0, 0.0, 1.0,
 			 0.0,   0.5, 0.0,    0.0, 0.0, 1.0, 1.0
 		};
-		uint32_t Indices[] = { 0, 1, 2 };
+		uint32_t TriangleIndices[] = { 0, 1, 2 };
+
+		float SquareVertices[] =
+		{
+			-0.8,  -0.8, 0.0,    0.0, 0.0, 1.0, 1.0,
+			 0.8,  -0.8, 0.0,    0.0, 0.0, 1.0, 1.0,
+			-0.8,   0.8, 0.0,    1.0, 0.0, 0.0, 1.0,
+			-0.8,   0.8, 0.0,    1.0, 0.0, 0.0, 1.0,
+			 0.8,  -0.8, 0.0,    0.0, 0.0, 1.0, 1.0,
+			 0.8,   0.8, 0.0,    1.0, 0.0, 0.0, 1.0
+		};
+		uint32_t SquareIndices[] = { 0, 1, 2, 3, 4, 5 };
 
 		_TestShader.reset(Shader::Create("Shaders/Test.shader"));
 
-		Ref<VertexBuffer> VBuffer = Ref<VertexBuffer>(VertexBuffer::Create(Vertices, sizeof(Vertices) / sizeof(float)));
-		Ref<IndexBuffer> IBuffer = Ref<IndexBuffer>(IndexBuffer::Create(Indices, sizeof(Indices) / sizeof(uint32_t)));
-		VBuffer->SetLayout({ VertexAttributeType::OPENGL_FLOAT3, VertexAttributeType::OPENGL_FLOAT4 });
-
-		this->_VertexArray.reset(VertexArray::Create(VBuffer, IBuffer));
+		Ref<VertexBuffer> TriangleVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(TriangleVertices, sizeof(TriangleVertices) / sizeof(float)));
+		Ref<IndexBuffer> TriangleIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(TriangleIndices, sizeof(TriangleIndices) / sizeof(uint32_t)));
+		TriangleVertexBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT4 });
+		this->_TriangleVertexArray.reset(VertexArray::Create(TriangleVertexBuffer, TriangleIndexBuffer));		
+		
+		Ref<VertexBuffer> SquareVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(SquareVertices, sizeof(SquareVertices) / sizeof(float)));
+		Ref<IndexBuffer> SquareIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
+		SquareVertexBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT4 });
+		this->_SquareVertexArray.reset(VertexArray::Create(SquareVertexBuffer, SquareIndexBuffer));
 	}
 
 	void GameLayer::OnDetach()
@@ -30,14 +47,17 @@ namespace Volund
 
 	void GameLayer::OnUpdate(TimeStep TS)
 	{
-		_TestShader->Use();
+		Renderer::BeginScene();
 
-		_VertexArray->Bind();
-		glDrawElements(GL_TRIANGLES, 3, GL_UNSIGNED_INT, nullptr);
+		_TestShader->Use();
+		Renderer::Submit(_SquareVertexArray);
+		Renderer::Submit(_TriangleVertexArray);
 
 		if (_LoadedScene != nullptr)
 		{
 			this->_LoadedScene->OnUpdate(TS);
 		}
+
+		Renderer::EndScene();
 	}
 }

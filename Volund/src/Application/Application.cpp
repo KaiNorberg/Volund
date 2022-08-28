@@ -5,7 +5,7 @@
 #include "Scene/Scene.h"
 #include "Input/Input.h"
 #include "Time/Time.h"
-#include "Renderer/RenderingAPI/RenderingAPI.h"
+#include "Renderer/Renderer.h"
 
 namespace Volund
 {
@@ -47,8 +47,6 @@ namespace Volund
 				L->OnUpdate(TS);
 			}
 
-			this->_Context->Flush();
-
 			this->_Window->PollEvents();
 		}
 	}
@@ -64,13 +62,11 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
-		RenderingAPI::LoadJSONSettings();
-
 		this->_EventDispatcher.reset(new EventDispatcher(this));
 		
-		this->_Window.reset(new Window(this->_EventDispatcher));
-
-		this->_Context.reset(Context::Create(this->_Window));
+		this->_Window.reset(new Window(this->_EventDispatcher));		
+		
+		Renderer::Init(this->_Window);
 	}
 
 	Application::~Application()

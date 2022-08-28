@@ -4,11 +4,13 @@
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
+#include <glad/include/glad/glad.h>
+
 namespace Volund
 {
 	uint32_t VertexAttribute::GetDataType() const
 	{
-		return (this->BitMask & (int)this->_Type);
+		return this->FloatID * (((int)this->_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + this->IntID * ((int)this->_Type & VOLUND_ATTRIBUTE_INT);
 	}
 
 	uint32_t VertexAttribute::GetByteSize() const
@@ -18,7 +20,7 @@ namespace Volund
 
 	uint32_t VertexAttribute::GetElementCount() const
 	{
-		return ((~this->BitMask) & (int)this->_Type) >> this->ByteSizeOffset;
+		return ((int)this->_Type >> 2);
 	}
 
 	std::string VertexAttribute::GetName() const
@@ -32,8 +34,8 @@ namespace Volund
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			this->ByteSizeOffset = 3;
-			this->BitMask = 0b1110000000111;		
+			this->FloatID = GL_FLOAT;
+			this->IntID = GL_INT;
 		}
 		break;
 		default:

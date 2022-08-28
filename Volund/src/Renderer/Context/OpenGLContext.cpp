@@ -2,6 +2,8 @@
 #include "Context.h"
 #include "OpenGLContext.h"
 
+#include <glad/include/glad/glad.h>
+
 namespace Volund
 {
 	void APIENTRY ErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity,

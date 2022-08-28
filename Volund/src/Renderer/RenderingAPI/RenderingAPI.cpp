@@ -1,6 +1,8 @@
 #include "PCH/PCH.h"
 #include "RenderingAPI.h"
 
+#include "OpenGLRenderingAPI.h"
+
 namespace Volund
 {
 	RenderingAPI::API RenderingAPI::_SelectedAPI = API::NONE;
@@ -11,24 +13,43 @@ namespace Volund
 		{VOLUND_GRAPHICSAPI_OPENGL, API::OPENGL}
 	};
 
-	void RenderingAPI::LoadJSONSettings()
-	{
-		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
-
-		std::string API = ConfigFile["Renderer"]["GraphicsAPI"];
-
-		if (_APINames.contains(API))
-		{
-			_SelectedAPI = _APINames[API];
-		}
-		else
-		{
-			VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", API.c_str());
-		}
-	}
-
 	RenderingAPI::API RenderingAPI::GetAPI()
 	{
 		return _SelectedAPI;
+	}
+
+	RenderingAPI* RenderingAPI::Create()
+	{
+		if (RenderingAPI::GetAPI() == API::NONE)
+		{
+			JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
+
+			std::string API = ConfigFile["Renderer"]["API"];
+
+			if (_APINames.contains(API))
+			{
+				_SelectedAPI = _APINames[API];
+			}
+			else
+			{
+				VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", API.c_str());
+			}
+
+		}
+
+		switch (RenderingAPI::GetAPI())
+		{
+		case RenderingAPI::API::OPENGL:
+		{
+			return new OpenGLRenderingAPI();
+		}
+		break;
+		default:
+		{
+			VOLUND_ERROR("Creating a Contex without a specified GraphicsAPI!");
+			return nullptr;
+		}
+		break;
+		}
 	}
 }
