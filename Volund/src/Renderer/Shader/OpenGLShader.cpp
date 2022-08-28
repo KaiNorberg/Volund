@@ -12,7 +12,7 @@ namespace Volund
 			VOLUND_INFO("Shader (%s) already initialized.", FilePath.c_str());
 			return;
 		}
-		VOLUND_INFO("Loading shader (%s)...", FilePath.c_str());
+		VOLUND_INFO("Loading Shader (%s)...", FilePath.c_str());
 
 		Source Source = this->ParseShader(FilePath);
 

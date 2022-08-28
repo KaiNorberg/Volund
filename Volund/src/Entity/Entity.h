@@ -1,7 +1,6 @@
 #pragma once
 
-#include "Component/SimpleComponent.h"
-#include "Component/NativeComponents/NativeComponents.h"
+#include "Component/Components.h"
 
 namespace Volund
 {
@@ -11,34 +10,27 @@ namespace Volund
 	{
 	public:
 	
-		Scene* GetParent();
-
 		std::string GetName();
 
-		bool Error();
+		Scene* GetParent();
 
-		SimpleComponent* AddComponent(JSON ComponentJSON);
-
-		bool RemoveComponent(std::string const& Type);
-
-		SimpleComponent* GetComponent(std::string const& Type);
-
-		bool HasComponent(std::string const& Type) const;
+		template<typename T, class... ARGS>
+		T* AddComponent(ARGS&&... Args);
 
 		template<typename T>
-		bool RemoveComponent();
+		bool RemoveComponent(uint32_t Index = 0);
 
 		template<typename T>
-		T* GetComponent();
+		T* GetComponent(uint32_t Index = 0);
 
 		template<typename T>
-		bool HasComponent() const;
+		bool HasComponent(uint32_t Index = 0) const;
 
 		void OnUpdate(TimeStep TS);
 
 		Entity() = default;
 
-		Entity(Scene* Parent, JSON EntityJSON);
+		Entity(Scene* Parent, std::string const& Name = "");
 
 		~Entity();
 
@@ -48,47 +40,59 @@ namespace Volund
 
 		std::string _Name;
 
-		bool _ErrorOccured = false;
+		std::unordered_map<uint64_t, std::vector<Component*>> _Components;
+	};	
 
-		std::unordered_map<uint64_t, SimpleComponent*> _Components;
-
-		static std::unordered_map<std::string, uint64_t> _ComponentTypeIDs;
-	};			
-	
-	template<typename T>
-	bool Entity::RemoveComponent()
+	template<typename T, class... ARGS>
+	T* Entity::AddComponent(ARGS&&... Args)
 	{
+		uint64_t Hash = typeid(T).hash_code();
+
 		if (!this->HasComponent<T>())
+		{
+			this->_Components[Hash] = std::vector<Component*>();
+		}
+
+		T* NewComponent = new T(Args...);
+		this->_Components[Hash].push_back(NewComponent);
+
+		return NewComponent;
+	}
+
+	template<typename T>
+	bool Entity::RemoveComponent(uint32_t Index)
+	{
+		if (!this->HasComponent<T>(Index))
 		{
 			VOLUND_WARNING("Cant remove a component from a entity without that component.");
 			return false;
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
-		delete this->_Components[Hash];
-		this->_Components.erase(Hash);
+		delete this->_Components[Hash][Index];
+		this->_Components[Hash].erase(Index);
 
 		return true;
 	}
 
 	template<typename T>
-	T* Entity::GetComponent()
+	T* Entity::GetComponent(uint32_t Index)
 	{
-		if (!this->HasComponent<T>())
+		if (!this->HasComponent<T>(Index))
 		{
 			VOLUND_WARNING("Cant get a component from a entity without that component.");
 			return nullptr;
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
-		return this->_Components[Hash];
+		return this->_Components[Hash][Index];
 	}
 
 	template<typename T>
-	bool Entity::HasComponent() const
+	bool Entity::HasComponent(uint32_t Index) const
 	{
 		uint64_t Hash = typeid(T).hash_code();
-		return this->_Components.find(Hash) != this->_Components.end();
+		return this->_Components.find(Hash) != this->_Components.end() && Index < this->_Components[Hash].size();
 	}
 }
 

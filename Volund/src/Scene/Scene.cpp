@@ -4,19 +4,10 @@
 
 namespace Volund
 {
-	bool Scene::Error()
+	Entity* Scene::CreateEntity(std::string const& Name)
 	{
-		return _ErrorOccured;
-	}
+		Entity* NewEntity = new Entity(this);
 
-	Entity* Scene::AddEntity(JSON EntityJSON)
-	{
-		Entity* NewEntity = new Entity(this, EntityJSON);
-
-		if (NewEntity->Error())
-		{
-			return nullptr;
-		}
 		if (this->HasEntity(NewEntity->GetName()))
 		{
 			VOLUND_WARNING("Duplicate entity detected");
@@ -70,32 +61,19 @@ namespace Volund
 		return false;
 	}
 
-	void Scene::OnUpdate(TimeStep TS)
+	void Scene::Update(TimeStep TS)
 	{
-		for (auto const& EntityPointer : this->_Entities)
+		for (auto const& Entity : this->_Entities)
 		{
-			EntityPointer->OnUpdate(TS);
-		}
-	}
-
-	Scene::Scene(std::filesystem::path FilePath)
-	{
-		this->_Name = FilePath.filename().string();
-
-		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
-		JSON EntitiesJSON = JSON::Load(FilePath.string() + "\\" + ConfigFile["Scene"]["EntitiesJSON"].GetAs<std::string>());
-
-		for (int i = 0; i < EntitiesJSON.Size(); i++)
-		{
-			this->AddEntity(EntitiesJSON[i]);
+			Entity->OnUpdate(TS);
 		}
 	}
 
 	Scene::~Scene()
 	{
-		for (auto const& EntityPointer : this->_Entities)
+		for (auto const& Entity : this->_Entities)
 		{
-			delete EntityPointer;
+			delete Entity;
 		}
 	}
 }

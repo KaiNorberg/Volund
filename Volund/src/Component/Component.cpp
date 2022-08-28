@@ -1,6 +1,6 @@
 #include "PCH/PCH.h"
 
-#include "SimpleComponent.h"
+#include "Component.h"
 
 namespace Volund
 {

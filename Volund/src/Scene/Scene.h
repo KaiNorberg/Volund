@@ -8,9 +8,7 @@ namespace Volund
 	{
 	public:
 
-		 bool Error();
-
-		 Entity* AddEntity(JSON EntityJSON);
+		 Entity* CreateEntity(std::string const& Name);
 
 		 bool RemoveEntity(std::string const& Name);
 
@@ -18,19 +16,15 @@ namespace Volund
 
 		 bool HasEntity(std::string const& Name) const;
 
-		 void OnUpdate(TimeStep TS);
+		 virtual void OnUpdate(TimeStep TS) = 0;
+
+		 void Update(TimeStep TS);
 
 		 Scene() = default;
-
-		 Scene(std::filesystem::path FilePath);
 
 		 ~Scene();
 
 	private:
-
-		std::string _Name;
-
-		bool _ErrorOccured = false;
 	
 		std::vector<Entity*> _Entities;
 	};

@@ -1,16 +1,14 @@
 #pragma once
 
-#include "Component/NativeComponent.h"
+#include "Component/Component.h"
 
 #include "Math/Math.h"
-
-#define VOLUND_COMPONENT_TRANSFORM "Transform"
 
 namespace Volund
 {
 	class Entity;
 
-	class Transform : public NativeComponent
+	class Transform : public Component
 	{
 	public:
 
@@ -61,11 +59,7 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		const std::string Type() override;
-
-		Transform() = default;
-
-		Transform(Entity* Parent, JSON ComponentJSON);
+		Transform(Entity* Parent, Vec3 const& Position, Vec3 const& Scale);
 
 	private:
 

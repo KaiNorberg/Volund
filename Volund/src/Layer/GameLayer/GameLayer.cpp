@@ -4,19 +4,8 @@
 
 namespace Volund
 {
-	void GameLayer::LoadScene(std::string const& FilePath)
-	{
-		VOLUND_INFO("Loading Scene (%s)...", FilePath.c_str());
-
-		this->_LoadedScene.reset(new Scene((std::filesystem::path)FilePath));
-	}
-
 	void GameLayer::OnAttach()
 	{
-		JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
-
-		this->LoadScene(ConfigFile["Engine"]["MainScene"].GetAs<std::string>());
-
 		float Vertices[] =
 		{
 			-0.5f, -0.5, 0.0,    1.0, 0.0, 0.0, 1.0,

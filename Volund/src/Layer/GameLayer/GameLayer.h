@@ -12,7 +12,8 @@ namespace Volund
 	{
 	public:
 
-		void LoadScene(std::string const& FilePath);
+		template<typename T>
+		void LoadScene();
 
 		void OnAttach() override;
 
@@ -26,5 +27,13 @@ namespace Volund
 		Ref<Shader> _TestShader;
 		Ref<Scene> _LoadedScene;
 	};
+
+	template<typename T>
+	inline void GameLayer::LoadScene()
+	{
+		VOLUND_INFO("Loading Scene ...");
+
+		this->_LoadedScene.reset(new T());
+	}
 }
 

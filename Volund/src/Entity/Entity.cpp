@@ -4,112 +4,40 @@
 
 namespace Volund
 {
-	std::unordered_map<std::string, uint64_t> Entity::_ComponentTypeIDs =
+	std::string Entity::GetName()
 	{
-		{VOLUND_COMPONENT_TRANSFORM, typeid(Transform).hash_code()}
-	};
+		return this->_Name;
+	}
 
 	Scene* Entity::GetParent()
 	{
 		return this->_Parent;
 	}
 
-	std::string Entity::GetName()
-	{
-		return this->_Name;
-	}
-
-	bool Entity::Error()
-	{
-		return _ErrorOccured;
-	}
-
-	SimpleComponent* Entity::AddComponent(JSON ComponentJSON)
-	{
-		if (!ComponentJSON.Contains("Type"))
-		{
-			VOLUND_WARNING("Component without specified type found");
-			return nullptr;
-		}
-		std::string Type = ComponentJSON["Type"];
-		if (this->HasComponent(Type))
-		{
-			VOLUND_WARNING("Cant give an entity a component that it already has.");
-			return nullptr;
-		}
-	
-		if (Type == VOLUND_COMPONENT_TRANSFORM)
-		{
-			this->_Components[_ComponentTypeIDs[Type]] = new Transform(this, ComponentJSON);
-		}
-		else
-		{
-			return nullptr;
-		}
-
-		return this->_Components[_ComponentTypeIDs[Type]];
-	}
-
-	bool Entity::RemoveComponent(std::string const& Type)
-	{
-		if (!HasComponent(Type))
-		{
-			VOLUND_WARNING("Cant remove a component from a object without that component.");
-			return false;
-		}
-
-		delete this->_Components[_ComponentTypeIDs[Type]];
-		this->_Components.erase(_ComponentTypeIDs[Type]);
-
-		return true;
-	}
-
-	SimpleComponent* Entity::GetComponent(std::string const& Type)
-	{
-		if (!HasComponent(Type))
-		{
-			VOLUND_WARNING("Cant get a component from a object without that component.");
-			return nullptr;
-		}
-
-		return this->_Components[_ComponentTypeIDs[Type]];
-	}
-
-	bool Entity::HasComponent(std::string const& Type) const
-	{
-		return this->_Components.find(_ComponentTypeIDs[Type]) != this->_Components.end();
-	}
-
 	void Entity::OnUpdate(TimeStep TS)
 	{
-		for (auto const& [TypeID, Component] : this->_Components)
+		for (auto const& [TypeID, ComponentVector] : this->_Components)
 		{
-			Component->OnUpdate(TS);
-		}
-	}
-
-	Entity::Entity(Scene* Parent, JSON EntityJSON)
-	{
-		this->_Parent = Parent;
-
-		if (EntityJSON.Contains("Type"))
-		{
-			this->_Name = EntityJSON["Type"].GetAs<std::string>();
-		}
-		if (EntityJSON.Contains("Components"))
-		{
-			for (int i = 0; i < EntityJSON["Components"].Size(); i++)
+			for (auto const& Component : ComponentVector)
 			{
-				this->AddComponent(EntityJSON["Components"][i]);
+				Component->OnUpdate(TS);
 			}
 		}
 	}
 
+	Entity::Entity(Scene* Parent, std::string const& Name)
+	{
+		this->_Parent = Parent;
+	}
+
 	Entity::~Entity()
 	{
-		for (auto const& [TypeID, Component] : this->_Components)
+		for (auto const& [TypeID, ComponentVector] : this->_Components)
 		{
-			delete Component;
+			for (auto const& Component : ComponentVector)
+			{
+				delete Component;
+			}
 		}
 	}
 }

@@ -2,9 +2,21 @@
 
 #include "Editor.h"
 
+class TestScene : public Volund::Scene
+{
+public:
+
+	void OnUpdate(Volund::TimeStep TS) override
+	{
+
+	}
+};
+
 Editor::Editor()
 {
-	this->AttachLayer(new Volund::GameLayer());
+	Volund::GameLayer* NewLayer = new Volund::GameLayer();
+	this->AttachLayer(NewLayer);
+	NewLayer->LoadScene<TestScene>();
 }
 
 

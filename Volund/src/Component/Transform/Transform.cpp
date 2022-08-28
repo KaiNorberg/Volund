@@ -41,29 +41,11 @@ namespace Volund
 		this->_Up = this->Quaternion * Math::Up;
 	}
 
-	const std::string Transform::Type()
-	{
-		return VOLUND_COMPONENT_TRANSFORM;
-	}
-
-	Transform::Transform(Entity* Parent, JSON ComponentJSON)
+	Transform::Transform(Entity* Parent, Vec3 const& Position, Vec3 const& Scale)
 	{
 		this->_Parent = Parent;
-
-		if (ComponentJSON.Contains("Position"))
-		{
-			JSON JSONPosition = ComponentJSON["Position"];
-			this->Position.x = JSONPosition[0];
-			this->Position.y = JSONPosition[1];
-			this->Position.z = JSONPosition[2];
-		}
-		if (ComponentJSON.Contains("Scale"))
-		{
-			JSON JSONScale = ComponentJSON["Scale"];
-			this->Scale.x = JSONScale[0];
-			this->Scale.y = JSONScale[1];
-			this->Scale.z = JSONScale[2];
-		}
+		this->Position = Position;
+		this->Scale = Scale;
 	}
 }
 

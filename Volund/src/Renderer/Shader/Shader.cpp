@@ -33,7 +33,7 @@ namespace Volund
 
 		if (stream.fail())
 		{
-			VOLUND_INFO("Cant find shader: (%s).", FilePath.c_str());
+			VOLUND_INFO("Cant find Shader: (%s).", FilePath.c_str());
 			return Source{};
 		}
 
