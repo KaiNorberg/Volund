@@ -15,6 +15,7 @@ public:
 	{
 		Volund::Entity* Entity1 = this->CreateEntity("Entity1");
 
+		Entity1->CreateComponent<Volund::Transform>();
 		Entity1->CreateComponent<Volund::Camera>();
 	}
 };
