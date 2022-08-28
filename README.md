@@ -21,8 +21,6 @@ After that, you can simply compile the generated project with your chosen tool s
 
 ## Goals:
 
-The main goal for Volund is to create a versatile application capable of being used for anything from making games to a 3D physics simulation. The hope is to achieve this versatility while maintaining ease of use and performance.
-
 - PBR 3D rendering
 - 3rd party 3D physics engine
 - Audio 
