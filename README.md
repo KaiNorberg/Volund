@@ -11,7 +11,7 @@ Visual Studio 2019/2022 is recommended since any other tool sets are not officia
 
 <ins>**1. Cloning (downloading) this repository**</ins>
 
-Cloning this repository can either be done via the green code button at the top of the screen or if you have git installed the following command ```git clone --recursive https://github.com/Kaj9296/Volund```.
+Cloning this repository can either be done via the green ```Code``` button at the top of the screen or if you have git installed the following command ```git clone --recursive https://github.com/Kaj9296/Volund```.
 
 <ins>**2. Building Volund**</ins>
 
