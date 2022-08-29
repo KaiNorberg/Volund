@@ -15,19 +15,19 @@ public:
 
 			EntityTransform->Position += EntityTransform->GetFront() * float(TS);
 		}
-		else if (Input::IsHeld('S'))
+		if (Input::IsHeld('S'))
 		{
 			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
 			EntityTransform->Position -= EntityTransform->GetFront() * float(TS);
 		}
-		else if (Input::IsHeld('A'))
+		if (Input::IsHeld('A'))
 		{
 			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
 			EntityTransform->Position -= EntityTransform->GetRight() * float(TS);
 		}
-		else if (Input::IsHeld('D'))
+		if (Input::IsHeld('D'))
 		{
 			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
