@@ -23,7 +23,7 @@ namespace Volund
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->Dispatch(new WindowCloseEvent());
+		Data->Dispatcher->Dispatch(WindowCloseEvent());
 	}
 
 	void WindowSizeCallback(GLFWwindow* WindowHandle, int32_t Width, int32_t Height)
@@ -35,7 +35,7 @@ namespace Volund
 			Data->Width = Width;
 			Data->Height = Height;
 
-			Data->Dispatcher->Dispatch(new WindowSizeEvent(Width, Height));
+			Data->Dispatcher->Dispatch(WindowSizeEvent(Width, Height));
 		}
 	}
 
@@ -43,28 +43,28 @@ namespace Volund
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->Dispatch(new KeyEvent(Key, (bool)Action));
+		Data->Dispatcher->Dispatch(KeyEvent(Key, (bool)Action));
 	}
 
 	void MouseButtonCallback(GLFWwindow* WindowHandle, int32_t Button, int32_t Action, int32_t Mods)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->Dispatch(new MouseButtonEvent(Button, (bool)Action));
+		Data->Dispatcher->Dispatch(MouseButtonEvent(Button, (bool)Action));
 	}
 
 	void ScrollCallback(GLFWwindow* WindowHandle, double xOffset, double yOffset)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->Dispatch(new ScrollEvent(xOffset, yOffset));
+		Data->Dispatcher->Dispatch(ScrollEvent(xOffset, yOffset));
 	}
 
 	void CursorPosCallback(GLFWwindow* WindowHandle, double xPos, double yPos)
 	{
 		WindowData* Data = (WindowData*)glfwGetWindowUserPointer(WindowHandle);
 
-		Data->Dispatcher->Dispatch(new CursorPosEvent(xPos, yPos));
+		Data->Dispatcher->Dispatch(CursorPosEvent(xPos, yPos));
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////

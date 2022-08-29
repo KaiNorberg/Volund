@@ -51,6 +51,11 @@ namespace Volund
 		}
 	}
 
+	void CallBack(Event* E)
+	{
+
+	}
+
 	Application::Application()
 	{
 #ifdef VOLUND_DEBUG
@@ -62,7 +67,7 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
-		this->_EventDispatcher.reset(new EventDispatcher(this));
+		this->_EventDispatcher.reset(new EventDispatcher(CallBack));
 		
 		this->_Window.reset(new Window(this->_EventDispatcher));		
 		
