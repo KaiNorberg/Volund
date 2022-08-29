@@ -51,9 +51,16 @@ namespace Volund
 		}
 	}
 
-	void CallBack(Event* E)
+	void Application::OnEvent(Event* E)
 	{
-
+		switch (E->GetType())
+		{
+		case EventType::WINDOW_CLOSE:
+		{
+			this->Terminate();
+		}
+		break;
+		}
 	}
 
 	Application::Application()
@@ -67,7 +74,7 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
-		this->_EventDispatcher.reset(new EventDispatcher(CallBack));
+		this->_EventDispatcher.reset(new EventDispatcher(this));
 		
 		this->_Window.reset(new Window(this->_EventDispatcher));		
 		

@@ -49,27 +49,27 @@ namespace Volund
 		return MousePosition;
 	}
 
-	void Input::SendKeyEvent(KeyEvent* KE)
+	void Input::SendEvent(KeyEvent E)
 	{		
-		Keys[KE->GetKey()] += KE->GetIsDown();
-		Keys[KE->GetKey()] *= KE->GetIsDown();
-		Keys[KE->GetKey()] = Math::Min(Keys[KE->GetKey()], (int8_t)100);
+		Keys[E.GetKey()] += E.GetIsDown();
+		Keys[E.GetKey()] *= E.GetIsDown();
+		Keys[E.GetKey()] = Math::Min(Keys[E.GetKey()], (int8_t)100);
 	}
 
-	void Input::SendMouseButtonEvent(MouseButtonEvent* MBE)
+	void Input::SendEvent(MouseButtonEvent E)
 	{
-		MouseButtons[MBE->GetButton()] += MBE->GetIsDown();
-		MouseButtons[MBE->GetButton()] *= MBE->GetIsDown();
-		MouseButtons[MBE->GetButton()] = Math::Min(MouseButtons[MBE->GetButton()], (int8_t)100);
+		MouseButtons[E.GetButton()] += E.GetIsDown();
+		MouseButtons[E.GetButton()] *= E.GetIsDown();
+		MouseButtons[E.GetButton()] = Math::Min(MouseButtons[E.GetButton()], (int8_t)100);
 	}
 
-	void Input::SendScrollEvent(ScrollEvent* SE)
+	void Input::SendEvent(ScrollEvent E)
 	{
-		ScrollOffset += SE->GetYOffset();
+		ScrollOffset += E.GetYOffset();
 	}
 
-	void Input::SendCursorPosEvent(CursorPosEvent* CPE)
+	void Input::SendEvent(CursorPosEvent E)
 	{
-		MousePosition = Vec2(CPE->GetXPos(), CPE->GetYPos());
+		MousePosition = Vec2(E.GetXPos(), E.GetYPos());
 	}
 }
