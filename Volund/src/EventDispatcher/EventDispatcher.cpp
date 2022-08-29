@@ -17,52 +17,44 @@ namespace Volund
 
 	}
 
-	void EventDispatcher::OnEvent(Event* E)
+	void EventDispatcher::SendEventToApp(Event* E)
 	{
 		this->_Application->OnEvent(E);
 	}
 
 	template<>
-	void EventDispatcher::Handler(WindowCloseEvent E)
+	void EventDispatcher::EventHandler(WindowCloseEvent E)
 	{
 
 	}
 
 	template<>
-	void EventDispatcher::Handler(WindowSizeEvent E)
+	void EventDispatcher::EventHandler(WindowSizeEvent E)
 	{
-		//TODO
+
 	}
 
 	template<>
-	void EventDispatcher::Handler(KeyEvent E)
+	void EventDispatcher::EventHandler(KeyEvent E)
 	{
 		Input::SendEvent(E);
-
-		//TODO
 	}
 
 	template<>
-	void EventDispatcher::Handler(MouseButtonEvent E)
+	void EventDispatcher::EventHandler(MouseButtonEvent E)
 	{
 		Input::SendEvent(E);
-
-		//TODO
 	}
 
 	template<>
-	void EventDispatcher::Handler(ScrollEvent E)
+	void EventDispatcher::EventHandler(ScrollEvent E)
 	{
 		Input::SendEvent(E);
-
-		//TODO
 	}
 
 	template<>
-	void EventDispatcher::Handler(CursorPosEvent E)
+	void EventDispatcher::EventHandler(CursorPosEvent E)
 	{
 		Input::SendEvent(E);
-
-		//TODO
 	}
 }
