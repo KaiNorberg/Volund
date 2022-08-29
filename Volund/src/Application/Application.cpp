@@ -51,7 +51,7 @@ namespace Volund
 		}
 	}
 
-	void Application::OnEvent(Event* E)
+	void Application::EventCallback(Event* E)
 	{
 		switch (E->GetType())
 		{
@@ -60,6 +60,11 @@ namespace Volund
 			this->Terminate();
 		}
 		break;
+		}
+
+		for (Layer* L : _LayerStack)
+		{
+			L->OnEvent(E);
 		}
 	}
 

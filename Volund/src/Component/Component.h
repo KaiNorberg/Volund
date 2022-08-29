@@ -2,6 +2,8 @@
 
 #include "Time/Time.h"
 
+#include "EventDispatcher/Event.h"
+
 namespace Volund
 {
 	class Entity;
@@ -10,13 +12,15 @@ namespace Volund
 	{
 	public:
 
-		Entity* GetParent();
+		Entity* GetEntity();
 
 		virtual void OnCreate() {};
 
 		virtual void OnUpdate(TimeStep TS) {};
 
 		virtual void OnDelete() {};
+
+		virtual	void OnEvent(Event* E) {};
 
 		Component() = default;
 
@@ -25,7 +29,7 @@ namespace Volund
 
 		void SetParent(Entity* Parent);
 
-		Entity* _Parent;
+		Entity* _Parent = nullptr;
 	};
 }
 

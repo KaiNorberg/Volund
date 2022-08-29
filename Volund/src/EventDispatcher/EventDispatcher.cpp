@@ -19,7 +19,7 @@ namespace Volund
 
 	void EventDispatcher::SendEventToApp(Event* E)
 	{
-		this->_Application->OnEvent(E);
+		this->_Application->EventCallback(E);
 	}
 
 	template<>

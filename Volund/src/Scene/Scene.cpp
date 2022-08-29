@@ -2,11 +2,13 @@
 
 #include "Scene.h"
 
+#include "EventDispatcher/Event.h"
+
 namespace Volund
 {
 	Entity* Scene::CreateEntity(std::string const& Name)
 	{
-		Entity* NewEntity = new Entity(this);
+		Entity* NewEntity = new Entity(this, Name);
 
 		if (this->HasEntity(NewEntity->GetName()))
 		{
@@ -30,7 +32,7 @@ namespace Volund
 			}
 		}
 
-		VOLUND_WARNING("Entity not found (%s)", Name);
+		VOLUND_ERROR("Entity not found (%s)", Name.c_str());
 		return false;
 	}
 
@@ -44,7 +46,7 @@ namespace Volund
 			}
 		}
 
-		VOLUND_WARNING("Entity not found (%s)", Name);
+		VOLUND_ERROR("Entity not found (%s)", Name.c_str());
 		return nullptr;
 	}
 
@@ -63,9 +65,21 @@ namespace Volund
 
 	void Scene::Update(TimeStep TS)
 	{
+		this->OnUpdate(TS);
 		for (auto const& Entity : this->_Entities)
 		{
 			Entity->OnUpdate(TS);
+		}
+	}
+
+	void Scene::EventCallback(Event* E)
+	{
+		VOLUND_INFO("Test");
+
+		this->OnEvent(E);
+		for (auto const& Entity : this->_Entities)
+		{
+			Entity->OnEvent(E);
 		}
 	}
 

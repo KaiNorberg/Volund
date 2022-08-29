@@ -120,6 +120,34 @@ namespace Volund
 		glfwSwapInterval(Enabled);
 	}
 
+	void Window::SetCursorMode(CursorMode NewMode)
+	{
+		switch (NewMode)
+		{
+		case CursorMode::NORMAL:
+		{
+			glfwSetInputMode(this->_WindowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+		break;
+		case CursorMode::HIDDEN:
+		{
+			glfwSetInputMode(this->_WindowHandle, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+		}
+		break;
+		case CursorMode::DISABLED:
+		{
+			glfwSetInputMode(this->_WindowHandle, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
+		break;
+		case CursorMode::CAPTURED:
+		{
+			glfwSetInputMode(this->_WindowHandle, GLFW_CURSOR, GLFW_CURSOR_CAPTURED);
+		}
+		break;
+		}
+
+	}
+
 	Vec2 Window::GetSize()
 	{
 		return Vec2(this->_Data.Width, this->_Data.Height);
@@ -164,6 +192,29 @@ namespace Volund
 		{
 			this->MakeFullscreen();
 		}
+
+		std::string CursorModeString = ConfigFile["Window"]["CursorMode"];
+		if (CursorModeString == "Normal")
+		{
+			this->SetCursorMode(CursorMode::NORMAL);
+		}
+		else if (CursorModeString == "Hidden")
+		{
+			this->SetCursorMode(CursorMode::HIDDEN);
+		}
+		else if (CursorModeString == "Disabled")
+		{
+			this->SetCursorMode(CursorMode::DISABLED);
+		}
+		else if (CursorModeString == "Captured")
+		{
+			this->SetCursorMode(CursorMode::CAPTURED);
+		}
+		else
+		{
+			VOLUND_ERROR("Unknown CursorMode (%s)", CursorModeString.c_str());
+		}
+
 		this->SetVSync(ConfigFile["Window"]["VSync"]);
 
 		//Set callbacks

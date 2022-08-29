@@ -21,12 +21,10 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
+		void OnEvent(Event* E) override;
+
 	private:
 
-		Ref<VertexArray> _TriangleVertexArray;		
-		Ref<VertexArray> _SquareVertexArray;
-
-		Ref<Shader> _TestShader;
 		Ref<Scene> _LoadedScene;
 	};
 

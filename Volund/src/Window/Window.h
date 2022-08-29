@@ -14,6 +14,14 @@ namespace Volund
         Ref<EventDispatcher> Dispatcher;
     };
 
+    enum class CursorMode
+    {
+        NORMAL,
+        HIDDEN,
+        DISABLED,
+        CAPTURED
+    };
+
     class Window
     {
     public:
@@ -29,6 +37,8 @@ namespace Volund
         void MakeFullscreen();
 
         void SetVSync(bool Enabled);
+
+        void SetCursorMode(CursorMode NewMode);
 
         Vec2 GetSize();
 

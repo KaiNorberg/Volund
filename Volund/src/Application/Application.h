@@ -21,7 +21,7 @@ namespace Volund
 
 		 bool ShouldRun();
 
-		 void OnEvent(Event* E);
+		 void EventCallback(Event* E);
 
 		 Application();
 			

@@ -6,7 +6,8 @@
     "Title": "Test Title",
     "FullScreen": false,
     "Monitor": 0,
-    "VSync": true
+    "VSync": true,
+    "CursorMode": "Disabled"
   },
   "Renderer": 
   {

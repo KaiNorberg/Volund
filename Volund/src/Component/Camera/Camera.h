@@ -30,6 +30,8 @@ namespace Volund
 
 		void OnCreate() override;
 
+		void OnEvent(Event* E) override;
+
 		void OnUpdate(TimeStep TS) override;
 		
 		void OnDelete() override;

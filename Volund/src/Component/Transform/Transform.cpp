@@ -43,10 +43,11 @@ namespace Volund
 		this->_Up = this->Quaternion * Math::Up;
 	}
 
-	Transform::Transform(Vec3 const& Position, Vec3 const& Scale)
+	Transform::Transform(Vec3 const& Position, Vec3 const& Rotation, Vec3 const& Scale)
 	{
 		this->Position = Position;
 		this->Scale = Scale;
+		this->SetRotation(Rotation);
 	}
 }
 

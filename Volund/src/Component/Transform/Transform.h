@@ -55,7 +55,7 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		Transform(Vec3 const& Position = Vec3(0.0f), Vec3 const& Scale = Vec3(0.0f));
+		Transform(Vec3 const& Position = Vec3(0.0f), Vec3 const& Rotation = Vec3(0.0f), Vec3 const& Scale = Vec3(0.0f));
 
 	private:
 

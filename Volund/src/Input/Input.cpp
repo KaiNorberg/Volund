@@ -70,6 +70,8 @@ namespace Volund
 
 	void Input::SendEvent(CursorPosEvent E)
 	{
+		//VOLUND_INFO("%d", E.GetXPos());
+
 		MousePosition = Vec2(E.GetXPos(), E.GetYPos());
 	}
 }

@@ -26,6 +26,8 @@ namespace Volund
 		template<typename T>
 		bool HasComponent(uint32_t Index = 0);
 
+		void OnEvent(Event* E);
+
 		void OnUpdate(TimeStep TS);
 
 		Entity() = default;

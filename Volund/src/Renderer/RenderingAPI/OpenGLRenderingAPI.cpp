@@ -18,7 +18,6 @@ namespace Volund
 
 	void OpenGLRenderingAPI::DrawIndexed(Ref<VertexArray> const& VArray)
 	{
-		VArray->Bind();
 		glDrawElements(GL_TRIANGLES, VArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 }

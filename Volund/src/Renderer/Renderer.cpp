@@ -3,26 +3,28 @@
 
 namespace Volund
 {
+	Renderer::SceneData Renderer::_SceneData;
+
 	Ref<Context> Renderer::_Context;
 	Ref<RenderingAPI> Renderer::_RenderingAPI;
 
-	void Renderer::SubmitScene(Ref<Scene> const& scene)
+	void Renderer::BeginScene(Camera* Cam)
 	{
-		//TODO
-	}
-
-	void Renderer::BeginScene()
-	{
+		_SceneData.ViewProjMatrix = Cam->GetProjectionMatrix() * Cam->GetViewMatrix();
 		_RenderingAPI->Clear();
 	}
 
 	void Renderer::EndScene()
 	{
+		_SceneData = SceneData();
 		_Context->Flush();
 	}
 
-	void Renderer::Submit(Ref<VertexArray> const& VArray)
+	void Renderer::Submit(Ref<VertexArray> const& VArray, Ref<Shader> const& shader)
 	{
+		shader->Bind();
+		shader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
+		VArray->Bind();
 		_RenderingAPI->DrawIndexed(VArray);
 	}
 	

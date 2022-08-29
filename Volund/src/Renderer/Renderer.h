@@ -9,24 +9,31 @@
 #include "Context/Context.h"
 #include "Application/Application.h"
 
+#include "Component/Camera/Camera.h"
+
+#include "Renderer/Shader/Shader.h"
+
 namespace Volund
 {
 	class Renderer
 	{
 	public:
 
-		static void SubmitScene(Ref<Scene> const& scene);
-
-		static void BeginScene();
+		static void BeginScene(Camera* Cam);
 		static void EndScene();
 
-		static void Submit(Ref<VertexArray> const& VArray);
+		static void Submit(Ref<VertexArray> const& VArray, Ref<Shader> const& shader);
 
 	private:		
 		
 		friend Application::Application();
 
 		static void Init(Ref<Window>& window);
+
+		static struct SceneData
+		{
+			Mat4x4 ViewProjMatrix;
+		} _SceneData;
 
 		static Ref<RenderingAPI> _RenderingAPI;
 		static Ref<Context> _Context;

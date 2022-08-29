@@ -4,6 +4,8 @@
 
 namespace Volund
 {
+	class Event;
+
 	class Scene
 	{
 	public:
@@ -16,9 +18,13 @@ namespace Volund
 
 		 bool HasEntity(std::string const& Name) const;
 
-		 virtual void OnUpdate(TimeStep TS) = 0;
-
 		 void Update(TimeStep TS);
+
+		 void EventCallback(Event* E);
+
+		 virtual void OnEvent(Event* E) {};
+
+		 virtual void OnUpdate(TimeStep TS) {};
 
 		 Scene() = default;
 

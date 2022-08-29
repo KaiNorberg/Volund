@@ -62,56 +62,56 @@ namespace Volund
 		this->ID = program;
 	}
 
-	void OpenGLShader::Use()
+	void OpenGLShader::Bind()
 	{
 		glUseProgram(this->ID);
 	}
 
 	void OpenGLShader::SetInt(int32_t Value, std::string const& Name)
 	{
-		this->Use();
+		this->Bind();
 		glUniform1i(this->GetUniformLocation(Name), Value);
 	}
 
 	void OpenGLShader::SetFloat(float Value, std::string const& Name)
 	{
-		this->Use();
+		this->Bind();
 		glUniform1f(this->GetUniformLocation(Name), Value);
 	}
 
 	void OpenGLShader::SetDouble(float Value, std::string const& Name)
 	{
-		this->Use();
+		this->Bind();
 		glUniform1d(this->GetUniformLocation(Name), Value);
 	}
 
 	void OpenGLShader::SetVec2(Vec2 const& Value, std::string const& Name)
 	{
-		this->Use();
+		this->Bind();
 		glUniform2fv(this->GetUniformLocation(Name), 1, glm::value_ptr(Value));
 	}
 
 	void OpenGLShader::SetVec3(Vec3 const& Value, std::string const& Name)
 	{
-		this->Use();
+		this->Bind();
 		glUniform3fv(this->GetUniformLocation(Name), 1, glm::value_ptr(Value));
 	}
 
 	void OpenGLShader::SetVec4(Vec4 const& Value, std::string const& Name)
 	{
-		this->Use();
+		this->Bind();
 		glUniform4fv(this->GetUniformLocation(Name), 1, glm::value_ptr(Value));
 	}
 
 	void OpenGLShader::SetMat3x3(Mat3x3 const& Value, std::string const& Name, bool Transpose)
 	{
-		this->Use();
+		this->Bind();
 		glUniformMatrix3fv(this->GetUniformLocation(Name), 1, Transpose, glm::value_ptr(Value));
 	}
 
 	void OpenGLShader::SetMat4x4(Mat4x4 const& Value, std::string const& Name, bool Transpose)
 	{
-		this->Use();
+		this->Bind();
 		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, glm::value_ptr(Value));
 	}
 

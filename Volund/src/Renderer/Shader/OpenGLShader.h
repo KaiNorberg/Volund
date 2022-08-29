@@ -8,7 +8,7 @@ namespace Volund
     {
     public:
 
-         void Use();
+         void Bind();
 
         /// <summary>
         /// Compiles and generates the shader, (Dont use if filepath was specified in the constructor).

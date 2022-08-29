@@ -46,6 +46,21 @@ namespace Volund
         this->UpdateMatrices();
     }
 
+    void Camera::OnEvent(Event* E)
+    {
+        switch (E->GetType())
+        {
+        case EventType::WINDOW_SIZE:
+        {
+            if (this->IsActive())
+            {
+                this->AspectRatio = ((float)((WindowSizeEvent*)E)->GetWidth()) / ((float)((WindowSizeEvent*)E)->GetHeight());
+            }
+        }
+        break;
+        }
+    }
+
     void Camera::OnUpdate(TimeStep TS)
     {
         this->UpdateMatrices();
@@ -61,9 +76,9 @@ namespace Volund
 
     void Camera::UpdateMatrices()
     {
-        VOLUND_ASSERT(this->GetParent()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
+        VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
 
-        Transform* EntityTransform = this->GetParent()->GetComponent<Transform>();
+        Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
         this->_ViewMatrix = glm::lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(), EntityTransform->GetUp());
         this->_OriginViewMatrix = glm::lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());

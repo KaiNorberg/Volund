@@ -2,6 +2,8 @@
 
 #include "Time/Time.h"
 
+#include "EventDispatcher/Event.h"
+
 namespace Volund
 {
 	class Layer
@@ -14,6 +16,8 @@ namespace Volund
 
 		virtual void OnUpdate(TimeStep TS) {};
 	
+		virtual void OnEvent(Event* E) {};
+
 		virtual ~Layer() {}
 	};
 }

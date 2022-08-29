@@ -76,6 +76,12 @@ namespace Volund
 		static T Max(T N1, T N2)
 		{
 			return (N1 > N2) ? N1 : N2;
+		}		
+		
+		template <class T>
+		static T Clamp(T N, T Lower, T Upper) 
+		{
+			return Max(Lower, Min(N, Upper));
 		}
 	private:
 	};
