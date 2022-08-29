@@ -2,17 +2,18 @@
 
 #include "Event.h"
 
+#include "Input/Input.h"
+
 namespace Volund
 {
 	class Application;
-
-	using EventHandler = void(*)(Volund::Event*, Volund::Application*);
 
 	class EventDispatcher
 	{
 	public:
 
-		void Dispatch(Event* E);
+		template<typename T>
+		void Dispatch(T E);
 
 		EventDispatcher(Application* App);
 
@@ -20,8 +21,19 @@ namespace Volund
 
 	private:
 
-		Application* _Application;
+		template<typename T>
+		void Handler(T E);
 
-		static std::unordered_map<EventType, EventHandler> _EventHandlers;
+		void OnEvent(Event* E);
+
+		Application* _Application;
 	};
+
+	template<typename T>
+	void EventDispatcher::Dispatch(T E)
+	{
+		Handler(E);
+
+		this->OnEvent(static_cast<Event*>(&E));
+	}
 }

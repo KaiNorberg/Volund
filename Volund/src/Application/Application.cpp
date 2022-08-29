@@ -51,6 +51,18 @@ namespace Volund
 		}
 	}
 
+	void Application::OnEvent(Event* E)
+	{
+		switch (E->GetType())
+		{
+		case EventType::WINDOW_CLOSE:
+		{
+			this->Terminate();
+		}
+		break;
+		}
+	}
+
 	Application::Application()
 	{
 #ifdef VOLUND_DEBUG

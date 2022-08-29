@@ -21,6 +21,8 @@ namespace Volund
 
 		 bool ShouldRun();
 
+		 void OnEvent(Event* E);
+
 		 Application();
 			
 		 virtual ~Application();
@@ -31,12 +33,12 @@ namespace Volund
 
 	private:
 
+		void Loop();
+
 		Ref<EventDispatcher> _EventDispatcher;
 		Ref<Window> _Window;
 
 		std::vector<Layer*> _LayerStack;
-
-		void Loop();
 	};
 }
 

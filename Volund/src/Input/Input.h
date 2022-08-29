@@ -15,11 +15,6 @@ namespace Volund
 {
 	class Application;
 
-	void KeyHandler(Event* E, Application* App);
-	void MouseButtonHandler(Event* E, Application* App);
-	void ScrollHandler(Event* E, Application* App);
-	void CursorPosHandler(Event* E, Application* App);
-
 	class Input
 	{
 	public:
@@ -34,17 +29,12 @@ namespace Volund
 
 		static Vec2 GetCursorPosition();
 
-	private:
-		
-		friend void Volund::KeyHandler(Event* E, Application* App);
-		friend void Volund::MouseButtonHandler(Event* E, Application* App);
-		friend void Volund::ScrollHandler(Event* E, Application* App);
-		friend void Volund::CursorPosHandler(Event* E, Application* App);
+		static void SendEvent(KeyEvent E);
+		static void SendEvent(MouseButtonEvent E);
+		static void SendEvent(ScrollEvent E);
+		static void SendEvent(CursorPosEvent E);
 
-		static void SendKeyEvent(KeyEvent* KE);
-		static void SendMouseButtonEvent(MouseButtonEvent* MBE);
-		static void SendScrollEvent(ScrollEvent* SE);
-		static void SendCursorPosEvent(CursorPosEvent* CPE);
+	private:
 
 		static Vec2 MousePosition;
 
