@@ -22,9 +22,9 @@ namespace Volund
 	private:
 
 		template<typename T>
-		void Handler(T E);
+		void EventHandler(T E);
 
-		void OnEvent(Event* E);
+		void SendEventToApp(Event* E);
 
 		Application* _Application;
 	};
@@ -32,8 +32,8 @@ namespace Volund
 	template<typename T>
 	void EventDispatcher::Dispatch(T E)
 	{
-		Handler(E);
+		EventHandler(E);
 
-		this->OnEvent(static_cast<Event*>(&E));
+		this->SendEventToApp(static_cast<Event*>(&E));
 	}
 }
