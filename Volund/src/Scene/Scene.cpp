@@ -74,8 +74,6 @@ namespace Volund
 
 	void Scene::EventCallback(Event* E)
 	{
-		VOLUND_INFO("Test");
-
 		this->OnEvent(E);
 		for (auto const& Entity : this->_Entities)
 		{
