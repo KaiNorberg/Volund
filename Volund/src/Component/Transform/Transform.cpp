@@ -2,8 +2,6 @@
 
 #include "Transform.h"
 
-#include "Math/Math.h"
-
 namespace Volund
 {
 	void Transform::SetRotation(Vec3 const& Rotation)
@@ -13,7 +11,7 @@ namespace Volund
 
 	Vec3 Transform::GetRotation() const
 	{
-		return Math::Euler(this->Quaternion);
+		return Math::ToDegrees(glm::eulerAngles(this->Quaternion));
 	}
 
 	void Transform::AddRotation(Vec3 const& Rotation)

@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Math/Vec/Vec.h"
-
 namespace Volund
 {
     class Logger

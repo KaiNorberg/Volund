@@ -9,8 +9,6 @@
 #define MOUSE_BUTTON_LEFT 0   
 #define MOUSE_BUTTON_RIGHT 1   
 
-#include "Math/Math.h"
-
 namespace Volund
 {
 	class Application;

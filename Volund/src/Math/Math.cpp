@@ -19,9 +19,4 @@ namespace Volund
 	 const Vec3 Math::One = Vec3(1, 1, 1);
 
 	 const Vec3 Math::Zero = Vec3(0, 0, 0);
-
-	Vec3 Math::Euler(Quat const& Q)
-	{
-		return ToDegrees(glm::eulerAngles(Q));
-	}
 }

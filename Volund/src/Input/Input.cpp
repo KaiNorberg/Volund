@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "Input.h"
 
-#include "Math/Math.h"
-
 namespace Volund
 {
 	int8_t Input::Keys[KEY_AMOUNT];

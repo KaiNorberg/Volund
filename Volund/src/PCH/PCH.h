@@ -20,26 +20,7 @@
 
 #include "JSON/JSON.h"
 
-///////////TEMPORARY///////////
-#include <glm/glm/glm.hpp>
-#include <glm/glm/vec2.hpp>
-#include <glm/glm/vec3.hpp>
-#include <glm/glm/vec4.hpp>
-#include <glm/glm/mat4x4.hpp>
-#include <glm/glm/mat3x3.hpp>
-#include <glm/glm/gtc/matrix_transform.hpp>
-#include <glm/glm/gtc/type_ptr.hpp>
-#include <glm/glm/gtc/quaternion.hpp>
-
-using Vec2 = glm::vec2;
-using Vec3 = glm::vec3; 
-using Vec4 = glm::vec4;
-using RGBA = glm::vec4;
-using Quat = glm::quat;
-using Mat3x3 = glm::mat3x3; 
-using Mat4x4 = glm::mat4x4;
-
-///////////////////////////////
+#include "Math/Math.h"
 
 #include "Core/Core.h"
 #include "Logger/Logger.h"
