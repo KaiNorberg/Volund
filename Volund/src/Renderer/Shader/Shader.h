@@ -2,6 +2,18 @@
 
 namespace Volund
 {
+    enum class ShaderUniformType
+    {
+        INT,
+        FLOAT,
+        DOUBLE,
+        FLOAT2,
+        FLOAT3,
+        FLOAT4,
+        MAT3X3,
+        MAT4X4
+    };
+
     /// <summary>
     /// A shader object that Contains code that describes how to render a mesh to the screen.
     /// </summary>
@@ -15,6 +27,11 @@ namespace Volund
         /// Compiles and generates the shader, (Dont use if filepath was specified in the constructor).
         /// </summary>
         virtual void Init(std::string const& FilePath) = 0;
+
+        /// <summary>
+        /// Returns if the shader has the specified uniform.
+        /// </summary>
+        virtual bool HasUniform(ShaderUniformType Type, std::string const& Name) = 0;
 
         /// <summary>
         /// Sets a int shader uniform.
@@ -62,6 +79,14 @@ namespace Volund
 
     protected:
 
+        struct Uniform
+        {
+            std::string Name;
+            ShaderUniformType Type;
+        };
+
+        static std::unordered_map<std::string, ShaderUniformType> UniformTypeStringToEnum;
+
         struct Source
         {
             std::string VertexSource;
@@ -69,6 +94,8 @@ namespace Volund
             std::string FragmentSource;
 
             std::string GeometrySource;
+
+            std::vector<Uniform> Uniforms;
         };
 
         Source ParseShader(std::string const& FilePath);

@@ -34,11 +34,22 @@ namespace Volund
 		return this->_Up;
 	}
 
+	Mat4x4 Transform::GetModelMatrix()
+	{
+		return this->_ModelMatrix;
+	}
+
 	void Transform::OnUpdate(TimeStep TS)
 	{
 		this->_Front = this->Quaternion * Math::Back; //Dont ask
 		this->_Right = this->Quaternion * Math::Right;
 		this->_Up = this->Quaternion * Math::Up;
+
+		this->_ModelMatrix = glm::mat4();
+
+		this->_ModelMatrix = glm::translate(this->_ModelMatrix, this->Position);
+		this->_ModelMatrix *= Mat4x4(this->Quaternion);
+		this->_ModelMatrix = glm::scale(this->_ModelMatrix, this->Scale);
 	}
 
 	Transform::Transform(Vec3 const& Position, Vec3 const& Rotation, Vec3 const& Scale)
@@ -46,6 +57,7 @@ namespace Volund
 		this->Position = Position;
 		this->Scale = Scale;
 		this->SetRotation(Rotation);
+		this->OnUpdate(0.0f);
 	}
 }
 

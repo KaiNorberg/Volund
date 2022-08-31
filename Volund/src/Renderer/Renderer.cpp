@@ -20,10 +20,12 @@ namespace Volund
 		_Context->Flush();
 	}
 
-	void Renderer::Submit(Ref<VertexArray> const& VArray, Ref<Shader> const& shader)
+	void Renderer::Submit(Mat4x4& ModelMatrix, Ref<VertexArray> const& VArray, Ref<Shader> const& shader)
 	{
 		shader->Bind();
 		shader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
+		shader->SetMat4x4(ModelMatrix, "ModelMatrix");
+
 		VArray->Bind();
 		_RenderingAPI->DrawIndexed(VArray);
 	}

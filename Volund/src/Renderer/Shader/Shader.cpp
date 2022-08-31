@@ -9,6 +9,18 @@
 
 namespace Volund
 {
+	std::unordered_map<std::string, ShaderUniformType> Shader::UniformTypeStringToEnum =
+	{
+		{"int", ShaderUniformType::INT},
+		{"float", ShaderUniformType::FLOAT},
+		{"double", ShaderUniformType::DOUBLE},
+		{"vec2", ShaderUniformType::FLOAT2},
+		{"vec3", ShaderUniformType::FLOAT3},
+		{"vec4", ShaderUniformType::FLOAT4},
+		{"mat3", ShaderUniformType::MAT3X3},
+		{"mat4", ShaderUniformType::MAT4X4}
+	};
+
 	Shader* Shader::Create(std::string const& FilePath)
 	{
 		switch (RenderingAPI::GetAPI())
@@ -29,9 +41,9 @@ namespace Volund
 
 	Shader::Source Shader::ParseShader(std::string const& FilePath)
 	{
-		std::ifstream stream(FilePath);
+		std::ifstream File(FilePath);
 
-		if (stream.fail())
+		if (File.fail())
 		{
 			VOLUND_INFO("Cant find Shader: (%s).", FilePath.c_str());
 			return Source{};
@@ -43,33 +55,55 @@ namespace Volund
 		};
 
 		std::string Line;
-		std::stringstream ss[3];
+		std::stringstream SourceStrings[3];
 		ShaderType Type = ShaderType::NONE;
+		std::vector<Uniform> Uniforms;
 
-		while (std::getline(stream, Line))
+		while (std::getline(File, Line))
 		{
-			if (Line.find("#VOLUND_SHADER_TYPE") != std::string::npos)
+			//Split into words
+			std::vector<std::string> Words;
+			std::istringstream ISS(Line);
+			std::copy(std::istream_iterator<std::string>(ISS), std::istream_iterator<std::string>(), std::back_inserter(Words));
+
+			if (Words.size() <= 0)
 			{
-				if (Line.find("VERTEX") != std::string::npos)
+				continue;
+			}
+
+			if (Words.size() >= 2 && Words[0] == "#VOLUND_SHADER_TYPE")
+			{
+				if (Words[1] == "VERTEX")
 				{
 					Type = ShaderType::VERTEX;
 				}
-				else if (Line.find("FRAGMENT") != std::string::npos)
+				else if (Words[1] == "FRAGMENT")
 				{
 					Type = ShaderType::FRAGMENT;
 				}
-				else if (Line.find("GEOMETRY") != std::string::npos)
+				else if (Words[1] == "GEOMETRY")
 				{
 					Type = ShaderType::GEOMETRY;
 				}
-			}
+			}			
 			else if ((int32_t)Type != -1)
 			{
-				ss[(int32_t)Type] << Line << '\n';
+				// Read uniforms
+				if (Words.size() == 3 && Words[0] == "uniform" && UniformTypeStringToEnum.contains(Words[1]))
+				{
+					std::string UniformName = Words[2];
+					UniformName.erase(remove(UniformName.begin(), UniformName.end(), ';'), UniformName.end());
+
+					ShaderUniformType ShaderUniformType = UniformTypeStringToEnum[Words[1]];
+
+					Uniforms.push_back({ UniformName, ShaderUniformType });
+				}
+
+				SourceStrings[(int32_t)Type] << Line << '\n';
 			}
 		}
 
-		return Source{ ss[(int)ShaderType::VERTEX].str(), ss[(int)ShaderType::FRAGMENT].str(), ss[(int)ShaderType::GEOMETRY].str() };
+		return Source{ SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(), SourceStrings[(int)ShaderType::GEOMETRY].str(), Uniforms };
 	}	
 	
 } //namespace Volund

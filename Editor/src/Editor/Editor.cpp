@@ -63,8 +63,10 @@ public:
 
 	void OnUpdate(TimeStep TS)
 	{
-		Renderer::Submit(_SquareVertexArray, _TestShader);
-		Renderer::Submit(_TriangleVertexArray, _TestShader);
+		Mat4x4 IdentityMatrix = Mat4x4(1.0f);
+
+		Renderer::Submit(IdentityMatrix, _SquareVertexArray, _TestShader);
+		Renderer::Submit(IdentityMatrix, _TriangleVertexArray, _TestShader);
 	}
 
 	TestScene()

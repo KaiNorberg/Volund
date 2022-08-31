@@ -21,7 +21,7 @@ namespace Volund
 		static void BeginScene(Camera* Cam);
 		static void EndScene();
 
-		static void Submit(Ref<VertexArray> const& VArray, Ref<Shader> const& shader);
+		static void Submit(Mat4x4& ModelMatrix, Ref<VertexArray> const& VArray, Ref<Shader> const& shader);
 
 		Renderer(Ref<Window>& window);
 

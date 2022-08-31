@@ -1,4 +1,4 @@
-﻿#VOLUND_SHADER_TYPE VERTEX
+#VOLUND_SHADER_TYPE VERTEX
 #version 460
 
 layout(location = 0) in vec3 vertex_position;
@@ -8,12 +8,13 @@ out vec3 vs_position;
 out vec4 vs_color;
 
 uniform mat4 ViewProjMatrix;
+uniform mat4 ModelMatrix;
 
 void main()
 {
     vs_position = vertex_position;
     vs_color = vertex_color;
-    gl_Position = ViewProjMatrix * vec4(vertex_position, 1.0f);
+    gl_Position = ViewProjMatrix * ModelMatrix * vec4(vertex_position, 1.0f);
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT
