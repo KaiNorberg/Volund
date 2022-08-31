@@ -6,9 +6,12 @@
 #include "Scene/Scene.h"
 
 #include "Renderer/Context/Context.h"
+#include "Renderer/Renderer.h"
 
 namespace Volund
 {
+	static bool ShouldRun = true;
+
 	class Application
 	{
 	public:
@@ -17,6 +20,14 @@ namespace Volund
 
 		 void AttachLayer(Layer* L);
 
+		 /// <summary>
+		 /// Sets the Application SholdRun flag to false.
+		 /// </summary>
+		 void Restart();
+
+		 /// <summary>
+		 /// Sets the Application SholdRun flag to false and the Global ShouldRun flag to false.
+		 /// </summary>
 		 void Terminate();
 
 		 bool ShouldRun();
@@ -36,6 +47,7 @@ namespace Volund
 		void Loop();
 
 		Ref<EventDispatcher> _EventDispatcher;
+		Ref<Renderer> _Renderer;
 		Ref<Window> _Window;
 
 		std::vector<Layer*> _LayerStack;

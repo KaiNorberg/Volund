@@ -2,12 +2,12 @@
 
 #include "EventDispatcher/Event.h"
 
-#define KEY_AMOUNT 348
-#define MOUSE_BUTTON_AMOUNT 8
+#define VOLUND_KEY_AMOUNT 348
+#define VOLUND_MOUSE_BUTTON_AMOUNT 8
  
-#define MOUSE_BUTTON_MIDDLE 2
-#define MOUSE_BUTTON_LEFT 0   
-#define MOUSE_BUTTON_RIGHT 1   
+#define VOLUND_MOUSE_BUTTON_MIDDLE 2
+#define VOLUND_MOUSE_BUTTON_LEFT 0   
+#define VOLUND_MOUSE_BUTTON_RIGHT 1   
 
 namespace Volund
 {
@@ -38,7 +38,7 @@ namespace Volund
 
 		static double ScrollOffset;
 
-		static int8_t MouseButtons[MOUSE_BUTTON_AMOUNT];
-		static int8_t Keys[KEY_AMOUNT];
+		static int8_t MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
+		static int8_t Keys[VOLUND_KEY_AMOUNT];
 	};
 }

@@ -2,17 +2,23 @@
 
 namespace Volund
 {		
-	//Needs to be defined by the client.
+	/// <summary>
+	/// This function needs to be defined by a client.
+	/// It should return a pointer that inherits from the Application class, deletion of the pointer will be handled by Volund.
+	/// </summary>
 	extern Application* CreateApplication();
 }
 
 int main(int argc, char* argv)
 {
-	Volund::Application* Application = Volund::CreateApplication();
+	while (Volund::ShouldRun)
+	{
+		Volund::Application* Application = Volund::CreateApplication();
 
-	Application->Run();
+		Application->Run();
 
-	delete Application;
+		delete Application;
+	}
 
 	return 0;
 } 

@@ -111,8 +111,8 @@ public:
 Editor::Editor()
 {
 	GameLayer* NewLayer = new GameLayer();
-	this->AttachLayer(NewLayer);
 	NewLayer->LoadScene<TestScene>();
+	this->AttachLayer(NewLayer);
 }
 
 Application* Volund::CreateApplication()

@@ -3,8 +3,8 @@
 
 namespace Volund
 {
-	int8_t Input::Keys[KEY_AMOUNT];
-	int8_t Input::MouseButtons[MOUSE_BUTTON_AMOUNT];
+	int8_t Input::Keys[VOLUND_KEY_AMOUNT];
+	int8_t Input::MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
 
 	double Input::ScrollOffset = 0;
 	Vec2 Input::MousePosition;
@@ -68,8 +68,6 @@ namespace Volund
 
 	void Input::SendEvent(CursorPosEvent E)
 	{
-		//VOLUND_INFO("%d", E.GetXPos());
-
 		MousePosition = Vec2(E.GetXPos(), E.GetYPos());
 	}
 }

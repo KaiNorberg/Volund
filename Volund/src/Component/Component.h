@@ -16,9 +16,9 @@ namespace Volund
 
 		virtual void OnCreate() {};
 
-		virtual void OnUpdate(TimeStep TS) {};
-
 		virtual void OnDelete() {};
+
+		virtual void OnUpdate(TimeStep TS) {};
 
 		virtual	void OnEvent(Event* E) {};
 

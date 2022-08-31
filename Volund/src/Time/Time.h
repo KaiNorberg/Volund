@@ -15,9 +15,6 @@ namespace Volund
 		std::chrono::time_point<std::chrono::steady_clock> Start;
 	};
 
-	/// <summary>
-	/// Stores how much time has passed between to moments.
-	/// </summary>
 	class TimeStep
 	{
 	public:

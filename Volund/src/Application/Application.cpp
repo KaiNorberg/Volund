@@ -5,7 +5,6 @@
 #include "Scene/Scene.h"
 #include "Input/Input.h"
 #include "Time/Time.h"
-#include "Renderer/Renderer.h"
 
 namespace Volund
 {
@@ -20,8 +19,15 @@ namespace Volund
 		L->OnAttach();
 	}
 
+	void Application::Restart()
+	{
+		::Volund::ShouldRun = true;
+		this->_ShouldRun = false;
+	}
+
 	void Application::Terminate()
 	{
+		::Volund::ShouldRun = false;
 		this->_ShouldRun = false;
 	}
 
@@ -83,7 +89,7 @@ namespace Volund
 		
 		this->_Window.reset(new Window(this->_EventDispatcher));		
 		
-		Renderer::Init(this->_Window);
+		this->_Renderer.reset(new Renderer(this->_Window));
 	}
 
 	Application::~Application()

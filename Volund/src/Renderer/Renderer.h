@@ -7,7 +7,6 @@
 #include "Scene/Scene.h"
 #include "RenderingAPI/RenderingAPI.h"
 #include "Context/Context.h"
-#include "Application/Application.h"
 
 #include "Component/Camera/Camera.h"
 
@@ -24,12 +23,12 @@ namespace Volund
 
 		static void Submit(Ref<VertexArray> const& VArray, Ref<Shader> const& shader);
 
+		Renderer(Ref<Window>& window);
+
+		~Renderer();
+
 	private:		
 		
-		friend Application::Application();
-
-		static void Init(Ref<Window>& window);
-
 		static struct SceneData
 		{
 			Mat4x4 ViewProjMatrix;

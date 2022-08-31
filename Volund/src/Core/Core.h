@@ -6,9 +6,15 @@
 
 namespace Volund
 {
+	/// <summary>
+	/// Unique ptr
+	/// </summary>
 	template<typename T>
 	using Scope = std::unique_ptr<T>;
 
+	/// <summary>
+	/// Shared ptr
+	/// </summary>
 	template<typename T>
 	using Ref = std::shared_ptr<T>;
 }

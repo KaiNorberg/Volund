@@ -25,13 +25,13 @@ namespace Volund
 	template<>
 	void EventDispatcher::EventHandler(WindowCloseEvent E)
 	{
-
+		//TODO
 	}
 
 	template<>
 	void EventDispatcher::EventHandler(WindowSizeEvent E)
 	{
-
+		//TODO
 	}
 
 	template<>
