@@ -15,13 +15,13 @@ namespace Volund
 		Scene* GetParent();
 
 		template<typename T, class... ARGS>
-		T* CreateComponent(ARGS&&... Args);
+		Ref<T> CreateComponent(ARGS&&... Args);
 
 		template<typename T>
 		bool DeleteComponent(uint32_t Index = 0);
 
 		template<typename T>
-		T* GetComponent(uint32_t Index = 0);
+		Ref<T> GetComponent(uint32_t Index = 0);
 
 		template<typename T>
 		bool HasComponent(uint32_t Index = 0);
@@ -42,20 +42,15 @@ namespace Volund
 
 		std::string _Name;
 
-		std::unordered_map<uint64_t, std::vector<Component*>> _Components;
+		std::unordered_map<uint64_t, std::vector<Ref<Component>>> _Components;
 	};	
 
 	template<typename T, class... ARGS>
-	T* Entity::CreateComponent(ARGS&&... Args)
+	Ref<T> Entity::CreateComponent(ARGS&&... Args)
 	{
 		uint64_t Hash = typeid(T).hash_code();
 
-		if (!this->HasComponent<T>())
-		{
-			this->_Components[Hash] = std::vector<Component*>();
-		}
-
-		T* NewComponent = new T(Args...);
+		Ref<T> NewComponent = Ref<T>(new T(Args...));
 		NewComponent->SetParent(this);
 		NewComponent->OnCreate();
 		this->_Components[Hash].push_back(NewComponent);
@@ -81,7 +76,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	T* Entity::GetComponent(uint32_t Index)
+	Ref<T> Entity::GetComponent(uint32_t Index)
 	{
 		if (!this->HasComponent<T>(Index))
 		{
@@ -90,7 +85,7 @@ namespace Volund
 		}
 
 		uint64_t Hash = typeid(T).hash_code();
-		return static_cast<T*>(this->_Components[Hash][Index]);
+		return std::dynamic_pointer_cast<T>(this->_Components[Hash][Index]);
 	}
 
 	template<typename T>

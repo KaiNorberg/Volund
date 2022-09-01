@@ -1,7 +1,7 @@
 #pragma once
 
 #include "RenderingAPI.h"
-#include "Renderer/VertexArray/VertexArray.h"
+#include "Renderer/Mesh/Mesh.h"
 
 namespace Volund
 {
@@ -13,7 +13,7 @@ namespace Volund
 
 		void Clear() override;
 
-		void DrawIndexed(Ref<VertexArray> const& VArray) override;
+		void DrawIndexed(Ref<Mesh> const& VArray) override;
 
 	private:
 	};

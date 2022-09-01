@@ -3,7 +3,7 @@
 #define VOLUND_GRAPHICSAPI_NONE "None"
 #define VOLUND_GRAPHICSAPI_OPENGL "OpenGL"
 
-#include "Renderer/VertexArray/VertexArray.h"
+#include "Renderer/Mesh/Mesh.h"
 #include "Scene/Scene.h"
 #include "RenderingAPI/RenderingAPI.h"
 #include "Context/Context.h"
@@ -18,7 +18,7 @@ namespace Volund
 		static void BeginScene(Mat4x4& ViewProjMatrix);
 		static void EndScene();
 
-		static void Submit(Mat4x4& ModelMatrix, Ref<VertexArray> const& VArray, Ref<Shader> const& DrawShader);
+		static void Submit(Mat4x4 ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Shader> const& ObjectShader);
 
 		Renderer(Ref<Window>& window);
 
@@ -29,8 +29,8 @@ namespace Volund
 		struct EntityData
 		{
 			Mat4x4 ModelMatrix;
-			Ref<VertexArray> VArray; 
-			Ref<Shader> DrawShader;
+			Ref<Mesh> ObjectMesh;
+			Ref<Shader> ObjectShader;
 		};
 
 		static struct SceneData

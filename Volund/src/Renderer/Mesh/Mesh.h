@@ -5,7 +5,7 @@
 
 namespace Volund
 {
-	class VertexArray
+	class Mesh
 	{
 	public:
 
@@ -20,10 +20,10 @@ namespace Volund
 		const Ref<VertexBuffer> GetVertexBuffer() const;
 		const Ref<IndexBuffer> GetIndexBuffer() const;
 
-		static VertexArray* Create();
-		static VertexArray* Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
+		static Ref<Mesh> Create();
+		static Ref<Mesh> Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
 
-		virtual ~VertexArray() = default;
+		virtual ~Mesh() = default;
 
 	protected:
 		Ref<VertexBuffer> _VertexBuffer;

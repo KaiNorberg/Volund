@@ -44,12 +44,6 @@ namespace Volund
 
 	Entity::~Entity()
 	{
-		for (auto const& [TypeID, ComponentVector] : this->_Components)
-		{
-			for (auto const& Component : ComponentVector)
-			{
-				delete Component;
-			}
-		}
+
 	}
 }

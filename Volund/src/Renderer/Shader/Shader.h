@@ -73,7 +73,7 @@ namespace Volund
         /// </summary>
         virtual void SetMat4x4(Mat4x4 const& Value, std::string const& Name, bool Transpose = false) = 0;
 
-        static Shader* Create(std::string const& FilePath);
+        static Ref<Shader> Create(std::string const& FilePath);
 
         virtual ~Shader() = default;
 

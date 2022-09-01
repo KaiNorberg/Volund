@@ -12,7 +12,7 @@ namespace Volund
 
 		uint32_t GetCount();
 
-		static IndexBuffer* Create(uint32_t Indices[], uint32_t Size);
+		static Ref<IndexBuffer> Create(uint32_t Indices[], uint32_t Size);
 
 		virtual ~IndexBuffer() = default;
 

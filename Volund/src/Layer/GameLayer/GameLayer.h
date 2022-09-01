@@ -2,7 +2,7 @@
 
 #include "Layer/Layer.h"
 
-#include "Renderer/VertexArray/VertexArray.h"
+#include "Renderer/Mesh/Mesh.h"
 #include "Renderer/Shader/Shader.h"
 #include "Scene/Scene.h"
 

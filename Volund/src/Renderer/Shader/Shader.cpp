@@ -21,13 +21,13 @@ namespace Volund
 		{"mat4", ShaderUniformType::MAT4X4}
 	};
 
-	Shader* Shader::Create(std::string const& FilePath)
+	Ref<Shader> Shader::Create(std::string const& FilePath)
 	{
 		switch (RenderingAPI::GetAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return new OpenGLShader(FilePath);
+			return Ref<Shader>(new OpenGLShader(FilePath));
 		}
 		break;
 		default:

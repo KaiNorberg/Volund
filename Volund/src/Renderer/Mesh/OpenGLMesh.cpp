@@ -1,25 +1,25 @@
 #include "PCH/PCH.h"
-#include "VertexArray.h"
+#include "Mesh.h"
 
 #include "Renderer/Renderer.h"
 
-#include "OpenGLVertexArray.h"
+#include "OpenGLMesh.h"
 
 #include <glad/include/glad/glad.h>
 
 namespace Volund
 {
-	void OpenGLVertexArray::Bind() const
+	void OpenGLMesh::Bind() const
 	{
 		glBindVertexArray(this->_ID);
 	}
 
-	void OpenGLVertexArray::Unbind() const
+	void OpenGLMesh::Unbind() const
 	{
 		glBindVertexArray(0);
 	}
 
-	void OpenGLVertexArray::SetVertexBuffer(Ref<VertexBuffer>& Buffer)
+	void OpenGLMesh::SetVertexBuffer(Ref<VertexBuffer>& Buffer)
 	{
 		this->_VertexBuffer = Buffer;
 
@@ -42,7 +42,7 @@ namespace Volund
 		}
 	}
 
-	void OpenGLVertexArray::SetIndexBuffer(Ref<IndexBuffer>& Buffer)
+	void OpenGLMesh::SetIndexBuffer(Ref<IndexBuffer>& Buffer)
 	{
 		this->_IndexBuffer = Buffer;
 
@@ -50,19 +50,19 @@ namespace Volund
 		Buffer->Bind();
 	}
 
-	OpenGLVertexArray::OpenGLVertexArray()
+	OpenGLMesh::OpenGLMesh()
 	{
 		glGenVertexArrays(1, &this->_ID);
 	}
 
-	OpenGLVertexArray::OpenGLVertexArray(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
+	OpenGLMesh::OpenGLMesh(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
 	{
 		glGenVertexArrays(1, &this->_ID);
 		this->SetVertexBuffer(VBuffer);
 		this->SetIndexBuffer(IBuffer);
 	}
 
-	OpenGLVertexArray::~OpenGLVertexArray()
+	OpenGLMesh::~OpenGLMesh()
 	{
 		glDeleteVertexArrays(1, &this->_ID);
 	}

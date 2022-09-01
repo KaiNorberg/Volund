@@ -18,7 +18,7 @@ namespace Volund
 		return _SelectedAPI;
 	}
 
-	RenderingAPI* RenderingAPI::Create()
+	Ref<RenderingAPI> RenderingAPI::Create()
 	{
 		if (RenderingAPI::GetAPI() == API::NONE)
 		{
@@ -40,7 +40,7 @@ namespace Volund
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return new OpenGLRenderingAPI();
+			return Ref<RenderingAPI>(new OpenGLRenderingAPI());
 		}
 		break;
 		default:

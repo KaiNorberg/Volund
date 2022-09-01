@@ -10,11 +10,11 @@ namespace Volund
 	{
 	public:
 
-		 Entity* CreateEntity(std::string const& Name);
+		Ref<Entity> CreateEntity(std::string const& Name);
 
 		 bool DeleteEntity(std::string const& Name);
 
-		 Entity* GetEntity(std::string const& Name);
+		 Ref<Entity> GetEntity(std::string const& Name);
 
 		 bool HasEntity(std::string const& Name) const;
 
@@ -32,7 +32,7 @@ namespace Volund
 
 	private:
 	
-		std::vector<Entity*> _Entities;
+		std::vector<Ref<Entity>> _Entities;
 	};
 }
 

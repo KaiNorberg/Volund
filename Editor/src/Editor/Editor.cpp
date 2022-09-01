@@ -11,25 +11,25 @@ public:
 	{
 		if (Input::IsHeld('W'))
 		{
-			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
+			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
 			EntityTransform->Position += EntityTransform->GetFront() * float(TS);
 		}
 		if (Input::IsHeld('S'))
 		{
-			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
+			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
 			EntityTransform->Position -= EntityTransform->GetFront() * float(TS);
 		}
 		if (Input::IsHeld('A'))
 		{
-			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
+			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
 			EntityTransform->Position -= EntityTransform->GetRight() * float(TS);
 		}
 		if (Input::IsHeld('D'))
 		{
-			Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
+			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
 			EntityTransform->Position += EntityTransform->GetRight() * float(TS);
 		}		
@@ -56,57 +56,63 @@ class TestScene : public Scene
 {
 public:
 
-	Ref<VertexArray> _TriangleVertexArray;
-	Ref<VertexArray> _SquareVertexArray;
+	Ref<Mesh> _TriangleMesh;
+	Ref<Mesh> _SquareMesh;
 
 	Ref<Shader> _TestShader;
 
 	void OnUpdate(TimeStep TS)
 	{
-		Mat4x4 IdentityMatrix = Mat4x4(1.0f);
 
-		Renderer::Submit(IdentityMatrix, _SquareVertexArray, _TestShader);
-		Renderer::Submit(IdentityMatrix, _TriangleVertexArray, _TestShader);
 	}
 
 	TestScene()
 	{
 		float TriangleVertices[] =
 		{
-			-0.5f, -0.5, 0.5,    1.0, 0.0, 0.0, 1.0,
-			 0.5,  -0.5, 0.5,    0.0, 1.0, 0.0, 1.0,
-			 0.0,   0.5, 0.5,    0.0, 0.0, 1.0, 1.0
+			-0.5f, -0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
+			 0.5,  -0.5, 0.0,    0.0, 1.0, 0.0, 1.0,
+			 0.0,   0.5, 0.0,    0.0, 0.0, 1.0, 1.0
 		};
 		uint32_t TriangleIndices[] = { 0, 1, 2 };
 
 		float SquareVertices[] =
 		{
-			-0.8,  -0.8, 0.0,    0.0, 0.0, 1.0, 1.0,
-			 0.8,  -0.8, 0.0,    0.0, 0.0, 1.0, 1.0,
-			-0.8,   0.8, 0.0,    1.0, 0.0, 0.0, 1.0,
-			-0.8,   0.8, 0.0,    1.0, 0.0, 0.0, 1.0,
-			 0.8,  -0.8, 0.0,    0.0, 0.0, 1.0, 1.0,
-			 0.8,   0.8, 0.0,    1.0, 0.0, 0.0, 1.0
+			-0.5,  -0.5, 0.0,    0.0, 0.0, 1.0, 1.0,
+			 0.5,  -0.5, 0.0,    0.0, 0.0, 1.0, 1.0,
+			-0.5,   0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
+			-0.5,   0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
+			 0.5,  -0.5, 0.0,    0.0, 0.0, 1.0, 1.0,
+			 0.5,   0.5, 0.0,    1.0, 0.0, 0.0, 1.0
 		};
 		uint32_t SquareIndices[] = { 0, 1, 2, 3, 4, 5 };
 
-		_TestShader.reset(Shader::Create("Shaders/Test.shader"));
+		_TestShader = Shader::Create("Shaders/Test.shader");
 
 		Ref<VertexBuffer> TriangleVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(TriangleVertices, sizeof(TriangleVertices) / sizeof(float)));
 		Ref<IndexBuffer> TriangleIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(TriangleIndices, sizeof(TriangleIndices) / sizeof(uint32_t)));
 		TriangleVertexBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT4 });
-		this->_TriangleVertexArray.reset(VertexArray::Create(TriangleVertexBuffer, TriangleIndexBuffer));
+		this->_TriangleMesh = Mesh::Create(TriangleVertexBuffer, TriangleIndexBuffer);
 
 		Ref<VertexBuffer> SquareVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(SquareVertices, sizeof(SquareVertices) / sizeof(float)));
 		Ref<IndexBuffer> SquareIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
 		SquareVertexBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT4 });
-		this->_SquareVertexArray.reset(VertexArray::Create(SquareVertexBuffer, SquareIndexBuffer));
+		this->_SquareMesh = Mesh::Create(SquareVertexBuffer, SquareIndexBuffer);
 
-		Entity* CameraEntity = this->CreateEntity("CameraEntity");
 
-		CameraEntity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 3.0f));
+		Ref<Entity> CameraEntity = this->CreateEntity("CameraEntity");
+		Ref<Entity> TriangleEnity = this->CreateEntity("TriangleEnity");
+		Ref<Entity> SquareEnity = this->CreateEntity("SquareEnity");
+
+		CameraEntity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 0.0f));
 		CameraEntity->CreateComponent<Camera>()->SetActive();		
 		CameraEntity->CreateComponent<CameraMovement>();
+
+		TriangleEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, -2.0f));
+		TriangleEnity->CreateComponent<MeshRenderer>(_TriangleMesh, _TestShader);
+
+		SquareEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 2.0f));
+		SquareEnity->CreateComponent<MeshRenderer>(_SquareMesh, _TestShader);
 	}
 };
 

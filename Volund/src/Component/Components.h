@@ -2,3 +2,4 @@
 
 #include "Camera/Camera.h"
 #include "Transform/Transform.h"
+#include "MeshRenderer/MeshRenderer.h"

@@ -1,39 +1,39 @@
 #include "PCH/PCH.h"
-#include "VertexArray.h"
+#include "Mesh.h"
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
-#include "OpenGLVertexArray.h"
+#include "OpenGLMesh.h"
 
 namespace Volund
 {
-	Ref<VertexBuffer> VertexArray::GetVertexBuffer()
+	Ref<VertexBuffer> Mesh::GetVertexBuffer()
 	{
 		return this->_VertexBuffer;
 	}
 
-	Ref<IndexBuffer> VertexArray::GetIndexBuffer()
+	Ref<IndexBuffer> Mesh::GetIndexBuffer()
 	{
 		return this->_IndexBuffer;
 	}
 
-	const Ref<VertexBuffer> VertexArray::GetVertexBuffer() const
+	const Ref<VertexBuffer> Mesh::GetVertexBuffer() const
 	{
 		return this->_VertexBuffer;
 	}
 
-	const Ref<IndexBuffer> VertexArray::GetIndexBuffer() const
+	const Ref<IndexBuffer> Mesh::GetIndexBuffer() const
 	{
 		return this->_IndexBuffer;
 	}
 
-	VertexArray* VertexArray::Create()
+	Ref<Mesh> Mesh::Create()
 	{
 		switch (RenderingAPI::GetAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return new OpenGLVertexArray();
+			return Ref<Mesh>(new OpenGLMesh());
 		}
 		break;
 		default:
@@ -45,13 +45,13 @@ namespace Volund
 		}
 	}
 
-	VertexArray* VertexArray::Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
+	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
 	{
 		switch (RenderingAPI::GetAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return new OpenGLVertexArray(VBuffer, IBuffer);
+			return Ref<Mesh>(new OpenGLMesh(VBuffer, IBuffer));
 		}
 		break;
 		default:

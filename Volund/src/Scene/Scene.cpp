@@ -6,9 +6,9 @@
 
 namespace Volund
 {
-	Entity* Scene::CreateEntity(std::string const& Name)
+	Ref<Entity> Scene::CreateEntity(std::string const& Name)
 	{
-		Entity* NewEntity = new Entity(this, Name);
+		Ref<Entity> NewEntity = Ref<Entity>(new Entity(this, Name));
 
 		if (this->HasEntity(NewEntity->GetName()))
 		{
@@ -36,7 +36,7 @@ namespace Volund
 		return false;
 	}
 
-	Entity* Scene::GetEntity(std::string const& Name)
+	Ref<Entity> Scene::GetEntity(std::string const& Name)
 	{
 		for (int i = 0; i < this->_Entities.size(); i++)
 		{
@@ -83,9 +83,6 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (auto const& Entity : this->_Entities)
-		{
-			delete Entity;
-		}
+
 	}
 }

@@ -9,19 +9,19 @@
 
 namespace Volund
 {
-    Camera* Camera::ActiveCamera = nullptr;
+    Ref<Camera> Camera::ActiveCamera = nullptr;
 
     bool Camera::IsActive() const
     {
-        return ActiveCamera == this;
+        return ActiveCamera.get() == this;
     }
 
     void Camera::SetActive()
     {
-        ActiveCamera = this;
+        ActiveCamera = Ref<Camera>(this);
     }
 
-    Camera* Camera::GetActiveCamera()
+    Ref<Camera> Camera::GetActiveCamera()
     {
         return ActiveCamera;
     }
@@ -78,7 +78,7 @@ namespace Volund
     {
         VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
 
-        Transform* EntityTransform = this->GetEntity()->GetComponent<Transform>();
+        Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
         this->_ViewMatrix = glm::lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(), EntityTransform->GetUp());
         this->_OriginViewMatrix = glm::lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());

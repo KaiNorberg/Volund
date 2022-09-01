@@ -13,13 +13,13 @@ namespace Volund
 		return this->_Count;
 	}
 
-	IndexBuffer* IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
+	Ref<IndexBuffer> IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
 	{
 		switch (RenderingAPI::GetAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return new OpenGLIndexBuffer(Indices, Size);
+			return Ref<IndexBuffer>(new OpenGLIndexBuffer(Indices, Size));
 		}
 		break;
 		default:

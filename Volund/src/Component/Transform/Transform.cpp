@@ -45,7 +45,7 @@ namespace Volund
 		this->_Right = this->Quaternion * Math::Right;
 		this->_Up = this->Quaternion * Math::Up;
 
-		this->_ModelMatrix = glm::mat4();
+		this->_ModelMatrix = Mat4x4(1.0f);
 
 		this->_ModelMatrix = glm::translate(this->_ModelMatrix, this->Position);
 		this->_ModelMatrix *= Mat4x4(this->Quaternion);

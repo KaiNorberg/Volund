@@ -1,10 +1,10 @@
 #pragma once
 
-#include "VertexArray.h"
+#include "Mesh.h"
 
 namespace Volund
 {
-	class OpenGLVertexArray : public VertexArray
+	class OpenGLMesh : public Mesh
 	{
 	public:
 
@@ -15,11 +15,11 @@ namespace Volund
 		void SetVertexBuffer(Ref<VertexBuffer>& Buffer) override;
 		void SetIndexBuffer(Ref<IndexBuffer>& Buffer) override;
 
-		OpenGLVertexArray();
+		OpenGLMesh();
 
-		OpenGLVertexArray(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
+		OpenGLMesh(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
 		
-		~OpenGLVertexArray();
+		~OpenGLMesh();
 
 	private:
 		uint32_t _ID;

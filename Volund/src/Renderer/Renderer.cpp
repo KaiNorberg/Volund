@@ -20,32 +20,32 @@ namespace Volund
 	{
 		for (EntityData Data : _SceneData.Submissions)
 		{
-			Data.DrawShader->Bind();
-			Data.DrawShader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
-			Data.DrawShader->SetMat4x4(Data.ModelMatrix, "ModelMatrix");
+			Data.ObjectShader->Bind();
+			Data.ObjectShader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
+			Data.ObjectShader->SetMat4x4(Data.ModelMatrix, "ModelMatrix");
 
-			Data.VArray->Bind();
-			_RenderingAPI->DrawIndexed(Data.VArray);
+			Data.ObjectMesh->Bind();
+			_RenderingAPI->DrawIndexed(Data.ObjectMesh);
 		}
 
 		_SceneData = SceneData();
 		_Context->Flush();
 	}
 
-	void Renderer::Submit(Mat4x4& ModelMatrix, Ref<VertexArray> const& VArray, Ref<Shader> const& DrawShader)
+	void Renderer::Submit(Mat4x4 ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Shader> const& ObjectShader)
 	{
 		EntityData NewEnityData = EntityData();
 		NewEnityData.ModelMatrix = ModelMatrix;
-		NewEnityData.VArray = VArray;
-		NewEnityData.DrawShader = DrawShader;
+		NewEnityData.ObjectMesh = ObjectMesh;
+		NewEnityData.ObjectShader = ObjectShader;
 
 		_SceneData.Submissions.push_back(NewEnityData);
 	}
 
 	Renderer::Renderer(Ref<Window>& window)
 	{
-		_RenderingAPI.reset(RenderingAPI::Create());
-		_Context.reset(Context::Create(window));
+		_RenderingAPI = RenderingAPI::Create();
+		_Context = Context::Create(window);
 
 		_RenderingAPI->SetClearColor(RGBA(0.7f, 0.0f, 0.4f, 1.0f));
 
