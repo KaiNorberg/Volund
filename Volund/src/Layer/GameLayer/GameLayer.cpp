@@ -24,7 +24,8 @@ namespace Volund
 
 		if (ActiveCamera != nullptr)
 		{
-			Renderer::BeginScene(ActiveCamera);
+			Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix() * ActiveCamera->GetViewMatrix();
+			Renderer::BeginScene(ViewProjMatrix);
 
 			if (_LoadedScene != nullptr)
 			{

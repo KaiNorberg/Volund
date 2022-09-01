@@ -7,9 +7,6 @@
 #include "Scene/Scene.h"
 #include "RenderingAPI/RenderingAPI.h"
 #include "Context/Context.h"
-
-#include "Component/Camera/Camera.h"
-
 #include "Renderer/Shader/Shader.h"
 
 namespace Volund
@@ -18,10 +15,10 @@ namespace Volund
 	{
 	public:
 
-		static void BeginScene(Camera* Cam);
+		static void BeginScene(Mat4x4& ViewProjMatrix);
 		static void EndScene();
 
-		static void Submit(Mat4x4& ModelMatrix, Ref<VertexArray> const& VArray, Ref<Shader> const& shader);
+		static void Submit(Mat4x4& ModelMatrix, Ref<VertexArray> const& VArray, Ref<Shader> const& DrawShader);
 
 		Renderer(Ref<Window>& window);
 
@@ -29,9 +26,17 @@ namespace Volund
 
 	private:		
 		
+		struct EntityData
+		{
+			Mat4x4 ModelMatrix;
+			Ref<VertexArray> VArray; 
+			Ref<Shader> DrawShader;
+		};
+
 		static struct SceneData
 		{
 			Mat4x4 ViewProjMatrix;
+			std::vector<EntityData> Submissions;
 		} _SceneData;
 
 		static Ref<RenderingAPI> _RenderingAPI;
