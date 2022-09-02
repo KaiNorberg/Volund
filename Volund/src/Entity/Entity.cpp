@@ -16,9 +16,9 @@ namespace Volund
 
 	void Entity::OnEvent(Event* E)
 	{
-		for (auto const& [TypeID, ComponentVector] : this->_Components)
+		for (auto const& ComponentView : this->_Components)
 		{
-			for (auto const& Component : ComponentVector)
+			for (auto const& Component : ComponentView)
 			{
 				Component->OnEvent(E);
 			}
@@ -27,9 +27,9 @@ namespace Volund
 
 	void Entity::OnUpdate(TimeStep TS)
 	{
-		for (auto const& [TypeID, ComponentVector] : this->_Components)
+		for (auto const& ComponentView : this->_Components)
 		{
-			for (auto const& Component : ComponentVector)
+			for (auto const& Component : ComponentView)
 			{
 				Component->OnUpdate(TS);
 			}

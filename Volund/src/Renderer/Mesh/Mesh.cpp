@@ -27,23 +27,23 @@ namespace Volund
 		return this->_IndexBuffer;
 	}
 
-	Ref<Mesh> Mesh::Create()
+	/*Ref<Mesh> Mesh::Create(std::string const& FilePath)
 	{
 		switch (RenderingAPI::GetAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return Ref<Mesh>(new OpenGLMesh());
+			return Ref<Mesh>(new OpenGLMesh(VBuffer, IBuffer));
 		}
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a VertexBuffer without a specified GraphicsAPI!");
+			VOLUND_ERROR("Creating a Mesh without a specified GraphicsAPI!");
 			return nullptr;
 		}
 		break;
 		}
-	}
+	}*/
 
 	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
 	{
@@ -56,7 +56,7 @@ namespace Volund
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a VertexBuffer without a specified GraphicsAPI!");
+			VOLUND_ERROR("Creating a Mesh without a specified GraphicsAPI!");
 			return nullptr;
 		}
 		break;

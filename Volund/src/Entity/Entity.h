@@ -42,18 +42,28 @@ namespace Volund
 
 		std::string _Name;
 
-		std::unordered_map<uint64_t, std::vector<Ref<Component>>> _Components;
+		static inline uint32_t NewTypeID = 0;
+
+		template<typename T>
+		uint32_t GetTypeID();
+
+		std::vector<std::vector<Ref<Component>>> _Components;
 	};	
 
 	template<typename T, class... ARGS>
 	Ref<T> Entity::CreateComponent(ARGS&&... Args)
 	{
-		uint64_t Hash = typeid(T).hash_code();
+		static uint64_t TypeID = GetTypeID<T>();
+
+		while (this->_Components.size() <= TypeID)
+		{
+			this->_Components.push_back(std::vector<Ref<Component>>());
+		}
 
 		Ref<T> NewComponent = Ref<T>(new T(Args...));
 		NewComponent->SetParent(this);
 		NewComponent->OnCreate();
-		this->_Components[Hash].push_back(NewComponent);
+		this->_Components[TypeID].push_back(NewComponent);
 
 		return NewComponent;
 	}
@@ -61,16 +71,17 @@ namespace Volund
 	template<typename T>
 	bool Entity::DeleteComponent(uint32_t Index)
 	{
+		static uint64_t TypeID = GetTypeID<T>();
+
 		if (!this->HasComponent<T>(Index))
 		{
 			VOLUND_WARNING("Cant remove a component from a entity without that component.");
 			return false;
 		}
 
-		uint64_t Hash = typeid(T).hash_code();
-		this->_Components[Hash][Index]->OnDelete();
-		delete this->_Components[Hash][Index];
-		this->_Components[Hash].erase(Index);
+		this->_Components[TypeID][Index]->OnDelete();
+		delete this->_Components[TypeID][Index];
+		this->_Components[TypeID].erase(Index);
 
 		return true;
 	}
@@ -78,21 +89,30 @@ namespace Volund
 	template<typename T>
 	Ref<T> Entity::GetComponent(uint32_t Index)
 	{
+		static uint64_t TypeID = GetTypeID<T>();
+
 		if (!this->HasComponent<T>(Index))
 		{
 			VOLUND_WARNING("Cant get a component from a entity without that component.");
 			return nullptr;
 		}
 
-		uint64_t Hash = typeid(T).hash_code();
-		return std::dynamic_pointer_cast<T>(this->_Components[Hash][Index]);
+		return std::dynamic_pointer_cast<T>(this->_Components[TypeID][Index]);
 	}
 
 	template<typename T>
 	bool Entity::HasComponent(uint32_t Index)
 	{
-		uint64_t Hash = typeid(T).hash_code();
-		return this->_Components.find(Hash) != this->_Components.end() && Index < this->_Components[Hash].size();
+		static uint64_t TypeID = GetTypeID<T>();
+
+		return TypeID < this->_Components.size() && Index < this->_Components[TypeID].size();
+	}
+
+	template<typename T>
+	uint32_t Entity::GetTypeID()
+	{
+		static uint32_t ID = NewTypeID++;
+		return ID;
 	}
 }
 

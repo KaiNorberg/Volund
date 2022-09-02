@@ -103,8 +103,8 @@ public:
 
 
 		Ref<Entity> CameraEntity = this->CreateEntity("CameraEntity");
-		Ref<Entity> TriangleEnity = this->CreateEntity("TriangleEnity");
-		Ref<Entity> SquareEnity = this->CreateEntity("SquareEnity");
+		Ref<Entity> TriangleEnity = this->CreateEntity("TriangleEntity");
+		Ref<Entity> SquareEnity = this->CreateEntity("SquareEntity");
 
 		CameraEntity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 0.0f));
 		CameraEntity->CreateComponent<Camera>()->SetActive();		
