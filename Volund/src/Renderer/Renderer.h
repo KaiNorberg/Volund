@@ -8,6 +8,7 @@
 #include "RenderingAPI/RenderingAPI.h"
 #include "Context/Context.h"
 #include "Renderer/Shader/Shader.h"
+#include "Renderer/Material/Material.h"
 
 namespace Volund
 {
@@ -18,7 +19,7 @@ namespace Volund
 		static void BeginScene(Mat4x4& ViewProjMatrix);
 		static void EndScene();
 
-		static void Submit(Mat4x4 ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Shader> const& ObjectShader);
+		static void Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial);
 
 		Renderer(Ref<Window>& window);
 
@@ -26,17 +27,17 @@ namespace Volund
 
 	private:		
 		
-		struct EntityData
+		struct Submission
 		{
 			Mat4x4 ModelMatrix;
 			Ref<Mesh> ObjectMesh;
-			Ref<Shader> ObjectShader;
+			Ref<Material> ObjectMaterial;
 		};
 
 		static struct SceneData
 		{
 			Mat4x4 ViewProjMatrix;
-			std::vector<EntityData> Submissions;
+			std::vector<Submission> Submissions;
 		} _SceneData;
 
 		static Ref<RenderingAPI> _RenderingAPI;

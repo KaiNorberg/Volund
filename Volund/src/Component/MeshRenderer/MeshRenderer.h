@@ -3,7 +3,7 @@
 #include "Component/Component.h"
 
 #include "Renderer/Mesh/Mesh.h"
-#include "Renderer/Shader/Shader.h"
+#include "Renderer/Material/Material.h"
 
 namespace Volund
 {
@@ -13,11 +13,11 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		MeshRenderer(Ref<Mesh> DrawMesh, Ref<Shader> DrawShader);
+		MeshRenderer(Ref<Mesh> ObjectMesh, Ref<Material> ObjectMaterial);
 
 	private:
 
 		Ref<Mesh> _Mesh;
-		Ref<Shader> _Shader;
+		Ref<Material> _Material;
 	};
 }

@@ -60,6 +60,7 @@ public:
 	Ref<Mesh> _SquareMesh;
 
 	Ref<Shader> _TestShader;
+	Ref<Material> _TestMaterial;
 
 	void OnUpdate(TimeStep TS)
 	{
@@ -88,6 +89,7 @@ public:
 		uint32_t SquareIndices[] = { 0, 1, 2, 3, 4, 5 };
 
 		_TestShader = Shader::Create("Shaders/Test.shader");
+		_TestMaterial = Material::Create(_TestShader);
 
 		Ref<VertexBuffer> TriangleVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(TriangleVertices, sizeof(TriangleVertices) / sizeof(float)));
 		Ref<IndexBuffer> TriangleIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(TriangleIndices, sizeof(TriangleIndices) / sizeof(uint32_t)));
@@ -109,10 +111,10 @@ public:
 		CameraEntity->CreateComponent<CameraMovement>();
 
 		TriangleEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, -2.0f));
-		TriangleEnity->CreateComponent<MeshRenderer>(_TriangleMesh, _TestShader);
+		TriangleEnity->CreateComponent<MeshRenderer>(_TriangleMesh, _TestMaterial);
 
 		SquareEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 2.0f));
-		SquareEnity->CreateComponent<MeshRenderer>(_SquareMesh, _TestShader);
+		SquareEnity->CreateComponent<MeshRenderer>(_SquareMesh, _TestMaterial);
 	}
 };
 

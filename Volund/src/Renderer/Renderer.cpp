@@ -18,11 +18,12 @@ namespace Volund
 
 	void Renderer::EndScene()
 	{
-		for (EntityData Data : _SceneData.Submissions)
+		for (Submission Data : _SceneData.Submissions)
 		{
-			Data.ObjectShader->Bind();
-			Data.ObjectShader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
-			Data.ObjectShader->SetMat4x4(Data.ModelMatrix, "ModelMatrix");
+			Ref<Shader> ObjectShader = Data.ObjectMaterial->GetShader();
+			ObjectShader->Bind();
+			ObjectShader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
+			ObjectShader->SetMat4x4(Data.ModelMatrix, "ModelMatrix");
 
 			Data.ObjectMesh->Bind();
 			_RenderingAPI->DrawIndexed(Data.ObjectMesh);
@@ -32,14 +33,14 @@ namespace Volund
 		_Context->Flush();
 	}
 
-	void Renderer::Submit(Mat4x4 ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Shader> const& ObjectShader)
+	void Renderer::Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial)
 	{
-		EntityData NewEnityData = EntityData();
-		NewEnityData.ModelMatrix = ModelMatrix;
-		NewEnityData.ObjectMesh = ObjectMesh;
-		NewEnityData.ObjectShader = ObjectShader;
+		Submission NewSubmission = Submission();
+		NewSubmission.ModelMatrix = ModelMatrix;
+		NewSubmission.ObjectMesh = ObjectMesh;
+		NewSubmission.ObjectMaterial = ObjectMaterial;
 
-		_SceneData.Submissions.push_back(NewEnityData);
+		_SceneData.Submissions.push_back(NewSubmission);
 	}
 
 	Renderer::Renderer(Ref<Window>& window)

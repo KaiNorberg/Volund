@@ -12,14 +12,14 @@ namespace Volund
 		VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "MeshRenderer unable to find a Transform component!");
 
 		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
-		Mat4x4 IdentityMatrix = Mat4x4(1.0f);
+		Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
-		Renderer::Submit(EntityTransform->GetModelMatrix(), this->_Mesh, this->_Shader);
+		Renderer::Submit(ModelMatrix, this->_Mesh, this->_Material);
 	}
 
-	MeshRenderer::MeshRenderer(Ref<Mesh> DrawMesh, Ref<Shader> DrawShader)
+	MeshRenderer::MeshRenderer(Ref<Mesh> ObjectMesh, Ref<Material> ObjectMaterial)
 	{
-		this->_Mesh = DrawMesh;
-		this->_Shader = DrawShader;
+		this->_Mesh = ObjectMesh;
+		this->_Material = ObjectMaterial;
 	}
 }
