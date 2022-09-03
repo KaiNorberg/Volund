@@ -51,7 +51,7 @@ namespace Volund
 	};	
 
 	template<typename T, class... ARGS>
-	Ref<T> Entity::CreateComponent(ARGS&&... Args)
+	inline Ref<T> Entity::CreateComponent(ARGS&&... Args)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -69,7 +69,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	bool Entity::DeleteComponent(uint32_t Index)
+	inline bool Entity::DeleteComponent(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -87,7 +87,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	Ref<T> Entity::GetComponent(uint32_t Index)
+	inline Ref<T> Entity::GetComponent(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -101,7 +101,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	bool Entity::HasComponent(uint32_t Index)
+	inline bool Entity::HasComponent(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -109,7 +109,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	uint32_t Entity::GetTypeID()
+	inline uint32_t Entity::GetTypeID()
 	{
 		static uint32_t ID = NewTypeID++;
 		return ID;

@@ -29,14 +29,14 @@ namespace Volund
 		
 		struct Submission
 		{
-			Mat4x4 ModelMatrix;
+			Mat4x4 ModelMatrix = Mat4x4(1.0f);
 			Ref<Mesh> ObjectMesh;
 			Ref<Material> ObjectMaterial;
 		};
 
 		static struct SceneData
 		{
-			Mat4x4 ViewProjMatrix;
+			Mat4x4 ViewProjMatrix = Mat4x4(1.0f);
 			std::vector<Submission> Submissions;
 		} _SceneData;
 

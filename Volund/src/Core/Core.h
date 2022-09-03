@@ -2,7 +2,7 @@
 
 #define VOLUND_CONFIG_JSON "Config.json"
 
-#define VOLUND_ASSERT(Check, ...) if (!Check) { VOLUND_ERROR(__VA_ARGS__); }
+#define VOLUND_ASSERT(Check, ...) if (!(bool)(Check)) { VOLUND_ERROR(__VA_ARGS__); }
 
 namespace Volund
 {

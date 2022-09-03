@@ -10,13 +10,18 @@
 
 namespace Volund
 {
-	VertexBuffer* VertexBuffer::Create(float Vertices[], uint32_t Count)
+	uint32_t VertexBuffer::GetCount()
+	{
+		return this->_Count;
+	}
+
+	Ref<VertexBuffer> VertexBuffer::Create(float Vertices[], uint32_t Count)
 	{
 		switch (RenderingAPI::GetAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return new OpenGLVertexBuffer(Vertices, Count);
+			return Ref<VertexBuffer>(new OpenGLVertexBuffer(Vertices, Count));
 		}
 		break;
 		default:

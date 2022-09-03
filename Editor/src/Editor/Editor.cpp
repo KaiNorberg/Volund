@@ -13,25 +13,25 @@ public:
 		{
 			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
-			EntityTransform->Position += EntityTransform->GetFront() * float(TS);
+			EntityTransform->Position += EntityTransform->GetFront() * float(TS) * 5.0f;
 		}
 		if (Input::IsHeld('S'))
 		{
 			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
-			EntityTransform->Position -= EntityTransform->GetFront() * float(TS);
+			EntityTransform->Position -= EntityTransform->GetFront() * float(TS) * 5.0f;
 		}
 		if (Input::IsHeld('A'))
 		{
 			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
-			EntityTransform->Position -= EntityTransform->GetRight() * float(TS);
+			EntityTransform->Position -= EntityTransform->GetRight() * float(TS) * 5.0f;
 		}
 		if (Input::IsHeld('D'))
 		{
 			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 
-			EntityTransform->Position += EntityTransform->GetRight() * float(TS);
+			EntityTransform->Position += EntityTransform->GetRight() * float(TS) * 5.0f;
 		}		
 		
 		static Vec3 Rotation = Vec3(0.0f);
@@ -56,12 +56,6 @@ class TestScene : public Scene
 {
 public:
 
-	Ref<Mesh> _TriangleMesh;
-	Ref<Mesh> _SquareMesh;
-
-	Ref<Shader> _TestShader;
-	Ref<Material> _TestMaterial;
-
 	void OnUpdate(TimeStep TS)
 	{
 
@@ -69,52 +63,19 @@ public:
 
 	TestScene()
 	{
-		float TriangleVertices[] =
-		{
-			-0.5f, -0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
-			 0.5,  -0.5, 0.0,    0.0, 1.0, 0.0, 1.0,
-			 0.0,   0.5, 0.0,    0.0, 0.0, 1.0, 1.0
-		};
-		uint32_t TriangleIndices[] = { 0, 1, 2 };
-
-		float SquareVertices[] =
-		{
-			-0.5,  -0.5, 0.0,    0.0, 0.0, 1.0, 1.0,
-			 0.5,  -0.5, 0.0,    0.0, 0.0, 1.0, 1.0,
-			-0.5,   0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
-			-0.5,   0.5, 0.0,    1.0, 0.0, 0.0, 1.0,
-			 0.5,  -0.5, 0.0,    0.0, 0.0, 1.0, 1.0,
-			 0.5,   0.5, 0.0,    1.0, 0.0, 0.0, 1.0
-		};
-		uint32_t SquareIndices[] = { 0, 1, 2, 3, 4, 5 };
-
-		_TestShader = Shader::Create("Shaders/Test.shader");
-		_TestMaterial = Material::Create(_TestShader);
-
-		Ref<VertexBuffer> TriangleVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(TriangleVertices, sizeof(TriangleVertices) / sizeof(float)));
-		Ref<IndexBuffer> TriangleIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(TriangleIndices, sizeof(TriangleIndices) / sizeof(uint32_t)));
-		TriangleVertexBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT4 });
-		this->_TriangleMesh = Mesh::Create(TriangleVertexBuffer, TriangleIndexBuffer);
-
-		Ref<VertexBuffer> SquareVertexBuffer = Ref<VertexBuffer>(VertexBuffer::Create(SquareVertices, sizeof(SquareVertices) / sizeof(float)));
-		Ref<IndexBuffer> SquareIndexBuffer = Ref<IndexBuffer>(IndexBuffer::Create(SquareIndices, sizeof(SquareIndices) / sizeof(uint32_t)));
-		SquareVertexBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT4 });
-		this->_SquareMesh = Mesh::Create(SquareVertexBuffer, SquareIndexBuffer);
-
+		Ref<Shader> _TestShader = Shader::Create("Shaders/Test.shader");
+		Ref<Material> _TestMaterial = Material::Create(_TestShader);
+		Ref<Mesh> TeapotMesh = Mesh::Create("Teapot.obj");
 
 		Ref<Entity> CameraEntity = this->CreateEntity("CameraEntity");
-		Ref<Entity> TriangleEnity = this->CreateEntity("TriangleEntity");
-		Ref<Entity> SquareEnity = this->CreateEntity("SquareEntity");
+		Ref<Entity> CubeEnity = this->CreateEntity("CubeEntity");
 
 		CameraEntity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 0.0f));
 		CameraEntity->CreateComponent<Camera>()->SetActive();		
 		CameraEntity->CreateComponent<CameraMovement>();
 
-		TriangleEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, -2.0f));
-		TriangleEnity->CreateComponent<MeshRenderer>(_TriangleMesh, _TestMaterial);
-
-		SquareEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, 2.0f));
-		SquareEnity->CreateComponent<MeshRenderer>(_SquareMesh, _TestMaterial);
+		CubeEnity->CreateComponent<Transform>(Vec3(0.0f, 0.0f, -5.0f));
+		CubeEnity->CreateComponent<MeshRenderer>(TeapotMesh, _TestMaterial);
 	}
 };
 

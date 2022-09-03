@@ -109,6 +109,18 @@ namespace Volund
 
 		VOLUND_ASSERT(gladLoadGLLoader((GLADloadproc)_Window->GetProcAddress), "Failed to initialize OpenGL context");
 
+		glEnable(GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
+
+		glEnable(GL_CULL_FACE);
+		glCullFace(GL_BACK);
+		glFrontFace(GL_CCW);
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, NULL);
 

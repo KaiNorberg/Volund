@@ -12,11 +12,16 @@ namespace Volund
 
 		virtual void Unbind() = 0;
 
+		uint32_t GetCount();
+
 		virtual void SetLayout(VertexLayout const& Layout) = 0;
 		virtual VertexLayout GetLayout() = 0;
 
-		static VertexBuffer* Create(float Vertices[], uint32_t Count);       
+		static Ref<VertexBuffer> Create(float Vertices[], uint32_t Count);
 		
 		virtual ~VertexBuffer() = default;
+	private:
+
+		uint32_t _Count;
 	};
 }
