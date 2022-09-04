@@ -8,7 +8,7 @@ layout(location = 1) in vec2 Vertex_TextureCoord;
 layout(location = 2) in vec3 Vertex_Normal;
 
 out vec3 Position;
-out vec3 TextureCoord;
+out vec2 TextureCoord;
 out vec3 Normal;
 
 uniform mat4 ViewProjMatrix;
@@ -16,8 +16,9 @@ uniform mat4 ModelMatrix;
 
 void main()
 {
-    Normal = Vertex_Normal;
     Position = vec3(ModelMatrix * vec4(Vertex_Position, 1.0));
+    TextureCoord = Vertex_TextureCoord;
+    Normal = Vertex_Normal;
     gl_Position = ViewProjMatrix * ModelMatrix * vec4(Vertex_Position, 1.0f);
 };
 
@@ -35,7 +36,7 @@ uniform PointLight PointLights[64];
 uniform vec3 EyePosition;
 
 in vec3 Position;
-in vec3 TextureCoord;
+in vec2 TextureCoord;
 in vec3 Normal;
 
 out vec4 FragColor;

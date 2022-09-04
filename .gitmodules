@@ -7,3 +7,6 @@
 [submodule "vendor/glfw"]
 	path = vendor/glfw
 	url = https://github.com/Kaj9296/glfw
+[submodule "vendor/stb"]
+	path = vendor/stb
+	url = https://github.com/nothings/stb

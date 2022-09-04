@@ -4,8 +4,9 @@
 #include "Scene/Scene.h"
 #include "RenderingAPI/RenderingAPI.h"
 #include "Context/Context.h"
-#include "Renderer/Shader/Shader.h"
-#include "Renderer/Material/Material.h"
+#include "Shader/Shader.h"
+#include "Material/Material.h"
+#include "Texture/Texture.h"
 
 namespace Volund
 {
