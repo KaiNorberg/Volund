@@ -8,10 +8,12 @@ namespace Volund
 	Ref<Context> Renderer::_Context;
 	Ref<RenderingAPI> Renderer::_RenderingAPI;
 
-	void Renderer::BeginScene(Mat4x4& ViewProjMatrix)
+	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights)
 	{
 		SceneData NewSceneData = SceneData();
 		_SceneData.ViewProjMatrix = ViewProjMatrix;
+		_SceneData.EyePosition = EyePosition;
+		_SceneData.PointLights = PointLights;
 
 		_RenderingAPI->Clear();
 	}
@@ -22,8 +24,22 @@ namespace Volund
 		{
 			Ref<Shader> ObjectShader = Data.ObjectMaterial->GetShader();
 			ObjectShader->Bind();
-			ObjectShader->SetMat4x4(_SceneData.ViewProjMatrix, "ViewProjMatrix");
-			ObjectShader->SetMat4x4(Data.ModelMatrix, "ModelMatrix");
+
+			ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
+			ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
+			if (ObjectShader->HasUniform("PointLights[0].Color"))
+			{
+				ObjectShader->SetInt("PointLightAmount", (uint32_t)_SceneData.PointLights.size());
+
+				for (int i = 0; i < _SceneData.PointLights.size(); i++)
+				{
+					std::string Uniform = "PointLights[" + std::to_string(i) + "].";
+					ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);
+					ObjectShader->SetVec3(Uniform + "Position", _SceneData.PointLights[i].Position);
+				}
+			}
+
+			ObjectShader->SetMat4x4("ModelMatrix", Data.ModelMatrix);
 
 			Data.ObjectMesh->Bind();
 			_RenderingAPI->DrawIndexed(Data.ObjectMesh);

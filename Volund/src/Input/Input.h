@@ -25,7 +25,7 @@ namespace Volund
 
 		static double GetScrollOffset();
 
-		static Vec2 GetCursorPosition();
+		static DVec2 GetCursorPosition();
 
 		static void SendEvent(KeyEvent E);
 		static void SendEvent(MouseButtonEvent E);
@@ -34,7 +34,7 @@ namespace Volund
 
 	private:
 
-		static Vec2 MousePosition;
+		static DVec2 CursorPosition;
 
 		static double ScrollOffset;
 

@@ -21,11 +21,6 @@ namespace Volund
 		this->Step = Step;
 	}
 
-	TimeStep::operator float() const
-	{
-		return (float)this->Step;
-	}
-
 	TimeStep::operator double() const
 	{
 		return this->Step;

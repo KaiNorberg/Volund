@@ -1,8 +1,5 @@
 #pragma once
 
-#define VOLUND_GRAPHICSAPI_NONE "None"
-#define VOLUND_GRAPHICSAPI_OPENGL "OpenGL"
-
 #include "Renderer/Mesh/Mesh.h"
 #include "Scene/Scene.h"
 #include "RenderingAPI/RenderingAPI.h"
@@ -12,11 +9,17 @@
 
 namespace Volund
 {
+	struct PointLightData
+	{
+		RGB Color;
+		Vec3 Position;
+	};
+
 	class Renderer
 	{
 	public:
 
-		static void BeginScene(Mat4x4& ViewProjMatrix);
+		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights);
 		static void EndScene();
 
 		static void Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial);
@@ -37,6 +40,8 @@ namespace Volund
 		static struct SceneData
 		{
 			Mat4x4 ViewProjMatrix = Mat4x4(1.0f);
+			Vec3 EyePosition = Vec3(1.0f);
+			std::vector<PointLightData> PointLights;
 			std::vector<Submission> Submissions;
 		} _SceneData;
 

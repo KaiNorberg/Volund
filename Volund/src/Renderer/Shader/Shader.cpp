@@ -9,18 +9,6 @@
 
 namespace Volund
 {
-	std::unordered_map<std::string, ShaderUniformType> Shader::UniformTypeStringToEnum =
-	{
-		{"int", ShaderUniformType::INT},
-		{"float", ShaderUniformType::FLOAT},
-		{"double", ShaderUniformType::DOUBLE},
-		{"vec2", ShaderUniformType::FLOAT2},
-		{"vec3", ShaderUniformType::FLOAT3},
-		{"vec4", ShaderUniformType::FLOAT4},
-		{"mat3", ShaderUniformType::MAT3X3},
-		{"mat4", ShaderUniformType::MAT4X4}
-	};
-
 	Ref<Shader> Shader::Create(std::string const& FilePath)
 	{
 		switch (RenderingAPI::GetAPI())
@@ -57,7 +45,6 @@ namespace Volund
 		std::string Line;
 		std::stringstream SourceStrings[3];
 		ShaderType Type = ShaderType::NONE;
-		std::vector<Uniform> Uniforms;
 
 		while (std::getline(File, Line))
 		{
@@ -88,22 +75,11 @@ namespace Volund
 			}			
 			else if ((int32_t)Type != -1)
 			{
-				// Read uniforms
-				if (Words.size() == 3 && Words[0] == "uniform" && UniformTypeStringToEnum.contains(Words[1]))
-				{
-					std::string UniformName = Words[2];
-					UniformName.erase(remove(UniformName.begin(), UniformName.end(), ';'), UniformName.end());
-
-					ShaderUniformType ShaderUniformType = UniformTypeStringToEnum[Words[1]];
-
-					Uniforms.push_back({ UniformName, ShaderUniformType });
-				}
-
 				SourceStrings[(int32_t)Type] << Line << '\n';
 			}
 		}
 
-		return Source{ SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(), SourceStrings[(int)ShaderType::GEOMETRY].str(), Uniforms };
+		return Source{ SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(), SourceStrings[(int)ShaderType::GEOMETRY].str()};
 	}	
 	
 } //namespace Volund

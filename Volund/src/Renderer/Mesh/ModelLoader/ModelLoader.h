@@ -42,8 +42,6 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading OBJ file (%s)...", FilePath.c_str());
 
-		Timer T;
-
 		if (FilePath.ends_with(".obj"))
 		{
 			this->LoadOBJ(FilePath);

@@ -21,8 +21,6 @@ namespace Volund
 
 		TimeStep(double Step = 0.0);
 
-		operator float() const;
-
 		operator double() const;
 
 		double GetSeconds() const;

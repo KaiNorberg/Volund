@@ -5,6 +5,8 @@
 #include "Renderer/Renderer.h"
 
 #include "Component/Camera/Camera.h"
+#include "Component/Transform/Transform.h"
+#include "Component/PointLight/PointLight.h"
 
 namespace Volund
 {
@@ -25,7 +27,17 @@ namespace Volund
 		if (ActiveCamera != nullptr)
 		{
 			Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix() * ActiveCamera->GetViewMatrix();
-			Renderer::BeginScene(ViewProjMatrix);
+			Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
+
+			auto const& PointLightView = this->_LoadedScene->ComponentView<PointLight>();
+			std::vector<PointLightData> PointLights;
+			PointLights.reserve(PointLightView.size());
+			for (auto const& Light : PointLightView)
+			{
+				PointLights.push_back({Light->Color, Light->GetEntity()->GetComponent<Transform>()->Position});
+			}
+
+			Renderer::BeginScene(ViewProjMatrix, EyePosition, PointLights);
 
 			if (_LoadedScene != nullptr)
 			{

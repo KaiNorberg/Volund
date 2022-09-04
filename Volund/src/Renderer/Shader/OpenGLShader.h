@@ -18,47 +18,47 @@ namespace Volund
         /// <summary>
         /// Returns if the shader has the specified uniform.
         /// </summary>
-        bool HasUniform(ShaderUniformType Type, std::string const& Name) override;
+        bool HasUniform(std::string const& Name) override;
 
         /// <summary>
         /// Sets a int shader uniform.
         /// </summary>
-        void SetInt(int32_t Value, std::string const& Name) override;
+        void SetInt(std::string const& Name, int32_t Value) override;
 
         /// <summary>
         /// Sets a float shader uniform.
         /// </summary>
-        void SetFloat(float Value, std::string const& Name) override;
+        void SetFloat(std::string const& Name, float Value) override;
 
         /// <summary>
         /// Sets a double shader uniform.
         /// </summary>
-        void SetDouble(float Value, std::string const& Name) override;
+        void SetDouble(std::string const& Name, float Value) override;
 
         /// <summary>
         /// Sets a vector2 shader uniform.
         /// </summary>
-        void SetVec2(Vec2 const& Value, std::string const& Name) override;
+        void SetVec2(std::string const& Name, Vec2 const& Value) override;
 
         /// <summary>
         /// Sets a vector3 shader uniform.
         /// </summary>
-        void SetVec3(Vec3 const& Value, std::string const& Name) override;
+        void SetVec3(std::string const& Name, Vec3 const& Value) override;
 
         /// <summary>
         /// Sets a vector4 shader uniform.
         /// </summary>
-        void SetVec4(Vec4 const& Value, std::string const& Name) override;
+        void SetVec4(std::string const& Name, Vec4 const& Value) override;
 
         /// <summary>
         /// Sets a matrix3 shader uniform.
         /// </summary>
-        void SetMat3x3(Mat3x3 const& Value, std::string const& Name, bool Transpose = false) override;
+        void SetMat3x3(std::string const& Name, Mat3x3 const& Value, bool Transpose = false) override;
 
         /// <summary>
         /// Sets a matrix4 shader uniform.
         /// </summary>
-        void SetMat4x4(Mat4x4 const& Value, std::string const& Name, bool Transpose = false) override;
+        void SetMat4x4(std::string const& Name, Mat4x4 const& Value, bool Transpose = false) override;
 
         OpenGLShader() = default;
 
@@ -68,11 +68,11 @@ namespace Volund
 
     private:
 
-        uint32_t GetUniformLocation(ShaderUniformType Type, std::string const& Name);
-
         uint32_t CompileShader(uint32_t Type, std::string const& Source);
 
-        std::unordered_map<ShaderUniformType, std::unordered_map<std::string, uint32_t>> UniformLocations;
+        uint32_t GetUniformLocation(std::string const& Name);
+
+        std::unordered_map<std::string, uint32_t> UniformLocations;
 
         uint32_t ID = 0;
     };

@@ -26,6 +26,12 @@ namespace Volund
 		template<typename T>
 		bool HasComponent(uint32_t Index = 0);
 
+		template<typename T>
+		uint32_t ComponentAmount();
+
+		template<typename T>
+		std::vector<Ref<Component>> const& ComponentView();
+
 		void OnEvent(Event* E);
 
 		void OnUpdate(TimeStep TS);
@@ -106,6 +112,28 @@ namespace Volund
 		static uint64_t TypeID = GetTypeID<T>();
 
 		return TypeID < this->_Components.size() && Index < this->_Components[TypeID].size();
+	}
+
+
+	template<typename T>
+	inline uint32_t Entity::ComponentAmount()
+	{
+		static uint64_t TypeID = GetTypeID<T>();
+		
+		if (TypeID < this->_Components.size())
+		{
+			return 0;
+		}
+
+		return this->_Components[TypeID].size();
+	}
+
+	template<typename T>
+	inline std::vector<Ref<Component>> const& Entity::ComponentView()
+	{
+		static uint64_t TypeID = GetTypeID<T>();
+
+		return this->_Components[TypeID];
 	}
 
 	template<typename T>

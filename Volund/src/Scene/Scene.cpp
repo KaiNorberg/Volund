@@ -3,6 +3,7 @@
 #include "Scene.h"
 
 #include "EventDispatcher/Event.h"
+#include "Component/Transform/Transform.h"
 
 namespace Volund
 {
@@ -17,6 +18,15 @@ namespace Volund
 		}
 
 		this->_Entities.push_back(NewEntity);
+
+		return NewEntity;
+	}
+
+	Ref<Entity> Scene::CreateEntity(std::string const& Name, Vec3 const& Position, Vec3 const& Rotation, Vec3 const& Scale)
+	{
+		Ref<Entity> NewEntity = this->CreateEntity(Name);
+
+		NewEntity->CreateComponent<Transform>(Position, Rotation, Scale);
 
 		return NewEntity;
 	}

@@ -23,6 +23,7 @@ namespace Volund
 	using DVec3 = glm::vec<3, double>;
 	using IVec3 = glm::vec<3, int32_t>;
 	using I64Vec3 = glm::vec<3, int64_t>;
+	using RGB = Vec3;
 
 	using Vec4 = glm::vec<4, float>;
 	using DVec4 = glm::vec<4, double>;
