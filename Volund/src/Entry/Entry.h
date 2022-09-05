@@ -7,6 +7,8 @@ namespace Volund
 	/// It should return a pointer that inherits from the Application class, deletion of the pointer will be handled by Volund.
 	/// </summary>
 	extern Application* CreateApplication();
+
+	extern bool ShouldRun;
 }
 
 int main(int argc, char* argv)

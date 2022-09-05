@@ -8,6 +8,8 @@
 
 namespace Volund
 {
+	bool ShouldRun = true;
+
 	void Application::Run()
 	{
 		this->Loop();		

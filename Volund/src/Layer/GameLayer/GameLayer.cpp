@@ -22,7 +22,7 @@ namespace Volund
 
 	void GameLayer::OnUpdate(TimeStep TS)
 	{
-		Ref<Camera> ActiveCamera = Camera::GetActiveCamera();
+		Camera* ActiveCamera = Camera::GetActiveCamera();
 
 		if (ActiveCamera != nullptr)
 		{

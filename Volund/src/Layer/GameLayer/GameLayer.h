@@ -31,8 +31,6 @@ namespace Volund
 	template<typename T>
 	inline void GameLayer::LoadScene()
 	{
-		VOLUND_INFO("Loading Scene...");
-
 		this->_LoadedScene.reset(new T());
 	}
 }

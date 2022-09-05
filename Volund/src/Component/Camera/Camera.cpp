@@ -9,19 +9,17 @@
 
 namespace Volund
 {
-    Ref<Camera> Camera::ActiveCamera = nullptr;
-
     bool Camera::IsActive() const
     {
-        return ActiveCamera.get() == this;
+        return ActiveCamera == this;
     }
 
     void Camera::SetActive()
     {
-        ActiveCamera = Ref<Camera>(this);
+        ActiveCamera = this;
     }
 
-    Ref<Camera> Camera::GetActiveCamera()
+    Camera* Camera::GetActiveCamera()
     {
         return ActiveCamera;
     }

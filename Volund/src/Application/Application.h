@@ -10,8 +10,6 @@
 
 namespace Volund
 {
-	static bool ShouldRun = true;
-
 	class Application
 	{
 	public:

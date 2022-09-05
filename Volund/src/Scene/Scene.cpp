@@ -91,6 +91,11 @@ namespace Volund
 		}
 	}
 
+	Scene::Scene()
+	{
+		VOLUND_INFO("Initializing Scene...");
+	}
+
 	Scene::~Scene()
 	{
 

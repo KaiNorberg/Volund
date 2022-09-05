@@ -30,9 +30,9 @@ namespace Volund
 
 		 virtual void OnUpdate(TimeStep TS) {};
 
-		 Scene() = default;
+		 Scene();
 
-		 ~Scene();
+		 virtual ~Scene();
 
 	private:
 	

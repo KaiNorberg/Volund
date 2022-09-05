@@ -20,7 +20,7 @@ namespace Volund
 
 		void SetActive();
 
-		static Ref<Camera> GetActiveCamera();
+		static Camera* GetActiveCamera();
 
 		Mat4x4 GetViewMatrix() const;
 
@@ -38,7 +38,7 @@ namespace Volund
 
 	private:
 
-		static Ref<Camera> ActiveCamera;
+		static inline Camera* ActiveCamera = nullptr;
 
 		void UpdateMatrices();
 
