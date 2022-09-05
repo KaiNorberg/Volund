@@ -48,7 +48,7 @@ namespace Volund
 
 		std::string _Name;
 
-		static inline uint32_t NewTypeID = 0;
+		static inline uint32_t _NewTypeID = 0;
 
 		template<typename T>
 		uint32_t GetTypeID();
@@ -139,7 +139,7 @@ namespace Volund
 	template<typename T>
 	inline uint32_t Entity::GetTypeID()
 	{
-		static uint32_t ID = NewTypeID++;
+		static uint32_t ID = _NewTypeID++;
 		return ID;
 	}
 }
