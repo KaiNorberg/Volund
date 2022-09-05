@@ -64,7 +64,7 @@ namespace Volund
 		_RenderingAPI = RenderingAPI::Create();
 		_Context = Context::Create(window);
 
-		_RenderingAPI->SetClearColor(RGBA(0.7f, 0.0f, 0.4f, 1.0f));
+		_RenderingAPI->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
 
 		_SceneData.Submissions.reserve(32);
 	}

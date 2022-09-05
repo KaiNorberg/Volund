@@ -63,11 +63,12 @@ public:
 
 	TestScene()
 	{
-		Ref<Shader> _TestShader = Shader::Create("Shaders/Test.shader");
-		Ref<Material> _TestMaterial = Material::Create(_TestShader);
+		Ref<Shader> _TestShader = Shader::Create("Standard/Shaders/Test.shader");
 
-		Ref<Mesh> TeapotMesh = Mesh::Create("Teapot.obj");
-		Ref<Mesh> CubeMesh = Mesh::Create("Cube.obj");
+		Ref<Mesh> TeapotMesh = Mesh::Create("Standard/Models/Teapot.obj");
+		Ref<Mesh> CubeMesh = Mesh::Create("Standard/Models/Cube.obj");
+
+		Ref<Material> _TestMaterial = Material::Create(_TestShader);
 
 		Ref<Entity> CameraEntity = this->CreateEntity("CameraEntity", Vec3(0.0f, 0.0f, 5.0f));
 		CameraEntity->CreateComponent<Camera>()->SetActive();

@@ -18,17 +18,15 @@ namespace Volund
 		template<typename T>
 		bool Contains(T const& Entry);
 
-		JSON operator[](int32_t const& Other);
-		JSON operator[](const char* Other);
-
 		template<typename T>
 		operator T();
 
 		template<typename T>
-		bool operator==(T const& Other)
-		{
-			return this->_JSONObject == Other;
-		}
+		bool operator==(T const& Other);
+
+		JSON operator[](int32_t const& Other);
+
+		JSON operator[](const char* Other);
 
 		static JSON Load(std::string const& FilePath);
 
@@ -42,20 +40,26 @@ namespace Volund
 	};
 
 	template<typename T>
-	T JSON::GetAs()
+	inline T JSON::GetAs()
 	{
 		return this->_JSONObject.get<T>();
 	}
 	  
 	template<typename T>
-	bool JSON::Contains(T const& Entry)
+	inline bool JSON::Contains(T const& Entry)
 	{
 		return this->_JSONObject.contains(Entry);
 	}
 
 	template<typename T>
-	JSON::operator T()
+	inline JSON::operator T()
 	{
 		return this->GetAs<T>();
-	}		
+	}
+
+	template<typename T>
+	inline bool JSON::operator==(T const& Other)
+	{
+		return this->_JSONObject == Other;
+	}
 }
