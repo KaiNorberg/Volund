@@ -36,6 +36,8 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS);
 
+		JSON Serialize();
+
 		Entity() = default;
 
 		Entity(Scene* Parent, std::string const& Name = "");
@@ -44,16 +46,17 @@ namespace Volund
 
 	private:
 
+		template<typename T>
+		uint32_t GetTypeID();
+
+		static inline uint32_t _NewTypeID = 0;
+
 		Scene* _Parent;
 
 		std::string _Name;
 
-		static inline uint32_t _NewTypeID = 0;
-
-		template<typename T>
-		uint32_t GetTypeID();
-
 		std::vector<std::vector<Ref<Component>>> _Components;
+
 	};	
 
 	template<typename T, class... ARGS>
@@ -140,6 +143,7 @@ namespace Volund
 	inline uint32_t Entity::GetTypeID()
 	{
 		static uint32_t ID = _NewTypeID++;
+
 		return ID;
 	}
 }

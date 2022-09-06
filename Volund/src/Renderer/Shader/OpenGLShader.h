@@ -11,11 +11,6 @@ namespace Volund
         void Bind();
 
         /// <summary>
-        /// Compiles and generates the shader, (Dont use if filepath was specified in the constructor).
-        /// </summary>
-        void Init(std::string const& FilePath) override;
-
-        /// <summary>
         /// Returns if the shader has the specified uniform.
         /// </summary>
         bool HasUniform(std::string const& Name) override;

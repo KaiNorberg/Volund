@@ -4,15 +4,17 @@
 
 namespace Volund
 {
-	class OpenGLTexture2D : public Texture2D
+	class OpenGLTexture : public Texture
 	{
 	public:
 
+		std::string GetFilePath();
+
 		void Bind(uint32_t Unit) override;
 
-		OpenGLTexture2D(std::string const& FilePath);
+		OpenGLTexture(std::string const& FilePath);
 
-		~OpenGLTexture2D();
+		~OpenGLTexture();
 
 	private:
 		uint32_t _ID = 0;

@@ -12,8 +12,7 @@ namespace Volund
 	{
 	public:
 
-		template<typename T>
-		void LoadScene();
+		void LoadScene(Ref<Scene> NewScene);
 
 		void OnAttach() override;
 
@@ -27,11 +26,5 @@ namespace Volund
 
 		Ref<Scene> _LoadedScene;
 	};
-
-	template<typename T>
-	inline void GameLayer::LoadScene()
-	{
-		this->_LoadedScene.reset(new T());
-	}
 }
 

@@ -20,12 +20,12 @@ namespace Volund
 		const Ref<VertexBuffer> GetVertexBuffer() const;
 		const Ref<IndexBuffer> GetIndexBuffer() const;
 
-		static Ref<Mesh> Create(std::string const& FilePath);
 		static Ref<Mesh> Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
 
 		virtual ~Mesh() = default;
 
 	protected:
+
 		Ref<VertexBuffer> _VertexBuffer;
 		Ref<IndexBuffer> _IndexBuffer;
 	};

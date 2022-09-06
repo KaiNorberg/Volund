@@ -52,6 +52,22 @@ namespace Volund
 		this->_ModelMatrix = glm::scale(this->_ModelMatrix, this->Scale);
 	}
 
+	JSON Transform::Serialize()
+	{
+		JSON TransformJSON;
+
+		TransformJSON.AddEntry("Type", "Transform");
+
+		TransformJSON.AddList("Position", { this->Position.x, this->Position.y, this->Position.z });
+		
+		Vec3 Rotation = this->GetRotation();
+		TransformJSON.AddList("Rotation", { Rotation.x, Rotation.y, Rotation.z });
+
+		TransformJSON.AddList("Scale", { Scale.x, Scale.y, Scale.z });
+
+		return TransformJSON;
+	}
+
 	Transform::Transform(Vec3 const& Position, Vec3 const& Rotation, Vec3 const& Scale)
 	{
 		this->Position = Position;

@@ -9,6 +9,11 @@
 
 namespace Volund
 {
+	std::string Shader::GetFilePath()
+	{
+		return this->_FilePath;
+	}
+
 	Ref<Shader> Shader::Create(std::string const& FilePath)
 	{
 		switch (RenderingAPI::GetAPI())
@@ -29,13 +34,11 @@ namespace Volund
 
 	Shader::Source Shader::ParseShader(std::string const& FilePath)
 	{
+		VOLUND_INFO("Loading Shader (%s)...", FilePath.c_str());
+
 		std::ifstream File(FilePath);
 
-		if (File.fail())
-		{
-			VOLUND_INFO("Cant find Shader: (%s).", FilePath.c_str());
-			return Source{};
-		}
+		VOLUND_ASSERT(File, "Unable to load Shader (%s).", FilePath.c_str());
 
 		enum class ShaderType
 		{
@@ -81,5 +84,5 @@ namespace Volund
 
 		return Source{ SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(), SourceStrings[(int)ShaderType::GEOMETRY].str()};
 	}	
-	
+
 } //namespace Volund

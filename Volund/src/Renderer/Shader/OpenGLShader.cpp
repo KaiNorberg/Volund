@@ -7,61 +7,6 @@
 
 namespace Volund
 {
-	void OpenGLShader::Init(std::string const& FilePath)
-	{
-		if (this->ID != NULL)
-		{
-			VOLUND_INFO("Shader (%s) already initialized.", FilePath.c_str());
-			return;
-		}
-		VOLUND_INFO("Loading Shader (%s)...", FilePath.c_str());
-
-		Source Source = this->ParseShader(FilePath);
-
-		uint32_t program = glCreateProgram();
-
-		uint32_t vs = NULL;
-		if (Source.VertexSource.length() > 1)
-		{
-			vs = CompileShader(GL_VERTEX_SHADER, Source.VertexSource);
-			glAttachShader(program, vs);
-		}
-
-		uint32_t fs = NULL;
-		if (Source.FragmentSource.length() > 1)
-		{
-			fs = CompileShader(GL_FRAGMENT_SHADER, Source.FragmentSource);
-			glAttachShader(program, fs);
-		}
-
-		uint32_t gs = NULL;
-		if (Source.GeometrySource.length() > 1)
-		{
-			gs = CompileShader(GL_GEOMETRY_SHADER, Source.GeometrySource);
-			glAttachShader(program, gs);
-		}
-
-		glLinkProgram(program);
-		glValidateProgram(program);
-
-		if (vs != NULL)
-		{
-			glDeleteShader(vs);
-		}
-
-		if (fs != NULL)
-		{
-			glDeleteShader(fs);
-		}
-
-		if (gs != NULL)
-		{
-			glDeleteShader(gs);
-		}
-
-		this->ID = program;
-	}
-
 	bool OpenGLShader::HasUniform(std::string const& Name)
 	{
 		return UniformLocations.contains(Name) || glGetUniformLocation(this->ID, Name.c_str()) != 0;
@@ -166,7 +111,57 @@ namespace Volund
 
 	OpenGLShader::OpenGLShader(std::string const& FilePath)
 	{
-		this->Init(FilePath);
+		if (this->ID != NULL)
+		{
+			VOLUND_INFO("Shader (%s) already initialized.", FilePath.c_str());
+			return;
+		}
+
+		Source Source = this->ParseShader(FilePath);
+
+		uint32_t program = glCreateProgram();
+
+		uint32_t vs = NULL;
+		if (Source.VertexSource.length() > 1)
+		{
+			vs = CompileShader(GL_VERTEX_SHADER, Source.VertexSource);
+			glAttachShader(program, vs);
+		}
+
+		uint32_t fs = NULL;
+		if (Source.FragmentSource.length() > 1)
+		{
+			fs = CompileShader(GL_FRAGMENT_SHADER, Source.FragmentSource);
+			glAttachShader(program, fs);
+		}
+
+		uint32_t gs = NULL;
+		if (Source.GeometrySource.length() > 1)
+		{
+			gs = CompileShader(GL_GEOMETRY_SHADER, Source.GeometrySource);
+			glAttachShader(program, gs);
+		}
+
+		glLinkProgram(program);
+		glValidateProgram(program);
+
+		if (vs != NULL)
+		{
+			glDeleteShader(vs);
+		}
+
+		if (fs != NULL)
+		{
+			glDeleteShader(fs);
+		}
+
+		if (gs != NULL)
+		{
+			glDeleteShader(gs);
+		}
+
+		this->ID = program;
+		this->_FilePath = FilePath;
 	}
 
 	OpenGLShader::~OpenGLShader()

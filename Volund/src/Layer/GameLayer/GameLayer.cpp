@@ -10,6 +10,11 @@
 
 namespace Volund
 {
+	void GameLayer::LoadScene(Ref<Scene> NewScene)
+	{
+		this->_LoadedScene = NewScene;
+	}
+
 	void GameLayer::OnAttach()
 	{
 

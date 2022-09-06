@@ -10,27 +10,41 @@ namespace Volund
 	{
 	public:
 
-		uint64_t Size();
+		uint64_t Size() const;
 
 		template<typename T>
-		T GetAs();
+		T GetAs() const;
 
 		template<typename T>
 		bool Contains(T const& Entry);
 
 		template<typename T>
-		operator T();
+		void AddEntry(std::string const& Name, T const& Entry);
+
+		template<typename T>
+		void AddList(std::string const& Name, std::initializer_list<T> const& Entry);
+
+		template<typename T>
+		void PushBack(T const& Entry);
+
+		void Save(std::string const& FilePath);
+
+		static JSON Load(std::string const& FilePath);
+
+		template<typename T>
+		operator T() const;
 
 		template<typename T>
 		bool operator==(T const& Other);
 
-		JSON operator[](int32_t const& Other);
+		JSON const operator[](int32_t const& Other) const;
 
-		JSON operator[](const char* Other);
-
-		static JSON Load(std::string const& FilePath);
+		JSON const operator[](const char* Other) const;
 
 		JSON() = default;
+
+		template<typename T>
+		JSON(std::initializer_list<T> List);
 
 		JSON(nlohmann::json const& JSONObject);
 
@@ -40,7 +54,7 @@ namespace Volund
 	};
 
 	template<typename T>
-	inline T JSON::GetAs()
+	inline T JSON::GetAs() const
 	{
 		return this->_JSONObject.get<T>();
 	}
@@ -51,8 +65,38 @@ namespace Volund
 		return this->_JSONObject.contains(Entry);
 	}
 
+	template<>
+	inline void JSON::AddEntry(std::string const& Name, JSON const& Entry)
+	{
+		this->_JSONObject[Name] = Entry._JSONObject;
+	}
+
 	template<typename T>
-	inline JSON::operator T()
+	inline void JSON::AddEntry(std::string const& Name, T const& Entry)
+	{
+		this->_JSONObject[Name] = Entry;
+	}
+
+	template<typename T>
+	inline void JSON::AddList(std::string const& Name, std::initializer_list<T> const& Entry)
+	{
+		this->_JSONObject[Name] = Entry;
+	}
+
+	template<>
+	inline void JSON::PushBack(JSON const& Entry)
+	{
+		this->_JSONObject.push_back(Entry._JSONObject);
+	}
+
+	template<typename T>
+	inline void JSON::PushBack(T const& Entry)
+	{
+		this->_JSONObject.push_back(Entry);
+	}
+	
+	template<typename T>
+	inline JSON::operator T() const
 	{
 		return this->GetAs<T>();
 	}
@@ -61,5 +105,11 @@ namespace Volund
 	inline bool JSON::operator==(T const& Other)
 	{
 		return this->_JSONObject == Other;
+	}
+
+	template<typename T>
+	inline JSON::JSON(std::initializer_list<T> List)
+	{
+		this->_JSONObject = nlohmann::json(List);
 	}
 }

@@ -14,10 +14,22 @@ namespace Volund
 		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 		Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
-		Renderer::Submit(ModelMatrix, this->_Mesh, this->_Material);
+		Renderer::Submit(ModelMatrix, this->_Mesh->Get(), this->_Material->Get());
 	}
 
-	MeshRenderer::MeshRenderer(Ref<Mesh> ObjectMesh, Ref<Material> ObjectMaterial)
+	JSON MeshRenderer::Serialize()
+	{
+		JSON MeshRendererJSON;
+
+		MeshRendererJSON.AddEntry("Type", "MeshRenderer");
+
+		MeshRendererJSON.AddEntry("Mesh", this->_Mesh->GetFilePath());
+		MeshRendererJSON.AddEntry("Material", this->_Material->GetFilePath());
+
+		return MeshRendererJSON;
+	}
+
+	MeshRenderer::MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial)
 	{
 		this->_Mesh = ObjectMesh;
 		this->_Material = ObjectMaterial;

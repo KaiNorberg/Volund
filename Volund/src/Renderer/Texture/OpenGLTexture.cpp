@@ -11,18 +11,19 @@
 
 namespace Volund
 {
-	void OpenGLTexture2D::Bind(uint32_t Unit)
+	void OpenGLTexture::Bind(uint32_t Unit)
 	{
 		glActiveTexture(GL_TEXTURE0 + Unit);
 		glBindTexture(GL_TEXTURE_2D, this->_ID);
 	}
 
-	OpenGLTexture2D::OpenGLTexture2D(std::string const& FilePath)
+	OpenGLTexture::OpenGLTexture(std::string const& FilePath)
 	{
 		ImageLoader Loader = ImageLoader(FilePath, 4);
 
 		this->_Width = Loader.GetWidth();
 		this->_Height = Loader.GetHeight();
+		this->_FilePath = FilePath;
 	
 		glCreateTextures(GL_TEXTURE_2D, 1, &this->_ID);
 		glBindTexture(GL_TEXTURE_2D, this->_ID);
@@ -36,7 +37,7 @@ namespace Volund
 		glTextureParameteri(this->_ID, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture2D::~OpenGLTexture2D()
+	OpenGLTexture::~OpenGLTexture()
 	{
 		glDeleteTextures(1, &this->_ID);
 	}

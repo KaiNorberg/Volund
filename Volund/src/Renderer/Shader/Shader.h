@@ -9,12 +9,9 @@ namespace Volund
     {
     public:
 
-        virtual void Bind() = 0;
+        std::string GetFilePath();
 
-        /// <summary>
-        /// Compiles and generates the shader, (Dont use if filepath was specified in the constructor).
-        /// </summary>
-        virtual void Init(std::string const& FilePath) = 0;
+        virtual void Bind() = 0;
 
         /// <summary>
         /// Returns if the shader has the specified uniform.
@@ -77,6 +74,8 @@ namespace Volund
         };
 
         Source ParseShader(std::string const& FilePath);
+
+        std::string _FilePath;
     };
 
 } //namespace Volund

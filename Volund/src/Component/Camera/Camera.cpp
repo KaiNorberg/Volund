@@ -72,6 +72,20 @@ namespace Volund
         }
     }
 
+    JSON Camera::Serialize()
+    {
+        JSON CameraJSON;
+
+        CameraJSON.AddEntry("Type", "Camera");
+
+        CameraJSON.AddEntry("IsActive", this->IsActive());
+        CameraJSON.AddEntry("FOV", this->FOV);
+        CameraJSON.AddEntry("NearPlane", this->NearPlane);
+        CameraJSON.AddEntry("FarPlane", this->FarPlane);
+
+        return CameraJSON;
+    }
+
     void Camera::UpdateMatrices()
     {
         VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");

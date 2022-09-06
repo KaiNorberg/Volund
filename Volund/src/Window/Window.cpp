@@ -188,7 +188,7 @@ namespace Volund
 
 		//Read settings
 
-		if (ConfigFile["Window"]["FullScreen"] == true)
+		if ((bool)ConfigFile["Window"]["FullScreen"])
 		{
 			this->MakeFullscreen();
 		}

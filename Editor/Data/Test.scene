@@ -1,0 +1,163 @@
+{
+    "Entities": [
+        {
+            "Components": [
+                {
+                    "Position": [
+                        0.0,
+                        2.0,
+                        10.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Type": "Transform"
+                },
+                {
+                    "FOV": 70.0,
+                    "FarPlane": 100.0,
+                    "IsActive": true,
+                    "NearPlane": 0.10000000149011612,
+                    "Type": "Camera"
+                }
+            ],
+            "Name": "CameraEntity"
+        },
+        {
+            "Components": [
+                {
+                    "Position": [
+                        3.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Type": "Transform"
+                },
+                {
+                    "Material": "Test.material",
+                    "Mesh": "Standard/Models/Cube.obj",
+                    "Type": "MeshRenderer"
+                }
+            ],
+            "Name": "TeapotEntity"
+        },
+        {
+            "Components": [
+                {
+                    "Position": [
+                        -3.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Type": "Transform"
+                },
+                {
+                    "Material": "Test.material",
+                    "Mesh": "Standard/Models/Teapot.obj",
+                    "Type": "MeshRenderer"
+                }
+            ],
+            "Name": "CubeEntity"
+        },
+        {
+            "Components": [
+                {
+                    "Position": [
+                        10.0,
+                        5.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Type": "Transform"
+                },
+                {
+                    "Color": [
+                        1.0,
+                        0.0,
+                        0.0
+                    ],
+                    "Type": "PointLight"
+                }
+            ],
+            "Name": "RedPointLight"
+        },
+        {
+            "Components": [
+                {
+                    "Position": [
+                        -10.0,
+                        5.0,
+                        0.0
+                    ],
+                    "Rotation": [
+                        0.0,
+                        -0.0,
+                        0.0
+                    ],
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Type": "Transform"
+                },
+                {
+                    "Color": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Type": "PointLight"
+                }
+            ],
+            "Name": "BluePointLight"
+        }
+    ],
+    "Materials": [
+        "Test.material"
+    ],
+    "Meshes": [
+        "Standard/Models/Teapot.obj",
+        "Standard/Models/Cube.obj"
+    ],
+    "Shaders": [
+        "Standard/Shaders/Test.shader"
+    ],
+    "Textures": null
+}

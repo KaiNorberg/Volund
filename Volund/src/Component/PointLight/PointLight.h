@@ -10,6 +10,8 @@ namespace Volund
 		
 		RGB Color;
 
+		JSON Serialize() override;
+
 		PointLight(RGB Color = RGB(1.0f));
 
 	private:

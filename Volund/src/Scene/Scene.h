@@ -1,6 +1,12 @@
 #pragma once
 
 #include "Entity/Entity.h"
+#include "Renderer/Shader/Shader.h"
+#include "Renderer/Texture/Texture.h"
+#include "Renderer/Mesh/Mesh.h"
+
+#include "AssetLibrary/Assets.h"
+#include "AssetLibrary/AssetLibrary.h"
 
 namespace Volund
 {
@@ -9,6 +15,7 @@ namespace Volund
 	class Scene
 	{
 	public:
+
 		 Ref<Entity> CreateEntity(std::string const& Name);
 
 		 Ref<Entity> CreateEntity(std::string const& Name, Vec3 const& Position, Vec3 const& Rotation = Vec3(0.0f), Vec3 const& Scale = Vec3(1.0f));
@@ -26,16 +33,16 @@ namespace Volund
 
 		 void EventCallback(Event* E);
 
-		 virtual void OnEvent(Event* E) {};
+		 static Ref<Scene> Deserialize(std::string const& FilePath);
 
-		 virtual void OnUpdate(TimeStep TS) {};
+		 void Serialize(std::string const& FilePath);
+
+		 AssetLibrary Assets;
 
 		 Scene();
 
-		 virtual ~Scene();
-
 	private:
-	
+
 		std::vector<Ref<Entity>> _Entities;
 	};
 

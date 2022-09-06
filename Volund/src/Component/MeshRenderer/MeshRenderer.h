@@ -5,6 +5,9 @@
 #include "Renderer/Mesh/Mesh.h"
 #include "Renderer/Material/Material.h"
 
+#include "AssetLibrary/Material/MaterialAsset.h"
+#include "AssetLibrary/Mesh/MeshAsset.h"
+
 namespace Volund
 {
 	class MeshRenderer : public Component
@@ -13,11 +16,13 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		MeshRenderer(Ref<Mesh> ObjectMesh, Ref<Material> ObjectMaterial);
+		JSON Serialize() override;
+
+		MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial);
 
 	private:
 
-		Ref<Mesh> _Mesh;
-		Ref<Material> _Material;
+		Ref<MeshAsset> _Mesh;
+		Ref<MaterialAsset> _Material;
 	};
 }

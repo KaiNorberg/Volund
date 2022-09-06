@@ -22,6 +22,8 @@ namespace Volund
 
 		virtual	void OnEvent(Event* E) {};
 
+		virtual JSON Serialize() = 0;
+
 		Component() = default;
 
 	private:

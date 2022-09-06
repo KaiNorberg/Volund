@@ -36,6 +36,27 @@ namespace Volund
 		}
 	}
 
+	JSON Entity::Serialize()
+	{
+		JSON EntityJSON;
+
+		EntityJSON.AddEntry("Name", this->_Name);
+
+		JSON ComponentsJSON;
+
+		for (auto const& ComponentView : this->_Components)
+		{
+			for (auto const& Component : ComponentView)
+			{
+				ComponentsJSON.PushBack(Component->Serialize());
+			}
+		}
+
+		EntityJSON.AddEntry("Components", ComponentsJSON);
+		
+		return EntityJSON;
+	}
+
 	Entity::Entity(Scene* Parent, std::string const& Name)
 	{
 		this->_Parent = Parent;
