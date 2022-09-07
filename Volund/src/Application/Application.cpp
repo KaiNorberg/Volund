@@ -15,7 +15,7 @@ namespace Volund
 		this->Loop();		
 	}
 
-	void Application::AttachLayer(Layer* L)
+	void Application::AttachLayer(Ref<Layer> L)
 	{
 		this->_LayerStack.push_back(L);
 		L->OnAttach();
@@ -50,7 +50,7 @@ namespace Volund
 
 			this->_Window->Clear();
 
-			for (Layer* L : _LayerStack)
+			for (Ref<Layer> L : _LayerStack)
 			{
 				L->OnUpdate(TS);
 			}
@@ -70,7 +70,7 @@ namespace Volund
 		break;
 		}
 
-		for (Layer* L : _LayerStack)
+		for (Ref<Layer> L : _LayerStack)
 		{
 			L->OnEvent(E);
 		}
@@ -99,7 +99,6 @@ namespace Volund
 		for (auto const& L : this->_LayerStack)
 		{
 			L->OnDetach();
-			delete L;
 		}
 		this->_LayerStack.clear();
 	}

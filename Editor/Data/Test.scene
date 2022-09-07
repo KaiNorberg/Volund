@@ -26,6 +26,11 @@
                     "IsActive": true,
                     "NearPlane": 0.10000000149011612,
                     "Type": "Camera"
+                },
+                {
+                    "Sensitivity": 1.0,
+                    "Speed": 5.0,
+                    "Type": "CameraMovement"
                 }
             ],
             "Name": "CameraEntity"

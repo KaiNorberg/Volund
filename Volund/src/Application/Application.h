@@ -16,7 +16,7 @@ namespace Volund
 
 		 void Run();
 
-		 void AttachLayer(Layer* L);
+		 void AttachLayer(Ref<Layer> L);
 
 		 /// <summary>
 		 /// Sets the Application SholdRun flag to false.
@@ -48,7 +48,7 @@ namespace Volund
 		Ref<Renderer> _Renderer;
 		Ref<Window> _Window;
 
-		std::vector<Layer*> _LayerStack;
+		std::vector<Ref<Layer>> _LayerStack;
 	};
 }
 

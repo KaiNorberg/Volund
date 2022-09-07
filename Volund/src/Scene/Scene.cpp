@@ -130,6 +130,10 @@ namespace Volund
 					NewCamera->NearPlane = ComponentJSON["NearPlane"];
 					NewCamera->FarPlane = ComponentJSON["FarPlane"];
 				}
+				else if (ComponentType == "CameraMovement")
+				{
+					NewEntity->CreateComponent<CameraMovement>(ComponentJSON["Speed"], ComponentJSON["Sensitivity"]);
+				}
 				else if (ComponentType == "MeshRenderer")
 				{
 					Ref<MeshAsset> ObjectMesh = NewScene->Assets.GetAsset<MeshAsset>(ComponentJSON["Mesh"].GetAs<std::string>());
