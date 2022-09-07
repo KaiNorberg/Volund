@@ -21,7 +21,6 @@ project "Volund"
 
 	dependson 
 	{
-		"GLFW",
 		"Glad"
 	}
 
@@ -49,7 +48,6 @@ project "Volund"
 	links
 	{
 		"OpenGL32.lib",
-		"GLFW.lib",
 		"Glad.lib"
 	}
 	
@@ -115,7 +113,6 @@ project "Editor"
 	{
 		"Volund",
 		"OpenGL32.lib",
-		"GLFW.lib",
 		"Glad.lib"
 	}
 		
@@ -139,62 +136,7 @@ project "Editor"
 		postbuildcommands {
 		  "xcopy Data\\ ..\\" .. TargetDir .. "\\ /E /C /Y"
 		}
-
-project "GLFW"
-	kind "StaticLib"
-	language "C"
-	location "vendor/glfw"
-	systemversion "latest"
-	staticruntime "on"
-
-	targetdir (TargetDir)
-	objdir (ObjDir)
-
-	files
-	{
-		"vendor/glfw/include/GLFW/glfw3.h",
-		"vendor/glfw/include/GLFW/glfw3native.h",
-		"vendor/glfw/src/glfw_config.h",
-		"vendor/glfw/src/context.c",
-		"vendor/glfw/src/init.c",
-		"vendor/glfw/src/input.c",
-		"vendor/glfw/src/monitor.c",
-
-		"vendor/glfw/src/null_init.c",
-		"vendor/glfw/src/null_joystick.c",
-		"vendor/glfw/src/null_monitor.c",
-		"vendor/glfw/src/null_window.c",
-
-		"vendor/glfw/src/platform.c",
-		"vendor/glfw/src/vulkan.c",
-		"vendor/glfw/src/window.c",
-		"vendor/glfw/src/win32_init.c",
-		"vendor/glfw/src/win32_joystick.c",
-		"vendor/glfw/src/win32_module.c",
-		"vendor/glfw/src/win32_monitor.c",
-		"vendor/glfw/src/win32_time.c",
-		"vendor/glfw/src/win32_thread.c",
-		"vendor/glfw/src/win32_window.c",
-		"vendor/glfw/src/wgl_context.c",
-		"vendor/glfw/src/egl_context.c",
-		"vendor/glfw/src/osmesa_context.c"
-	}
-
-	defines 
-	{ 
-		"GLFW_VULKAN_STATIC",
-		"_GLFW_WIN32",
-		"_CRT_SECURE_NO_WARNINGS"
-	}
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"
-
+		
 project "Glad"
 	kind "StaticLib"
 	language "C"
