@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-	Ref<Context> Context::Create(Ref<Window>& window)
+	Ref<Context> Context::Create(Ref<Window> const& window)
 	{		
 		switch (RenderingAPI::GetAPI())
 		{

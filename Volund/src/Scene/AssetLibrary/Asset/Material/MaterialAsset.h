@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Renderer/Material/Material.h"
-#include "AssetLibrary/AssetLibrary.h"
+#include "Scene/AssetLibrary/AssetLibrary.h"
 
 namespace Volund
 {

@@ -3,7 +3,7 @@
 #include "Scene.h"
 
 #include "EventDispatcher/Event.h"
-#include "Component/Components.h"
+#include "Scene/Entity/Component/Components.h"
 
 namespace Volund
 {

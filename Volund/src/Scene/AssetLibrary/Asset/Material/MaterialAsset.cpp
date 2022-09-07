@@ -1,7 +1,7 @@
 #include "PCH/PCH.h"
 #include "MaterialAsset.h"
 
-#include "AssetLibrary/Shader/ShaderAsset.h"
+#include "Scene/AssetLibrary/Asset/Shader/ShaderAsset.h"
 
 #include "Scene/Scene.h"
 

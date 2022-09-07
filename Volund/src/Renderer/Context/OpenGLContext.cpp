@@ -102,7 +102,7 @@ namespace Volund
 		_Window->SwapBuffers();
 	}
 
-	OpenGLContext::OpenGLContext(Ref<Window>& window)
+	OpenGLContext::OpenGLContext(Ref<Window> const& window)
 	{
 		this->_Window = window;		
 		VOLUND_INFO("Creating OpenGL context...");

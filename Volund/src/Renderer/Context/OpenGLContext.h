@@ -11,7 +11,7 @@ namespace Volund
 
 		void Flush() override;
 
-		OpenGLContext(Ref<Window>& window);
+		OpenGLContext(Ref<Window> const& window);
 		
 		~OpenGLContext();
 

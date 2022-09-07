@@ -25,9 +25,9 @@ namespace Volund
 
 		static void Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial);
 
-		Renderer(Ref<Window>& window);
+		static Ref<Window> GetWindow();
 
-		~Renderer();
+		static void SetWindow(Ref<Window> const& NewWindow);
 
 	private:		
 		
@@ -38,7 +38,7 @@ namespace Volund
 			Ref<Material> ObjectMaterial;
 		};
 
-		static struct SceneData
+		static inline struct SceneData
 		{
 			Mat4x4 ViewProjMatrix = Mat4x4(1.0f);
 			Vec3 EyePosition = Vec3(1.0f);
@@ -46,8 +46,9 @@ namespace Volund
 			std::vector<Submission> Submissions;
 		} _SceneData;
 
-		static Ref<RenderingAPI> _RenderingAPI;
-		static Ref<Context> _Context;
+		static inline Ref<RenderingAPI> _RenderingAPI;
+		static inline Ref<Context> _Context;
+		static inline Ref<Window> _Window;
 	};
 }
 

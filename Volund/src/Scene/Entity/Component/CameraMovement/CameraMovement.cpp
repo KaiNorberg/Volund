@@ -5,9 +5,9 @@
 #include "CameraMovement.h"
 
 #include "Input/Input.h"
-#include "Component/Transform/Transform.h"
+#include "Scene/Entity/Component/Transform/Transform.h"
 
-#include "Entity/Entity.h"
+#include "Scene/Entity/Entity.h"
 
 namespace Volund
 {

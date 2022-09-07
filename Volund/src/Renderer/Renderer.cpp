@@ -3,11 +3,6 @@
 
 namespace Volund
 {
-	Renderer::SceneData Renderer::_SceneData;
-
-	Ref<Context> Renderer::_Context;
-	Ref<RenderingAPI> Renderer::_RenderingAPI;
-
 	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights)
 	{
 		SceneData NewSceneData = SceneData();
@@ -59,19 +54,28 @@ namespace Volund
 		_SceneData.Submissions.push_back(NewSubmission);
 	}
 
-	Renderer::Renderer(Ref<Window>& window)
+	Ref<Window> Renderer::GetWindow()
 	{
-		_RenderingAPI = RenderingAPI::Create();
-		_Context = Context::Create(window);
-
-		_RenderingAPI->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
-
-		_SceneData.Submissions.reserve(32);
+		return _Window;
 	}
 
-	Renderer::~Renderer()
+	void Renderer::SetWindow(Ref<Window> const& NewWindow)
 	{
-		_RenderingAPI.reset();
-		_Context.reset();
+		if (NewWindow != nullptr)
+		{
+			_RenderingAPI = RenderingAPI::Create();
+			_Context = Context::Create(NewWindow);
+
+			_RenderingAPI->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
+
+			_SceneData.Submissions.reserve(32);
+		}
+		else
+		{
+			_RenderingAPI.reset();
+			_Context.reset();
+		}
+		
+		_Window = NewWindow;
 	}
 }

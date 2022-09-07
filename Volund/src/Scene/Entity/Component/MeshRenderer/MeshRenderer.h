@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Component/Component.h"
+#include "../Component.h"
 
 #include "Renderer/Mesh/Mesh.h"
 #include "Renderer/Material/Material.h"
 
-#include "AssetLibrary/Material/MaterialAsset.h"
-#include "AssetLibrary/Mesh/MeshAsset.h"
+#include "Scene/AssetLibrary/Asset/Material/MaterialAsset.h"
+#include "Scene/AssetLibrary/Asset/Mesh/MeshAsset.h"
 
 namespace Volund
 {

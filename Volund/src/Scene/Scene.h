@@ -5,7 +5,7 @@
 #include "Renderer/Texture/Texture.h"
 #include "Renderer/Mesh/Mesh.h"
 
-#include "AssetLibrary/Assets.h"
+#include "AssetLibrary/Asset/Assets.h"
 #include "AssetLibrary/AssetLibrary.h"
 
 namespace Volund

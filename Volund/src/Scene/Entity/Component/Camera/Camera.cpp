@@ -4,8 +4,8 @@
 
 #include "Camera.h"
 
-#include "Component/Transform/Transform.h"
-#include "Entity/Entity.h"
+#include "Scene/Entity/Entity.h"
+#include "Scene/Entity/Component/Transform/Transform.h"
 
 namespace Volund
 {

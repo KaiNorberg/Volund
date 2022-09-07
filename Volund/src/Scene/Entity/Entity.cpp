@@ -65,6 +65,12 @@ namespace Volund
 
 	Entity::~Entity()
 	{
-
+		for (auto const& ComponentView : this->_Components)
+		{
+			for (auto const& Component : ComponentView)
+			{
+				Component->OnDelete();
+			}
+		}
 	}
 }

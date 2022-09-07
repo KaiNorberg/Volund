@@ -8,28 +8,19 @@
 
 namespace Volund
 {
-	bool ShouldRun = true;
-
 	void Application::Run()
 	{
 		this->Loop();		
 	}
 
-	void Application::AttachLayer(Ref<Layer> L)
+	void Application::AttachLayer(Layer* L)
 	{
-		this->_LayerStack.push_back(L);
+		this->_LayerStack.push_back(Ref<Layer>(L));
 		L->OnAttach();
-	}
-
-	void Application::Restart()
-	{
-		::Volund::ShouldRun = true;
-		this->_ShouldRun = false;
 	}
 
 	void Application::Terminate()
 	{
-		::Volund::ShouldRun = false;
 		this->_ShouldRun = false;
 	}
 
@@ -91,7 +82,7 @@ namespace Volund
 		
 		this->_Window.reset(new Window(this->_EventDispatcher));		
 		
-		this->_Renderer.reset(new Renderer(this->_Window));
+		Renderer::SetWindow(this->_Window);
 	}
 
 	Application::~Application()
@@ -101,5 +92,10 @@ namespace Volund
 			L->OnDetach();
 		}
 		this->_LayerStack.clear();
+
+		if (Renderer::GetWindow() == this->_Window)
+		{
+			Renderer::SetWindow(nullptr);
+		}
 	}
 }
