@@ -44,20 +44,20 @@ namespace Volund
 			EntityTransform->Position += EntityTransform->GetRight() * float(TS) * this->Speed;
 		}
 
-		DVec2 Delta = Input::GetCursorPosition() - this->OldCursorPosition;
-		Delta.x = Math::Clamp(Delta.x, -10.0, 10.0);
-		Delta.y = Math::Clamp(Delta.y, -10.0, 10.0);
+		IVec2 Delta = Input::GetMousePosition() - this->OldMousePosition;
+		Delta.x = Math::Clamp(Delta.x, -10, 10);
+		Delta.y = Math::Clamp(Delta.y, -10, 10);
 
 		Rotation -= Vec3(Delta.y, Delta.x, 0.0f);
 		Rotation.x = Math::Clamp(Rotation.x, -89.0f, 89.0f);
 
 		EntityTransform->SetRotation(Rotation * this->Sensitivity);
-		this->OldCursorPosition = Input::GetCursorPosition();
+		this->OldMousePosition = Input::GetMousePosition();
 	}
 
 	CameraMovement::CameraMovement(float Speed, float Sensitivity)
 	{
-		this->OldCursorPosition = Input::GetCursorPosition();
+		this->OldMousePosition = Input::GetMousePosition();
 
 		this->Speed = Speed;
 

@@ -13,30 +13,38 @@ namespace Volund
 		{VOLUND_GRAPHICSAPI_OPENGL, API::OPENGL}
 	};
 
-	RenderingAPI::API RenderingAPI::GetAPI()
+	RenderingAPI::API RenderingAPI::GetSelectedAPI()
 	{
 		return _SelectedAPI;
 	}
 
+	void RenderingAPI::SelectAPI(std::string const& NewAPI)
+	{
+		if (_APINames.contains(NewAPI))
+		{
+			SelectAPI(_APINames[NewAPI]);
+		}
+		else
+		{
+			VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", NewAPI.c_str());
+		}
+	}
+
+	void RenderingAPI::SelectAPI(RenderingAPI::API NewAPI)
+	{
+		if (_SelectedAPI == API::NONE)
+		{
+			_SelectedAPI = NewAPI;
+		}
+		else
+		{
+			VOLUND_ERROR("An API has already been selected!");
+		}
+	}
+
 	Ref<RenderingAPI> RenderingAPI::Create()
 	{
-		if (RenderingAPI::GetAPI() == API::NONE)
-		{
-			JSON ConfigFile = JSON::Load(VOLUND_CONFIG_JSON);
-
-			std::string API = ConfigFile["Renderer"]["API"];
-
-			if (_APINames.contains(API))
-			{
-				_SelectedAPI = _APINames[API];
-			}
-			else
-			{
-				VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", API.c_str());
-			}
-		}
-
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
@@ -45,7 +53,7 @@ namespace Volund
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a Contex without a specified GraphicsAPI!");
+			VOLUND_ERROR("Creating a RenderingAPI without a specified API!");
 			return nullptr;
 		}
 		break;

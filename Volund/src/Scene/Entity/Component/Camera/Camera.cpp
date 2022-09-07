@@ -7,6 +7,8 @@
 #include "Scene/Entity/Entity.h"
 #include "Scene/Entity/Component/Transform/Transform.h"
 
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
     bool Camera::IsActive() const
@@ -49,7 +51,7 @@ namespace Volund
         switch (E->GetType())
         {
         case EventType::WINDOW_SIZE:
-        {
+        {        
             if (this->IsActive())
             {
                 this->AspectRatio = ((float)((WindowSizeEvent*)E)->GetWidth()) / ((float)((WindowSizeEvent*)E)->GetHeight());
@@ -91,6 +93,10 @@ namespace Volund
         VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
 
         Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+
+        Vec2 WindowSize = Renderer::GetWindow()->GetSize();
+
+        this->AspectRatio = WindowSize.x / WindowSize.y;
 
         this->_ViewMatrix = glm::lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(), EntityTransform->GetUp());
         this->_OriginViewMatrix = glm::lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());

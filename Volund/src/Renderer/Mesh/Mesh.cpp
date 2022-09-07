@@ -29,7 +29,7 @@ namespace Volund
 
 	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
 	{
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{

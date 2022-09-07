@@ -16,7 +16,7 @@ namespace Volund
 
 	Ref<Shader> Shader::Create(std::string const& FilePath)
 	{
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{

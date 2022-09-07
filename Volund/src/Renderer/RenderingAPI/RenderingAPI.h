@@ -16,13 +16,19 @@ namespace Volund
 			OPENGL
 		};
 
+		virtual void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) = 0;
+
 		virtual void SetClearColor(RGBA const& Color) = 0;
 
 		virtual void Clear() = 0;
 
 		virtual void DrawIndexed(Ref<Mesh> const& VArray) = 0;
 
-		static API GetAPI();
+		static API GetSelectedAPI();
+
+		static void SelectAPI(std::string const& NewAPI);
+
+		static void SelectAPI(RenderingAPI::API NewAPI);
 
 		static Ref<RenderingAPI> Create();
 

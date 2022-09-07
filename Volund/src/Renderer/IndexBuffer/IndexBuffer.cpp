@@ -15,7 +15,7 @@ namespace Volund
 
 	Ref<IndexBuffer> IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
 	{
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{

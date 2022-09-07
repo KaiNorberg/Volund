@@ -2,13 +2,6 @@
 
 #include "EventDispatcher/Event.h"
 
-#define VOLUND_KEY_AMOUNT 348
-#define VOLUND_MOUSE_BUTTON_AMOUNT 8
- 
-#define VOLUND_MOUSE_BUTTON_MIDDLE 2
-#define VOLUND_MOUSE_BUTTON_LEFT 0   
-#define VOLUND_MOUSE_BUTTON_RIGHT 1   
-
 namespace Volund
 {
 	class Application;
@@ -23,22 +16,22 @@ namespace Volund
 		static bool IsMouseButtonHeld(char Button);
 		static bool IsMouseButtonPressed(char Button);
 
-		static double GetScrollOffset();
+		static uint32_t GetScrollPosition();
 
-		static DVec2 GetCursorPosition();
+		static IVec2 GetMousePosition();
 
 		static void SendEvent(KeyEvent E);
 		static void SendEvent(MouseButtonEvent E);
 		static void SendEvent(ScrollEvent E);
-		static void SendEvent(CursorPosEvent E);
+		static void SendEvent(MouseMoveEvent E);
 
 	private:
 
-		static DVec2 CursorPosition;
+		static inline IVec2 MousePosition;
 
-		static double ScrollOffset;
+		static inline uint32_t ScrollPosition;
 
-		static int8_t MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
-		static int8_t Keys[VOLUND_KEY_AMOUNT];
+		static inline int8_t MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
+		static inline int8_t Keys[VOLUND_KEY_AMOUNT];
 	};
 }

@@ -8,6 +8,8 @@
 #include "Material/Material.h"
 #include "Texture/Texture.h"
 
+#include "Window/Window.h"
+
 namespace Volund
 {
 	struct PointLightData
@@ -24,6 +26,8 @@ namespace Volund
 		static void EndScene();
 
 		static void Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial);
+
+		static Ref<Context> GetContext();
 
 		static Ref<Window> GetWindow();
 
@@ -45,6 +49,8 @@ namespace Volund
 			std::vector<PointLightData> PointLights;
 			std::vector<Submission> Submissions;
 		} _SceneData;
+
+		static inline bool InScene = false;
 
 		static inline Ref<RenderingAPI> _RenderingAPI;
 		static inline Ref<Context> _Context;

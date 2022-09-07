@@ -83,31 +83,31 @@ namespace Volund
 
 		const EventType GetType() override { return EventType::SCROLL; }
 
-		double GetXOffset() { return _xOffset; }
+		uint32_t GetXOffset() { return _xOffset; }
 
-		double GetYOffset() { return _yOffset; }
+		uint32_t GetYOffset() { return _yOffset; }
 
-		ScrollEvent(double xOffset, double yOffset) : _xOffset(xOffset), _yOffset(yOffset) {};
+		ScrollEvent(uint32_t xOffset, uint32_t yOffset) : _xOffset(xOffset), _yOffset(yOffset) {};
 
 	private:
-		double _xOffset;
-		double _yOffset;
+		uint32_t _xOffset;
+		uint32_t _yOffset;
 	};
 
-	class CursorPosEvent : public Event
+	class MouseMoveEvent : public Event
 	{
 	public:
 
 		const EventType GetType() override { return EventType::CURSOR_POS; }
 
-		double GetXPos() { return _xPos; }
+		int32_t GetXPos() { return _xPos; }
 
-		double GetYPos() { return _yPos; }
+		int32_t GetYPos() { return _yPos; }
 
-		CursorPosEvent(double xPos, double yPos) : _xPos(xPos), _yPos(yPos) {};
+		MouseMoveEvent(int32_t xPos, int32_t yPos) : _xPos(xPos), _yPos(yPos) {};
 
 	private:
-		double _xPos;
-		double _yPos;
+		int32_t _xPos;
+		int32_t _yPos;
 	};
 }

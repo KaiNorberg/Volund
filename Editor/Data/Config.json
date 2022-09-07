@@ -1,16 +1,14 @@
 {
-  "Window": 
-  {
-    "Height": 500,
-    "Width": 500,
+  "Window": {
+    "Height": 750,
+    "Width": 750,
     "Title": "Test Title",
-    "FullScreen": false,
-    "Monitor": 0,
-    "VSync": true,
+    "FullScreen": true,
     "CursorMode": "Disabled"
   },
   "Renderer": 
   {
-    "API": "OpenGL"
+    "API": "OpenGL",
+    "VSync": true
   }
 }

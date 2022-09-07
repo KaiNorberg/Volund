@@ -17,7 +17,7 @@ namespace Volund
 
 	Ref<VertexBuffer> VertexBuffer::Create(float Vertices[], uint32_t Count)
 	{
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{

@@ -30,7 +30,7 @@ namespace Volund
 
 	VertexAttribute::VertexAttribute(VertexAttributeType Type, std::string Name) : _Type(Type), _Name(Name)
 	{
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{

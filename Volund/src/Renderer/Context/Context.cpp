@@ -10,7 +10,7 @@ namespace Volund
 {
 	Ref<Context> Context::Create(Ref<Window> const& window)
 	{		
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{

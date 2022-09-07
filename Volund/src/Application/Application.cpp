@@ -39,14 +39,12 @@ namespace Volund
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());
 
-			this->_Window->Clear();
-
 			for (Ref<Layer> L : _LayerStack)
 			{
 				L->OnUpdate(TS);
 			}
 
-			this->_Window->PollEvents();
+			this->_Window->Update();
 		}
 	}
 
@@ -78,11 +76,32 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
+	
+		JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
+
 		this->_EventDispatcher.reset(new EventDispatcher(this));
-		
-		this->_Window.reset(new Window(this->_EventDispatcher));		
-		
+
+		// Window
+
+		uint32_t WindowWidth = ConfigJSON["Window"]["Width"].GetAs<uint32_t>();
+		uint32_t WindowHeight = ConfigJSON["Window"]["Height"].GetAs<uint32_t>();
+		bool WindowFullScreen = ConfigJSON["Window"]["FullScreen"].GetAs<bool>();
+
+		this->_Window.reset(new Window(this->_EventDispatcher, WindowWidth, WindowHeight, WindowFullScreen));
+
+		this->_Window->SetTitle(ConfigJSON["Window"]["Title"]);
+		this->_Window->SetCursorMode(ConfigJSON["Window"]["CursorMode"]);
+
+		// Renderer Settings
+
+		if (RenderingAPI::GetSelectedAPI() == RenderingAPI::API::NONE)
+		{
+			RenderingAPI::SelectAPI(ConfigJSON["Renderer"]["API"].GetAs<std::string>());
+		}
+
 		Renderer::SetWindow(this->_Window);
+
+		Renderer::GetContext()->SetVSync(ConfigJSON["Renderer"]["VSync"].GetAs<bool>());
 	}
 
 	Application::~Application()

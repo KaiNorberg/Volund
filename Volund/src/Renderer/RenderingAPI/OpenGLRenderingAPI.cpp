@@ -6,6 +6,11 @@
 
 namespace Volund
 {
+	void OpenGLRenderingAPI::SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height)
+	{
+		glViewport(X, Y, Width, Height);
+	}
+
 	void OpenGLRenderingAPI::SetClearColor(RGBA const& Color)
 	{
 		glClearColor(Color.r, Color.g, Color.b, Color.a);

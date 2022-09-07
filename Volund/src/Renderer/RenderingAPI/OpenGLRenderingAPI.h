@@ -9,6 +9,8 @@ namespace Volund
 	{
 	public:
 
+		void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) override;
+
 		void SetClearColor(RGBA const& Color) override;
 
 		void Clear() override;

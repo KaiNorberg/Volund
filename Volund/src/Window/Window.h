@@ -2,59 +2,48 @@
 
 #include "EventDispatcher/EventDispatcher.h"
 
-struct GLFWwindow;
-
 namespace Volund
 {
     struct WindowData
     {
-        uint32_t Width;
-        uint32_t Height;
+        uint64_t Width;
+        uint64_t Height;
+
+        bool CaptureMouse;
 
         Ref<EventDispatcher> Dispatcher;
     };
-
-    enum class CursorMode
-    {
-        NORMAL,
-        HIDDEN,
-        DISABLED,
-        CAPTURED
-    };
-
     class Window
     {
     public:
 
-        void Clear();
-
         void SwapBuffers();
 
-        void PollEvents();
+        void Update();
 
-        bool ShouldClose();
+        void SetCursorMode(std::string const& NewMode);
 
-        void MakeFullscreen();
-
-        void SetVSync(bool Enabled);
-
-        void SetCursorMode(CursorMode NewMode);
+        void SetTitle(std::string const& Title);
 
         Vec2 GetSize();
 
-        GLFWwindow* GetWindowHandle();
+        void* GetDeviceContext();
 
-        static void* GetProcAddress(const char* Name);
-
-        Window(Ref<EventDispatcher>& Dispatcher);
+        Window(Ref<EventDispatcher>& Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
 
         ~Window();
 
     private:
 
-        WindowData _Data;
+        std::wstring ConvertToWString(std::string const& String);
 
-        GLFWwindow* _WindowHandle;
+        void* _Handle = nullptr;
+
+        void* _Instance = nullptr;
+
+        void* _DeviceContext = nullptr;
+
+        WindowData _Data;
     };
 
 } //namespace Volund

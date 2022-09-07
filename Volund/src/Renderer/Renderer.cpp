@@ -9,12 +9,16 @@ namespace Volund
 		_SceneData.ViewProjMatrix = ViewProjMatrix;
 		_SceneData.EyePosition = EyePosition;
 		_SceneData.PointLights = PointLights;
-
-		_RenderingAPI->Clear();
+	
+		InScene = true;
 	}
 
 	void Renderer::EndScene()
 	{
+		_RenderingAPI->Clear();
+
+		_RenderingAPI->SetViewPort(0, 0,(uint32_t)_Window->GetSize().x, (uint32_t)_Window->GetSize().y);
+
 		for (Submission Data : _SceneData.Submissions)
 		{
 			Ref<Shader> ObjectShader = Data.ObjectMaterial->GetShader();
@@ -42,16 +46,25 @@ namespace Volund
 
 		_SceneData = SceneData();
 		_Context->Flush();
+
+		InScene = false;
 	}
 
 	void Renderer::Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial)
 	{
+		VOLUND_ASSERT(InScene, "Attempting to push a Submission to the Renderer while outside of a Renderer Scene!");
+
 		Submission NewSubmission = Submission();
 		NewSubmission.ModelMatrix = ModelMatrix;
 		NewSubmission.ObjectMesh = ObjectMesh;
 		NewSubmission.ObjectMaterial = ObjectMaterial;
 
 		_SceneData.Submissions.push_back(NewSubmission);
+	}
+
+	Ref<Context> Renderer::GetContext()
+	{
+		return _Context;
 	}
 
 	Ref<Window> Renderer::GetWindow()

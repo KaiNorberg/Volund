@@ -2,6 +2,8 @@
 
 #include "EditorLayer.h"
 
+#define LOAD_SCENE
+
 void EditorLayer::LoadScene(Ref<Scene> NewScene)
 {
 	this->_LoadedScene = NewScene;

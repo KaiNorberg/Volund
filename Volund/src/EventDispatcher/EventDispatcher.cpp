@@ -53,7 +53,7 @@ namespace Volund
 	}
 
 	template<>
-	void EventDispatcher::EventHandler(CursorPosEvent E)
+	void EventDispatcher::EventHandler(MouseMoveEvent E)
 	{
 		Input::SendEvent(E);
 	}

@@ -143,7 +143,7 @@ namespace Volund
 				}
 				else if (ComponentType == "PointLight")
 				{
-					RGB Color = Vec3(ComponentJSON["Color"][0], ComponentJSON["Color"][1], ComponentJSON["Color"][2]);
+					RGB Color = RGB(ComponentJSON["Color"][0], ComponentJSON["Color"][1], ComponentJSON["Color"][2]);
 
 					NewEntity->CreateComponent<PointLight>(Color);
 				}

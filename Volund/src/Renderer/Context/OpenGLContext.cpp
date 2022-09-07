@@ -4,6 +4,10 @@
 
 #include <glad/include/glad/glad.h>
 
+#include <windows.h>
+
+#include <wglext/wglext.h>
+
 namespace Volund
 {
 	void APIENTRY ErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
@@ -96,10 +100,36 @@ namespace Volund
 		}
 	}
 
+	void OpenGLContext::MakeCurrent()
+	{
+		VOLUND_ASSERT(wglMakeCurrent((HDC)this->_Window->GetDeviceContext(), (HGLRC)this->_RenderingContext), "Failed to active OpenGL Context");
+	}
+
+	void OpenGLContext::SetVSync(bool Enabled)
+	{
+		if (WGLExtensionSupported("WGL_EXT_swap_control"))
+		{
+			auto wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
+
+			wglSwapIntervalEXT(Enabled);
+		}
+		else
+		{
+			VOLUND_ERROR("VSync not souported!");
+		}
+	}
+
 	void OpenGLContext::Flush()
 	{
 		glViewport(0, 0, (GLsizei)this->_Window->GetSize().x, (GLsizei)this->_Window->GetSize().y);
 		_Window->SwapBuffers();
+	}
+
+	bool OpenGLContext::WGLExtensionSupported(std::string const& Name)
+	{
+		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");
+
+		return strstr(_wglGetExtensionsStringEXT(), Name.c_str()) != NULL;
 	}
 
 	OpenGLContext::OpenGLContext(Ref<Window> const& window)
@@ -107,7 +137,12 @@ namespace Volund
 		this->_Window = window;		
 		VOLUND_INFO("Creating OpenGL context...");
 
-		VOLUND_ASSERT(gladLoadGLLoader((GLADloadproc)_Window->GetProcAddress), "Failed to initialize OpenGL context");
+		this->_RenderingContext = wglCreateContext((HDC)this->_Window->GetDeviceContext());
+		VOLUND_ASSERT(this->_RenderingContext, "Failed to create OpenGL context");
+
+		this->MakeCurrent();
+
+		VOLUND_ASSERT(gladLoadGL(), "Failed to initialize OpenGL context");
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);

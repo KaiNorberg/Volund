@@ -9,6 +9,10 @@ namespace Volund
 	{
 	public:
 
+		void MakeCurrent() override;
+
+		void SetVSync(bool Enabled) override;
+
 		void Flush() override;
 
 		OpenGLContext(Ref<Window> const& window);
@@ -16,7 +20,11 @@ namespace Volund
 		~OpenGLContext();
 
 	private:
-		
+
+		bool WGLExtensionSupported(std::string const& Name);
+
+		void* _RenderingContext = nullptr;
+
 		Ref<Window> _Window;
 	};
 }

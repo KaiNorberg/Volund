@@ -26,7 +26,7 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading Texture2D (%s)...", FilePath.c_str());
 
-		switch (RenderingAPI::GetAPI())
+		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
