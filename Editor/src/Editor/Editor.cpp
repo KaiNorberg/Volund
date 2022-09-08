@@ -1,12 +1,17 @@
 #include "PCH/PCH.h"
 
+#include "Editor.h"
+
 #include "EditorLayer/EditorLayer.h"
+
+Editor::Editor()
+{
+	this->AttachLayer(new EditorLayer());
+}
 
 int main()
 {
-	Volund::Application* App = new Volund::Application();
-
-	App->AttachLayer(new EditorLayer());
+	Editor* App = new Editor();
 
 	App->Run();
 
