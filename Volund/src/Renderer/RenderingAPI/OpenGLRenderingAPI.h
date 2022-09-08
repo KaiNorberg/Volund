@@ -17,6 +17,8 @@ namespace Volund
 
 		void DrawIndexed(Ref<Mesh> const& VArray) override;
 
+		OpenGLRenderingAPI();
+
 	private:
 	};
 }

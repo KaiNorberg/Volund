@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-	Entity* Component::GetEntity()
+	Entity* Component::GetEntity() const
 	{
 		return this->_Parent;
 	}

@@ -45,13 +45,14 @@ namespace Volund
 		}
 
 		IVec2 Delta = Input::GetMousePosition() - this->OldMousePosition;
-		Delta.x = Math::Clamp(Delta.x, -10, 10);
-		Delta.y = Math::Clamp(Delta.y, -10, 10);
+
+		Delta.x = (int32_t)((float)Math::Clamp(Delta.x, -10, 10) * this->Sensitivity);
+		Delta.y = (int32_t)((float)Math::Clamp(Delta.y, -10, 10) * this->Sensitivity);
 
 		Rotation -= Vec3(Delta.y, Delta.x, 0.0f);
 		Rotation.x = Math::Clamp(Rotation.x, -89.0f, 89.0f);
 
-		EntityTransform->SetRotation(Rotation * this->Sensitivity);
+		EntityTransform->SetRotation(Rotation);
 		this->OldMousePosition = Input::GetMousePosition();
 	}
 

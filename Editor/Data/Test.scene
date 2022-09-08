@@ -28,7 +28,7 @@
                     "Type": "Camera"
                 },
                 {
-                    "Sensitivity": 1.0,
+                    "Sensitivity": 0.5,
                     "Speed": 5.0,
                     "Type": "CameraMovement"
                 }

@@ -3,6 +3,8 @@
 #include "PCH/PCH.h"
 #include "Window.h"
 
+#define WIN32_LEAN_AND_MEAN
+
 #include <Windows.h>
 #include <WindowsX.h>
 #include <locale>
@@ -59,6 +61,10 @@ namespace Volund
 			{
 				static int32_t VirtualXPos = 0;
 				static int32_t VirtualYPos = 0;
+
+				RECT ScreenSpaceRect;
+				GetWindowRect(hwnd, &ScreenSpaceRect);
+				ClipCursor(&ScreenSpaceRect);
 
 				RECT WindowRect = {};
 				GetClientRect(hwnd, &WindowRect);
@@ -187,12 +193,19 @@ namespace Volund
 		break;
 		case WM_SETFOCUS:
 		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
+			if (!Data->ShowMouse)
+			{
+				while (ShowCursor(false) >= -1) { }
+			}
 		}
 		break;
 		case WM_KILLFOCUS:
-		{
+		{				
+			ClipCursor(NULL);
 
+			while (ShowCursor(true) < 0) {}
 		}
 		break;
 
@@ -244,27 +257,33 @@ namespace Volund
 		}
 	}
 
+	void Window::SetFocus()
+	{
+		::SetFocus((HWND)this->_Handle);
+		SendMessage((HWND)this->_Handle, WM_SETFOCUS, 0, 0);
+	}
+
 	void Window::SetCursorMode(std::string const& NewMode)
 	{
 		if (NewMode == "Normal")
 		{
-			ShowCursor(true);
 			this->_Data.CaptureMouse = false;
+			this->_Data.ShowMouse = true;
 		}
 		else if (NewMode == "Hidden")
 		{
-			ShowCursor(false);
 			this->_Data.CaptureMouse = false;
+			this->_Data.ShowMouse = false;
 		}
 		else if (NewMode == "Disabled")
 		{
-			ShowCursor(false);
 			this->_Data.CaptureMouse = true;
+			this->_Data.ShowMouse = false;
 		}
 		else if (NewMode == "Captured")
 		{
-			ShowCursor(true);
 			this->_Data.CaptureMouse = true;
+			this->_Data.ShowMouse = true;
 		}		
 		else
 		{
@@ -282,6 +301,11 @@ namespace Volund
 		return Vec2(this->_Data.Width, this->_Data.Height);
 	}
 
+	float Window::GetAspectRatio()
+	{
+		return (float)this->_Data.Width / (float)this->_Data.Height;
+	}
+
 	void* Window::GetDeviceContext()
 	{
 		return this->_DeviceContext;
@@ -297,22 +321,9 @@ namespace Volund
 		VOLUND_INFO("Creating window...");
 
 		this->_Data.Dispatcher = Dispatcher;
+		this->_Data.FullScreen = FullScreen;
 
 		this->_Instance = GetModuleHandle(NULL);
-
-		WNDCLASS WindowClass = {};
-		WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;   
-		WindowClass.lpfnWndProc = (WNDPROC)WindowProcedure;    
-		WindowClass.cbClsExtra = 0;               
-		WindowClass.cbWndExtra = 0;               
-		WindowClass.hInstance = (HINSTANCE)this->_Instance;
-		WindowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);    
-		WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);      
-		WindowClass.hbrBackground = NULL;                    
-		WindowClass.lpszMenuName = NULL;                
-		WindowClass.lpszClassName = L"VolundWindow";                 
-
-		VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
 
 		DWORD dwExStyle;
 		DWORD dwStyle;
@@ -343,6 +354,20 @@ namespace Volund
 			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 			dwStyle = WS_OVERLAPPEDWINDOW;
 		}
+
+		WNDCLASS WindowClass = {};
+		WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+		WindowClass.lpfnWndProc = (WNDPROC)WindowProcedure;
+		WindowClass.cbClsExtra = 0;
+		WindowClass.cbWndExtra = 0;
+		WindowClass.hInstance = (HINSTANCE)this->_Instance;
+		WindowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+		WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+		WindowClass.hbrBackground = NULL;
+		WindowClass.lpszMenuName = NULL;
+		WindowClass.lpszClassName = L"VolundWindow";
+
+		VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
 
 		RECT WindowRect = { 0,0, (LONG)this->_Data.Width, (LONG)this->_Data.Height };
 		AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);
@@ -392,7 +417,18 @@ namespace Volund
 
 	Window::~Window()
 	{
+		if (this->_Data.FullScreen)
+		{
+			ChangeDisplaySettings(NULL, 0);
+		}
+
+		ShowCursor(true);
+
+		ReleaseDC((HWND)this->_Handle, (HDC)this->_DeviceContext);
+
 		DestroyWindow((HWND)this->_Handle);
+
+		UnregisterClass(L"VolundWindow", (HINSTANCE)this->_Instance);
 	}
 
 } //namespace Volund

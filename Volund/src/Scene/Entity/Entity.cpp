@@ -9,7 +9,7 @@ namespace Volund
 		return this->_Name;
 	}
 
-	Scene* Entity::GetParent()
+	Scene* Entity::GetScene()
 	{
 		return this->_Parent;
 	}

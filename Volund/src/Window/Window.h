@@ -6,13 +6,17 @@ namespace Volund
 {
     struct WindowData
     {
-        uint64_t Width;
-        uint64_t Height;
+        uint64_t Width = 0;
+        uint64_t Height = 0;
 
-        bool CaptureMouse;
+        bool FullScreen = false;
 
-        Ref<EventDispatcher> Dispatcher;
+        bool CaptureMouse = false;
+        bool ShowMouse = true;
+
+        Ref<EventDispatcher> Dispatcher = nullptr;
     };
+
     class Window
     {
     public:
@@ -21,11 +25,15 @@ namespace Volund
 
         void Update();
 
+        void SetFocus();
+
         void SetCursorMode(std::string const& NewMode);
 
         void SetTitle(std::string const& Title);
 
         Vec2 GetSize();
+
+        float GetAspectRatio();
 
         void* GetDeviceContext();
 

@@ -13,11 +13,13 @@ namespace Volund
 		InScene = true;
 	}
 
-	void Renderer::EndScene()
+	void Renderer::EndScene(Ref<Context> const& RenderingContext)
 	{
-		_RenderingAPI->Clear();
+		_API->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
 
-		_RenderingAPI->SetViewPort(0, 0,(uint32_t)_Window->GetSize().x, (uint32_t)_Window->GetSize().y);
+		_API->Clear();
+
+		_API->SetViewPort(0, 0,(uint32_t)RenderingContext->GetWindow()->GetSize().x, (uint32_t)RenderingContext->GetWindow()->GetSize().y);
 
 		for (Submission Data : _SceneData.Submissions)
 		{
@@ -41,11 +43,11 @@ namespace Volund
 			ObjectShader->SetMat4x4("ModelMatrix", Data.ModelMatrix);
 
 			Data.ObjectMesh->Bind();
-			_RenderingAPI->DrawIndexed(Data.ObjectMesh);
+			_API->DrawIndexed(Data.ObjectMesh);
 		}
 
 		_SceneData = SceneData();
-		_Context->Flush();
+		RenderingContext->Flush();
 
 		InScene = false;
 	}
@@ -61,34 +63,8 @@ namespace Volund
 
 		_SceneData.Submissions.push_back(NewSubmission);
 	}
-
-	Ref<Context> Renderer::GetContext()
+	void Renderer::SetAPI(Ref<RenderingAPI> const& API)
 	{
-		return _Context;
-	}
-
-	Ref<Window> Renderer::GetWindow()
-	{
-		return _Window;
-	}
-
-	void Renderer::SetWindow(Ref<Window> const& NewWindow)
-	{
-		if (NewWindow != nullptr)
-		{
-			_RenderingAPI = RenderingAPI::Create();
-			_Context = Context::Create(NewWindow);
-
-			_RenderingAPI->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
-
-			_SceneData.Submissions.reserve(32);
-		}
-		else
-		{
-			_RenderingAPI.reset();
-			_Context.reset();
-		}
-		
-		_Window = NewWindow;
-	}
+		_API = API;
+ 	}
 }

@@ -11,6 +11,11 @@ void EditorLayer::LoadScene(Ref<Scene> NewScene)
 
 void EditorLayer::OnAttach()
 {
+	this->_Context = Context::Create(this->GetApp()->GetWindow());
+	Renderer::SetAPI(RenderingAPI::Create());
+
+	this->_Context->SetVSync(true);
+
 #ifndef LOAD_SCENE
 
 	Ref<Scene> NewScene = Ref<Scene>(new Scene());
@@ -23,7 +28,7 @@ void EditorLayer::OnAttach()
 
 	Ref<Entity> CameraEntity = NewScene->CreateEntity("CameraEntity", Vec3(0.0f, 2.0f, 10.0f));
 	CameraEntity->CreateComponent<Camera>()->SetActive();
-	CameraEntity->CreateComponent<CameraMovement>(5.0f, 1.0f);
+	CameraEntity->CreateComponent<CameraMovement>(5.0f, 0.5f);
 
 	Ref<Entity> TeapotEnity = NewScene->CreateEntity("TeapotEntity", Vec3(3.0f, 0.0f, 0.0f));
 	TeapotEnity->CreateComponent<MeshRenderer>(CubeMesh, TestMaterial);
@@ -59,7 +64,7 @@ void EditorLayer::OnUpdate(TimeStep TS)
 
 	if (ActiveCamera != nullptr)
 	{
-		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix() * ActiveCamera->GetViewMatrix();
+		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix(this->_Context->GetWindow()->GetAspectRatio()) * ActiveCamera->GetViewMatrix();
 		Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
 
 		auto const& PointLightView = this->_LoadedScene->ComponentView<PointLight>();
@@ -77,7 +82,7 @@ void EditorLayer::OnUpdate(TimeStep TS)
 			this->_LoadedScene->Update(TS);
 		}
 
-		Renderer::EndScene();
+		Renderer::EndScene(this->_Context);
 	}
 	else
 	{

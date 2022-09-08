@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Renderer/RenderingAPI/RenderingAPI.h"
+
 namespace Volund
 {
 	class Window;
@@ -15,11 +17,15 @@ namespace Volund
 
 		virtual void Flush() = 0;
 
-		static Ref<Context> Create(Ref<Window> const& window);
+		Ref<Window> GetWindow();
+
+		static Ref<Context> Create(Ref<Window> const& TargetWindow);
 
 		virtual ~Context() = default;
 
-	private:
+	protected:		
+
+		Ref<Window> _Window;
 	};
 }
 

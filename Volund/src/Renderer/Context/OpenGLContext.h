@@ -15,7 +15,7 @@ namespace Volund
 
 		void Flush() override;
 
-		OpenGLContext(Ref<Window> const& window);
+		OpenGLContext(Ref<Window> const& TargetWindow);
 		
 		~OpenGLContext();
 
@@ -24,8 +24,6 @@ namespace Volund
 		bool WGLExtensionSupported(std::string const& Name);
 
 		void* _RenderingContext = nullptr;
-
-		Ref<Window> _Window;
 	};
 }
 

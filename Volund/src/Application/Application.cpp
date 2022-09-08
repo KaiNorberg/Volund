@@ -16,6 +16,7 @@ namespace Volund
 	void Application::AttachLayer(Layer* L)
 	{
 		this->_LayerStack.push_back(Ref<Layer>(L));
+		L->SetParent(this);
 		L->OnAttach();
 	}
 
@@ -65,6 +66,11 @@ namespace Volund
 		}
 	}
 
+	Ref<Window> Application::GetWindow()
+	{
+		return this->_Window;
+	}
+
 	Application::Application()
 	{
 #ifdef VOLUND_DEBUG
@@ -81,8 +87,6 @@ namespace Volund
 
 		this->_EventDispatcher.reset(new EventDispatcher(this));
 
-		// Window
-
 		uint32_t WindowWidth = ConfigJSON["Window"]["Width"].GetAs<uint32_t>();
 		uint32_t WindowHeight = ConfigJSON["Window"]["Height"].GetAs<uint32_t>();
 		bool WindowFullScreen = ConfigJSON["Window"]["FullScreen"].GetAs<bool>();
@@ -91,17 +95,7 @@ namespace Volund
 
 		this->_Window->SetTitle(ConfigJSON["Window"]["Title"]);
 		this->_Window->SetCursorMode(ConfigJSON["Window"]["CursorMode"]);
-
-		// Renderer Settings
-
-		if (RenderingAPI::GetSelectedAPI() == RenderingAPI::API::NONE)
-		{
-			RenderingAPI::SelectAPI(ConfigJSON["Renderer"]["API"].GetAs<std::string>());
-		}
-
-		Renderer::SetWindow(this->_Window);
-
-		Renderer::GetContext()->SetVSync(ConfigJSON["Renderer"]["VSync"].GetAs<bool>());
+		this->_Window->SetFocus();
 	}
 
 	Application::~Application()
@@ -111,10 +105,5 @@ namespace Volund
 			L->OnDetach();
 		}
 		this->_LayerStack.clear();
-
-		if (Renderer::GetWindow() == this->_Window)
-		{
-			Renderer::SetWindow(nullptr);
-		}
 	}
 }

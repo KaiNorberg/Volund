@@ -23,15 +23,11 @@ namespace Volund
 	public:
 
 		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights);
-		static void EndScene();
+		static void EndScene(Ref<Context> const& RenderingContext);
 
 		static void Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial);
 
-		static Ref<Context> GetContext();
-
-		static Ref<Window> GetWindow();
-
-		static void SetWindow(Ref<Window> const& NewWindow);
+		static void SetAPI(Ref<RenderingAPI> const& API);
 
 	private:		
 		
@@ -51,10 +47,8 @@ namespace Volund
 		} _SceneData;
 
 		static inline bool InScene = false;
-
-		static inline Ref<RenderingAPI> _RenderingAPI;
-		static inline Ref<Context> _Context;
-		static inline Ref<Window> _Window;
+	
+		static inline Ref<RenderingAPI> _API;
 	};
 }
 

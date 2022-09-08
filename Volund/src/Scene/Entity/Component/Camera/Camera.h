@@ -24,13 +24,7 @@ namespace Volund
 
 		Mat4x4 GetOriginViewMatrix() const;
 
-		Mat4x4 GetProjectionMatrix() const;
-
-		void OnCreate() override;
-
-		void OnEvent(Event* E) override;
-
-		void OnUpdate(TimeStep TS) override;
+		Mat4x4 GetProjectionMatrix(float AspectRatio) const;
 		
 		void OnDelete() override;
 
@@ -39,16 +33,6 @@ namespace Volund
 	private:
 
 		static inline Camera* ActiveCamera = nullptr;
-
-		void UpdateMatrices();
-
-		float AspectRatio = 1.0f;
-
-		Mat4x4 _ViewMatrix = Mat4x4(1.0f);
-
-		Mat4x4 _OriginViewMatrix = Mat4x4(1.0f);
-
-		Mat4x4 _ProjectionMatrix = Mat4x4(1.0f);
 	};
 
 } //namespace Volund

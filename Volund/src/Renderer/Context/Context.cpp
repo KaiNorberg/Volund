@@ -8,13 +8,18 @@
 
 namespace Volund
 {
-	Ref<Context> Context::Create(Ref<Window> const& window)
+	Ref<Window> Context::GetWindow()
+	{
+		return this->_Window;
+	}
+
+	Ref<Context> Context::Create(Ref<Window> const& TargetWindow)
 	{		
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return Ref<Context>(new OpenGLContext(window));
+			return Ref<Context>(new OpenGLContext(TargetWindow));
 		}
 		break;
 		default:

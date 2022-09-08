@@ -26,10 +26,6 @@ namespace Volund
 
 		static API GetSelectedAPI();
 
-		static void SelectAPI(std::string const& NewAPI);
-
-		static void SelectAPI(RenderingAPI::API NewAPI);
-
 		static Ref<RenderingAPI> Create();
 
 	private:

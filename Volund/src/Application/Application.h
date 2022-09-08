@@ -24,6 +24,8 @@ namespace Volund
 
 		 void EventCallback(Event* E);
 
+		 Ref<Window> GetWindow();
+
 		 Application();
 			
 		 virtual ~Application();
@@ -36,8 +38,8 @@ namespace Volund
 
 		void Loop();
 
-		Ref<EventDispatcher> _EventDispatcher;
 		Ref<Window> _Window;
+		Ref<EventDispatcher> _EventDispatcher;
 
 		std::vector<Ref<Layer>> _LayerStack;
 	};

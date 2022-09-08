@@ -18,6 +18,8 @@ public:
 
 private:
 
+	Ref<Context> _Context;
+
 	Ref<Scene> _LoadedScene;
 };
 

@@ -28,42 +28,25 @@ namespace Volund
 
     Mat4x4 Camera::GetViewMatrix() const
     {
-        return this->_ViewMatrix;
+        VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
+
+        Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+
+        return glm::lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(), EntityTransform->GetUp());
     }
 
     Mat4x4 Camera::GetOriginViewMatrix() const
     {
-        return this->_OriginViewMatrix;
+        VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
+
+        Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+
+        return glm::lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());
     }
 
-    Mat4x4 Camera::GetProjectionMatrix() const
+    Mat4x4 Camera::GetProjectionMatrix(float AspectRatio) const
     {
-        return this->_ProjectionMatrix;
-    }
-
-    void Camera::OnCreate()
-    {
-        this->UpdateMatrices();
-    }
-
-    void Camera::OnEvent(Event* E)
-    {
-        switch (E->GetType())
-        {
-        case EventType::WINDOW_SIZE:
-        {        
-            if (this->IsActive())
-            {
-                this->AspectRatio = ((float)((WindowSizeEvent*)E)->GetWidth()) / ((float)((WindowSizeEvent*)E)->GetHeight());
-            }
-        }
-        break;
-        }
-    }
-
-    void Camera::OnUpdate(TimeStep TS)
-    {
-        this->UpdateMatrices();
+        return glm::perspective(glm::radians(this->FOV), AspectRatio, this->NearPlane, this->FarPlane);
     }
 
     void Camera::OnDelete()
@@ -86,20 +69,5 @@ namespace Volund
         CameraJSON.AddEntry("FarPlane", this->FarPlane);
 
         return CameraJSON;
-    }
-
-    void Camera::UpdateMatrices()
-    {
-        VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "Camera unable to find a Transform component!");
-
-        Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
-
-        Vec2 WindowSize = Renderer::GetWindow()->GetSize();
-
-        this->AspectRatio = WindowSize.x / WindowSize.y;
-
-        this->_ViewMatrix = glm::lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(), EntityTransform->GetUp());
-        this->_OriginViewMatrix = glm::lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());
-        this->_ProjectionMatrix = glm::perspective(glm::radians(this->FOV), this->AspectRatio, this->NearPlane, this->FarPlane);
     }
 }

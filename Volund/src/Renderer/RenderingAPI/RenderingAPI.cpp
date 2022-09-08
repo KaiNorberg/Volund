@@ -15,31 +15,23 @@ namespace Volund
 
 	RenderingAPI::API RenderingAPI::GetSelectedAPI()
 	{
+		if (_SelectedAPI == RenderingAPI::API::NONE)
+		{
+			JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
+
+			std::string NewAPI = ConfigJSON["Renderer"]["API"];
+
+			if (_APINames.contains(NewAPI))
+			{
+				_SelectedAPI = _APINames[NewAPI];
+			}
+			else
+			{
+				VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", NewAPI.c_str());
+			}
+		}
+
 		return _SelectedAPI;
-	}
-
-	void RenderingAPI::SelectAPI(std::string const& NewAPI)
-	{
-		if (_APINames.contains(NewAPI))
-		{
-			SelectAPI(_APINames[NewAPI]);
-		}
-		else
-		{
-			VOLUND_ERROR("Unknown GraphicsAPI specified (%s)!", NewAPI.c_str());
-		}
-	}
-
-	void RenderingAPI::SelectAPI(RenderingAPI::API NewAPI)
-	{
-		if (_SelectedAPI == API::NONE)
-		{
-			_SelectedAPI = NewAPI;
-		}
-		else
-		{
-			VOLUND_ERROR("An API has already been selected!");
-		}
 	}
 
 	Ref<RenderingAPI> RenderingAPI::Create()

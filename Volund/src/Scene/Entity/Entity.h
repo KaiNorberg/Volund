@@ -12,7 +12,7 @@ namespace Volund
 	
 		std::string GetName();
 
-		Scene* GetParent();
+		Scene* GetScene();
 
 		template<typename T, class... ARGS>
 		Ref<T> CreateComponent(ARGS&&... Args);

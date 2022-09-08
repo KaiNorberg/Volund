@@ -6,9 +6,13 @@
 
 namespace Volund
 {
+	class Application;
+
 	class Layer
 	{
 	public:
+
+		Application* GetApp();
 
 		virtual void OnAttach() {};
 
@@ -19,5 +23,11 @@ namespace Volund
 		virtual void OnEvent(Event* E) {};
 
 		virtual ~Layer() {}
+	private:		
+		friend class Application;
+
+		void SetParent(Application* Parent);
+
+		Application* _Parent = nullptr;
 	};
 }

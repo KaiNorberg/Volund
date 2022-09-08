@@ -5,6 +5,7 @@
 #include "Application/Application.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/Context/Context.h"
 
 #include "Scene/Scene.h"
 #include "Scene/Entity/Entity.h"

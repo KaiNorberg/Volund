@@ -12,7 +12,7 @@ namespace Volund
 	{
 	public:
 
-		Entity* GetEntity();
+		Entity* GetEntity() const;
 
 		virtual void OnCreate() {};
 
