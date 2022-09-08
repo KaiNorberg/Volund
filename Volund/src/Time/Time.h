@@ -29,4 +29,4 @@ namespace Volund
 	private:
 		double Step = 0.0f;
 	};
-} //namespace Volund
+}
