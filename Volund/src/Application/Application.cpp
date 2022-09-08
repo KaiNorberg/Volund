@@ -58,20 +58,6 @@ namespace Volund
 #else 		
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
-	
-		/*JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
-
-		this->_EventDispatcher.reset(new EventDispatcher(this));
-
-		uint32_t WindowWidth = ConfigJSON["Window"]["Width"].GetAs<uint32_t>();
-		uint32_t WindowHeight = ConfigJSON["Window"]["Height"].GetAs<uint32_t>();
-		bool WindowFullScreen = ConfigJSON["Window"]["FullScreen"].GetAs<bool>();
-
-		this->_Window.reset(new Window(this->_EventDispatcher, WindowWidth, WindowHeight, WindowFullScreen));
-
-		this->_Window->SetTitle(ConfigJSON["Window"]["Title"]);
-		this->_Window->SetCursorMode(ConfigJSON["Window"]["CursorMode"]);
-		this->_Window->SetFocus();*/
 	}
 
 	Application::~Application()

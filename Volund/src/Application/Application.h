@@ -1,12 +1,6 @@
 #pragma once
 
-#include "Window/Window.h"
-#include "EventDispatcher/EventDispatcher.h"
 #include "Layer/Layer.h"
-#include "Scene/Scene.h"
-
-#include "Renderer/Context/Context.h"
-#include "Renderer/Renderer.h"
 
 namespace Volund
 {

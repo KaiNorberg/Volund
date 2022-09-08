@@ -72,8 +72,12 @@ project "Volund"
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "On"
-		runtime "Release"
-
+		runtime "Release"	
+		targetdir (TargetDir .. "/Volund")
+		postbuildcommands {
+			"xcopy src\\**.h ..\\" .. TargetDir .. "\\Volund\\include /Q /E /Y /I /S"
+		}
+		
 project "Editor"
 	location "Editor"
 	kind "ConsoleApp"
@@ -133,8 +137,9 @@ project "Editor"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"
+		targetdir (TargetDir .. "/Editor")
 		postbuildcommands {
-		  "xcopy Data\\ ..\\" .. TargetDir .. "\\ /E /C /Y"
+			"xcopy Data\\* ..\\" .. TargetDir .. "\\Editor /Q /E /Y /I /S"
 		}
 		
 project "Glad"
