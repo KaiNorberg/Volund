@@ -9,7 +9,8 @@ namespace Volund
 {
 	void MeshRenderer::OnUpdate(TimeStep TS)
 	{
-		VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(), "MeshRenderer unable to find a Transform component!");
+		VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(),
+		              "MeshRenderer unable to find a Transform component!");
 
 		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 		Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();

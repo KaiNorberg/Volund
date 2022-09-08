@@ -17,7 +17,7 @@ namespace Volund
 
 	}
 
-	void EventDispatcher::SendEventToLayer(Event* E)
+	void EventDispatcher::SendEventToLayer(Event* E) const
 	{
 		this->_Layer->OnEvent(E);
 	}

@@ -4,37 +4,37 @@
 
 namespace Volund
 {
-	void Transform::SetRotation(Vec3 const& Rotation)
+	void Transform::SetRotation(const Vec3& Rotation)
 	{
 		this->Quaternion = Quat(Math::ToRadians(Rotation));
 	}
 
 	Vec3 Transform::GetRotation() const
 	{
-		return Math::ToDegrees(glm::eulerAngles(this->Quaternion));
+		return Math::ToDegrees(eulerAngles(this->Quaternion));
 	}
 
-	void Transform::AddRotation(Vec3 const& Rotation)
+	void Transform::AddRotation(const Vec3& Rotation)
 	{
 		this->Quaternion *= Quat(Math::ToRadians(Rotation));
 	}
 
-	Vec3 Transform::GetFront()
+	Vec3 Transform::GetFront() const
 	{
 		return this->_Front;
 	}
 
-	Vec3 Transform::GetRight()
+	Vec3 Transform::GetRight() const
 	{
 		return this->_Right;
 	}
 
-	Vec3 Transform::GetUp()
+	Vec3 Transform::GetUp() const
 	{
 		return this->_Up;
 	}
 
-	Mat4x4 Transform::GetModelMatrix()
+	Mat4x4 Transform::GetModelMatrix() const
 	{
 		return this->_ModelMatrix;
 	}
@@ -47,9 +47,9 @@ namespace Volund
 
 		this->_ModelMatrix = Mat4x4(1.0f);
 
-		this->_ModelMatrix = glm::translate(this->_ModelMatrix, this->Position);
+		this->_ModelMatrix = translate(this->_ModelMatrix, this->Position);
 		this->_ModelMatrix *= Mat4x4(this->Quaternion);
-		this->_ModelMatrix = glm::scale(this->_ModelMatrix, this->Scale);
+		this->_ModelMatrix = scale(this->_ModelMatrix, this->Scale);
 	}
 
 	JSON Transform::Serialize()
@@ -58,17 +58,17 @@ namespace Volund
 
 		TransformJSON.AddEntry("Type", "Transform");
 
-		TransformJSON.AddList("Position", { this->Position.x, this->Position.y, this->Position.z });
-		
-		Vec3 Rotation = this->GetRotation();
-		TransformJSON.AddList("Rotation", { Rotation.x, Rotation.y, Rotation.z });
+		TransformJSON.AddList("Position", {this->Position.x, this->Position.y, this->Position.z});
 
-		TransformJSON.AddList("Scale", { Scale.x, Scale.y, Scale.z });
+		Vec3 Rotation = this->GetRotation();
+		TransformJSON.AddList("Rotation", {Rotation.x, Rotation.y, Rotation.z});
+
+		TransformJSON.AddList("Scale", {Scale.x, Scale.y, Scale.z});
 
 		return TransformJSON;
 	}
 
-	Transform::Transform(Vec3 const& Position, Vec3 const& Rotation, Vec3 const& Scale)
+	Transform::Transform(const Vec3& Position, const Vec3& Rotation, const Vec3& Scale)
 	{
 		this->Position = Position;
 		this->Scale = Scale;
@@ -76,4 +76,3 @@ namespace Volund
 		this->OnUpdate(0.0f);
 	}
 }
-

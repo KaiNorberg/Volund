@@ -7,7 +7,6 @@ namespace Volund
 	class PointLight : public Component
 	{
 	public:
-		
 		RGB Color;
 
 		JSON Serialize() override;
@@ -15,7 +14,5 @@ namespace Volund
 		PointLight(RGB Color = RGB(1.0f));
 
 	private:
-
 	};
-
 } //namespace Volund

@@ -7,20 +7,19 @@ namespace Volund
 	class Transform : public Component
 	{
 	public:
-
-		void SetRotation(Vec3 const& Rotation);
+		void SetRotation(const Vec3& Rotation);
 
 		Vec3 GetRotation() const;
 
-		void AddRotation(Vec3 const& Rotation);
+		void AddRotation(const Vec3& Rotation);
 
-		Vec3 GetFront();
+		Vec3 GetFront() const;
 
-		Vec3 GetRight();
+		Vec3 GetRight() const;
 
-		Vec3 GetUp();
+		Vec3 GetUp() const;
 
-		Mat4x4 GetModelMatrix();
+		Mat4x4 GetModelMatrix() const;
 
 		Vec3 Position = Vec3(0.0f);
 
@@ -32,10 +31,9 @@ namespace Volund
 
 		JSON Serialize() override;
 
-		Transform(Vec3 const& Position = Vec3(0.0f), Vec3 const& Rotation = Vec3(0.0f), Vec3 const& Scale = Vec3(1.0f));
+		Transform(const Vec3& Position = Vec3(0.0f), const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
 
 	private:
-
 		Mat4x4 _ModelMatrix = Mat4x4(1.0f);
 
 		Vec3 _Front = Vec3(0.0f);
@@ -45,4 +43,3 @@ namespace Volund
 		Vec3 _Up = Vec3(0.0f);
 	};
 }
-

@@ -16,7 +16,7 @@ namespace Volund
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLVertexBuffer::SetLayout(VertexLayout const& Layout)
+	void OpenGLVertexBuffer::SetLayout(const VertexLayout& Layout)
 	{
 		this->_Layout = Layout;
 	}

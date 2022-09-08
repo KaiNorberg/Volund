@@ -18,20 +18,18 @@ namespace Volund
 
 		virtual void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) = 0;
 
-		virtual void SetClearColor(RGBA const& Color) = 0;
+		virtual void SetClearColor(const RGBA& Color) = 0;
 
 		virtual void Clear() = 0;
 
-		virtual void DrawIndexed(Ref<Mesh> const& VArray) = 0;
+		virtual void DrawIndexed(const Ref<Mesh>& VArray) = 0;
 
 		static API GetSelectedAPI();
 
 		static Ref<RenderingAPI> Create();
 
 	private:
-
 		static std::unordered_map<std::string, API> _APINames;
 		static API _SelectedAPI;
 	};
 }
-

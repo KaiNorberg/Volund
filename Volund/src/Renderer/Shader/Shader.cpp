@@ -4,7 +4,6 @@
 #include "Shader.h"
 #include "OpenGLShader.h"
 
-#include "Time/Time.h"
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
@@ -14,25 +13,25 @@ namespace Volund
 		return this->_FilePath;
 	}
 
-	Ref<Shader> Shader::Create(std::string const& FilePath)
+	Ref<Shader> Shader::Create(const std::string& FilePath)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-		{
-			return Ref<Shader>(new OpenGLShader(FilePath));
-		}
-		break;
+			{
+				return std::make_shared<OpenGLShader>(FilePath);
+			}
+			break;
 		default:
-		{
-			VOLUND_ERROR("Creating a Shader without a specified GraphicsAPI!");
-			return nullptr;
-		}
-		break;
+			{
+				VOLUND_ERROR("Creating a Shader without a specified GraphicsAPI!");
+				return nullptr;
+			}
+			break;
 		}
 	}
 
-	Shader::Source Shader::ParseShader(std::string const& FilePath)
+	Shader::Source Shader::ParseShader(const std::string& FilePath) const
 	{
 		VOLUND_INFO("Loading Shader (%s)...", FilePath.c_str());
 
@@ -42,7 +41,10 @@ namespace Volund
 
 		enum class ShaderType
 		{
-			NONE = -1, VERTEX = 0, FRAGMENT = 1, GEOMETRY = 2
+			NONE = -1,
+			VERTEX = 0,
+			FRAGMENT = 1,
+			GEOMETRY = 2
 		};
 
 		std::string Line;
@@ -54,7 +56,8 @@ namespace Volund
 			//Split into words
 			std::vector<std::string> Words;
 			std::istringstream ISS(Line);
-			std::copy(std::istream_iterator<std::string>(ISS), std::istream_iterator<std::string>(), std::back_inserter(Words));
+			std::copy(std::istream_iterator<std::string>(ISS), std::istream_iterator<std::string>(),
+			          std::back_inserter(Words));
 
 			if (Words.size() <= 0)
 			{
@@ -75,14 +78,16 @@ namespace Volund
 				{
 					Type = ShaderType::GEOMETRY;
 				}
-			}			
+			}
 			else if ((int32_t)Type != -1)
 			{
 				SourceStrings[(int32_t)Type] << Line << '\n';
 			}
 		}
 
-		return Source{ SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(), SourceStrings[(int)ShaderType::GEOMETRY].str()};
-	}	
-
+		return Source{
+			SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(),
+			SourceStrings[(int)ShaderType::GEOMETRY].str()
+		};
+	}
 } //namespace Volund

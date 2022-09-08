@@ -1,11 +1,7 @@
 #pragma once
 
 #include "Entity/Entity.h"
-#include "Renderer/Shader/Shader.h"
-#include "Renderer/Texture/Texture.h"
-#include "Renderer/Mesh/Mesh.h"
 
-#include "AssetLibrary/Asset/Assets.h"
 #include "AssetLibrary/AssetLibrary.h"
 
 namespace Volund
@@ -15,54 +11,53 @@ namespace Volund
 	class Scene
 	{
 	public:
+		Ref<Entity> CreateEntity(const std::string& Name);
 
-		 Ref<Entity> CreateEntity(std::string const& Name);
+		Ref<Entity> CreateEntity(const std::string& Name, const Vec3& Position, const Vec3& Rotation = Vec3(0.0f),
+		                         const Vec3& Scale = Vec3(1.0f));
 
-		 Ref<Entity> CreateEntity(std::string const& Name, Vec3 const& Position, Vec3 const& Rotation = Vec3(0.0f), Vec3 const& Scale = Vec3(1.0f));
+		bool DeleteEntity(const std::string& Name);
 
-		 bool DeleteEntity(std::string const& Name);
+		Ref<Entity> GetEntity(const std::string& Name);
 
-		 Ref<Entity> GetEntity(std::string const& Name);
+		bool HasEntity(const std::string& Name) const;
 
-		 bool HasEntity(std::string const& Name) const;
+		template <typename T>
+		const std::vector<Ref<T>> ComponentView();
 
-		 template<typename T>
-		 std::vector<Ref<T>> const ComponentView();
+		void Update(TimeStep TS);
 
-		 void Update(TimeStep TS);
+		void EventCallback(Event* E);
 
-		 void EventCallback(Event* E);
+		virtual void OnEvent(Event* E);
 
-		 virtual void OnEvent(Event* E);
+		virtual void OnUpdate(TimeStep TS);
 
-		 virtual void OnUpdate(TimeStep TS);
+		static Ref<Scene> Deserialize(const std::string& FilePath);
 
-		 static Ref<Scene> Deserialize(std::string const& FilePath);
+		void Serialize(const std::string& FilePath);
 
-		 void Serialize(std::string const& FilePath);
+		AssetLibrary Assets;
 
-		 AssetLibrary Assets;
+		Scene();
 
-		 Scene();
-
-		 virtual ~Scene() = default;
+		virtual ~Scene() = default;
 
 	private:
-
 		std::vector<Ref<Entity>> _Entities;
 	};
 
-	template<typename T>
-	inline std::vector<Ref<T>> const Scene::ComponentView()
+	template <typename T>
+	const std::vector<Ref<T>> Scene::ComponentView()
 	{
 		std::vector<Ref<T>> ComponentView;
-		for (auto const& Entity : _Entities)
+		for (const auto& Entity : _Entities)
 		{
 			if (Entity->HasComponent<T>())
 			{
-				auto const& View = Entity->ComponentView<T>();
+				const auto& View = Entity->ComponentView<T>();
 				ComponentView.reserve(View.size());
-				for (auto const& Component : View)
+				for (const auto& Component : View)
 				{
 					ComponentView.push_back(std::dynamic_pointer_cast<T>(Component));
 				}
@@ -72,4 +67,3 @@ namespace Volund
 		return ComponentView;
 	}
 }
-

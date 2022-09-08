@@ -32,16 +32,16 @@ namespace Volund
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-		{
-			return Ref<Mesh>(new OpenGLMesh(VBuffer, IBuffer));
-		}
-		break;
+			{
+				return std::make_shared<OpenGLMesh>(VBuffer, IBuffer);
+			}
+			break;
 		default:
-		{
-			VOLUND_ERROR("Creating a Mesh without a specified GraphicsAPI!");
-			return nullptr;
-		}
-		break;
+			{
+				VOLUND_ERROR("Creating a Mesh without a specified GraphicsAPI!");
+				return nullptr;
+			}
+			break;
 		}
 	}
 }

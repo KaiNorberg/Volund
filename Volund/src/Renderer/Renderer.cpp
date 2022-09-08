@@ -3,17 +3,17 @@
 
 namespace Volund
 {
-	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights)
+	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<PointLightData>& PointLights)
 	{
 		_SceneData = SceneData();
 		_SceneData.ViewProjMatrix = ViewProjMatrix;
 		_SceneData.EyePosition = EyePosition;
 		_SceneData.PointLights = PointLights;
- 	
+
 		InScene = true;
 	}
 
-	void Renderer::EndScene(Ref<Context> const& RenderingContext)
+	void Renderer::EndScene(const Ref<Context>& RenderingContext)
 	{
 		RenderingContext->MakeCurrent();
 
@@ -21,7 +21,8 @@ namespace Volund
 
 		_API->Clear();
 
-		_API->SetViewPort(0, 0,(uint32_t)RenderingContext->GetWindow()->GetSize().x, (uint32_t)RenderingContext->GetWindow()->GetSize().y);
+		_API->SetViewPort(0, 0, (uint32_t)RenderingContext->GetWindow()->GetSize().x,
+		                  (uint32_t)RenderingContext->GetWindow()->GetSize().y);
 
 		for (Submission Data : _SceneData.Submissions)
 		{
@@ -54,7 +55,7 @@ namespace Volund
 		InScene = false;
 	}
 
-	void Renderer::Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial)
+	void Renderer::Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial)
 	{
 		VOLUND_ASSERT(InScene, "Attempting to push a Submission to the Renderer while outside of a Renderer Scene!");
 
@@ -66,8 +67,8 @@ namespace Volund
 		_SceneData.Submissions.push_back(NewSubmission);
 	}
 
-	void Renderer::SetAPI(Ref<RenderingAPI> const& API)
+	void Renderer::SetAPI(const Ref<RenderingAPI>& API)
 	{
 		_API = API;
- 	}
+	}
 }

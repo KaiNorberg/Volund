@@ -4,54 +4,51 @@
 
 namespace Volund
 {
-    struct WindowData
-    {
-        uint64_t Width = 0;
-        uint64_t Height = 0;
+	struct WindowData
+	{
+		uint64_t Width = 0;
+		uint64_t Height = 0;
 
-        bool FullScreen = false;
+		bool FullScreen = false;
 
-        bool CaptureMouse = false;
-        bool ShowMouse = true;
+		bool CaptureMouse = false;
+		bool ShowMouse = true;
 
-        Ref<EventDispatcher> Dispatcher = nullptr;
-    };
+		Ref<EventDispatcher> Dispatcher = nullptr;
+	};
 
-    class Window
-    {
-    public:
+	class Window
+	{
+	public:
+		void SwapBuffers() const;
 
-        void SwapBuffers();
+		void Update();
 
-        void Update();
+		void SetFocus() const;
 
-        void SetFocus();
+		void SetCursorMode(const std::string& NewMode);
 
-        void SetCursorMode(std::string const& NewMode);
+		void SetTitle(const std::string& Title);
 
-        void SetTitle(std::string const& Title);
+		Vec2 GetSize() const;
 
-        Vec2 GetSize();
+		float GetAspectRatio() const;
 
-        float GetAspectRatio();
+		void* GetDeviceContext() const;
 
-        void* GetDeviceContext();
+		Window(Ref<EventDispatcher>& Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
 
-        Window(Ref<EventDispatcher>& Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
+		~Window();
 
-        ~Window();
+	private:
+		std::wstring ConvertToWString(const std::string& String);
 
-    private:
+		void* _Handle = nullptr;
 
-        std::wstring ConvertToWString(std::string const& String);
+		void* _Instance = nullptr;
 
-        void* _Handle = nullptr;
+		void* _DeviceContext = nullptr;
 
-        void* _Instance = nullptr;
-
-        void* _DeviceContext = nullptr;
-
-        WindowData _Data;
-    };
-
+		WindowData _Data;
+	};
 } //namespace Volund

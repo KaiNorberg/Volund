@@ -9,34 +9,34 @@ namespace Volund
 		return this->_Name;
 	}
 
-	Scene* Entity::GetScene()
+	Scene* Entity::GetScene() const
 	{
 		return this->_Parent;
 	}
 
-	void Entity::OnEvent(Event* E)
+	void Entity::OnEvent(Event* E) const
 	{
-		for (auto const& ComponentView : this->_Components)
+		for (const auto& ComponentView : this->_Components)
 		{
-			for (auto const& Component : ComponentView)
+			for (const auto& Component : ComponentView)
 			{
 				Component->OnEvent(E);
 			}
 		}
 	}
 
-	void Entity::OnUpdate(TimeStep TS)
+	void Entity::OnUpdate(TimeStep TS) const
 	{
-		for (auto const& ComponentView : this->_Components)
+		for (const auto& ComponentView : this->_Components)
 		{
-			for (auto const& Component : ComponentView)
+			for (const auto& Component : ComponentView)
 			{
 				Component->OnUpdate(TS);
 			}
 		}
 	}
 
-	JSON Entity::Serialize()
+	JSON Entity::Serialize() const
 	{
 		JSON EntityJSON;
 
@@ -44,20 +44,20 @@ namespace Volund
 
 		JSON ComponentsJSON;
 
-		for (auto const& ComponentView : this->_Components)
+		for (const auto& ComponentView : this->_Components)
 		{
-			for (auto const& Component : ComponentView)
+			for (const auto& Component : ComponentView)
 			{
 				ComponentsJSON.PushBack(Component->Serialize());
 			}
 		}
 
 		EntityJSON.AddEntry("Components", ComponentsJSON);
-		
+
 		return EntityJSON;
 	}
 
-	Entity::Entity(Scene* Parent, std::string const& Name)
+	Entity::Entity(Scene* Parent, const std::string& Name)
 	{
 		this->_Parent = Parent;
 		this->_Name = Name;
@@ -65,9 +65,9 @@ namespace Volund
 
 	Entity::~Entity()
 	{
-		for (auto const& ComponentView : this->_Components)
+		for (const auto& ComponentView : this->_Components)
 		{
-			for (auto const& Component : ComponentView)
+			for (const auto& Component : ComponentView)
 			{
 				Component->OnDelete();
 			}

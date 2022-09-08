@@ -11,16 +11,23 @@ namespace Volund
 	class Component
 	{
 	public:
-
 		Entity* GetEntity() const;
 
-		virtual void OnCreate() {};
+		virtual void OnCreate()
+		{
+		};
 
-		virtual void OnDelete() {};
+		virtual void OnDelete()
+		{
+		};
 
-		virtual void OnUpdate(TimeStep TS) {};
+		virtual void OnUpdate(TimeStep TS)
+		{
+		};
 
-		virtual	void OnEvent(Event* E) {};
+		virtual void OnEvent(Event* E)
+		{
+		};
 
 		virtual JSON Serialize() = 0;
 
@@ -34,4 +41,3 @@ namespace Volund
 		Entity* _Parent = nullptr;
 	};
 }
-

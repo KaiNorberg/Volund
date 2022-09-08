@@ -9,44 +9,42 @@ namespace Volund
 	class Entity
 	{
 	public:
-	
 		std::string GetName();
 
-		Scene* GetScene();
+		Scene* GetScene() const;
 
-		template<typename T, class... ARGS>
+		template <typename T, class... ARGS>
 		Ref<T> CreateComponent(ARGS&&... Args);
 
-		template<typename T>
+		template <typename T>
 		bool DeleteComponent(uint32_t Index = 0);
 
-		template<typename T>
+		template <typename T>
 		Ref<T> GetComponent(uint32_t Index = 0);
 
-		template<typename T>
+		template <typename T>
 		bool HasComponent(uint32_t Index = 0);
 
-		template<typename T>
+		template <typename T>
 		uint32_t ComponentAmount();
 
-		template<typename T>
-		std::vector<Ref<Component>> const& ComponentView();
+		template <typename T>
+		const std::vector<Ref<Component>>& ComponentView();
 
-		void OnEvent(Event* E);
+		void OnEvent(Event* E) const;
 
-		void OnUpdate(TimeStep TS);
+		void OnUpdate(TimeStep TS) const;
 
-		JSON Serialize();
+		JSON Serialize() const;
 
 		Entity() = default;
 
-		Entity(Scene* Parent, std::string const& Name = "");
+		Entity(Scene* Parent, const std::string& Name = "");
 
 		~Entity();
 
 	private:
-
-		template<typename T>
+		template <typename T>
 		uint32_t GetTypeID();
 
 		static inline uint32_t _NewTypeID = 0;
@@ -56,11 +54,10 @@ namespace Volund
 		std::string _Name;
 
 		std::vector<std::vector<Ref<Component>>> _Components;
+	};
 
-	};	
-
-	template<typename T, class... ARGS>
-	inline Ref<T> Entity::CreateComponent(ARGS&&... Args)
+	template <typename T, class... ARGS>
+	Ref<T> Entity::CreateComponent(ARGS&&... Args)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -69,7 +66,7 @@ namespace Volund
 			this->_Components.push_back(std::vector<Ref<Component>>());
 		}
 
-		Ref<T> NewComponent = Ref<T>(new T(Args...));
+		Ref<T> NewComponent = std::make_shared<T>(Args...);
 		NewComponent->SetParent(this);
 		NewComponent->OnCreate();
 		this->_Components[TypeID].push_back(NewComponent);
@@ -77,8 +74,8 @@ namespace Volund
 		return NewComponent;
 	}
 
-	template<typename T>
-	inline bool Entity::DeleteComponent(uint32_t Index)
+	template <typename T>
+	bool Entity::DeleteComponent(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -95,8 +92,8 @@ namespace Volund
 		return true;
 	}
 
-	template<typename T>
-	inline Ref<T> Entity::GetComponent(uint32_t Index)
+	template <typename T>
+	Ref<T> Entity::GetComponent(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -109,8 +106,8 @@ namespace Volund
 		return std::dynamic_pointer_cast<T>(this->_Components[TypeID][Index]);
 	}
 
-	template<typename T>
-	inline bool Entity::HasComponent(uint32_t Index)
+	template <typename T>
+	bool Entity::HasComponent(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -118,11 +115,11 @@ namespace Volund
 	}
 
 
-	template<typename T>
-	inline uint32_t Entity::ComponentAmount()
+	template <typename T>
+	uint32_t Entity::ComponentAmount()
 	{
 		static uint64_t TypeID = GetTypeID<T>();
-		
+
 		if (TypeID < this->_Components.size())
 		{
 			return 0;
@@ -131,20 +128,19 @@ namespace Volund
 		return this->_Components[TypeID].size();
 	}
 
-	template<typename T>
-	inline std::vector<Ref<Component>> const& Entity::ComponentView()
+	template <typename T>
+	const std::vector<Ref<Component>>& Entity::ComponentView()
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
 		return this->_Components[TypeID];
 	}
 
-	template<typename T>
-	inline uint32_t Entity::GetTypeID()
+	template <typename T>
+	uint32_t Entity::GetTypeID()
 	{
 		static uint32_t ID = _NewTypeID++;
 
 		return ID;
 	}
 }
-

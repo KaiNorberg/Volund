@@ -15,7 +15,7 @@ namespace Volund
 
 	RenderingAPI::API RenderingAPI::GetSelectedAPI()
 	{
-		if (_SelectedAPI == RenderingAPI::API::NONE)
+		if (_SelectedAPI == API::NONE)
 		{
 			JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
 
@@ -36,19 +36,19 @@ namespace Volund
 
 	Ref<RenderingAPI> RenderingAPI::Create()
 	{
-		switch (RenderingAPI::GetSelectedAPI())
+		switch (GetSelectedAPI())
 		{
-		case RenderingAPI::API::OPENGL:
-		{
-			return Ref<RenderingAPI>(new OpenGLRenderingAPI());
-		}
-		break;
+		case API::OPENGL:
+			{
+				return std::make_shared<OpenGLRenderingAPI>();
+			}
+			break;
 		default:
-		{
-			VOLUND_ERROR("Creating a RenderingAPI without a specified API!");
-			return nullptr;
-		}
-		break;
+			{
+				VOLUND_ERROR("Creating a RenderingAPI without a specified API!");
+				return nullptr;
+			}
+			break;
 		}
 	}
 }

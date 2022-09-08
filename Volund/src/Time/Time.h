@@ -18,7 +18,6 @@ namespace Volund
 	class TimeStep
 	{
 	public:
-
 		TimeStep(double Step = 0.0);
 
 		operator double() const;
@@ -28,8 +27,6 @@ namespace Volund
 		double GetMilliseconds() const;
 
 	private:
-
 		double Step = 0.0f;
 	};
-
 } //namespace Volund

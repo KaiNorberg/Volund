@@ -9,7 +9,7 @@ namespace Volund
 		return this->_JSONObject.size();
 	}
 
-	JSON JSON::Load(std::string const& FilePath)
+	JSON JSON::Load(const std::string& FilePath)
 	{
 		std::ifstream File(FilePath);
 
@@ -18,29 +18,28 @@ namespace Volund
 		return JSON(nlohmann::json::parse(File));
 	}
 
-	JSON const JSON::operator[](const char* Other) const
+	const JSON JSON::operator[](const char* Other) const
 	{
 		VOLUND_ASSERT(this->_JSONObject.contains(Other), "Unable to find JSON entry (%s)!", Other);
 
 		return JSON(this->_JSONObject[Other]);
 	}
 
-	JSON const JSON::operator[](int32_t const& Other) const
+	const JSON JSON::operator[](const int32_t& Other) const
 	{
 		VOLUND_ASSERT(Other < this->_JSONObject.size(), "Index exceeds boundary of JSON entry (%d)!", Other);
 
 		return JSON(this->_JSONObject[Other]);
 	}
 
-	void JSON::Save(std::string const& FilePath)
+	void JSON::Save(const std::string& FilePath) const
 	{
 		std::ofstream File(FilePath);
 		File << std::setw(4) << this->_JSONObject << std::endl;
-	}	
+	}
 
-	JSON::JSON(nlohmann::json const& JSONObject)
+	JSON::JSON(const nlohmann::json& JSONObject)
 	{
 		this->_JSONObject = JSONObject;
 	}
-
 }

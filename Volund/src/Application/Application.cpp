@@ -2,15 +2,13 @@
 
 #include "Application.h"
 
-#include "Scene/Scene.h"
-#include "Input/Input.h"
 #include "Time/Time.h"
 
 namespace Volund
 {
 	void Application::Run()
 	{
-		this->Loop();		
+		this->Loop();
 	}
 
 	void Application::AttachLayer(Layer* L)
@@ -25,12 +23,12 @@ namespace Volund
 		this->_ShouldRun = false;
 	}
 
-	bool Application::ShouldRun()
+	bool Application::ShouldRun() const
 	{
 		return this->_ShouldRun;
 	}
 
-	void Application::Loop()
+	void Application::Loop() const
 	{
 		std::chrono::time_point<std::chrono::steady_clock> OldTime = std::chrono::high_resolution_clock::now();
 
@@ -55,14 +53,14 @@ namespace Volund
 		VOLUND_INFO("Initializing application (Release)...");
 #elif VOLUND_DIST
 		VOLUND_INFO("Initializing application (Distribution)...");
-#else 		
+#else
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
 	}
 
 	Application::~Application()
 	{
-		for (auto const& L : this->_LayerStack)
+		for (const auto& L : this->_LayerStack)
 		{
 			L->OnDetach();
 		}

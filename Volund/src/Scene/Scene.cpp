@@ -1,15 +1,16 @@
 #include "PCH/PCH.h"
 
 #include "Scene.h"
+#include "AssetLibrary/Asset/Assets.h"
 
 #include "EventDispatcher/Event.h"
 #include "Scene/Entity/Component/Components.h"
 
 namespace Volund
 {
-	Ref<Entity> Scene::CreateEntity(std::string const& Name)
+	Ref<Entity> Scene::CreateEntity(const std::string& Name)
 	{
-		Ref<Entity> NewEntity = Ref<Entity>(new Entity(this, Name));
+		Ref<Entity> NewEntity = std::make_shared<Entity>(this, Name);
 
 		if (this->HasEntity(NewEntity->GetName()))
 		{
@@ -22,7 +23,8 @@ namespace Volund
 		return NewEntity;
 	}
 
-	Ref<Entity> Scene::CreateEntity(std::string const& Name, Vec3 const& Position, Vec3 const& Rotation, Vec3 const& Scale)
+	Ref<Entity> Scene::CreateEntity(const std::string& Name, const Vec3& Position, const Vec3& Rotation,
+	                                const Vec3& Scale)
 	{
 		Ref<Entity> NewEntity = this->CreateEntity(Name);
 
@@ -31,13 +33,13 @@ namespace Volund
 		return NewEntity;
 	}
 
-	bool Scene::DeleteEntity(std::string const& Name)
+	bool Scene::DeleteEntity(const std::string& Name)
 	{
 		for (int i = 0; i < this->_Entities.size(); i++)
 		{
 			if (this->_Entities[i]->GetName() == Name)
 			{
-				this->_Entities.erase(this->_Entities.begin() + i);		
+				this->_Entities.erase(this->_Entities.begin() + i);
 				return true;
 			}
 		}
@@ -46,7 +48,7 @@ namespace Volund
 		return false;
 	}
 
-	Ref<Entity> Scene::GetEntity(std::string const& Name)
+	Ref<Entity> Scene::GetEntity(const std::string& Name)
 	{
 		for (int i = 0; i < this->_Entities.size(); i++)
 		{
@@ -60,7 +62,7 @@ namespace Volund
 		return nullptr;
 	}
 
-	bool Scene::HasEntity(std::string const& Name) const
+	bool Scene::HasEntity(const std::string& Name) const
 	{
 		for (int i = 0; i < this->_Entities.size(); i++)
 		{
@@ -76,7 +78,7 @@ namespace Volund
 	void Scene::Update(TimeStep TS)
 	{
 		this->OnUpdate(TS);
-		for (auto const& Entity : this->_Entities)
+		for (const auto& Entity : this->_Entities)
 		{
 			Entity->OnUpdate(TS);
 		}
@@ -85,7 +87,7 @@ namespace Volund
 	void Scene::EventCallback(Event* E)
 	{
 		this->OnEvent(E);
-		for (auto const& Entity : this->_Entities)
+		for (const auto& Entity : this->_Entities)
 		{
 			Entity->OnEvent(E);
 		}
@@ -93,21 +95,19 @@ namespace Volund
 
 	void Scene::OnEvent(Event* E)
 	{
-
 	}
 
 	void Scene::OnUpdate(TimeStep TS)
 	{
-
 	}
 
-	Ref<Scene> Scene::Deserialize(std::string const& FilePath)
+	Ref<Scene> Scene::Deserialize(const std::string& FilePath)
 	{
 		VOLUND_INFO("Deserializing Scene (%s)...", FilePath.c_str());
 
 		JSON SceneJSON = JSON::Load(FilePath);
 
-		Ref<Scene> NewScene = Ref<Scene>(new Scene());
+		Ref<Scene> NewScene = std::make_shared<Scene>();
 
 		NewScene->Assets.Deserialize<MeshAsset>(SceneJSON["Meshes"]);
 
@@ -148,8 +148,10 @@ namespace Volund
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
-					Ref<MeshAsset> ObjectMesh = NewScene->Assets.GetAsset<MeshAsset>(ComponentJSON["Mesh"].GetAs<std::string>());
-					Ref<MaterialAsset> ObjectMaterial = NewScene->Assets.GetAsset<MaterialAsset>(ComponentJSON["Material"].GetAs<std::string>());
+					Ref<MeshAsset> ObjectMesh = NewScene->Assets.GetAsset<MeshAsset>(
+						ComponentJSON["Mesh"].GetAs<std::string>());
+					Ref<MaterialAsset> ObjectMaterial = NewScene->Assets.GetAsset<MaterialAsset>(
+						ComponentJSON["Material"].GetAs<std::string>());
 
 					NewEntity->CreateComponent<MeshRenderer>(ObjectMesh, ObjectMaterial);
 				}
@@ -161,8 +163,10 @@ namespace Volund
 				}
 				else if (ComponentType == "Transform")
 				{
-					Vec3 Position = Vec3(ComponentJSON["Position"][0], ComponentJSON["Position"][1], ComponentJSON["Position"][2]);
-					Vec3 Rotation = Vec3(ComponentJSON["Rotation"][0], ComponentJSON["Rotation"][1], ComponentJSON["Rotation"][2]);
+					Vec3 Position = Vec3(ComponentJSON["Position"][0], ComponentJSON["Position"][1],
+					                     ComponentJSON["Position"][2]);
+					Vec3 Rotation = Vec3(ComponentJSON["Rotation"][0], ComponentJSON["Rotation"][1],
+					                     ComponentJSON["Rotation"][2]);
 					Vec3 Scale = Vec3(ComponentJSON["Scale"][0], ComponentJSON["Scale"][1], ComponentJSON["Scale"][2]);
 
 					NewEntity->CreateComponent<Transform>(Position, Rotation, Scale);
@@ -172,7 +176,6 @@ namespace Volund
 					VOLUND_ERROR("Unknown Component type (%s)!", ComponentType.c_str());
 				}
 			}
-
 		}
 
 		VOLUND_INFO("Finished deserializing Scene!");
@@ -180,7 +183,7 @@ namespace Volund
 		return NewScene;
 	}
 
-	void Scene::Serialize(std::string const& FilePath)
+	void Scene::Serialize(const std::string& FilePath)
 	{
 		JSON SceneJSON;
 

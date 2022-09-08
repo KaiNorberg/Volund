@@ -3,8 +3,6 @@
 
 #include "Scene/AssetLibrary/Asset/Shader/ShaderAsset.h"
 
-#include "Scene/Scene.h"
-
 namespace Volund
 {
 	Ref<Material> MaterialAsset::Get()
@@ -12,7 +10,7 @@ namespace Volund
 		return this->_Material;
 	}
 
-	MaterialAsset::MaterialAsset(AssetLibrary* Parent, std::string const& FilePath)
+	MaterialAsset::MaterialAsset(AssetLibrary* Parent, const std::string& FilePath)
 	{
 		this->_FilePath = FilePath;
 

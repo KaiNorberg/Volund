@@ -8,13 +8,11 @@ namespace Volund
 	class ShaderAsset : public Asset
 	{
 	public:
-
 		Ref<Shader> Get();
 
-		ShaderAsset(AssetLibrary* Parent, std::string const& FilePath);
+		ShaderAsset(AssetLibrary* Parent, const std::string& FilePath);
 
 	private:
-
 		Ref<Shader> _Shader;
 	};
 }

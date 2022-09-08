@@ -2,80 +2,77 @@
 
 namespace Volund
 {
-    /// <summary>
-    /// A shader object that Contains code that describes how to render a mesh to the screen.
-    /// </summary>
-    class Shader
-    {
-    public:
+	/// <summary>
+	/// A shader object that Contains code that describes how to render a mesh to the screen.
+	/// </summary>
+	class Shader
+	{
+	public:
+		std::string GetFilePath();
 
-        std::string GetFilePath();
+		virtual void Bind() = 0;
 
-        virtual void Bind() = 0;
+		/// <summary>
+		/// Returns if the shader has the specified uniform.
+		/// </summary>
+		virtual bool HasUniform(const std::string& Name) = 0;
 
-        /// <summary>
-        /// Returns if the shader has the specified uniform.
-        /// </summary>
-        virtual bool HasUniform(std::string const& Name) = 0;
+		/// <summary>
+		/// Sets a int shader uniform.
+		/// </summary>
+		virtual void SetInt(const std::string& Name, int32_t Value) = 0;
 
-        /// <summary>
-        /// Sets a int shader uniform.
-        /// </summary>
-        virtual void SetInt(std::string const& Name, int32_t Value) = 0;
+		/// <summary>
+		/// Sets a float shader uniform.
+		/// </summary>
+		virtual void SetFloat(const std::string& Name, float Value) = 0;
 
-        /// <summary>
-        /// Sets a float shader uniform.
-        /// </summary>
-        virtual void SetFloat(std::string const& Name, float Value) = 0;
+		/// <summary>
+		/// Sets a double shader uniform.
+		/// </summary>
+		virtual void SetDouble(const std::string& Name, float Value) = 0;
 
-        /// <summary>
-        /// Sets a double shader uniform.
-        /// </summary>
-        virtual void SetDouble(std::string const& Name, float Value) = 0;
+		/// <summary>
+		/// Sets a vector2 shader uniform.
+		/// </summary>
+		virtual void SetVec2(const std::string& Name, const Vec2& Value) = 0;
 
-        /// <summary>
-        /// Sets a vector2 shader uniform.
-        /// </summary>
-        virtual void SetVec2(std::string const& Name, Vec2 const& Value) = 0;
+		/// <summary>
+		/// Sets a vector3 shader uniform.
+		/// </summary>
+		virtual void SetVec3(const std::string& Name, const Vec3& Value) = 0;
 
-        /// <summary>
-        /// Sets a vector3 shader uniform.
-        /// </summary>
-        virtual void SetVec3(std::string const& Name, Vec3 const& Value) = 0;
+		/// <summary>
+		/// Sets a vector4 shader uniform.
+		/// </summary>
+		virtual void SetVec4(const std::string& Name, const Vec4& Value) = 0;
 
-        /// <summary>
-        /// Sets a vector4 shader uniform.
-        /// </summary>
-        virtual void SetVec4(std::string const& Name, Vec4 const& Value) = 0;
+		/// <summary>
+		/// Sets a matrix3 shader uniform.
+		/// </summary>
+		virtual void SetMat3x3(const std::string& Name, const Mat3x3& Value, bool Transpose = false) = 0;
 
-        /// <summary>
-        /// Sets a matrix3 shader uniform.
-        /// </summary>
-        virtual void SetMat3x3(std::string const& Name, Mat3x3 const& Value, bool Transpose = false) = 0;
+		/// <summary>
+		/// Sets a matrix4 shader uniform.
+		/// </summary>
+		virtual void SetMat4x4(const std::string& Name, const Mat4x4& Value, bool Transpose = false) = 0;
 
-        /// <summary>
-        /// Sets a matrix4 shader uniform.
-        /// </summary>
-        virtual void SetMat4x4(std::string const& Name, Mat4x4 const& Value, bool Transpose = false) = 0;
+		static Ref<Shader> Create(const std::string& FilePath);
 
-        static Ref<Shader> Create(std::string const& FilePath);
+		virtual ~Shader() = default;
 
-        virtual ~Shader() = default;
+	protected:
+		struct Source
+		{
+			std::string VertexSource;
 
-    protected:
+			std::string FragmentSource;
 
-        struct Source
-        {
-            std::string VertexSource;
+			std::string GeometrySource;
+		};
 
-            std::string FragmentSource;
+		Source ParseShader(const std::string& FilePath) const;
 
-            std::string GeometrySource;
-        };
-
-        Source ParseShader(std::string const& FilePath);
-
-        std::string _FilePath;
-    };
-
+		std::string _FilePath;
+	};
 } //namespace Volund

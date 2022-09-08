@@ -8,13 +8,11 @@ namespace Volund
 	class TextureAsset : public Asset
 	{
 	public:
-
 		Ref<Texture> Get();
 
-		TextureAsset(AssetLibrary* Parent, std::string const& FilePath);
+		TextureAsset(AssetLibrary* Parent, const std::string& FilePath);
 
 	private:
-
 		Ref<Texture> _Texture;
 	};
 }

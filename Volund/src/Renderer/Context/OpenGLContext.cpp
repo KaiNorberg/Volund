@@ -1,12 +1,14 @@
 #include "PCH/PCH.h"
-#include "Context.h"
 #include "OpenGLContext.h"
+#include "Context.h"
 
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
 
-#include <glad/include/glad/glad.h>
+#include <windowsx.h>
+
+#include <glad/glad.h>
 
 #include <wglext/wglext.h>
 
@@ -16,7 +18,8 @@ namespace Volund
 	{
 		if (wglGetCurrentContext() != this->_RenderingContext)
 		{
-			VOLUND_ASSERT(wglMakeCurrent((HDC)this->GetWindow()->GetDeviceContext(), (HGLRC)this->_RenderingContext), "Failed to active OpenGL Context");
+			VOLUND_ASSERT(wglMakeCurrent((HDC)this->GetWindow()->GetDeviceContext(), (HGLRC)this->_RenderingContext),
+			              "Failed to active OpenGL Context");
 		}
 	}
 
@@ -39,14 +42,15 @@ namespace Volund
 		GetWindow()->SwapBuffers();
 	}
 
-	bool OpenGLContext::WGLExtensionSupported(std::string const& Name)
+	bool OpenGLContext::WGLExtensionSupported(const std::string& Name) const
 	{
-		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");
+		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress(
+			"wglGetExtensionsStringEXT");
 
-		return strstr(_wglGetExtensionsStringEXT(), Name.c_str()) != NULL;
+		return strstr(_wglGetExtensionsStringEXT(), Name.c_str()) != nullptr;
 	}
 
-	OpenGLContext::OpenGLContext(Ref<Window> const& TargetWindow)
+	OpenGLContext::OpenGLContext(const Ref<Window>& TargetWindow)
 	{
 		this->_Window = TargetWindow;
 
@@ -64,7 +68,7 @@ namespace Volund
 		{
 			if (wglGetCurrentContext() == this->_RenderingContext)
 			{
-				wglMakeCurrent(NULL, NULL);
+				wglMakeCurrent(nullptr, nullptr);
 			}
 
 			wglDeleteContext((HGLRC)this->_RenderingContext);

@@ -7,22 +7,21 @@ namespace Volund
 {
 	enum class VertexAttributeType
 	{
-		FLOAT  = VOLUND_ATTRIBUTE_FLOAT + (1 << 2),
+		FLOAT = VOLUND_ATTRIBUTE_FLOAT + (1 << 2),
 		FLOAT2 = VOLUND_ATTRIBUTE_FLOAT + (2 << 2),
 		FLOAT3 = VOLUND_ATTRIBUTE_FLOAT + (3 << 2),
 		FLOAT4 = VOLUND_ATTRIBUTE_FLOAT + (4 << 2),
-		MAT3   = VOLUND_ATTRIBUTE_FLOAT + (9 << 2),
-		MAT4   = VOLUND_ATTRIBUTE_FLOAT + (12 << 2),
-		INT    = VOLUND_ATTRIBUTE_INT + (1 << 2),
-		INT2   = VOLUND_ATTRIBUTE_INT + (2 << 2),
-		INT3   = VOLUND_ATTRIBUTE_INT + (3 << 2),
-		INT4   = VOLUND_ATTRIBUTE_INT + (4 << 2)
+		MAT3 = VOLUND_ATTRIBUTE_FLOAT + (9 << 2),
+		MAT4 = VOLUND_ATTRIBUTE_FLOAT + (12 << 2),
+		INT = VOLUND_ATTRIBUTE_INT + (1 << 2),
+		INT2 = VOLUND_ATTRIBUTE_INT + (2 << 2),
+		INT3 = VOLUND_ATTRIBUTE_INT + (3 << 2),
+		INT4 = VOLUND_ATTRIBUTE_INT + (4 << 2)
 	};
 
 	class VertexAttribute
 	{
 	public:
-
 		uint32_t GetDataType() const;
 
 		uint32_t GetByteSize() const;
@@ -34,7 +33,6 @@ namespace Volund
 		VertexAttribute(VertexAttributeType Type, std::string Name = "");
 
 	private:
-
 		uint32_t FloatID = 0;
 		uint32_t IntID = 0;
 
@@ -43,5 +41,5 @@ namespace Volund
 		VertexAttributeType _Type;
 	};
 
-	typedef std::vector<VertexAttribute> VertexLayout;	
+	using VertexLayout = std::vector<VertexAttribute>;
 }

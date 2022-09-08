@@ -5,7 +5,6 @@ namespace Volund
 	class Asset
 	{
 	public:
-
 		std::string GetFilePath();
 
 		Asset() = default;
@@ -13,9 +12,6 @@ namespace Volund
 		virtual ~Asset() = default;
 
 	protected:
-
 		std::string _FilePath;
 	};
 }
-
-

@@ -8,7 +8,7 @@ namespace Volund
 		return this->_Shader;
 	}
 
-	ShaderAsset::ShaderAsset(AssetLibrary* Parent, std::string const& FilePath)
+	ShaderAsset::ShaderAsset(AssetLibrary* Parent, const std::string& FilePath)
 	{
 		this->_FilePath = FilePath;
 

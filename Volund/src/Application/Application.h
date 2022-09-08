@@ -7,28 +7,24 @@ namespace Volund
 	class Application
 	{
 	public:
+		void Run();
 
-		 void Run();
+		void AttachLayer(Layer* L);
 
-		 void AttachLayer(Layer* L);
+		void Terminate();
 
-		 void Terminate();
+		bool ShouldRun() const;
 
-		 bool ShouldRun();
+		Application();
 
-		 Application();
-			
-		 virtual ~Application();
+		virtual ~Application();
 
 	protected:
-
 		bool _ShouldRun = true;
 
 	private:
-
-		void Loop();
+		void Loop() const;
 
 		std::vector<Ref<Layer>> _LayerStack;
 	};
 }
-

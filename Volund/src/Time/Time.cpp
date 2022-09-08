@@ -13,7 +13,8 @@ namespace Volund
 	Timer::~Timer()
 	{
 		std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - Start;
-		VOLUND_INFO("Timer destroyed! Time passed: %f | Iterations per second: %f", Duration.count(), 1 / Duration.count());
+		VOLUND_INFO("Timer destroyed! Time passed: %f | Iterations per second: %f", Duration.count(),
+		            1 / Duration.count());
 	}
 
 	TimeStep::TimeStep(double Step)
@@ -35,5 +36,4 @@ namespace Volund
 	{
 		return this->Step * 1000.0f;
 	}
-
 } //namespace Volund

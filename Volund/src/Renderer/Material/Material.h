@@ -7,7 +7,6 @@ namespace Volund
 	class Material
 	{
 	public:
-
 		Ref<Shader> GetShader();
 
 		static Ref<Material> Create(Ref<Shader> ObjectShader);
@@ -15,7 +14,6 @@ namespace Volund
 		Material(Ref<Shader> ObjectShader);
 
 	private:
-
 		Ref<Shader> _Shader;
 	};
 }

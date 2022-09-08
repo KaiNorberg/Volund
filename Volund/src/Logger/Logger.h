@@ -2,35 +2,33 @@
 
 namespace Volund
 {
-    class Logger
-    {
-    public:
+	class Logger
+	{
+	public:
+		static Logger& GetCoreLogger();
 
-         static Logger& GetCoreLogger();
+		static Logger& GetClientLogger();
 
-         static Logger& GetClientLogger();
+		void Info(const char* Format, ...) const;
 
-         void Info(const char* Format, ...);
-        
-         void Warning(const char* Format, ...);
+		void Warning(const char* Format, ...) const;
 
-         void Error(const char* Format, ...);
+		void Error(const char* Format, ...) const;
 
-        Logger(std::string const& Name);
+		Logger(const std::string& Name);
 
-    private:   
+	private:
+		static Logger _CoreLogger;
+		static Logger _ClientLogger;
 
-        static Logger _CoreLogger;
-        static Logger _ClientLogger;
-
-        std::string _Name;
-    };
+		std::string _Name;
+	};
 }
 
 #ifdef VOLUND_CORE
-    #define VOLUND_INFO(...) ::Volund::Logger::GetCoreLogger().Info(__VA_ARGS__)
-    #define VOLUND_WARNING(...) ::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__)
-    #define VOLUND_ERROR(...) ::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__)
+#define VOLUND_INFO(...) ::Volund::Logger::GetCoreLogger().Info(__VA_ARGS__)
+#define VOLUND_WARNING(...) ::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__)
+#define VOLUND_ERROR(...) ::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__)
 #else
     #define VOLUND_INFO(...) ::Volund::Logger::GetClientLogger().Info(__VA_ARGS__)
     #define VOLUND_WARNING(...) ::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__)

@@ -10,7 +10,7 @@
 
 namespace Volund
 {
-	uint32_t VertexBuffer::GetCount()
+	uint32_t VertexBuffer::GetCount() const
 	{
 		return this->_Count;
 	}
@@ -20,16 +20,16 @@ namespace Volund
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-		{
-			return Ref<VertexBuffer>(new OpenGLVertexBuffer(Vertices, Count));
-		}
-		break;
+			{
+				return std::make_shared<OpenGLVertexBuffer>(Vertices, Count);
+			}
+			break;
 		default:
-		{
-			VOLUND_ERROR("Creating a VertexBuffer without a specified GraphicsAPI!");
-			return nullptr;
-		}
-		break;
+			{
+				VOLUND_ERROR("Creating a VertexBuffer without a specified GraphicsAPI!");
+				return nullptr;
+			}
+			break;
 		}
 	}
 }

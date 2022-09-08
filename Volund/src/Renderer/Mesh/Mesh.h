@@ -1,14 +1,13 @@
 #pragma once
 
-#include "Renderer/VertexBuffer/VertexBuffer.h"
 #include "Renderer/IndexBuffer/IndexBuffer.h"
+#include "Renderer/VertexBuffer/VertexBuffer.h"
 
 namespace Volund
 {
 	class Mesh
 	{
 	public:
-
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
@@ -25,7 +24,6 @@ namespace Volund
 		virtual ~Mesh() = default;
 
 	protected:
-
 		Ref<VertexBuffer> _VertexBuffer;
 		Ref<IndexBuffer> _IndexBuffer;
 	};

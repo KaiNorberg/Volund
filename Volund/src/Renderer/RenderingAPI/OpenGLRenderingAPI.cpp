@@ -7,7 +7,7 @@
 namespace Volund
 {
 	void APIENTRY ErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
-		GLsizei length, const GLchar* message, const void* userParam)
+	                            GLsizei length, const GLchar* message, const void* userParam)
 	{
 		std::string _source;
 		std::string _type;
@@ -101,7 +101,7 @@ namespace Volund
 		glViewport(X, Y, Width, Height);
 	}
 
-	void OpenGLRenderingAPI::SetClearColor(RGBA const& Color)
+	void OpenGLRenderingAPI::SetClearColor(const RGBA& Color)
 	{
 		glClearColor(Color.r, Color.g, Color.b, Color.a);
 	}
@@ -112,7 +112,7 @@ namespace Volund
 		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
-	void OpenGLRenderingAPI::DrawIndexed(Ref<Mesh> const& VArray)
+	void OpenGLRenderingAPI::DrawIndexed(const Ref<Mesh>& VArray)
 	{
 		glDrawElements(GL_TRIANGLES, VArray->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
@@ -134,7 +134,7 @@ namespace Volund
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(ErrorCallback, NULL);
+		glDebugMessageCallback(ErrorCallback, nullptr);
 
 		VOLUND_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
 		VOLUND_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));

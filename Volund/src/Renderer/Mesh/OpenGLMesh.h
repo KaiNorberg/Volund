@@ -7,7 +7,6 @@ namespace Volund
 	class OpenGLMesh : public Mesh
 	{
 	public:
-
 		void Bind() const override;
 
 		void Unbind() const override;
@@ -15,11 +14,11 @@ namespace Volund
 		void SetVertexBuffer(Ref<VertexBuffer>& Buffer) override;
 		void SetIndexBuffer(Ref<IndexBuffer>& Buffer) override;
 
-		OpenGLMesh(std::string const& FilePath);
+		OpenGLMesh(const std::string& FilePath);
 
 		OpenGLMesh(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
-		
-		~OpenGLMesh();
+
+		~OpenGLMesh() override;
 
 	private:
 		uint32_t _ID;

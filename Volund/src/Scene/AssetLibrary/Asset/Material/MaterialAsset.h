@@ -8,13 +8,11 @@ namespace Volund
 	class MaterialAsset : public Asset
 	{
 	public:
-
 		Ref<Material> Get();
 
-		MaterialAsset(AssetLibrary* Parent, std::string const& FilePath);
+		MaterialAsset(AssetLibrary* Parent, const std::string& FilePath);
 
 	private:
-
 		Ref<Material> _Material;
 	};
 }

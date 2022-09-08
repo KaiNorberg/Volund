@@ -2,18 +2,14 @@
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/vec2.hpp>
-#include <glm/glm/vec3.hpp>
-#include <glm/glm/vec4.hpp>
-#include <glm/glm/mat4x4.hpp>
-#include <glm/glm/mat3x3.hpp>
 #include <glm/glm/gtc/matrix_transform.hpp>
-#include <glm/glm/gtc/type_ptr.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
+#include <glm/glm/gtc/type_ptr.hpp>
 
 #define PI 3.14159265359f
 
 namespace Volund
-{		
+{
 	using Vec2 = glm::vec<2, float>;
 	using DVec2 = glm::vec<2, double>;
 	using IVec2 = glm::vec<2, int32_t>;
@@ -88,13 +84,13 @@ namespace Volund
 		static const Vec3 Zero;
 
 		template <class T>
-		static T ToRadians(T const& V)
+		static T ToRadians(const T& V)
 		{
 			return (PI / 180.0f) * V;
 		}
 
 		template <class T>
-		static T ToDegrees(T const& V)
+		static T ToDegrees(const T& V)
 		{
 			return (180.0f / PI) * V;
 		}
@@ -109,10 +105,10 @@ namespace Volund
 		static T Max(T N1, T N2)
 		{
 			return (N1 > N2) ? N1 : N2;
-		}		
-		
+		}
+
 		template <class T>
-		static T Clamp(T N, T Lower, T Upper) 
+		static T Clamp(T N, T Lower, T Upper)
 		{
 			return Max(Lower, Min(N, Upper));
 		}

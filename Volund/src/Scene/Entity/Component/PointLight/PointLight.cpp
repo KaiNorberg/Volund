@@ -12,7 +12,7 @@ namespace Volund
 
 		PointLightJSON.AddEntry("Type", "PointLight");
 
-		PointLightJSON.AddList("Color", { this->Color.r, this->Color.g, this->Color.b });
+		PointLightJSON.AddList("Color", {this->Color.r, this->Color.g, this->Color.b});
 
 		return PointLightJSON;
 	}

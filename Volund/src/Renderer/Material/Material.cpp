@@ -10,7 +10,7 @@ namespace Volund
 
 	Ref<Material> Material::Create(Ref<Shader> ObjectShader)
 	{
-		return Ref<Material>(new Material(ObjectShader));
+		return std::make_shared<Material>(ObjectShader);
 	}
 
 	Material::Material(Ref<Shader> DrawShader)

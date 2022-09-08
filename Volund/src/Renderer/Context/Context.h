@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Renderer/RenderingAPI/RenderingAPI.h"
-
 namespace Volund
 {
 	class Window;
@@ -9,8 +7,6 @@ namespace Volund
 	class Context
 	{
 	public:
-
-
 		virtual void MakeCurrent() = 0;
 
 		virtual void SetVSync(bool Enabled) = 0;
@@ -19,14 +15,11 @@ namespace Volund
 
 		Ref<Window> GetWindow();
 
-		static Ref<Context> Create(Ref<Window> const& TargetWindow);
+		static Ref<Context> Create(const Ref<Window>& TargetWindow);
 
 		virtual ~Context() = default;
 
-	protected:		
-
+	protected:
 		Ref<Window> _Window;
 	};
 }
-
-

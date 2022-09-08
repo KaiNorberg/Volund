@@ -7,40 +7,38 @@ namespace Volund
 	class AssetLibrary
 	{
 	public:
+		template <typename T>
+		Ref<T> GetAsset(const std::string& FilePath);
 
-		template<typename T>
-		Ref<T> GetAsset(std::string const& FilePath);
-
-		template<typename T>
+		template <typename T>
 		Ref<T> GetAsset(uint32_t Index);
 
-		template<typename T>
-		Ref<T> Create(std::string const& FilePath);
+		template <typename T>
+		Ref<T> Create(const std::string& FilePath);
 
-		template<typename T>
+		template <typename T>
 		uint32_t AssetAmount();
 
-		template<typename T>
+		template <typename T>
 		JSON Serialize();
 
-		template<typename T>
-		void Deserialize(JSON const& AssetsJSON);
+		template <typename T>
+		void Deserialize(const JSON& AssetsJSON);
 
-		template<typename T>
+		template <typename T>
 		bool HasAssetType();
 
 	private:
-
-		template<typename T>
+		template <typename T>
 		uint32_t GetTypeID();
 
 		static inline uint32_t _NewTypeID = 0;
 
 		std::vector<std::vector<Ref<Asset>>> _Assets;
-	};	
+	};
 
-	template<typename T>
-	inline Ref<T> Volund::AssetLibrary::GetAsset(std::string const& FilePath)
+	template <typename T>
+	Ref<T> AssetLibrary::GetAsset(const std::string& FilePath)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -57,8 +55,8 @@ namespace Volund
 		return nullptr;
 	}
 
-	template<typename T>
-	inline Ref<T> AssetLibrary::GetAsset(uint32_t Index)
+	template <typename T>
+	Ref<T> AssetLibrary::GetAsset(uint32_t Index)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -70,8 +68,8 @@ namespace Volund
 		return this->_Assets[TypeID][Index];
 	}
 
-	template<typename T>
-	inline Ref<T> Volund::AssetLibrary::Create(std::string const& FilePath)
+	template <typename T>
+	Ref<T> AssetLibrary::Create(const std::string& FilePath)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -80,15 +78,15 @@ namespace Volund
 			this->_Assets.push_back(std::vector<Ref<Asset>>());
 		}
 
-		Ref<T> NewAsset = Ref<T>(new T(this, FilePath));
+		Ref<T> NewAsset = std::make_shared<T>(this, FilePath);
 
 		this->_Assets[TypeID].push_back(NewAsset);
 
 		return NewAsset;
 	}
 
-	template<typename T>
-	inline uint32_t Volund::AssetLibrary::AssetAmount()
+	template <typename T>
+	uint32_t AssetLibrary::AssetAmount()
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -100,8 +98,8 @@ namespace Volund
 		return this->_Assets[TypeID];
 	}
 
-	template<typename T>
-	inline JSON Volund::AssetLibrary::Serialize()
+	template <typename T>
+	JSON AssetLibrary::Serialize()
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -118,8 +116,8 @@ namespace Volund
 		return AssetsJSON;
 	}
 
-	template<typename T>
-	inline void Volund::AssetLibrary::Deserialize(JSON const& AssetsJSON)
+	template <typename T>
+	void AssetLibrary::Deserialize(const JSON& AssetsJSON)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -130,20 +128,20 @@ namespace Volund
 
 		for (int i = 0; i < AssetsJSON.Size(); i++)
 		{
-			this->_Assets[TypeID].push_back(Ref<T>(new T(this, AssetsJSON[i])));
+			this->_Assets[TypeID].push_back(std::make_shared<T>(this, AssetsJSON[i]));
 		}
 	}
 
-	template<typename T>
-	inline bool AssetLibrary::HasAssetType()
+	template <typename T>
+	bool AssetLibrary::HasAssetType()
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
 		return TypeID < this->_Assets.size() && !this->_Assets[TypeID].empty();
 	}
 
-	template<typename T>
-	inline uint32_t AssetLibrary::GetTypeID()
+	template <typename T>
+	uint32_t AssetLibrary::GetTypeID()
 	{
 		static uint32_t ID = _NewTypeID++;
 

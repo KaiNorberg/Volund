@@ -1,35 +1,28 @@
 #pragma once
 
-#include "Renderer/IndexBuffer/IndexBuffer.h"
-#include "Renderer/VertexBuffer/VertexBuffer.h"
-
-#include "Time/Time.h"
-
 namespace Volund
 {
-	template<typename V, typename I>
+	template <typename V, typename I>
 	class ModelLoader
 	{
 	public:
-
 		std::vector<V> Vertices;
 		std::vector<I> Indices;
 
-		ModelLoader(std::string const& FilePath);
+		ModelLoader(const std::string& FilePath);
 
 	private:
+		void LoadOBJ(const std::string& FilePath);
 
-		void LoadOBJ(std::string const& FilePath);
-
-		struct ArrayHasher 
+		struct ArrayHasher
 		{
-			std::size_t operator()(const std::array<V, 8>& Array) const 
+			std::size_t operator()(const std::array<V, 8>& Array) const
 			{
 				std::size_t H = 0;
 
-				for (auto E : Array) 
+				for (auto E : Array)
 				{
-					H ^= std::hash<int>{}((size_t)(E))+0x9e3779b9 + (H << 6) + (H >> 2);
+					H ^= std::hash<int>{}((size_t)(E)) + 0x9e3779b9 + (H << 6) + (H >> 2);
 				}
 
 				return H;
@@ -37,8 +30,8 @@ namespace Volund
 		};
 	};
 
-	template<typename V, typename I>
-	inline ModelLoader<V, I>::ModelLoader(std::string const& FilePath)
+	template <typename V, typename I>
+	ModelLoader<V, I>::ModelLoader(const std::string& FilePath)
 	{
 		VOLUND_INFO("Loading OBJ file (%s)...", FilePath.c_str());
 
@@ -52,8 +45,8 @@ namespace Volund
 		}
 	}
 
-	template<typename V, typename I>
-	inline void ModelLoader<V, I>::LoadOBJ(std::string const& FilePath)
+	template <typename V, typename I>
+	void ModelLoader<V, I>::LoadOBJ(const std::string& FilePath)
 	{
 		std::vector<V> Geometry;
 		std::vector<V> TextureCoords;
@@ -168,7 +161,7 @@ namespace Volund
 						}
 					}
 				}
-			} 
+			}
 			else
 			{
 				//Not implemented
@@ -178,4 +171,3 @@ namespace Volund
 		fclose(File);
 	}
 }
-

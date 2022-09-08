@@ -9,7 +9,6 @@ namespace Volund
 	class Camera : public Component
 	{
 	public:
-
 		float FOV = 70.0f;
 
 		float NearPlane = 0.1f;
@@ -27,7 +26,7 @@ namespace Volund
 		Mat4x4 GetOriginViewMatrix() const;
 
 		Mat4x4 GetProjectionMatrix(float AspectRatio) const;
-		
+
 		void OnCreate() override;
 
 		void OnDelete() override;
@@ -35,8 +34,6 @@ namespace Volund
 		JSON Serialize() override;
 
 	private:
-
 		static inline std::unordered_map<Scene*, Camera*> ActiveCameras = {};
 	};
-
 } //namespace Volund

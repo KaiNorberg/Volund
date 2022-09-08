@@ -7,23 +7,21 @@ namespace Volund
 	class Input
 	{
 	public:
-
-		bool IsHeld(char KeyCode);
+		bool IsHeld(char KeyCode) const;
 		bool IsPressed(char KeyCode);
 
-		bool IsMouseButtonHeld(char Button);
+		bool IsMouseButtonHeld(char Button) const;
 		bool IsMouseButtonPressed(char Button);
 
-		uint32_t GetScrollPosition();
+		uint32_t GetScrollPosition() const;
 
-		IVec2 GetMousePosition();
+		IVec2 GetMousePosition() const;
 
 		void HandleEvent(Event* E);
 
 		Input();
 
 	private:
-
 		IVec2 _MousePosition;
 
 		uint32_t _ScrollPosition;

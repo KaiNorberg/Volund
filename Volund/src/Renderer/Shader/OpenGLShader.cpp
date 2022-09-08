@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-	bool OpenGLShader::HasUniform(std::string const& Name)
+	bool OpenGLShader::HasUniform(const std::string& Name)
 	{
 		return UniformLocations.contains(Name) || glGetUniformLocation(this->ID, Name.c_str()) != 0;
 	}
@@ -17,55 +17,55 @@ namespace Volund
 		glUseProgram(this->ID);
 	}
 
-	void OpenGLShader::SetInt(std::string const& Name, int32_t Value)
+	void OpenGLShader::SetInt(const std::string& Name, int32_t Value)
 	{
 		this->Bind();
 		glUniform1i(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetFloat(std::string const& Name, float Value)
+	void OpenGLShader::SetFloat(const std::string& Name, float Value)
 	{
 		this->Bind();
 		glUniform1f(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetDouble(std::string const& Name, float Value)
+	void OpenGLShader::SetDouble(const std::string& Name, float Value)
 	{
 		this->Bind();
 		glUniform1d(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetVec2(std::string const& Name, Vec2 const& Value)
+	void OpenGLShader::SetVec2(const std::string& Name, const Vec2& Value)
 	{
 		this->Bind();
-		glUniform2fv(this->GetUniformLocation(Name), 1, glm::value_ptr(Value));
+		glUniform2fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetVec3(std::string const& Name, Vec3 const& Value)
+	void OpenGLShader::SetVec3(const std::string& Name, const Vec3& Value)
 	{
 		this->Bind();
-		glUniform3fv(this->GetUniformLocation(Name), 1, glm::value_ptr(Value));
+		glUniform3fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetVec4(std::string const& Name, Vec4 const& Value)
+	void OpenGLShader::SetVec4(const std::string& Name, const Vec4& Value)
 	{
 		this->Bind();
-		glUniform4fv(this->GetUniformLocation(Name), 1, glm::value_ptr(Value));
+		glUniform4fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetMat3x3(std::string const& Name, Mat3x3 const& Value, bool Transpose)
+	void OpenGLShader::SetMat3x3(const std::string& Name, const Mat3x3& Value, bool Transpose)
 	{
 		this->Bind();
-		glUniformMatrix3fv(this->GetUniformLocation(Name), 1, Transpose, glm::value_ptr(Value));
+		glUniformMatrix3fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetMat4x4(std::string const& Name, Mat4x4 const& Value, bool Transpose)
+	void OpenGLShader::SetMat4x4(const std::string& Name, const Mat4x4& Value, bool Transpose)
 	{
 		this->Bind();
-		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, glm::value_ptr(Value));
+		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
-	uint32_t OpenGLShader::CompileShader(uint32_t type, std::string const& source)
+	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
 	{
 		uint32_t id = glCreateShader(type);
 		const char* src = source.c_str();
@@ -89,27 +89,24 @@ namespace Volund
 		return id;
 	}
 
-	uint32_t OpenGLShader::GetUniformLocation(std::string const& Name)
-	{	
+	uint32_t OpenGLShader::GetUniformLocation(const std::string& Name)
+	{
 		if (UniformLocations.contains(Name))
 		{
 			return UniformLocations[Name];
 		}
-		else
-		{
-			int UniformLocation = glGetUniformLocation(this->ID, Name.c_str());
+		int UniformLocation = glGetUniformLocation(this->ID, Name.c_str());
 
-			if (UniformLocation == -1)
-			{
-				VOLUND_WARNING("Unknown Uniform specified (%s)", Name.c_str());
-			}		
-			
-			UniformLocations[Name] = UniformLocation;
-			return UniformLocation;
+		if (UniformLocation == -1)
+		{
+			VOLUND_WARNING("Unknown Uniform specified (%s)", Name.c_str());
 		}
+
+		UniformLocations[Name] = UniformLocation;
+		return UniformLocation;
 	}
 
-	OpenGLShader::OpenGLShader(std::string const& FilePath)
+	OpenGLShader::OpenGLShader(const std::string& FilePath)
 	{
 		if (this->ID != NULL)
 		{
@@ -171,5 +168,4 @@ namespace Volund
 			glDeleteProgram(this->ID);
 		}
 	}
-
 } //namespace Volund

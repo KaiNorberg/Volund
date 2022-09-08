@@ -7,14 +7,13 @@ namespace Volund
 	class OpenGLTexture : public Texture
 	{
 	public:
-
 		std::string GetFilePath();
 
 		void Bind(uint32_t Unit) override;
 
-		OpenGLTexture(std::string const& FilePath);
+		OpenGLTexture(const std::string& FilePath);
 
-		~OpenGLTexture();
+		~OpenGLTexture() override;
 
 	private:
 		uint32_t _ID = 0;

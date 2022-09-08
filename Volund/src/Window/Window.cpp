@@ -7,230 +7,229 @@
 
 #include <Windows.h>
 #include <WindowsX.h>
-#include <locale>
-#include <codecvt>
 
 namespace Volund
-{	
+{
 	LRESULT CALLBACK WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
 	{
 		switch (msg)
 		{
 		case WM_CREATE:
-		{
-
-		}
-		break;
+			{
+			}
+			break;
 		case WM_KEYDOWN:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
 			{
-				break;
-			}
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-			Data->Dispatcher->Dispatch(KeyEvent((int32_t)wparam, true));
-		}
-		break;
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(KeyEvent((int32_t)wparam, true));
+			}
+			break;
 		case WM_KEYUP:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
 			{
-				break;
-			}
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-			Data->Dispatcher->Dispatch(KeyEvent((int32_t)wparam, false));
-		}
-		break;
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(KeyEvent((int32_t)wparam, false));
+			}
+			break;
 		case WM_MOUSEMOVE:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr || GetFocus() != hwnd)
 			{
-				break;
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr || GetFocus() != hwnd)
+				{
+					break;
+				}
+
+				int32_t xPos = GET_X_LPARAM(lparam);
+				int32_t yPos = GET_Y_LPARAM(lparam);
+
+				if (Data->CaptureMouse)
+				{
+					static int32_t VirtualXPos = 0;
+					static int32_t VirtualYPos = 0;
+
+					RECT ScreenSpaceRect;
+					GetWindowRect(hwnd, &ScreenSpaceRect);
+					ClipCursor(&ScreenSpaceRect);
+
+					RECT WindowRect = {};
+					GetClientRect(hwnd, &WindowRect);
+
+					int32_t MiddleX = WindowRect.left + (WindowRect.right - WindowRect.left) / 2;
+					int32_t MiddleY = WindowRect.top + (WindowRect.bottom - WindowRect.top) / 2;
+
+					POINT WindowCenter = {MiddleX, MiddleY};
+					ClientToScreen(hwnd, &WindowCenter);
+					SetCursorPos(WindowCenter.x, WindowCenter.y);
+
+					VirtualXPos += xPos - MiddleX;
+					VirtualYPos += yPos - MiddleY;
+
+					Data->Dispatcher->Dispatch(MouseMoveEvent(VirtualXPos, VirtualYPos));
+				}
+				else
+				{
+					Data->Dispatcher->Dispatch(MouseMoveEvent(xPos, yPos));
+				}
 			}
-
-			int32_t xPos = GET_X_LPARAM(lparam);
-			int32_t yPos = GET_Y_LPARAM(lparam);
-
-			if (Data->CaptureMouse)
+			break;
+		case WM_LBUTTONDOWN:
 			{
-				static int32_t VirtualXPos = 0;
-				static int32_t VirtualYPos = 0;
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-				RECT ScreenSpaceRect;
-				GetWindowRect(hwnd, &ScreenSpaceRect);
-				ClipCursor(&ScreenSpaceRect);
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true));
+			}
+			break;
+		case WM_LBUTTONUP:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false));
+			}
+			break;
+		case WM_MBUTTONDOWN:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true));
+			}
+			break;
+		case WM_MBUTTONUP:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false));
+			}
+			break;
+		case WM_RBUTTONDOWN:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true));
+			}
+			break;
+		case WM_RBUTTONUP:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false));
+			}
+			break;
+		case WM_MOUSEWHEEL:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				uint32_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
+
+				Data->Dispatcher->Dispatch(ScrollEvent(0, zDelta));
+			}
+			break;
+		case WM_SIZE:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+				if (Data == nullptr)
+				{
+					break;
+				}
 
 				RECT WindowRect = {};
 				GetClientRect(hwnd, &WindowRect);
 
-				int32_t MiddleX = WindowRect.left + (WindowRect.right - WindowRect.left) / 2;
-				int32_t MiddleY = WindowRect.top + (WindowRect.bottom - WindowRect.top) / 2;
+				Data->Width = WindowRect.right;
+				Data->Height = WindowRect.bottom;
 
-				POINT WindowCenter = { MiddleX, MiddleY };
-				ClientToScreen(hwnd, &WindowCenter);
-				SetCursorPos(WindowCenter.x, WindowCenter.y);
-
-				VirtualXPos += xPos - MiddleX;
-				VirtualYPos += yPos - MiddleY;
-
-				Data->Dispatcher->Dispatch(MouseMoveEvent(VirtualXPos, VirtualYPos));
+				Data->Dispatcher->Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
 			}
-			else
-			{
-				Data->Dispatcher->Dispatch(MouseMoveEvent(xPos, yPos));
-			}
-		}
-		break;		
-		case WM_LBUTTONDOWN:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true));
-		}
-		break;
-		case WM_LBUTTONUP:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false));
-		}
-		break;
-		case WM_MBUTTONDOWN:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true));
-		}
-		break;
-		case WM_MBUTTONUP:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false));
-		}
-		break;
-		case WM_RBUTTONDOWN:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true));
-		}
-		break;
-		case WM_RBUTTONUP:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false));
-		}
-		break;
-		case WM_MOUSEWHEEL:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			uint32_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
-
-			Data->Dispatcher->Dispatch(ScrollEvent(0, zDelta));
-		}
-		break;
-		case WM_SIZE:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
-			{
-				break;
-			}
-
-			RECT WindowRect = {};
-			GetClientRect(hwnd, &WindowRect);
-
-			Data->Width = WindowRect.right;
-			Data->Height = WindowRect.bottom;
-
-			Data->Dispatcher->Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
-		}
-		break;
+			break;
 		case WM_SETFOCUS:
-		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (!Data->ShowMouse)
 			{
-				while (ShowCursor(false) >= -1) { }
-			}
-		}
-		break;
-		case WM_KILLFOCUS:
-		{				
-			ClipCursor(NULL);
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-			while (ShowCursor(true) < 0) {}
-		}
-		break;
+				if (!Data->ShowMouse)
+				{
+					while (ShowCursor(false) >= -1)
+					{
+					}
+				}
+			}
+			break;
+		case WM_KILLFOCUS:
+			{
+				ClipCursor(nullptr);
+
+				while (ShowCursor(true) < 0)
+				{
+				}
+			}
+			break;
 
 		case WM_MOVE:
-		{
-
-		}			
-		break;
-		case WM_CLOSE:
-		{		
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
 			{
-				break;
 			}
+			break;
+		case WM_CLOSE:
+			{
+				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-			Data->Dispatcher->Dispatch(WindowCloseEvent());
-		}			
-		break;
+				if (Data == nullptr)
+				{
+					break;
+				}
+
+				Data->Dispatcher->Dispatch(WindowCloseEvent());
+			}
+			break;
 		case WM_DESTROY:
-		{
-
-		}
-		break;
+			{
+			}
+			break;
 		default:
 			return DefWindowProc(hwnd, msg, wparam, lparam);
 		}
@@ -241,7 +240,7 @@ namespace Volund
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	void Window::SwapBuffers()
+	void Window::SwapBuffers() const
 	{
 		::SwapBuffers((HDC)this->_DeviceContext);
 	}
@@ -257,13 +256,13 @@ namespace Volund
 		}
 	}
 
-	void Window::SetFocus()
+	void Window::SetFocus() const
 	{
 		::SetFocus((HWND)this->_Handle);
 		SendMessage((HWND)this->_Handle, WM_SETFOCUS, 0, 0);
 	}
 
-	void Window::SetCursorMode(std::string const& NewMode)
+	void Window::SetCursorMode(const std::string& NewMode)
 	{
 		if (NewMode == "Normal")
 		{
@@ -284,34 +283,34 @@ namespace Volund
 		{
 			this->_Data.CaptureMouse = true;
 			this->_Data.ShowMouse = true;
-		}		
+		}
 		else
 		{
 			VOLUND_ERROR("Unrecognized Cursor Mode (%s)", NewMode.c_str());
 		}
 	}
 
-	void Window::SetTitle(std::string const& Title)
+	void Window::SetTitle(const std::string& Title)
 	{
 		SetWindowText((HWND)this->_Handle, this->ConvertToWString(Title).c_str());
 	}
 
-	Vec2 Window::GetSize()
+	Vec2 Window::GetSize() const
 	{
 		return Vec2(this->_Data.Width, this->_Data.Height);
 	}
 
-	float Window::GetAspectRatio()
+	float Window::GetAspectRatio() const
 	{
 		return (float)this->_Data.Width / (float)this->_Data.Height;
 	}
 
-	void* Window::GetDeviceContext()
+	void* Window::GetDeviceContext() const
 	{
 		return this->_DeviceContext;
 	}
 
-	std::wstring Window::ConvertToWString(std::string const& String)
+	std::wstring Window::ConvertToWString(const std::string& String)
 	{
 		return std::wstring(String.begin(), String.end());
 	}
@@ -323,7 +322,7 @@ namespace Volund
 		this->_Data.Dispatcher = Dispatcher;
 		this->_Data.FullScreen = FullScreen;
 
-		this->_Instance = GetModuleHandle(NULL);
+		this->_Instance = GetModuleHandle(nullptr);
 
 		DWORD dwExStyle;
 		DWORD dwStyle;
@@ -333,7 +332,7 @@ namespace Volund
 			this->_Data.Width = GetSystemMetrics(SM_CXSCREEN);
 			this->_Data.Height = GetSystemMetrics(SM_CYSCREEN);
 
-			DEVMODE ScreenSettings; 
+			DEVMODE ScreenSettings;
 			memset(&ScreenSettings, 0, sizeof(ScreenSettings));
 			ScreenSettings.dmSize = sizeof(ScreenSettings);
 			ScreenSettings.dmPelsWidth = (DWORD)Width;
@@ -365,41 +364,42 @@ namespace Volund
 			WindowClass.cbClsExtra = 0;
 			WindowClass.cbWndExtra = 0;
 			WindowClass.hInstance = (HINSTANCE)this->_Instance;
-			WindowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-			WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-			WindowClass.hbrBackground = NULL;
-			WindowClass.lpszMenuName = NULL;
+			WindowClass.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
+			WindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
+			WindowClass.hbrBackground = nullptr;
+			WindowClass.lpszMenuName = nullptr;
 			WindowClass.lpszClassName = L"VolundWindow";
 
 			VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
 		}
 
-		RECT WindowRect = { 0,0, (LONG)this->_Data.Width, (LONG)this->_Data.Height };
+		RECT WindowRect = {0, 0, (LONG)this->_Data.Width, (LONG)this->_Data.Height};
 		AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);
 
-		this->_Handle = CreateWindowEx(dwExStyle, L"VolundWindow", L"", WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0, 0, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
-			NULL, NULL, (HINSTANCE)this->_Instance, NULL);
+		this->_Handle = CreateWindowEx(dwExStyle, L"VolundWindow", L"", WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0,
+		                               0, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
+		                               nullptr, nullptr, (HINSTANCE)this->_Instance, nullptr);
 
 		VOLUND_ASSERT(this->_Handle, "Failed to create Window!");
 
-		PIXELFORMATDESCRIPTOR PFD = 
+		PIXELFORMATDESCRIPTOR PFD =
 		{
-			sizeof(PIXELFORMATDESCRIPTOR),       
-			1,                 
+			sizeof(PIXELFORMATDESCRIPTOR),
+			1,
 			PFD_DRAW_TO_WINDOW |
 			PFD_SUPPORT_OPENGL |
 			PFD_DOUBLEBUFFER,
 			PFD_TYPE_RGBA,
 			16,
 			0, 0, 0, 0, 0, 0,
-			0, 
-			0, 
-			0, 
-			0, 0, 0, 0, 
+			0,
+			0,
+			0,
+			0, 0, 0, 0,
 			16,
 			0,
 			0,
-			PFD_MAIN_PLANE,   
+			PFD_MAIN_PLANE,
 			0,
 			0, 0, 0
 		};
@@ -424,7 +424,7 @@ namespace Volund
 	{
 		if (this->_Data.FullScreen)
 		{
-			ChangeDisplaySettings(NULL, 0);
+			ChangeDisplaySettings(nullptr, 0);
 		}
 
 		ShowCursor(true);
@@ -435,5 +435,4 @@ namespace Volund
 
 		UnregisterClass(L"VolundWindow", (HINSTANCE)this->_Instance);
 	}
-
 } //namespace Volund

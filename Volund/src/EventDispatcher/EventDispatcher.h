@@ -2,8 +2,6 @@
 
 #include "Event.h"
 
-#include "Input/Input.h"
-
 namespace Volund
 {
 	class Layer;
@@ -11,8 +9,7 @@ namespace Volund
 	class EventDispatcher
 	{
 	public:
-
-		template<typename T>
+		template <typename T>
 		void Dispatch(T E);
 
 		EventDispatcher(Layer* L);
@@ -20,13 +17,12 @@ namespace Volund
 		~EventDispatcher();
 
 	private:
-
-		void SendEventToLayer(Event* E);
+		void SendEventToLayer(Event* E) const;
 
 		Layer* _Layer;
 	};
 
-	template<typename T>
+	template <typename T>
 	void EventDispatcher::Dispatch(T E)
 	{
 		this->SendEventToLayer(static_cast<Event*>(&E));
