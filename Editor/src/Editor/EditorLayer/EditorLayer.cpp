@@ -12,9 +12,9 @@ void EditorLayer::LoadScene(Ref<Scene> NewScene)
 void EditorLayer::OnAttach()
 {
 	this->_Context = Context::Create(this->GetApp()->GetWindow());
-	Renderer::SetAPI(RenderingAPI::Create());
-
 	this->_Context->SetVSync(true);
+
+	Renderer::SetAPI(RenderingAPI::Create());
 
 #ifndef LOAD_SCENE
 
@@ -81,7 +81,7 @@ void EditorLayer::OnUpdate(TimeStep TS)
 		{
 			this->_LoadedScene->Update(TS);
 		}
-
+	
 		Renderer::EndScene(this->_Context);
 	}
 	else

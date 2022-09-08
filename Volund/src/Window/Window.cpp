@@ -355,19 +355,24 @@ namespace Volund
 			dwStyle = WS_OVERLAPPEDWINDOW;
 		}
 
-		WNDCLASS WindowClass = {};
-		WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-		WindowClass.lpfnWndProc = (WNDPROC)WindowProcedure;
-		WindowClass.cbClsExtra = 0;
-		WindowClass.cbWndExtra = 0;
-		WindowClass.hInstance = (HINSTANCE)this->_Instance;
-		WindowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
-		WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-		WindowClass.hbrBackground = NULL;
-		WindowClass.lpszMenuName = NULL;
-		WindowClass.lpszClassName = L"VolundWindow";
+		WNDCLASS Temp;
 
-		VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
+		if (GetClassInfo((HINSTANCE)this->_Instance, L"VolundWindow", &Temp) == 0)
+		{
+			WNDCLASS WindowClass = {};
+			WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
+			WindowClass.lpfnWndProc = (WNDPROC)WindowProcedure;
+			WindowClass.cbClsExtra = 0;
+			WindowClass.cbWndExtra = 0;
+			WindowClass.hInstance = (HINSTANCE)this->_Instance;
+			WindowClass.hIcon = LoadIcon(NULL, IDI_WINLOGO);
+			WindowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+			WindowClass.hbrBackground = NULL;
+			WindowClass.lpszMenuName = NULL;
+			WindowClass.lpszClassName = L"VolundWindow";
+
+			VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
+		}
 
 		RECT WindowRect = { 0,0, (LONG)this->_Data.Width, (LONG)this->_Data.Height };
 		AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);
@@ -375,7 +380,7 @@ namespace Volund
 		this->_Handle = CreateWindowEx(dwExStyle, L"VolundWindow", L"", WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0, 0, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
 			NULL, NULL, (HINSTANCE)this->_Instance, NULL);
 
-		VOLUND_ASSERT(this->_Handle, "Failed to register Window class!");
+		VOLUND_ASSERT(this->_Handle, "Failed to create Window!");
 
 		PIXELFORMATDESCRIPTOR PFD = 
 		{

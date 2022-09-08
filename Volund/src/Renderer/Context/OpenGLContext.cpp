@@ -14,7 +14,10 @@ namespace Volund
 {
 	void OpenGLContext::MakeCurrent()
 	{
-		VOLUND_ASSERT(wglMakeCurrent((HDC)this->GetWindow()->GetDeviceContext(), (HGLRC)this->_RenderingContext), "Failed to active OpenGL Context");
+		if (wglGetCurrentContext() != this->_RenderingContext)
+		{
+			VOLUND_ASSERT(wglMakeCurrent((HDC)this->GetWindow()->GetDeviceContext(), (HGLRC)this->_RenderingContext), "Failed to active OpenGL Context");
+		}
 	}
 
 	void OpenGLContext::SetVSync(bool Enabled)

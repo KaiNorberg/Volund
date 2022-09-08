@@ -5,16 +5,18 @@ namespace Volund
 {
 	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights)
 	{
-		SceneData NewSceneData = SceneData();
 		_SceneData.ViewProjMatrix = ViewProjMatrix;
 		_SceneData.EyePosition = EyePosition;
 		_SceneData.PointLights = PointLights;
+		_SceneData.Submissions.clear();
 	
 		InScene = true;
 	}
 
 	void Renderer::EndScene(Ref<Context> const& RenderingContext)
 	{
+		RenderingContext->MakeCurrent();
+
 		_API->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
 
 		_API->Clear();
@@ -46,7 +48,7 @@ namespace Volund
 			_API->DrawIndexed(Data.ObjectMesh);
 		}
 
-		_SceneData = SceneData();
+		//_SceneData = SceneData();
 		RenderingContext->Flush();
 
 		InScene = false;
