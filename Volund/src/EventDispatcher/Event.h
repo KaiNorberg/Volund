@@ -98,7 +98,7 @@ namespace Volund
 	{
 	public:
 
-		const EventType GetType() override { return EventType::CURSOR_POS; }
+		const EventType GetType() override { return EventType::MOUSE_MOVE; }
 
 		int32_t GetXPos() { return _xPos; }
 

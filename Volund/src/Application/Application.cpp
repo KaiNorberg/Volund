@@ -44,31 +44,7 @@ namespace Volund
 			{
 				L->OnUpdate(TS);
 			}
-
-			this->_Window->Update();
 		}
-	}
-
-	void Application::EventCallback(Event* E)
-	{
-		switch (E->GetType())
-		{
-		case EventType::WINDOW_CLOSE:
-		{
-			this->Terminate();
-		}
-		break;
-		}
-
-		for (Ref<Layer> L : _LayerStack)
-		{
-			L->OnEvent(E);
-		}
-	}
-
-	Ref<Window> Application::GetWindow()
-	{
-		return this->_Window;
 	}
 
 	Application::Application()
@@ -83,7 +59,7 @@ namespace Volund
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif
 	
-		JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
+		/*JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
 
 		this->_EventDispatcher.reset(new EventDispatcher(this));
 
@@ -95,7 +71,7 @@ namespace Volund
 
 		this->_Window->SetTitle(ConfigJSON["Window"]["Title"]);
 		this->_Window->SetCursorMode(ConfigJSON["Window"]["CursorMode"]);
-		this->_Window->SetFocus();
+		this->_Window->SetFocus();*/
 	}
 
 	Application::~Application()

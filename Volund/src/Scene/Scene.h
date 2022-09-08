@@ -33,6 +33,10 @@ namespace Volund
 
 		 void EventCallback(Event* E);
 
+		 virtual void OnEvent(Event* E);
+
+		 virtual void OnUpdate(TimeStep TS);
+
 		 static Ref<Scene> Deserialize(std::string const& FilePath);
 
 		 void Serialize(std::string const& FilePath);
@@ -40,6 +44,8 @@ namespace Volund
 		 AssetLibrary Assets;
 
 		 Scene();
+
+		 virtual ~Scene() = default;
 
 	private:
 

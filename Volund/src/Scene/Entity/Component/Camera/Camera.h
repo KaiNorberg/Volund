@@ -4,6 +4,8 @@
 
 namespace Volund
 {
+	class Scene;
+
 	class Camera : public Component
 	{
 	public:
@@ -18,7 +20,7 @@ namespace Volund
 
 		void SetActive();
 
-		static Camera* GetActiveCamera();
+		static Camera* GetActiveCamera(Ref<Scene> ParentScene);
 
 		Mat4x4 GetViewMatrix() const;
 
@@ -26,13 +28,15 @@ namespace Volund
 
 		Mat4x4 GetProjectionMatrix(float AspectRatio) const;
 		
+		void OnCreate() override;
+
 		void OnDelete() override;
 
 		JSON Serialize() override;
 
 	private:
 
-		static inline Camera* ActiveCamera = nullptr;
+		static inline std::unordered_map<Scene*, Camera*> ActiveCameras = {};
 	};
 
 } //namespace Volund

@@ -5,11 +5,11 @@ namespace Volund
 {
 	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights)
 	{
+		_SceneData = SceneData();
 		_SceneData.ViewProjMatrix = ViewProjMatrix;
 		_SceneData.EyePosition = EyePosition;
 		_SceneData.PointLights = PointLights;
-		_SceneData.Submissions.clear();
-	
+ 	
 		InScene = true;
 	}
 
@@ -65,6 +65,7 @@ namespace Volund
 
 		_SceneData.Submissions.push_back(NewSubmission);
 	}
+
 	void Renderer::SetAPI(Ref<RenderingAPI> const& API)
 	{
 		_API = API;

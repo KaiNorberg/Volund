@@ -11,8 +11,16 @@ void EditorLayer::LoadScene(Ref<Scene> NewScene)
 
 void EditorLayer::OnAttach()
 {
-	this->_Context = Context::Create(this->GetApp()->GetWindow());
-	this->_Context->SetVSync(true);
+	auto NewEventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
+	this->_Window = Ref<Window>(new Window(NewEventDispatcher, 500, 500, false));
+
+	this->_Window->SetTitle("Editor");
+	this->_Window->SetCursorMode("Disabled");
+	this->_Window->SetFocus();
+
+	this->_Context = Context::Create(this->_Window);
+	this->_Context->SetVSync(false);
+	this->_Context->MakeCurrent();
 
 	Renderer::SetAPI(RenderingAPI::Create());
 
@@ -60,7 +68,9 @@ void EditorLayer::OnDetach()
 
 void EditorLayer::OnUpdate(TimeStep TS)
 {
-	Camera* ActiveCamera = Camera::GetActiveCamera();
+	this->_Context->MakeCurrent();
+
+	Camera* ActiveCamera = Camera::GetActiveCamera(this->_LoadedScene);
 
 	if (ActiveCamera != nullptr)
 	{
@@ -91,10 +101,21 @@ void EditorLayer::OnUpdate(TimeStep TS)
 			this->_LoadedScene->Update(TS);
 		}
 	}
+
+	this->_Window->Update();
 }
 
 void EditorLayer::OnEvent(Event* E)
 {
+	switch (E->GetType())
+	{
+	case EventType::WINDOW_CLOSE:
+	{
+		this->GetApp()->Terminate();
+	}
+	break;
+	}
+
 	if (_LoadedScene != nullptr)
 	{
 		this->_LoadedScene->EventCallback(E);

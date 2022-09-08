@@ -4,6 +4,7 @@
 
 #include "Camera.h"
 
+#include "Scene/Scene.h"
 #include "Scene/Entity/Entity.h"
 #include "Scene/Entity/Component/Transform/Transform.h"
 
@@ -13,17 +14,26 @@ namespace Volund
 {
     bool Camera::IsActive() const
     {
-        return ActiveCamera == this;
+        Scene* ParentScene = this->GetEntity()->GetScene();
+
+        return ActiveCameras.contains(ParentScene) && ActiveCameras[ParentScene] == this;
     }
 
     void Camera::SetActive()
     {
-        ActiveCamera = this;
+        ActiveCameras[this->GetEntity()->GetScene()] = this;
     }
 
-    Camera* Camera::GetActiveCamera()
-    {
-        return ActiveCamera;
+    Camera* Camera::GetActiveCamera(Ref<Scene> ParentScene)
+    {    
+        if (ActiveCameras.contains(ParentScene.get()))
+        {
+            return ActiveCameras[ParentScene.get()];
+        }
+        else
+        {
+            return nullptr;
+        }
     }
 
     Mat4x4 Camera::GetViewMatrix() const
@@ -49,11 +59,21 @@ namespace Volund
         return glm::perspective(glm::radians(this->FOV), AspectRatio, this->NearPlane, this->FarPlane);
     }
 
+    void Camera::OnCreate()
+    {
+        Scene* ParentScene = this->GetEntity()->GetScene();
+
+        if (!ActiveCameras.contains(ParentScene))
+        {
+            ActiveCameras[ParentScene] = this;
+        }
+    }
+
     void Camera::OnDelete()
     {
         if (this->IsActive())
         {
-            ActiveCamera = nullptr;
+            this->ActiveCameras.erase(this->GetEntity()->GetScene());
         }
     }
 

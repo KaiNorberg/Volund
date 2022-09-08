@@ -5,61 +5,81 @@ namespace Volund
 {
 	bool Input::IsHeld(char KeyCode)
 	{
-		return Keys[KeyCode];
+		return this->_Keys[KeyCode];
 	}
 
 	bool Input::IsPressed(char KeyCode)
 	{
-		bool IsDown = Keys[KeyCode] == 1;
-		Keys[KeyCode] += IsDown;
+		bool IsDown = this->_Keys[KeyCode] == 1;
+		this->_Keys[KeyCode] += IsDown;
 
 		return IsDown;
 	}
 
 	bool Input::IsMouseButtonHeld(char Button)
 	{
-		return MouseButtons[Button];
+		return this->_MouseButtons[Button];
 	}
 
 	bool Input::IsMouseButtonPressed(char Button)
 	{
-		bool IsDown = MouseButtons[Button] == 1;
-		MouseButtons[Button] += IsDown;
+		bool IsDown = this->_MouseButtons[Button] == 1;
+		this->_MouseButtons[Button] += IsDown;
 
 		return IsDown;
 	}
 
 	uint32_t Input::GetScrollPosition()
 	{
-		return ScrollPosition;
+		return this->_ScrollPosition;
 	}
 
 	IVec2 Input::GetMousePosition()
 	{
-		return MousePosition;
+		return this->_MousePosition;
 	}
 
-	void Input::SendEvent(KeyEvent E)
-	{		
-		Keys[E.GetKey()] += E.GetIsDown();
-		Keys[E.GetKey()] *= E.GetIsDown();
-		Keys[E.GetKey()] = Math::Min(Keys[E.GetKey()], (int8_t)100);
-	}
+	void Input::HandleEvent(Event* E)
+	{	
+		switch (E->GetType())
+		{
+		case EventType::KEY:
+		{
+			KeyEvent* KE = (KeyEvent*)E;
+			this->_Keys[KE->GetKey()] += KE->GetIsDown();
+			this->_Keys[KE->GetKey()] *= KE->GetIsDown();
+			this->_Keys[KE->GetKey()] = Math::Min(this->_Keys[KE->GetKey()], (int8_t)100);
+		}
+		break;
+		case EventType::MOUSE_BUTTON:
+		{			
+			MouseButtonEvent* MBE = (MouseButtonEvent*)E;
 
-	void Input::SendEvent(MouseButtonEvent E)
+			this->_MouseButtons[MBE->GetButton()] += MBE->GetIsDown();
+			this->_MouseButtons[MBE->GetButton()] *= MBE->GetIsDown();
+			this->_MouseButtons[MBE->GetButton()] = Math::Min(this->_MouseButtons[MBE->GetButton()], (int8_t)100);
+		}
+		break;
+		case EventType::SCROLL:
+		{
+			ScrollEvent* SE = (ScrollEvent*)E;
+
+			this->_ScrollPosition += SE->GetYOffset();
+		}
+		break;
+		case EventType::MOUSE_MOVE:
+		{
+			MouseMoveEvent* MME = (MouseMoveEvent*)E;
+
+			this->_MousePosition = DVec2(MME->GetXPos(), MME->GetYPos());
+		}
+		break;
+		}
+	}
+	Input::Input()
 	{
-		MouseButtons[E.GetButton()] += E.GetIsDown();
-		MouseButtons[E.GetButton()] *= E.GetIsDown();
-		MouseButtons[E.GetButton()] = Math::Min(MouseButtons[E.GetButton()], (int8_t)100);
-	}
+		memset(this->_MouseButtons, 0, VOLUND_MOUSE_BUTTON_AMOUNT * sizeof(this->_MouseButtons[0]));
+		memset(this->_Keys, 0, VOLUND_KEY_AMOUNT * sizeof(this->_Keys[0]));
 
-	void Input::SendEvent(ScrollEvent E)
-	{
-		ScrollPosition += E.GetYOffset();
-	}
-
-	void Input::SendEvent(MouseMoveEvent E)
-	{
-		MousePosition = DVec2(E.GetXPos(), E.GetYPos());
 	}
 }

@@ -10,7 +10,7 @@ namespace Volund
 		KEY,
 		MOUSE_BUTTON,
 		SCROLL,
-		CURSOR_POS
+		MOUSE_MOVE
 	};
 }
 

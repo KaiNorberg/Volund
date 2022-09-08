@@ -4,34 +4,31 @@
 
 namespace Volund
 {
-	class Application;
-
 	class Input
 	{
 	public:
 
-		static bool IsHeld(char KeyCode);
-		static bool IsPressed(char KeyCode);
+		bool IsHeld(char KeyCode);
+		bool IsPressed(char KeyCode);
 
-		static bool IsMouseButtonHeld(char Button);
-		static bool IsMouseButtonPressed(char Button);
+		bool IsMouseButtonHeld(char Button);
+		bool IsMouseButtonPressed(char Button);
 
-		static uint32_t GetScrollPosition();
+		uint32_t GetScrollPosition();
 
-		static IVec2 GetMousePosition();
+		IVec2 GetMousePosition();
 
-		static void SendEvent(KeyEvent E);
-		static void SendEvent(MouseButtonEvent E);
-		static void SendEvent(ScrollEvent E);
-		static void SendEvent(MouseMoveEvent E);
+		void HandleEvent(Event* E);
+
+		Input();
 
 	private:
 
-		static inline IVec2 MousePosition;
+		IVec2 _MousePosition;
 
-		static inline uint32_t ScrollPosition;
+		uint32_t _ScrollPosition;
 
-		static inline int8_t MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
-		static inline int8_t Keys[VOLUND_KEY_AMOUNT];
+		int8_t _MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
+		int8_t _Keys[VOLUND_KEY_AMOUNT];
 	};
 }

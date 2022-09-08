@@ -75,6 +75,7 @@ namespace Volund
 
 	void Scene::Update(TimeStep TS)
 	{
+		this->OnUpdate(TS);
 		for (auto const& Entity : this->_Entities)
 		{
 			Entity->OnUpdate(TS);
@@ -83,10 +84,21 @@ namespace Volund
 
 	void Scene::EventCallback(Event* E)
 	{
+		this->OnEvent(E);
 		for (auto const& Entity : this->_Entities)
 		{
 			Entity->OnEvent(E);
 		}
+	}
+
+	void Scene::OnEvent(Event* E)
+	{
+
+	}
+
+	void Scene::OnUpdate(TimeStep TS)
+	{
+
 	}
 
 	Ref<Scene> Scene::Deserialize(std::string const& FilePath)

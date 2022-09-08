@@ -7,9 +7,9 @@
 
 namespace Volund
 {
-	EventDispatcher::EventDispatcher(Application* App)
+	EventDispatcher::EventDispatcher(Layer* L)
 	{
-		this->_Application = App;
+		this->_Layer = L;
 	}
 
 	EventDispatcher::~EventDispatcher()
@@ -17,44 +17,8 @@ namespace Volund
 
 	}
 
-	void EventDispatcher::SendEventToApp(Event* E)
+	void EventDispatcher::SendEventToLayer(Event* E)
 	{
-		this->_Application->EventCallback(E);
-	}
-
-	template<>
-	void EventDispatcher::EventHandler(WindowCloseEvent E)
-	{
-		//TODO
-	}
-
-	template<>
-	void EventDispatcher::EventHandler(WindowSizeEvent E)
-	{
-		//TODO
-	}
-
-	template<>
-	void EventDispatcher::EventHandler(KeyEvent E)
-	{
-		Input::SendEvent(E);
-	}
-
-	template<>
-	void EventDispatcher::EventHandler(MouseButtonEvent E)
-	{
-		Input::SendEvent(E);
-	}
-
-	template<>
-	void EventDispatcher::EventHandler(ScrollEvent E)
-	{
-		Input::SendEvent(E);
-	}
-
-	template<>
-	void EventDispatcher::EventHandler(MouseMoveEvent E)
-	{
-		Input::SendEvent(E);
+		this->_Layer->OnEvent(E);
 	}
 }

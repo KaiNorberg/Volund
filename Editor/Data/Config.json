@@ -1,11 +1,4 @@
 {
-  "Window": {
-    "Height": 500,
-    "Width": 500,
-    "Title": "Test Title",
-    "FullScreen": false,
-    "CursorMode": "Disabled"
-  },
   "Renderer": 
   {
     "API": "OpenGL"
