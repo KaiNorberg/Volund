@@ -31,9 +31,7 @@ namespace Volund
 
 		uint32_t GetHeight() const { return _Height; }
 
-		WindowSizeEvent(uint32_t Width, uint32_t Height) : _Width(Width), _Height(Height)
-		{
-		};
+		WindowSizeEvent(uint32_t Width, uint32_t Height) : _Width(Width), _Height(Height) {}
 
 	private:
 		uint32_t _Width;
@@ -49,9 +47,7 @@ namespace Volund
 
 		bool GetIsDown() const { return _IsDown; }
 
-		KeyEvent(int32_t Key, bool IsDown) : _Key(Key), _IsDown(IsDown)
-		{
-		};
+		KeyEvent(int32_t Key, bool IsDown) : _Key(Key), _IsDown(IsDown) {}
 
 	private:
 		int32_t _Key;
@@ -67,9 +63,7 @@ namespace Volund
 
 		uint32_t GetIsDown() const { return _IsDown; }
 
-		MouseButtonEvent(int32_t Button, bool IsDown) : _Button(Button), _IsDown(IsDown)
-		{
-		};
+		MouseButtonEvent(int32_t Button, bool IsDown) : _Button(Button), _IsDown(IsDown) {}
 
 	private:
 		int32_t _Button;
@@ -85,9 +79,7 @@ namespace Volund
 
 		uint32_t GetYOffset() const { return _yOffset; }
 
-		ScrollEvent(uint32_t xOffset, uint32_t yOffset) : _xOffset(xOffset), _yOffset(yOffset)
-		{
-		};
+		ScrollEvent(uint32_t xOffset, uint32_t yOffset) : _xOffset(xOffset), _yOffset(yOffset) {}
 
 	private:
 		uint32_t _xOffset;
@@ -103,9 +95,7 @@ namespace Volund
 
 		int32_t GetYPos() const { return _yPos; }
 
-		MouseMoveEvent(int32_t xPos, int32_t yPos) : _xPos(xPos), _yPos(yPos)
-		{
-		};
+		MouseMoveEvent(int32_t xPos, int32_t yPos) : _xPos(xPos), _yPos(yPos) {}
 
 	private:
 		int32_t _xPos;

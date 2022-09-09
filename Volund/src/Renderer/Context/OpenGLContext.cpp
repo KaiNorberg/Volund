@@ -8,7 +8,7 @@
 
 #include <windowsx.h>
 
-#include <glad/glad.h>
+#include <glad/include/glad/glad.h>
 
 #include <wglext/wglext.h>
 
