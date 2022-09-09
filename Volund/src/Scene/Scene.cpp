@@ -6,6 +6,8 @@
 #include "EventDispatcher/Event.h"
 #include "Scene/Entity/Component/Components.h"
 
+#include "VML/VML.h"
+
 namespace Volund
 {
 	Ref<Entity> Scene::CreateEntity(const std::string& Name)
@@ -105,69 +107,70 @@ namespace Volund
 	{
 		VOLUND_INFO("Deserializing Scene (%s)...", FilePath.c_str());
 
-		JSON SceneJSON = JSON::Load(FilePath);
+		VML SceneVML(FilePath);
 
 		Ref<Scene> NewScene = std::make_shared<Scene>();
 
-		NewScene->Assets.Deserialize<MeshAsset>(SceneJSON["Meshes"]);
+		NewScene->Assets.Deserialize<MeshAsset>(SceneVML.Get("Meshes"));
 
-		NewScene->Assets.Deserialize<ShaderAsset>(SceneJSON["Shaders"]);
+		NewScene->Assets.Deserialize<ShaderAsset>(SceneVML.Get("Shaders"));
 
-		NewScene->Assets.Deserialize<TextureAsset>(SceneJSON["Textures"]);
+		NewScene->Assets.Deserialize<TextureAsset>(SceneVML.Get("Textures"));
 
-		NewScene->Assets.Deserialize<MaterialAsset>(SceneJSON["Materials"]);
+		NewScene->Assets.Deserialize<MaterialAsset>(SceneVML.Get("Materials"));
 
-		JSON EntitiesJSON = SceneJSON["Entities"];
-		for (int i = 0; i < EntitiesJSON.Size(); i++)
+		VML EntitiesVML = SceneVML["Entities"];
+		for (auto& [EntityName, EntityVML] : EntitiesVML)
 		{
-			Ref<Entity> NewEntity = NewScene->CreateEntity(EntitiesJSON[i]["Name"]);
+			Ref<Entity> NewEntity = NewScene->CreateEntity(EntityName);
 
-			JSON ComponentsJSON = EntitiesJSON[i]["Components"];
-
-			for (int j = 0; j < ComponentsJSON.Size(); j++)
+			for (auto& [ComponentName, ComponentVML] : EntitiesVML)
 			{
-				JSON ComponentJSON = ComponentsJSON[j];
-				std::string ComponentType = ComponentJSON["Type"];
+				std::string ComponentType = ComponentVML.Get("Type");
 
 				if (ComponentType == "Camera")
 				{
 					Ref<Camera> NewCamera = NewEntity->CreateComponent<Camera>();
 
-					if (ComponentJSON["IsActive"])
+					if (ComponentVML.Get("IsActive"))
 					{
 						NewEntity->CreateComponent<Camera>()->SetActive();
 					}
 
-					NewCamera->FOV = ComponentJSON["FOV"];
-					NewCamera->NearPlane = ComponentJSON["NearPlane"];
-					NewCamera->FarPlane = ComponentJSON["FarPlane"];
+					NewCamera->FOV = ComponentVML.Get("FOV");
+					NewCamera->NearPlane = ComponentVML.Get("NearPlane");
+					NewCamera->FarPlane = ComponentVML.Get("FarPlane");
 				}
 				else if (ComponentType == "CameraMovement")
 				{
-					NewEntity->CreateComponent<CameraMovement>(ComponentJSON["Speed"], ComponentJSON["Sensitivity"]);
+					NewEntity->CreateComponent<CameraMovement>(ComponentVML.Get("Speed"), ComponentVML.Get("Sensitivity"));
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
 					Ref<MeshAsset> ObjectMesh = NewScene->Assets.GetAsset<MeshAsset>(
-						ComponentJSON["Mesh"].GetAs<std::string>());
+						ComponentVML.Get("Mesh").GetAs<std::string>());
 					Ref<MaterialAsset> ObjectMaterial = NewScene->Assets.GetAsset<MaterialAsset>(
-						ComponentJSON["Material"].GetAs<std::string>());
+						ComponentVML.Get("Material").GetAs<std::string>());
 
 					NewEntity->CreateComponent<MeshRenderer>(ObjectMesh, ObjectMaterial);
 				}
 				else if (ComponentType == "PointLight")
 				{
-					RGB Color = RGB(ComponentJSON["Color"][0], ComponentJSON["Color"][1], ComponentJSON["Color"][2]);
+					VMLEntry ColorVML = ComponentVML.Get("Color");
+
+					RGB Color = RGB(ColorVML[0].GetAs<float>(), ColorVML[1].GetAs<float>(), ColorVML[2].GetAs<float>());
 
 					NewEntity->CreateComponent<PointLight>(Color);
 				}
 				else if (ComponentType == "Transform")
 				{
-					Vec3 Position = Vec3(ComponentJSON["Position"][0], ComponentJSON["Position"][1],
-					                     ComponentJSON["Position"][2]);
-					Vec3 Rotation = Vec3(ComponentJSON["Rotation"][0], ComponentJSON["Rotation"][1],
-					                     ComponentJSON["Rotation"][2]);
-					Vec3 Scale = Vec3(ComponentJSON["Scale"][0], ComponentJSON["Scale"][1], ComponentJSON["Scale"][2]);
+					VMLEntry PositionVML = ComponentVML.Get("Position");
+					VMLEntry RotationVML = ComponentVML.Get("Rotation");
+					VMLEntry ScaleVML = ComponentVML.Get("Scale");
+
+					Vec3 Position = Vec3(PositionVML[0].GetAs<float>(), PositionVML[1].GetAs<float>(), PositionVML[2].GetAs<float>());
+					Vec3 Rotation = Vec3(RotationVML[0].GetAs<float>(), RotationVML[1].GetAs<float>(), RotationVML[2].GetAs<float>());
+					Vec3 Scale = Vec3(ScaleVML[0].GetAs<float>(), ScaleVML[1].GetAs<float>(), ScaleVML[2].GetAs<float>());
 
 					NewEntity->CreateComponent<Transform>(Position, Rotation, Scale);
 				}
@@ -185,24 +188,24 @@ namespace Volund
 
 	void Scene::Serialize(const std::string& FilePath)
 	{
-		JSON SceneJSON;
+		VML SceneVML;
 
-		SceneJSON.AddEntry("Meshes", this->Assets.Serialize<MeshAsset>());
+		SceneVML.PushBack("Meshes", this->Assets.Serialize<MeshAsset>());
 
-		SceneJSON.AddEntry("Shaders", this->Assets.Serialize<ShaderAsset>());
+		SceneVML.PushBack("Shaders", this->Assets.Serialize<ShaderAsset>());
 
-		SceneJSON.AddEntry("Textures", this->Assets.Serialize<TextureAsset>());
+		SceneVML.PushBack("Textures", this->Assets.Serialize<TextureAsset>());
 
-		SceneJSON.AddEntry("Materials", this->Assets.Serialize<MaterialAsset>());
+		SceneVML.PushBack("Materials", this->Assets.Serialize<MaterialAsset>());
 
-		JSON EntitiesJSON = {};
+		VML EntitiesVML;
 		for (int i = 0; i < this->_Entities.size(); i++)
 		{
-			EntitiesJSON.PushBack(this->_Entities[i]->Serialize());
+			EntitiesVML.PushBack(this->_Entities[i]->GetName(), this->_Entities[i]->Serialize());
 		}
-		SceneJSON.AddEntry("Entities", EntitiesJSON);
+		SceneVML.PushBack("Entities", EntitiesVML);
 
-		SceneJSON.Save(FilePath);
+		SceneVML.Write(FilePath);
 	}
 
 	Scene::Scene()

@@ -36,25 +36,21 @@ namespace Volund
 		}
 	}
 
-	JSON Entity::Serialize() const
+	VML Entity::Serialize() const
 	{
-		JSON EntityJSON;
+		VML EntityVML;
 
-		EntityJSON.AddEntry("Name", this->_Name);
-
-		JSON ComponentsJSON;
-
+		int i = 0;
 		for (const auto& ComponentView : this->_Components)
 		{
 			for (const auto& Component : ComponentView)
 			{
-				ComponentsJSON.PushBack(Component->Serialize());
+				EntityVML.PushBack("Component" + std::to_string(i), Component->Serialize());
+				i++;
 			}
 		}
 
-		EntityJSON.AddEntry("Components", ComponentsJSON);
-
-		return EntityJSON;
+		return EntityVML;
 	}
 
 	Entity::Entity(Scene* Parent, const std::string& Name)

@@ -17,7 +17,7 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		JSON Serialize() override;
+		VML Serialize() override;
 
 		CameraMovement(float Speed = 1.0f, float Sensitivity = 1.0f);
 

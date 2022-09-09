@@ -3,6 +3,8 @@
 
 #include "OpenGLRenderingAPI.h"
 
+#include "VML/VML.h"
+
 namespace Volund
 {
 	RenderingAPI::API RenderingAPI::_SelectedAPI = API::NONE;
@@ -17,9 +19,9 @@ namespace Volund
 	{
 		if (_SelectedAPI == API::NONE)
 		{
-			JSON ConfigJSON = JSON::Load(VOLUND_CONFIG_JSON);
+			VML Config(VOLUND_CONFIG);
 
-			std::string NewAPI = ConfigJSON["Renderer"]["API"];
+			std::string NewAPI = Config["Renderer"].Get("API");
 
 			if (_APINames.contains(NewAPI))
 			{

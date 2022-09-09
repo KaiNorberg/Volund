@@ -12,7 +12,7 @@ namespace Volund
 	public:
 		void OnUpdate(TimeStep TS) override;
 
-		JSON Serialize() override;
+		VML Serialize() override;
 
 		MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial);
 

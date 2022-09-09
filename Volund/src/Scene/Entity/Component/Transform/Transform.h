@@ -29,7 +29,7 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		JSON Serialize() override;
+		VML Serialize() override;
 
 		Transform(const Vec3& Position = Vec3(0.0f), const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
 

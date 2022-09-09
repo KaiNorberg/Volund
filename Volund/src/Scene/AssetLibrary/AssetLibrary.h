@@ -2,6 +2,8 @@
 
 #include "Asset/Asset.h"
 
+#include "VML/VML.h"
+
 namespace Volund
 {
 	class AssetLibrary
@@ -20,10 +22,10 @@ namespace Volund
 		uint32_t AssetAmount();
 
 		template <typename T>
-		JSON Serialize();
+		VMLEntry Serialize();
 
 		template <typename T>
-		void Deserialize(const JSON& AssetsJSON);
+		void Deserialize(VMLEntry& AssetsJSON);
 
 		template <typename T>
 		bool HasAssetType();
@@ -99,25 +101,25 @@ namespace Volund
 	}
 
 	template <typename T>
-	JSON AssetLibrary::Serialize()
+	VMLEntry AssetLibrary::Serialize()
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
 		if (!this->HasAssetType<T>())
 		{
-			return JSON();
+			return VMLEntry();
 		}
 
-		JSON AssetsJSON = {};
+		VMLEntry Result;
 		for (int i = 0; i < this->_Assets[TypeID].size(); i++)
 		{
-			AssetsJSON.PushBack(this->_Assets[TypeID][i]->GetFilePath());
+			Result.PushBack(this->_Assets[TypeID][i]->GetFilePath());
 		}
-		return AssetsJSON;
+		return Result;
 	}
 
 	template <typename T>
-	void AssetLibrary::Deserialize(const JSON& AssetsJSON)
+	void AssetLibrary::Deserialize(VMLEntry& AssetsVML)
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
@@ -126,9 +128,9 @@ namespace Volund
 			this->_Assets.push_back(std::vector<Ref<Asset>>());
 		}
 
-		for (int i = 0; i < AssetsJSON.Size(); i++)
+		for (uint32_t i = 0; i < AssetsVML.Size(); i++)
 		{
-			this->_Assets[TypeID].push_back(std::make_shared<T>(this, AssetsJSON[i]));
+			this->_Assets[TypeID].push_back(std::make_shared<T>(this, AssetsVML[i]));
 		}
 	}
 

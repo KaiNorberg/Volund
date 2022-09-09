@@ -1,9 +1,6 @@
 [submodule "vendor/glm"]
 	path = vendor/glm
 	url = https://github.com/g-truc/glm
-[submodule "vendor/json"]
-	path = vendor/json
-	url = https://github.com/nlohmann/json
 [submodule "vendor/stb"]
 	path = vendor/stb
 	url = https://github.com/nothings/stb

@@ -1,24 +1,23 @@
 #pragma once
 
 #define _CRT_SECURE_NO_WARNINGS
-#define GLEW_STATIC
 
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
+#include <array>
+#include <map>
 #if defined(_MSC_VER)
-# include <unordered_map>
+#include <unordered_map>
 #else
-# include <tr/unordered_map>
+#include <tr/unordered_map>
 #endif
 #include <cstdarg>
 #include <filesystem>
 #include <fstream>
 #include <future>
 #include <memory>
-
-#include "JSON/JSON.h"
 
 #include "Math/Math.h"
 

@@ -10,16 +10,16 @@
 
 namespace Volund
 {
-	JSON CameraMovement::Serialize()
+	VML CameraMovement::Serialize()
 	{
-		JSON CameraMovementJSON;
+		VML CameraMovementVML;
 
-		CameraMovementJSON.AddEntry("Type", "CameraMovement");
+		CameraMovementVML.PushBack("Type", VMLEntry("CameraMovement"));
 
-		CameraMovementJSON.AddEntry("Speed", this->Speed);
-		CameraMovementJSON.AddEntry("Sensitivity", this->Sensitivity);
+		CameraMovementVML.PushBack("Speed", VMLEntry(this->Speed));
+		CameraMovementVML.PushBack("Sensitivity", VMLEntry(this->Sensitivity));
 
-		return CameraMovementJSON;
+		return CameraMovementVML;
 	}
 
 	void CameraMovement::OnEvent(Event* E)

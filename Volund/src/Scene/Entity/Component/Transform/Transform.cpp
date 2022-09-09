@@ -52,20 +52,20 @@ namespace Volund
 		this->_ModelMatrix = scale(this->_ModelMatrix, this->Scale);
 	}
 
-	JSON Transform::Serialize()
+	VML Transform::Serialize()
 	{
-		JSON TransformJSON;
+		VML TransformVML;
 
-		TransformJSON.AddEntry("Type", "Transform");
+		TransformVML.PushBack("Type", VMLEntry("Transform"));
 
-		TransformJSON.AddList("Position", {this->Position.x, this->Position.y, this->Position.z});
+		TransformVML.PushBack("Position", VMLEntry({Position.x, Position.y, Position.z}));
 
 		Vec3 Rotation = this->GetRotation();
-		TransformJSON.AddList("Rotation", {Rotation.x, Rotation.y, Rotation.z});
+		TransformVML.PushBack("Rotation", VMLEntry({ Rotation.x, Rotation.y, Rotation.z }));
 
-		TransformJSON.AddList("Scale", {Scale.x, Scale.y, Scale.z});
+		TransformVML.PushBack("Scale", VMLEntry({ Scale.x, Scale.y, Scale.z }));
 
-		return TransformJSON;
+		return TransformVML;
 	}
 
 	Transform::Transform(const Vec3& Position, const Vec3& Rotation, const Vec3& Scale)

@@ -31,7 +31,7 @@ namespace Volund
 
 		void OnDelete() override;
 
-		JSON Serialize() override;
+		VML Serialize() override;
 
 	private:
 		static inline std::unordered_map<Scene*, Camera*> ActiveCameras = {};

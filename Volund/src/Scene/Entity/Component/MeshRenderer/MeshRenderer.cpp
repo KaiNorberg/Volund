@@ -18,16 +18,16 @@ namespace Volund
 		Renderer::Submit(ModelMatrix, this->_Mesh->Get(), this->_Material->Get());
 	}
 
-	JSON MeshRenderer::Serialize()
+	VML MeshRenderer::Serialize()
 	{
-		JSON MeshRendererJSON;
+		VML MeshRendererVML;
 
-		MeshRendererJSON.AddEntry("Type", "MeshRenderer");
+		MeshRendererVML.PushBack("Type", VMLEntry("MeshRenderer"));
 
-		MeshRendererJSON.AddEntry("Mesh", this->_Mesh->GetFilePath());
-		MeshRendererJSON.AddEntry("Material", this->_Material->GetFilePath());
+		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetFilePath()));
+		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetFilePath()));
 
-		return MeshRendererJSON;
+		return MeshRendererVML;
 	}
 
 	MeshRenderer::MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial)

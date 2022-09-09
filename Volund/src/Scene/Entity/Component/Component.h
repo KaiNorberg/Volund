@@ -4,6 +4,8 @@
 
 #include "EventDispatcher/Event.h"
 
+#include "VML/VML.h"
+
 namespace Volund
 {
 	class Entity;
@@ -13,23 +15,15 @@ namespace Volund
 	public:
 		Entity* GetEntity() const;
 
-		virtual void OnCreate()
-		{
-		};
+		virtual void OnCreate() {};
 
-		virtual void OnDelete()
-		{
-		};
+		virtual void OnDelete() {};
 
-		virtual void OnUpdate(TimeStep TS)
-		{
-		};
+		virtual void OnUpdate(TimeStep TS) {};
 
-		virtual void OnEvent(Event* E)
-		{
-		};
+		virtual void OnEvent(Event* E) {};
 
-		virtual JSON Serialize() = 0;
+		virtual VML Serialize() = 0;
 
 		Component() = default;
 

@@ -2,6 +2,8 @@
 
 #include "Component/Component.h"
 
+#include "VML/VML.h"
+
 namespace Volund
 {
 	class Scene;
@@ -35,7 +37,7 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) const;
 
-		JSON Serialize() const;
+		VML Serialize() const;
 
 		Entity() = default;
 

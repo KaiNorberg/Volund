@@ -14,9 +14,9 @@ namespace Volund
 	{
 		this->_FilePath = FilePath;
 
-		JSON MaterialJSON = JSON::Load(FilePath);
+		VML MaterialVML(FilePath);
 
-		Ref<Shader> ObjectShader = Parent->GetAsset<ShaderAsset>(MaterialJSON["Shader"].GetAs<std::string>())->Get();
+		Ref<Shader> ObjectShader = Parent->GetAsset<ShaderAsset>(MaterialVML.Get("Shader").GetAs<std::string>())->Get();
 
 		this->_Material = Material::Create(ObjectShader);
 	}

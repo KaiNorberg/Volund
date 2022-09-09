@@ -22,12 +22,12 @@ namespace Volund
 	{
 	public:
 
-		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, std::vector<PointLightData> const& PointLights);
-		static void EndScene(Ref<Context> const& RenderingContext);
+		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<PointLightData>& PointLights);
+		static void EndScene(const Ref<Context>& RenderingContext);
 
-		static void Submit(Mat4x4& ModelMatrix, Ref<Mesh> const& ObjectMesh, Ref<Material> const& ObjectMaterial);
+		static void Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial);
 
-		static void SetAPI(Ref<RenderingAPI> const& API);
+		static void SetAPI(const Ref<RenderingAPI>& API);
 
 	private:		
 		

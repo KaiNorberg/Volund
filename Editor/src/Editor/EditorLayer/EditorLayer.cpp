@@ -2,7 +2,9 @@
 
 #include "EditorLayer.h"
 
-#define LOAD_SCENE
+#include "VML/VML.h"
+
+//#define LOAD_SCENE
 
 void EditorLayer::LoadScene(Ref<Scene> NewScene)
 {

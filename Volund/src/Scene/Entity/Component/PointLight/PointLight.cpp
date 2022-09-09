@@ -6,15 +6,15 @@
 
 namespace Volund
 {
-	JSON PointLight::Serialize()
+	VML PointLight::Serialize()
 	{
-		JSON PointLightJSON;
+		VML PointLightVML;
 
-		PointLightJSON.AddEntry("Type", "PointLight");
+		PointLightVML.PushBack("Type", VMLEntry("PointLight"));
 
-		PointLightJSON.AddList("Color", {this->Color.r, this->Color.g, this->Color.b});
+		PointLightVML.PushBack("Color", VMLEntry({ this->Color.r, this->Color.g, this->Color.b }));
 
-		return PointLightJSON;
+		return PointLightVML;
 	}
 
 	PointLight::PointLight(RGB Color)

@@ -73,17 +73,17 @@ namespace Volund
 		}
 	}
 
-	JSON Camera::Serialize()
+	VML Camera::Serialize()
 	{
-		JSON CameraJSON;
+		VML CameraVML;
 
-		CameraJSON.AddEntry("Type", "Camera");
+		CameraVML.PushBack("Type", VMLEntry("Camera"));
 
-		CameraJSON.AddEntry("IsActive", this->IsActive());
-		CameraJSON.AddEntry("FOV", this->FOV);
-		CameraJSON.AddEntry("NearPlane", this->NearPlane);
-		CameraJSON.AddEntry("FarPlane", this->FarPlane);
+		CameraVML.PushBack("IsActive", VMLEntry(this->IsActive()));
+		CameraVML.PushBack("FOV", VMLEntry(this->FOV));
+		CameraVML.PushBack("NearPlane", VMLEntry(this->NearPlane));
+		CameraVML.PushBack("FarPlane", VMLEntry(this->FarPlane));
 
-		return CameraJSON;
+		return CameraVML;
 	}
 }

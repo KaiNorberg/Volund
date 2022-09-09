@@ -9,7 +9,7 @@ namespace Volund
 	public:
 		RGB Color;
 
-		JSON Serialize() override;
+		VML Serialize() override;
 
 		PointLight(RGB Color = RGB(1.0f));
 
