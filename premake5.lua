@@ -76,7 +76,6 @@ project "Volund"
 		targetdir (TargetDir .. "/Volund")
 		postbuildcommands {			
 			"xcopy ..\\vendor\\glm\\** ..\\" .. TargetDir .. "\\Volund\\vendor\\glm /Q /E /Y /I /S",
-			"xcopy ..\\vendor\\json\\** ..\\" .. TargetDir .. "\\Volund\\vendor\\json /Q /E /Y /I /S",
 			"xcopy src\\**.h ..\\" .. TargetDir .. "\\Volund\\include /Q /E /Y /I /S"
 		}
 		
