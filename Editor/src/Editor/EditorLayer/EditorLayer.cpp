@@ -58,13 +58,6 @@ void EditorLayer::OnAttach()
 
 	Ref<Scene> NewScene = Scene::Deserialize("Test.scene");
 
-	for (int i = 0; i < 15; i++)
-	{
-		Timer T;
-
-		NewScene = Scene::Deserialize("Test.scene");
-	}
-
 #endif
 
 	this->LoadScene(NewScene);
