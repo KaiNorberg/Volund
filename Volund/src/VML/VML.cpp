@@ -162,11 +162,11 @@ namespace Volund
 					VOLUND_ERROR("Duplicate node in VML file found (%s)!", NodeName.c_str());
 				}
 
-				this->PushBack(NodeName, VML(File));
+				this->_Nodes.emplace(NodeName, File);
 			}
 			else
 			{
-				uint64_t EqualPos = Line.find('=');
+				uint64_t EqualPos = Line.find_first_of('=');
 				if (EqualPos != std::string::npos)
 				{
 					std::string EntryName = Line.substr(TabCount, EqualPos - TabCount);
@@ -174,14 +174,15 @@ namespace Volund
 
 					if (!EntryValue.empty())
 					{ 
-						std::vector<std::string> Values = this->Split(EntryValue, ',');
+						std::vector<std::string> Values;
+						this->Split(&Values, EntryValue, ',');
 
 						if (this->ContainsEntry(EntryName))
 						{
 							VOLUND_ERROR("Duplicate entry in VML file found (%s)!", EntryName.c_str());
 						}
 
-						this->PushBack(EntryName, VMLEntry(Values));
+						this->_Entries.emplace(EntryName, Values);
 					}
 					else
 					{
@@ -217,23 +218,20 @@ namespace Volund
 		return Occurrences;
 	}
 
-	std::vector<std::string> VML::Split(const std::string& String, char Delimiter)
+	void VML::Split(std::vector<std::string>* Out, const std::string& String, char Delimiter)
 	{
-		std::vector<std::string> Result;
-		Result.reserve(16);
+		Out->reserve(16);
 
 		int64_t OldIndex = 0;
 		for (int64_t i = 0; i < (int64_t)String.size(); i++)
 		{
 			if (String[i] == Delimiter)
 			{
-				Result.push_back(String.substr(OldIndex, i - OldIndex));
+				Out->push_back(String.substr(OldIndex, i - OldIndex));
 				OldIndex = i + 1;
 			}
 		}
-		Result.push_back(String.substr(OldIndex, String.size()));
-
-		return Result;
+		Out->push_back(String.substr(OldIndex, String.size()));
 	}
 
 	VML::VML(const std::string& FilePath)

@@ -33,4 +33,9 @@ namespace Volund
 	{
 		return this->_Value;
 	}
+
+	const std::string& VMLValue::String() const
+	{
+		return this->_Value;
+	}
 }

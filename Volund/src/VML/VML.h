@@ -44,7 +44,7 @@ namespace Volund
 
 		uint32_t GetOccurrencesAtStart(const std::string& String, char Character);
 
-		std::vector<std::string> Split(const std::string& String, char Delimiter);
+		void Split(std::vector<std::string>* Out, const std::string& String, char Delimiter);
 
 		std::map<std::string, VML> _Nodes;
 		std::map<std::string, VMLEntry> _Entries;

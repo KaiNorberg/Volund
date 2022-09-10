@@ -119,14 +119,14 @@ namespace Volund
 
 		NewScene->Assets.Deserialize<MaterialAsset>(SceneVML.Get("Materials"));
 
-		VML EntitiesVML = SceneVML["Entities"];
+		VML& EntitiesVML = SceneVML["Entities"];
 		for (auto& [EntityName, EntityVML] : EntitiesVML)
 		{
 			Ref<Entity> NewEntity = NewScene->CreateEntity(EntityName);
 
 			for (auto& [ComponentName, ComponentVML] : EntityVML)
 			{
-				std::string ComponentType = ComponentVML.Get("Type");
+				const std::string& ComponentType = (ComponentVML.Get("Type")).String();
 
 				if (ComponentType == "Camera")
 				{
@@ -158,7 +158,7 @@ namespace Volund
 				{
 					VMLEntry ColorVML = ComponentVML.Get("Color");
 
-					RGB Color = RGB(ColorVML[0].GetAs<float>(), ColorVML[1].GetAs<float>(), ColorVML[2].GetAs<float>());
+					RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
 
 					NewEntity->CreateComponent<PointLight>(Color);
 				}
@@ -168,9 +168,9 @@ namespace Volund
 					VMLEntry RotationVML = ComponentVML.Get("Rotation");
 					VMLEntry ScaleVML = ComponentVML.Get("Scale");
 
-					Vec3 Position = Vec3(PositionVML[0].GetAs<float>(), PositionVML[1].GetAs<float>(), PositionVML[2].GetAs<float>());
-					Vec3 Rotation = Vec3(RotationVML[0].GetAs<float>(), RotationVML[1].GetAs<float>(), RotationVML[2].GetAs<float>());
-					Vec3 Scale = Vec3(ScaleVML[0].GetAs<float>(), ScaleVML[1].GetAs<float>(), ScaleVML[2].GetAs<float>());
+					Vec3 Position = Vec3(PositionVML[0], PositionVML[1], PositionVML[2].GetAs<float>());
+					Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2].GetAs<float>());
+					Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
 
 					NewEntity->CreateComponent<Transform>(Position, Rotation, Scale);
 				}

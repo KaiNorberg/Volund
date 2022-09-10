@@ -63,10 +63,7 @@ namespace Volund
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
-		while (this->_Components.size() <= TypeID)
-		{
-			this->_Components.push_back(std::vector<Ref<Component>>());
-		}
+		this->_Components.resize(TypeID + 1);
 
 		Ref<T> NewComponent = std::make_shared<T>(Args...);
 		NewComponent->SetParent(this);

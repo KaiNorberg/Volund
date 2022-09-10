@@ -11,6 +11,8 @@ namespace Volund
 		template <typename T>
 		operator T() const;
 
+		const std::string& String(uint32_t Index = 0) const;
+
 		template <typename T>
 		T GetAs() const;
 
@@ -54,7 +56,7 @@ namespace Volund
 		this->_Values.reserve(Values.size());
 		for (auto& Value : Values)
 		{
-			this->_Values.push_back(VMLValue(Value));
+			this->_Values.emplace_back(Value);
 		}
 	}
 
@@ -64,14 +66,14 @@ namespace Volund
 		this->_Values.reserve(Values.size());
 		for (auto& Value : Values)
 		{
-			this->_Values.push_back(VMLValue(Value));
+			this->_Values.emplace_back(Value);
 		}
 	}
 
 	template <typename T>
 	inline VMLEntry::VMLEntry(const T& Value)
 	{
-		this->_Values.push_back(VMLValue(Value));
+		this->_Values.emplace_back(Value);
 	}
 }
 

@@ -75,10 +75,7 @@ namespace Volund
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
-		while (this->_Assets.size() <= TypeID)
-		{
-			this->_Assets.push_back(std::vector<Ref<Asset>>());
-		}
+		this->_Assets.resize(TypeID + 1);
 
 		Ref<T> NewAsset = std::make_shared<T>(this, FilePath);
 
@@ -123,10 +120,7 @@ namespace Volund
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
-		while (this->_Assets.size() <= TypeID)
-		{
-			this->_Assets.push_back(std::vector<Ref<Asset>>());
-		}
+		this->_Assets.resize(TypeID + 1);
 
 		for (uint32_t i = 0; i < AssetsVML.Size(); i++)
 		{

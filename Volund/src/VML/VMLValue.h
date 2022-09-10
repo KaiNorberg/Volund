@@ -17,6 +17,8 @@ namespace Volund
 		template <typename T>
 		T GetAs() const;
 
+		const std::string& String() const;
+
 		template <typename T>
 		VMLValue(const T Value);
 
