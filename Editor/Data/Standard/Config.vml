@@ -1,2 +1,4 @@
-Renderer:
-	API=OpenGL
+Renderer
+{
+	API [ OpenGL ]
+}

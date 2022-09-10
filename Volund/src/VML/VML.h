@@ -36,11 +36,28 @@ namespace Volund
 
 		VML(const std::string& FilePath);
 
-		VML(std::ifstream& File);
-
 	private:
 
-		void Parse(std::ifstream& File);
+		enum class TokenType
+		{
+			NONE,
+			WORD,
+			ENTRY_BEGIN,
+			ENTRY_END,
+			NODE_BEGIN,
+			NODE_END
+		};
+
+		struct Token
+		{
+			TokenType Type = TokenType::NONE;
+
+			std::string Value;
+		};
+
+		static void Tokenize(std::vector<Token>* Out, FILE* File);
+
+		void Parse(const std::vector<Token>& Tokens, int& Index);
 
 		uint32_t GetOccurrencesAtStart(const std::string& String, char Character);
 

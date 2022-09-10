@@ -76,24 +76,20 @@ namespace Volund
 		std::string Result;
 		for (auto& [EntryName, Entry] : this->_Entries)
 		{
-			Result += IndentationString + EntryName + '=';
+			Result += IndentationString + EntryName + " [ ";
 
 			for (uint32_t i = 0; i < Entry.Size(); i++)
 			{
-				Result += Entry[i];
-				if (i != Entry.Size() - 1)
-				{
-					Result += ',';
-				}
+				Result += Entry[i].GetAs<std::string>() + ' ';
 			}
 
-			Result += '\n';
+			Result += "]\n";
 		}
 
 		for (auto& [NodeName, Node] : this->_Nodes)
 		{
-			Result += IndentationString + NodeName + ":\n";
-			Result += Node.ToString(Indentation + 1);
+			Result += IndentationString + NodeName + '\n' + IndentationString + "{\n";
+			Result += Node.ToString(Indentation + 1) + IndentationString + "}\n";
 		}
 
 		return Result;
@@ -119,85 +115,128 @@ namespace Volund
 		return this->_Nodes.end();
 	}
 
-	void VML::Parse(std::ifstream& File)
+	void VML::Tokenize(std::vector<Token>* Out, FILE* File)
 	{
-		std::streampos PrevStreamPos;
-
-		std::string Line;
-		uint32_t TabCount = 0;
-
-		if (std::getline(File, Line))
+		while (true)
 		{
-			TabCount = this->GetOccurrencesAtStart(Line, '\t');
-		}
-		else
-		{
-			return;
-		}
-
-		do
-		{
-			uint32_t NewTabCount = this->GetOccurrencesAtStart(Line, '\t');
-
-			if (NewTabCount != TabCount)
+			char TokenString[128];
+			int RET = fscanf(File, "%128s", TokenString);
+			if (RET == EOF || RET == NULL)
 			{
-				if (NewTabCount < TabCount)
-				{
-					File.seekg(PrevStreamPos);
-
-					return;
-				}
-				else
-				{
-					VOLUND_ERROR("Invalid indentation found in VML file!");
-				}
+				return;
 			}
 
-			if (Line.back() == ':') //New node
+			Token NewToken;
+			NewToken.Value = TokenString;
+
+			if (strlen(TokenString) == 1)
 			{
-				std::string NodeName = Line.substr(TabCount, Line.size() - TabCount - 1);
-
-				if (this->ContainsNode(NodeName))
+				switch (TokenString[0])
 				{
-					VOLUND_ERROR("Duplicate node in VML file found (%s)!", NodeName.c_str());
+				case '[':
+				{
+					NewToken.Type = TokenType::ENTRY_BEGIN;
 				}
-
-				this->_Nodes.emplace(NodeName, File);
+				break;
+				case ']':
+				{
+					NewToken.Type = TokenType::ENTRY_END;
+				}
+				break;
+				case '{':
+				{
+					NewToken.Type = TokenType::NODE_BEGIN;
+				}
+				break;
+				case '}':
+				{
+					NewToken.Type = TokenType::NODE_END;
+				}
+				break;
+				default:
+				{
+					NewToken.Type = TokenType::WORD;
+				}
+				}
 			}
 			else
 			{
-				uint64_t EqualPos = Line.find_first_of('=');
-				if (EqualPos != std::string::npos)
+				NewToken.Type = TokenType::WORD;
+			}
+
+			Out->push_back(NewToken);
+		}
+	}
+
+	void VML::Parse(const std::vector<Token>& Tokens, int& Index)
+	{
+		std::string LastIdentifier;
+
+		bool InEntry = false;
+		VMLEntry NewEntry;
+
+		for (; Index < Tokens.size(); Index++)
+		{
+			switch (Tokens[Index].Type)
+			{
+			case TokenType::ENTRY_BEGIN:
+			{
+				if (InEntry)
 				{
-					std::string EntryName = Line.substr(TabCount, EqualPos - TabCount);
-					std::string EntryValue = Line.substr(EqualPos + 1, Line.size() - 1);
+					VOLUND_ERROR("Unable to read VLM file, invalid token (%s)!", Tokens[Index].Value.c_str());
+				}
 
-					if (!EntryValue.empty())
-					{ 
-						std::vector<std::string> Values;
-						this->Split(&Values, EntryValue, ',');
+				InEntry = true;
+			}
+			break;
+			case TokenType::ENTRY_END:
+			{
+				if (!InEntry)
+				{
+					VOLUND_ERROR("Unable to read VLM file, invalid token (%s)!", Tokens[Index].Value.c_str());
+				}
 
-						if (this->ContainsEntry(EntryName))
-						{
-							VOLUND_ERROR("Duplicate entry in VML file found (%s)!", EntryName.c_str());
-						}
+				this->PushBack(LastIdentifier, NewEntry);
+				
+				NewEntry = VMLEntry();
+				LastIdentifier.clear();
+				InEntry = false;
+			}
+			break;
+			case TokenType::NODE_BEGIN:
+			{
+				Index++;
 
-						this->_Entries.emplace(EntryName, Values);
-					}
-					else
-					{
-						this->PushBack(EntryName, VMLEntry());
-					}
+				VML NewNode;
+				NewNode.Parse(Tokens, Index);
+
+				this->PushBack(LastIdentifier, NewNode);
+				LastIdentifier.clear();		
+			}
+			break;
+			case TokenType::NODE_END:
+			{
+				return;
+			}
+			break;
+			case TokenType::WORD:
+			{
+				if (InEntry)
+				{
+					NewEntry.PushBack(Tokens[Index].Value);
+				}
+				else if (LastIdentifier.empty())
+				{
+					LastIdentifier = Tokens[Index].Value;
 				}
 				else
 				{
-					VOLUND_ERROR("Unable to read VML file!");
+					VOLUND_ERROR("Unable to read VLM file, invalid token (%s)!", Tokens[Index].Value.c_str());
 				}
 			}
-
-			PrevStreamPos = File.tellg();
-
-		} while (std::getline(File, Line));
+			break;
+			}
+		}
 	}
 
 	uint32_t VML::GetOccurrencesAtStart(const std::string& String, char Character)
@@ -238,18 +277,16 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading VML file (%s)...", FilePath.c_str());
 
-		std::ifstream File(FilePath);
+		FILE* File = fopen(FilePath.c_str(), "r");
 
-		if (File.fail())
-		{
-			VOLUND_ERROR("Unable to open VML file (%s)!", FilePath.c_str());
-		}
+		VOLUND_ASSERT(File, "Unable to open VML file (%s)!", FilePath.c_str());
 
-		this->Parse(File);
-	}
+		std::vector<Token> Tokens;
+		Tokenize(&Tokens, File);
 
-	VML::VML(std::ifstream& File)
-	{
-		this->Parse(File);
+		int Index = 0;
+		this->Parse(Tokens, Index);
+
+		fclose(File);
 	}
 }
