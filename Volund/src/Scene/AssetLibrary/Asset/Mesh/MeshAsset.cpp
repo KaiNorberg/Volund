@@ -14,6 +14,8 @@ namespace Volund
 
 	MeshAsset::MeshAsset(AssetLibrary* Parent, const std::string& FilePath)
 	{
+		this->_Parent = Parent;
+
 		this->_FilePath = FilePath;
 
 		ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(FilePath);

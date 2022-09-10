@@ -1,5 +1,3 @@
-#pragma once
-
 #include "PCH/PCH.h"
 
 #include "CameraMovement.h"
@@ -53,7 +51,7 @@ namespace Volund
 		Delta.x = (int32_t)((float)Math::Clamp(Delta.x, -10, 10) * this->Sensitivity);
 		Delta.y = (int32_t)((float)Math::Clamp(Delta.y, -10, 10) * this->Sensitivity);
 
-		_Rotation -= Vec3(Delta.y, Delta.x, 0.0f);
+		_Rotation -= Vec3(Delta.y, Delta.x, 0.0f) * this->Sensitivity;
 		_Rotation.x = Math::Clamp(_Rotation.x, -89.0f, 89.0f);
 
 		EntityTransform->SetRotation(_Rotation);

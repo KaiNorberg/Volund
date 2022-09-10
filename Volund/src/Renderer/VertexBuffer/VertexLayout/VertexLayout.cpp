@@ -10,7 +10,7 @@ namespace Volund
 {
 	uint32_t VertexAttribute::GetDataType() const
 	{
-		return this->FloatID * (((int)this->_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + this->IntID * ((int)this->_Type &
+		return this->FloatID * (((uint32_t)this->_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + this->IntID * ((uint32_t)this->_Type &
 			VOLUND_ATTRIBUTE_INT);
 	}
 
@@ -21,7 +21,7 @@ namespace Volund
 
 	uint32_t VertexAttribute::GetElementCount() const
 	{
-		return ((int)this->_Type >> 2);
+		return ((uint32_t)this->_Type >> 2);
 	}
 
 	std::string VertexAttribute::GetName() const

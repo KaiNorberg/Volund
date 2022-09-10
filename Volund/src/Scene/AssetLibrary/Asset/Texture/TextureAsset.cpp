@@ -10,6 +10,8 @@ namespace Volund
 
 	TextureAsset::TextureAsset(AssetLibrary* Parent, const std::string& FilePath)
 	{
+		this->_Parent = Parent;
+
 		this->_FilePath = FilePath;
 
 		this->_Texture = Texture::Create(FilePath);

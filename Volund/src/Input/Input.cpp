@@ -5,7 +5,7 @@ namespace Volund
 {
 	bool Input::IsHeld(char KeyCode) const
 	{
-		return this->_Keys[KeyCode];
+		return (bool)this->_Keys[KeyCode];
 	}
 
 	bool Input::IsPressed(char KeyCode)
@@ -18,7 +18,7 @@ namespace Volund
 
 	bool Input::IsMouseButtonHeld(char Button) const
 	{
-		return this->_MouseButtons[Button];
+		return (bool)this->_MouseButtons[Button];
 	}
 
 	bool Input::IsMouseButtonPressed(char Button)
@@ -71,7 +71,7 @@ namespace Volund
 			{
 				MouseMoveEvent* MME = (MouseMoveEvent*)E;
 
-				this->_MousePosition = DVec2(MME->GetXPos(), MME->GetYPos());
+				this->_MousePosition = IVec2(MME->GetXPos(), MME->GetYPos());
 			}
 			break;
 		}

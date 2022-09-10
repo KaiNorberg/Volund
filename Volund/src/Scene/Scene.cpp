@@ -37,11 +37,11 @@ namespace Volund
 
 	bool Scene::DeleteEntity(const std::string& Name)
 	{
-		for (int i = 0; i < this->_Entities.size(); i++)
+		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
 			if (this->_Entities[i]->GetName() == Name)
 			{
-				this->_Entities.erase(this->_Entities.begin() + i);
+				this->_Entities.erase(this->_Entities.begin() + (int64_t)i);
 				return true;
 			}
 		}
@@ -52,7 +52,7 @@ namespace Volund
 
 	Ref<Entity> Scene::GetEntity(const std::string& Name)
 	{
-		for (int i = 0; i < this->_Entities.size(); i++)
+		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
 			if (this->_Entities[i]->GetName() == Name)
 			{
@@ -66,7 +66,7 @@ namespace Volund
 
 	bool Scene::HasEntity(const std::string& Name) const
 	{
-		for (int i = 0; i < this->_Entities.size(); i++)
+		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
 			if (this->_Entities[i]->GetName() == Name)
 			{
@@ -95,11 +95,11 @@ namespace Volund
 		}
 	}
 
-	void Scene::OnEvent(Event* E)
+	void Scene::OnEvent(Event*)
 	{
 	}
 
-	void Scene::OnUpdate(TimeStep TS)
+	void Scene::OnUpdate(TimeStep)
 	{
 	}
 
@@ -124,7 +124,7 @@ namespace Volund
 		{
 			Ref<Entity> NewEntity = NewScene->CreateEntity(EntityName);
 
-			for (auto& [ComponentName, ComponentVML] : EntitiesVML)
+			for (auto& [ComponentName, ComponentVML] : EntityVML)
 			{
 				std::string ComponentType = ComponentVML.Get("Type");
 
@@ -199,7 +199,7 @@ namespace Volund
 		SceneVML.PushBack("Materials", this->Assets.Serialize<MaterialAsset>());
 
 		VML EntitiesVML;
-		for (int i = 0; i < this->_Entities.size(); i++)
+		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
 			EntitiesVML.PushBack(this->_Entities[i]->GetName(), this->_Entities[i]->Serialize());
 		}

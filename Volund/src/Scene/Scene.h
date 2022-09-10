@@ -13,8 +13,7 @@ namespace Volund
 	public:
 		Ref<Entity> CreateEntity(const std::string& Name);
 
-		Ref<Entity> CreateEntity(const std::string& Name, const Vec3& Position, const Vec3& Rotation = Vec3(0.0f),
-		                         const Vec3& Scale = Vec3(1.0f));
+		Ref<Entity> CreateEntity(const std::string& Name, const Vec3& Position, const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
 
 		bool DeleteEntity(const std::string& Name);
 
@@ -29,9 +28,9 @@ namespace Volund
 
 		void EventCallback(Event* E);
 
-		virtual void OnEvent(Event* E);
+		virtual void OnEvent(Event*);
 
-		virtual void OnUpdate(TimeStep TS);
+		virtual void OnUpdate(TimeStep);
 
 		static Ref<Scene> Deserialize(const std::string& FilePath);
 

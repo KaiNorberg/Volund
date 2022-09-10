@@ -10,6 +10,8 @@ namespace Volund
 
 	ShaderAsset::ShaderAsset(AssetLibrary* Parent, const std::string& FilePath)
 	{
+		this->_Parent = Parent;
+
 		this->_FilePath = FilePath;
 
 		this->_Shader = Shader::Create(FilePath);

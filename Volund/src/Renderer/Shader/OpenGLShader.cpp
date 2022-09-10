@@ -95,7 +95,7 @@ namespace Volund
 		{
 			return UniformLocations[Name];
 		}
-		int UniformLocation = glGetUniformLocation(this->ID, Name.c_str());
+		int32_t UniformLocation = glGetUniformLocation(this->ID, Name.c_str());
 
 		if (UniformLocation == -1)
 		{

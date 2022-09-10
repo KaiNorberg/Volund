@@ -2,6 +2,8 @@
 
 namespace Volund
 {
+	class AssetLibrary;
+
 	class Asset
 	{
 	public:
@@ -12,6 +14,9 @@ namespace Volund
 		virtual ~Asset() = default;
 
 	protected:
+
+		AssetLibrary* _Parent = nullptr;
+
 		std::string _FilePath;
 	};
 }

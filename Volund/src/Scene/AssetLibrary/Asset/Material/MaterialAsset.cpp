@@ -12,6 +12,8 @@ namespace Volund
 
 	MaterialAsset::MaterialAsset(AssetLibrary* Parent, const std::string& FilePath)
 	{
+		this->_Parent = Parent;
+
 		this->_FilePath = FilePath;
 
 		VML MaterialVML(FilePath);

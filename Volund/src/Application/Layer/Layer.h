@@ -18,9 +18,9 @@ namespace Volund
 
 		virtual void OnDetach() {};
 
-		virtual void OnUpdate(TimeStep TS) {};
+		virtual void OnUpdate(TimeStep) {};
 	
-		virtual void OnEvent(Event* E) {};
+		virtual void OnEvent(Event*) {};
 
 		virtual ~Layer() {}
 	private:		

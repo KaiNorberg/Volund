@@ -21,8 +21,8 @@ namespace Volund
 
 		_API->Clear();
 
-		_API->SetViewPort(0, 0, (uint32_t)RenderingContext->GetWindow()->GetSize().x,
-		                  (uint32_t)RenderingContext->GetWindow()->GetSize().y);
+		_API->SetViewPort(0, 0, (int32_t)RenderingContext->GetWindow()->GetSize().x,
+		                  (int32_t)RenderingContext->GetWindow()->GetSize().y);
 
 		for (Submission Data : _SceneData.Submissions)
 		{
@@ -33,9 +33,9 @@ namespace Volund
 			ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
 			if (ObjectShader->HasUniform("PointLights[0].Color"))
 			{
-				ObjectShader->SetInt("PointLightAmount", (uint32_t)_SceneData.PointLights.size());
+				ObjectShader->SetInt("PointLightAmount", (int32_t)_SceneData.PointLights.size());
 
-				for (int i = 0; i < _SceneData.PointLights.size(); i++)
+				for (uint64_t i = 0; i < _SceneData.PointLights.size(); i++)
 				{
 					std::string Uniform = "PointLights[" + std::to_string(i) + "].";
 					ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);

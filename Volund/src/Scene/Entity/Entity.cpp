@@ -40,7 +40,7 @@ namespace Volund
 	{
 		VML EntityVML;
 
-		int i = 0;
+		uint32_t i = 0;
 		for (const auto& ComponentView : this->_Components)
 		{
 			for (const auto& Component : ComponentView)

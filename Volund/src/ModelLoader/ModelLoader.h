@@ -16,13 +16,13 @@ namespace Volund
 
 		struct ArrayHasher
 		{
-			std::size_t operator()(const std::array<V, 8>& Array) const
+			std::uint64_t operator()(const std::array<V, 8>& Array) const
 			{
-				std::size_t H = 0;
+				std::uint64_t H = 0;
 
 				for (auto E : Array)
 				{
-					H ^= std::hash<int>{}((size_t)(E)) + 0x9e3779b9 + (H << 6) + (H >> 2);
+					H ^= std::hash<uint64_t>{}((uint64_t)(E)) + 0x9e3779b9 + (H << 6) + (H >> 2);
 				}
 
 				return H;
@@ -52,7 +52,7 @@ namespace Volund
 		std::vector<V> TextureCoords;
 		std::vector<V> Normals;
 
-		std::unordered_map<std::array<V, 8>, uint32_t, ArrayHasher> VertexToIndexMap;
+		std::unordered_map<std::array<V, 8>, I, ArrayHasher> VertexToIndexMap;
 
 		FILE* File = fopen(FilePath.c_str(), "r");
 
@@ -66,7 +66,7 @@ namespace Volund
 			char LineHeader[16] = {};
 			LineHeader[15] = 0;
 
-			int RET = fscanf(File, "%15s", LineHeader);
+			int32_t RET = fscanf(File, "%15s", LineHeader);
 			if (RET == EOF || RET == NULL)
 			{
 				break;
@@ -100,13 +100,13 @@ namespace Volund
 			}
 			else if (strcmp(LineHeader, "f") == 0)
 			{
-				for (int i = 0; i < 3; i++)
+				for (uint64_t i = 0; i < 3; i++)
 				{
 					std::array<V, 8> Vertex;
 
 					if (!Geometry.empty() && !TextureCoords.empty() && !Normals.empty())
 					{
-						int GeometryIndex, TextureCoordsIndex, NormalsIndex;
+						uint32_t GeometryIndex, TextureCoordsIndex, NormalsIndex;
 						VOLUND_ASSERT(fscanf(File, "%d/%d/%d", &GeometryIndex, &TextureCoordsIndex, &NormalsIndex) == 3, "Unable to parse OBJ file (%s)!", FilePath.c_str());
 						GeometryIndex = (GeometryIndex - 1) * 3;
 						TextureCoordsIndex = (TextureCoordsIndex - 1) * 2;
@@ -126,7 +126,7 @@ namespace Volund
 					}
 					else if (!Geometry.empty() && TextureCoords.empty() && Normals.empty())
 					{
-						int GeometryIndex;
+						uint32_t GeometryIndex;
 						VOLUND_ASSERT(fscanf(File, "%d", &GeometryIndex) == 1, "Unable to parse OBJ file (%s)!", FilePath.c_str());
 						GeometryIndex = (GeometryIndex - 1) * 3;
 
@@ -155,9 +155,9 @@ namespace Volund
 					{
 						this->Indices.push_back((uint32_t)(this->Vertices.size() / 8));
 
-						for (int i = 0; i < 8; i++)
+						for (uint64_t j = 0; j < 8; j++)
 						{
-							this->Vertices.push_back(Vertex[i]);
+							this->Vertices.push_back(Vertex[j]);
 						}
 					}
 				}

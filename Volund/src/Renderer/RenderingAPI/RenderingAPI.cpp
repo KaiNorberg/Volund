@@ -21,6 +21,11 @@ namespace Volund
 		{
 			VML Config(VOLUND_CONFIG);
 
+			for (auto& [EntityName, EntityVML] : Config["Renderer"])
+			{
+				VOLUND_INFO(EntityName.c_str());
+			}
+
 			std::string NewAPI = Config["Renderer"].Get("API");
 
 			if (_APINames.contains(NewAPI))

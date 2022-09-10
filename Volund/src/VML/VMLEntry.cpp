@@ -23,5 +23,7 @@ namespace Volund
 		{
 			VOLUND_ERROR("Index exceeds boundary of VML entry (%d)!", Index);
 		}
+
+		return this->_Values[0];
 	}
 }

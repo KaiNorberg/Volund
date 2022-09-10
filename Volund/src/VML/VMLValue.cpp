@@ -20,7 +20,7 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_ERROR("Unable to convet VML value to bool (%s)!", this->_Value.c_str());
+			return (bool)stoi(this->_Value);
 		}
 	}
 

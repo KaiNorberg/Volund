@@ -44,7 +44,7 @@ namespace Volund
 	{
 		static uint64_t TypeID = GetTypeID<T>();
 
-		for (int i = 0; i < this->_Assets[TypeID].size(); i++)
+		for (uint64_t i = 0; i < this->_Assets[TypeID].size(); i++)
 		{
 			if (this->_Assets[TypeID][i]->GetFilePath() == FilePath)
 			{
@@ -111,7 +111,7 @@ namespace Volund
 		}
 
 		VMLEntry Result;
-		for (int i = 0; i < this->_Assets[TypeID].size(); i++)
+		for (uint64_t i = 0; i < this->_Assets[TypeID].size(); i++)
 		{
 			Result.PushBack(this->_Assets[TypeID][i]->GetFilePath());
 		}

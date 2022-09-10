@@ -1,6 +1,8 @@
 #include "PCH/PCH.h"
 #include "VML.h"
 
+#include "Time/Time.h"
+
 namespace Volund
 {
 	bool VML::ContainsNode(const std::string& Name) const
@@ -23,6 +25,8 @@ namespace Volund
 		{
 			VOLUND_ERROR("Unable to find VML entry (%s)!", Name.c_str());
 		}
+	
+		return this->_Entries.at("");
 	}
 
 	VMLEntry& VML::Get(const std::string& Name)
@@ -34,7 +38,9 @@ namespace Volund
 		else
 		{
 			VOLUND_ERROR("Unable to find VML entry (%s)!", Name.c_str());
-		}
+		}	
+
+		return this->_Entries.at("");
 	}
 
 	VML& VML::operator[](const std::string& Name)
@@ -47,6 +53,8 @@ namespace Volund
 		{
 			VOLUND_ERROR("Unable to find VML node (%s)!", Name.c_str());
 		}
+
+		return this->_Nodes.at("");
 	}
 
 	void VML::Write(const std::string& FilePath)
@@ -164,14 +172,21 @@ namespace Volund
 					std::string EntryName = Line.substr(TabCount, EqualPos - TabCount);
 					std::string EntryValue = Line.substr(EqualPos + 1, Line.size() - 1);
 
-					std::vector<std::string> Values = this->Split(EntryValue, ',');
+					if (!EntryValue.empty())
+					{ 
+						std::vector<std::string> Values = this->Split(EntryValue, ',');
 
-					if (this->ContainsEntry(EntryName))
-					{
-						VOLUND_ERROR("Duplicate entry in VML file found (%s)!", EntryName.c_str());
+						if (this->ContainsEntry(EntryName))
+						{
+							VOLUND_ERROR("Duplicate entry in VML file found (%s)!", EntryName.c_str());
+						}
+
+						this->PushBack(EntryName, VMLEntry(Values));
 					}
-
-					this->PushBack(EntryName, VMLEntry(Values));
+					else
+					{
+						this->PushBack(EntryName, VMLEntry());
+					}
 				}
 				else
 				{
@@ -186,8 +201,8 @@ namespace Volund
 
 	uint32_t VML::GetOccurrencesAtStart(const std::string& String, char Character)
 	{
-		int Occurrences = 0;
-		for (int i = 0; i < String.size(); i++)
+		uint32_t Occurrences = 0;
+		for (uint64_t i = 0; i < String.size(); i++)
 		{
 			if (String[i] == Character)
 			{
@@ -207,8 +222,8 @@ namespace Volund
 		std::vector<std::string> Result;
 		Result.reserve(16);
 
-		uint32_t OldIndex = 0;
-		for (uint32_t i = 0; i < String.size(); i++)
+		int64_t OldIndex = 0;
+		for (int64_t i = 0; i < (int64_t)String.size(); i++)
 		{
 			if (String[i] == Delimiter)
 			{

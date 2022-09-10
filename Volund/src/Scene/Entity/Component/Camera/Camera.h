@@ -36,4 +36,4 @@ namespace Volund
 	private:
 		static inline std::unordered_map<Scene*, Camera*> ActiveCameras = {};
 	};
-} //namespace Volund
+}

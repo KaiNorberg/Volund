@@ -26,16 +26,16 @@ namespace Volund
 
 		VertexLayout Layout = Buffer->GetLayout();
 		uint32_t Stride = 0;
-		for (int i = 0; i < Layout.size(); i++)
+		for (uint64_t i = 0; i < Layout.size(); i++)
 		{
 			Stride += Layout[i].GetByteSize();
 		}
 
 		uint64_t Offset = 0;
-		for (int i = 0; i < Layout.size(); i++)
+		for (uint64_t i = 0; i < Layout.size(); i++)
 		{
-			glEnableVertexAttribArray(i);
-			glVertexAttribPointer(i, Layout[i].GetElementCount(), Layout[i].GetDataType(), GL_FALSE, Stride,
+			glEnableVertexAttribArray((GLuint)i);
+			glVertexAttribPointer((GLuint)i, Layout[i].GetElementCount(), Layout[i].GetDataType(), GL_FALSE, Stride,
 			                      (const void*)Offset);
 			Offset += Layout[i].GetByteSize();
 		}

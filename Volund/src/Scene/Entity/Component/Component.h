@@ -19,13 +19,15 @@ namespace Volund
 
 		virtual void OnDelete() {};
 
-		virtual void OnUpdate(TimeStep TS) {};
+		virtual void OnUpdate(TimeStep) {};
 
-		virtual void OnEvent(Event* E) {};
+		virtual void OnEvent(Event*) {};
 
 		virtual VML Serialize() = 0;
 
 		Component() = default;
+
+		virtual ~Component() = default;
 
 	private:
 		friend class Entity;

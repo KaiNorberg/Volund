@@ -25,7 +25,7 @@ Entities:
 			NearPlane=0.100000
 			Type=Camera
 		Component2:
-			Sensitivity=0.500000
+			Sensitivity=0.400000
 			Speed=5.000000
 			Type=CameraMovement
 	CubeEntity:

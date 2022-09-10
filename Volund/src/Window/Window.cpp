@@ -1,5 +1,3 @@
-#pragma once
-
 #include "PCH/PCH.h"
 #include "Window.h"
 
@@ -27,7 +25,7 @@ namespace Volund
 					break;
 				}
 
-				Data->Dispatcher->Dispatch(KeyEvent((int32_t)wparam, true));
+				Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, true));
 			}
 			break;
 		case WM_KEYUP:
@@ -39,7 +37,7 @@ namespace Volund
 					break;
 				}
 
-				Data->Dispatcher->Dispatch(KeyEvent((int32_t)wparam, false));
+				Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, false));
 			}
 			break;
 		case WM_MOUSEMOVE:
@@ -165,9 +163,9 @@ namespace Volund
 					break;
 				}
 
-				uint32_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
+				int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
 
-				Data->Dispatcher->Dispatch(ScrollEvent(0, zDelta));
+				Data->Dispatcher->Dispatch(ScrollEvent(0, (uint32_t)zDelta));
 			}
 			break;
 		case WM_SIZE:
@@ -182,8 +180,8 @@ namespace Volund
 				RECT WindowRect = {};
 				GetClientRect(hwnd, &WindowRect);
 
-				Data->Width = WindowRect.right;
-				Data->Height = WindowRect.bottom;
+				Data->Width = (uint64_t)WindowRect.right;
+				Data->Height = (uint64_t)WindowRect.bottom;
 
 				Data->Dispatcher->Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
 			}
@@ -329,8 +327,8 @@ namespace Volund
 
 		if (FullScreen)
 		{
-			this->_Data.Width = GetSystemMetrics(SM_CXSCREEN);
-			this->_Data.Height = GetSystemMetrics(SM_CYSCREEN);
+			this->_Data.Width = (uint64_t)GetSystemMetrics(SM_CXSCREEN);
+			this->_Data.Height = (uint64_t)GetSystemMetrics(SM_CYSCREEN);
 
 			DEVMODE ScreenSettings;
 			memset(&ScreenSettings, 0, sizeof(ScreenSettings));
@@ -408,7 +406,7 @@ namespace Volund
 
 		VOLUND_ASSERT(this->_DeviceContext, "Failed to create a Window Device Context!");
 
-		uint32_t PixelFormat = ChoosePixelFormat((HDC)this->_DeviceContext, &PFD);
+		int32_t PixelFormat = ChoosePixelFormat((HDC)this->_DeviceContext, &PFD);
 
 		VOLUND_ASSERT(PixelFormat, "Unable to find a suitable Pixel Format!");
 

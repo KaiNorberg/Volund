@@ -86,8 +86,8 @@ namespace Volund
 		}
 
 		return Source{
-			SourceStrings[(int)ShaderType::VERTEX].str(), SourceStrings[(int)ShaderType::FRAGMENT].str(),
-			SourceStrings[(int)ShaderType::GEOMETRY].str()
+			SourceStrings[(uint32_t)ShaderType::VERTEX].str(), SourceStrings[(uint32_t)ShaderType::FRAGMENT].str(),
+			SourceStrings[(uint32_t)ShaderType::GEOMETRY].str()
 		};
 	}
 } //namespace Volund

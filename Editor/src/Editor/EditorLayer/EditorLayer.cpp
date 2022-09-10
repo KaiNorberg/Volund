@@ -4,7 +4,7 @@
 
 #include "VML/VML.h"
 
-//#define LOAD_SCENE
+#define LOAD_SCENE
 
 void EditorLayer::LoadScene(Ref<Scene> NewScene)
 {
@@ -21,7 +21,7 @@ void EditorLayer::OnAttach()
 	this->_Window->SetFocus();
 
 	this->_Context = Context::Create(this->_Window);
-	this->_Context->SetVSync(false);
+	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
 	Renderer::SetAPI(RenderingAPI::Create());
@@ -38,7 +38,7 @@ void EditorLayer::OnAttach()
 
 	Ref<Entity> CameraEntity = NewScene->CreateEntity("CameraEntity", Vec3(0.0f, 2.0f, 10.0f));
 	CameraEntity->CreateComponent<Camera>()->SetActive();
-	CameraEntity->CreateComponent<CameraMovement>(5.0f, 0.5f);
+	CameraEntity->CreateComponent<CameraMovement>(5.0f, 0.4f);
 
 	Ref<Entity> TeapotEnity = NewScene->CreateEntity("TeapotEntity", Vec3(3.0f, 0.0f, 0.0f));
 	TeapotEnity->CreateComponent<MeshRenderer>(CubeMesh, TestMaterial);
@@ -57,6 +57,13 @@ void EditorLayer::OnAttach()
 #else
 
 	Ref<Scene> NewScene = Scene::Deserialize("Test.scene");
+
+	for (int i = 0; i < 15; i++)
+	{
+		Timer T;
+
+		NewScene = Scene::Deserialize("Test.scene");
+	}
 
 #endif
 
