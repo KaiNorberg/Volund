@@ -299,7 +299,14 @@ namespace Volund
 
 	float Window::GetAspectRatio() const
 	{
-		return (float)this->_Data.Width / (float)this->_Data.Height;
+		if (this->_Data.Width == 0 || this->_Data.Height == 0)
+		{
+			return 0;
+		}
+		else
+		{
+			return (float)this->_Data.Width / (float)this->_Data.Height;
+		}
 	}
 
 	void* Window::GetDeviceContext() const
