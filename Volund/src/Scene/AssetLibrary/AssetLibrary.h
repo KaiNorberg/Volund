@@ -4,22 +4,24 @@
 
 #include "VML/VML.h"
 
+#include "Container/Container.h"
+
 namespace Volund
 {
 	class AssetLibrary
 	{
 	public:
 		template <typename T>
-		Ref<T> GetAsset(const std::string& FilePath);
+		Ref<T> Get(const std::string& FilePath);
 
 		template <typename T>
-		Ref<T> GetAsset(uint32_t Index);
+		Ref<T> Get(uint32_t Index);
 
 		template <typename T>
 		Ref<T> Create(const std::string& FilePath);
 
 		template <typename T>
-		uint32_t AssetAmount();
+		uint32_t Amount();
 
 		template <typename T>
 		VMLEntry Serialize();
@@ -28,27 +30,21 @@ namespace Volund
 		void Deserialize(VMLEntry& AssetsJSON);
 
 		template <typename T>
-		bool HasAssetType();
+		bool HasType();
 
 	private:
-		template <typename T>
-		uint32_t GetTypeID();
 
-		static inline uint32_t _NewTypeID = 0;
-
-		std::vector<std::vector<Ref<Asset>>> _Assets;
+		Container<Asset> _AssetContainer;
 	};
 
 	template <typename T>
-	Ref<T> AssetLibrary::GetAsset(const std::string& FilePath)
+	Ref<T> AssetLibrary::Get(const std::string& FilePath)
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		for (uint64_t i = 0; i < this->_Assets[TypeID].size(); i++)
+		for (uint64_t i = 0; i < this->_AssetContainer.Size<T>(); i++)
 		{
-			if (this->_Assets[TypeID][i]->GetFilePath() == FilePath)
+			if (this->_AssetContainer.Get<T>(i)->GetFilePath() == FilePath)
 			{
-				return std::dynamic_pointer_cast<T>(this->_Assets[TypeID][i]);
+				return this->_AssetContainer.Get<T>(i);
 			}
 		}
 
@@ -58,59 +54,39 @@ namespace Volund
 	}
 
 	template <typename T>
-	Ref<T> AssetLibrary::GetAsset(uint32_t Index)
+	Ref<T> AssetLibrary::Get(uint32_t Index)
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		if (!this->HasAssetType<T>())
-		{
-			VOLUND_ERROR("Unable to find Asset!");
-		}
-
-		return this->_Assets[TypeID][Index];
+		return this->_AssetContainer.Get<T>(Index);
 	}
 
 	template <typename T>
 	Ref<T> AssetLibrary::Create(const std::string& FilePath)
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		this->_Assets.resize(TypeID + 1);
-
 		Ref<T> NewAsset = std::make_shared<T>(this, FilePath);
 
-		this->_Assets[TypeID].push_back(NewAsset);
+		this->_AssetContainer.PushBack(NewAsset);
 
 		return NewAsset;
 	}
 
 	template <typename T>
-	uint32_t AssetLibrary::AssetAmount()
+	uint32_t AssetLibrary::Amount()
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		if (!this->HasAssetType<T>())
-		{
-			VOLUND_ERROR("Unable to find Asset!");
-		}
-
-		return this->_Assets[TypeID];
+		return this->_AssetContainer.Size<T>();
 	}
 
 	template <typename T>
 	VMLEntry AssetLibrary::Serialize()
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		if (!this->HasAssetType<T>())
+		if (!this->HasType<T>())
 		{
 			return VMLEntry();
 		}
 
 		VMLEntry Result;
-		for (uint64_t i = 0; i < this->_Assets[TypeID].size(); i++)
+		for (uint64_t i = 0; i < this->_AssetContainer.Size<T>(); i++)
 		{
-			Result.PushBack(this->_Assets[TypeID][i]->GetFilePath());
+			Result.PushBack(this->_AssetContainer.Get<T>()->GetFilePath());
 		}
 		return Result;
 	}
@@ -118,29 +94,15 @@ namespace Volund
 	template <typename T>
 	void AssetLibrary::Deserialize(VMLEntry& AssetsVML)
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		this->_Assets.resize(TypeID + 1);
-
 		for (uint32_t i = 0; i < AssetsVML.Size(); i++)
 		{
-			this->_Assets[TypeID].push_back(std::make_shared<T>(this, AssetsVML[i]));
+			this->_AssetContainer.PushBack(std::make_shared<T>(this, AssetsVML[i]));
 		}
 	}
 
 	template <typename T>
-	bool AssetLibrary::HasAssetType()
+	bool AssetLibrary::HasType()
 	{
-		static uint64_t TypeID = GetTypeID<T>();
-
-		return TypeID < this->_Assets.size() && !this->_Assets[TypeID].empty();
-	}
-
-	template <typename T>
-	uint32_t AssetLibrary::GetTypeID()
-	{
-		static uint32_t ID = _NewTypeID++;
-
-		return ID;
+		return this->_AssetContainer.Contains<T>(0);
 	}
 }

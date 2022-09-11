@@ -101,6 +101,7 @@ namespace Volund
 
 	void Scene::OnUpdate(TimeStep)
 	{
+
 	}
 
 	Ref<Scene> Scene::Deserialize(const std::string& FilePath)
@@ -120,8 +121,6 @@ namespace Volund
 		VML& EntitiesVML = SceneVML["Entities"];
 		for (auto& [EntityName, EntityVML] : EntitiesVML)
 		{
-			VOLUND_INFO("%s", EntityName.c_str());
-
 			Ref<Entity> NewEntity = NewScene->CreateEntity(EntityName);
 
 			for (auto& [ComponentName, ComponentVML] : EntityVML)
@@ -147,9 +146,9 @@ namespace Volund
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
-					Ref<MeshAsset> ObjectMesh = NewScene->Assets.GetAsset<MeshAsset>(
+					Ref<MeshAsset> ObjectMesh = NewScene->Assets.Get<MeshAsset>(
 						ComponentVML.Get("Mesh").GetAs<std::string>());
-					Ref<MaterialAsset> ObjectMaterial = NewScene->Assets.GetAsset<MaterialAsset>(
+					Ref<MaterialAsset> ObjectMaterial = NewScene->Assets.Get<MaterialAsset>(
 						ComponentVML.Get("Material").GetAs<std::string>());
 
 					NewEntity->CreateComponent<MeshRenderer>(ObjectMesh, ObjectMaterial);

@@ -1,6 +1,9 @@
 #include "PCH/PCH.h"
 #include "Renderer.h"
 
+#include "Scene/Entity/Component/Transform/Transform.h"
+#include "Scene/Entity/Component/PointLight/PointLight.h"
+
 namespace Volund
 {
 	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<PointLightData>& PointLights)
@@ -9,6 +12,21 @@ namespace Volund
 		_SceneData.ViewProjMatrix = ViewProjMatrix;
 		_SceneData.EyePosition = EyePosition;
 		_SceneData.PointLights = PointLights;
+
+		InScene = true;
+	}
+
+	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<Ref<PointLight>>& PointLights)
+	{
+		_SceneData = SceneData();
+		_SceneData.ViewProjMatrix = ViewProjMatrix;
+		_SceneData.EyePosition = EyePosition;
+
+		_SceneData.PointLights.reserve(PointLights.size());
+		for (auto const& Light : PointLights)
+		{
+			_SceneData.PointLights.push_back({ Light->Color, Light->GetEntity()->GetComponent<Transform>()->Position });
+		}
 
 		InScene = true;
 	}
@@ -67,7 +85,7 @@ namespace Volund
 		_SceneData.Submissions.push_back(NewSubmission);
 	}
 
-	void Renderer::SetAPI(const Ref<RenderingAPI>& API)
+	void Renderer::Init(const Ref<RenderingAPI>& API)
 	{
 		_API = API;
 	}

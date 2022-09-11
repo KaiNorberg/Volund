@@ -24,7 +24,7 @@ void EditorLayer::OnAttach()
 	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
-	Renderer::SetAPI(RenderingAPI::Create());
+	Renderer::Init(RenderingAPI::Create());
 
 #ifndef LOAD_SCENE
 
@@ -78,14 +78,7 @@ void EditorLayer::OnUpdate(TimeStep TS)
 	{
 		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix(this->_Context->GetWindow()->GetAspectRatio()) * ActiveCamera->GetViewMatrix();
 		Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
-
-		auto const& PointLightView = this->_LoadedScene->ComponentView<PointLight>();
-		std::vector<PointLightData> PointLights;
-		PointLights.reserve(PointLightView.size());
-		for (auto const& Light : PointLightView)
-		{
-			PointLights.push_back({Light->Color, Light->GetEntity()->GetComponent<Transform>()->Position});
-		}
+		auto& PointLights = this->_LoadedScene->ComponentView<PointLight>();
 
 		Renderer::BeginScene(ViewProjMatrix, EyePosition, PointLights);
 

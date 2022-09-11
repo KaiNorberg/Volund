@@ -12,6 +12,7 @@
 
 namespace Volund
 {
+	class PointLight;
 	struct PointLightData
 	{
 		RGB Color;
@@ -22,12 +23,15 @@ namespace Volund
 	{
 	public:
 
-		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<PointLightData>& PointLights);
+		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<PointLightData>& PointLights);	
+
+		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<Ref<PointLight>>& PointLights);
+
 		static void EndScene(const Ref<Context>& RenderingContext);
 
 		static void Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial);
 
-		static void SetAPI(const Ref<RenderingAPI>& API);
+		static void Init(const Ref<RenderingAPI>& API);
 
 	private:		
 		

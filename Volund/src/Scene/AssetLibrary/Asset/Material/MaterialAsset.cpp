@@ -18,7 +18,7 @@ namespace Volund
 
 		VML MaterialVML(FilePath);
 
-		Ref<Shader> ObjectShader = Parent->GetAsset<ShaderAsset>(MaterialVML.Get("Shader").GetAs<std::string>())->Get();
+		Ref<Shader> ObjectShader = Parent->Get<ShaderAsset>(MaterialVML.Get("Shader").GetAs<std::string>())->Get();
 
 		this->_Material = Material::Create(ObjectShader);
 	}
