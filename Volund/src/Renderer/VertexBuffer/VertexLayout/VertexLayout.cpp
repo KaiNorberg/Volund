@@ -34,16 +34,16 @@ namespace Volund
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-			{
-				this->FloatID = GL_FLOAT;
-				this->IntID = GL_INT;
-			}
-			break;
+		{
+			this->FloatID = GL_FLOAT;
+			this->IntID = GL_INT;
+		}
+		break;
 		default:
-			{
-				VOLUND_ERROR("Creating a VertexAttribute without a specified GraphicsAPI!");
-			}
-			break;
+		{
+			VOLUND_ERROR("Creating a VertexAttribute without a specified GraphicsAPI!");
+		}
+		break;
 		}
 	}
 }

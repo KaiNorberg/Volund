@@ -13,6 +13,8 @@ void EditorLayer::LoadScene(Ref<Scene> NewScene)
 
 void EditorLayer::OnAttach()
 {
+	auto NewAPI = RenderingAPI::Create(RenderingAPI::API::OPENGL);
+
 	auto NewEventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
 	this->_Window = Ref<Window>(new Window(NewEventDispatcher, 500, 500, false));
 
@@ -24,7 +26,7 @@ void EditorLayer::OnAttach()
 	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
-	Renderer::Init(RenderingAPI::Create());
+	Renderer::Init(NewAPI);
 
 #ifndef LOAD_SCENE
 

@@ -1,7 +1,5 @@
 #pragma once
 
-#define VOLUND_CONFIG "Standard/Config.vml"
-
 #define VOLUND_ASSERT(Check, ...) if (!(bool)(Check)) { VOLUND_ERROR(__VA_ARGS__); }
 
 #define VOLUND_KEY_AMOUNT 348

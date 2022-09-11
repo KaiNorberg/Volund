@@ -18,16 +18,16 @@ namespace Volund
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-			{
-				return std::make_shared<OpenGLShader>(FilePath);
-			}
-			break;
+		{
+			return std::make_shared<OpenGLShader>(FilePath);
+		}
+		break;
 		default:
-			{
-				VOLUND_ERROR("Creating a Shader without a specified GraphicsAPI!");
-				return nullptr;
-			}
-			break;
+		{
+			VOLUND_ERROR("Creating a Shader without a specified GraphicsAPI!");
+			return nullptr;
+		}
+		break;
 		}
 	}
 

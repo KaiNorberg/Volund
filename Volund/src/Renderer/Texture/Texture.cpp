@@ -29,16 +29,16 @@ namespace Volund
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-			{
-				return std::make_shared<OpenGLTexture>(FilePath);
-			}
-			break;
+		{
+			return std::make_shared<OpenGLTexture>(FilePath);
+		}
+		break;
 		default:
-			{
-				VOLUND_ERROR("Creating a Texture2D without a specified GraphicsAPI!");
-				return nullptr;
-			}
-			break;
+		{
+			VOLUND_ERROR("Creating a Texture2D without a specified GraphicsAPI!");
+			return nullptr;
+		}
+		break;
 		}
 	}
 }

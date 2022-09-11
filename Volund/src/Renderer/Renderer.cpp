@@ -88,5 +88,6 @@ namespace Volund
 	void Renderer::Init(const Ref<RenderingAPI>& API)
 	{
 		_API = API;
+		_API->Init();
 	}
 }

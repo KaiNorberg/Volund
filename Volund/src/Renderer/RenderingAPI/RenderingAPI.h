@@ -1,8 +1,5 @@
 #pragma once
 
-#define VOLUND_GRAPHICSAPI_NONE "None"
-#define VOLUND_GRAPHICSAPI_OPENGL "OpenGL"
-
 #include "Renderer/Mesh/Mesh.h"
 
 namespace Volund
@@ -10,7 +7,7 @@ namespace Volund
 	class RenderingAPI
 	{
 	public:
-		enum class API
+		enum API
 		{
 			NONE,
 			OPENGL
@@ -24,12 +21,14 @@ namespace Volund
 
 		virtual void DrawIndexed(const Ref<Mesh>& VArray) = 0;
 
+		virtual void Init() = 0;
+
 		static API GetSelectedAPI();
 
-		static Ref<RenderingAPI> Create();
+		static Ref<RenderingAPI> Create(API SelectedAPI);
 
 	private:
-		static std::unordered_map<std::string, API> _APINames;
-		static API _SelectedAPI;
+
+		static inline API _SelectedAPI;
 	};
 }

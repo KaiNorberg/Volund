@@ -18,16 +18,16 @@ namespace Volund
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
-			{
-				return std::make_shared<OpenGLIndexBuffer>(Indices, Size);
-			}
-			break;
+		{
+			return std::make_shared<OpenGLIndexBuffer>(Indices, Size);
+		}
+		break;
 		default:
-			{
-				VOLUND_ERROR("Creating a IndexBuffer without a specified GraphicsAPI!");
-				return nullptr;
-			}
-			break;
+		{
+			VOLUND_ERROR("Creating a IndexBuffer without a specified GraphicsAPI!");
+			return nullptr;
+		}
+		break;
 		}
 	}
 }

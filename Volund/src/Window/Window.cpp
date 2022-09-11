@@ -13,221 +13,220 @@ namespace Volund
 		switch (msg)
 		{
 		case WM_CREATE:
-			{
-			}
-			break;
+		{
+		}
+		break;
 		case WM_KEYDOWN:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
 			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, true));
+				break;
 			}
-			break;
+
+			Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, true));
+		}
+		break;
 		case WM_KEYUP:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
 			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, false));
+				break;
 			}
-			break;
+
+			Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, false));
+		}
+		break;
 		case WM_MOUSEMOVE:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr || GetFocus() != hwnd)
 			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr || GetFocus() != hwnd)
-				{
-					break;
-				}
-
-				int32_t xPos = GET_X_LPARAM(lparam);
-				int32_t yPos = GET_Y_LPARAM(lparam);
-
-				if (Data->CaptureMouse)
-				{
-					static int32_t VirtualXPos = 0;
-					static int32_t VirtualYPos = 0;
-
-					RECT ScreenSpaceRect;
-					GetWindowRect(hwnd, &ScreenSpaceRect);
-					ClipCursor(&ScreenSpaceRect);
-
-					RECT WindowRect = {};
-					GetClientRect(hwnd, &WindowRect);
-
-					int32_t MiddleX = WindowRect.left + (WindowRect.right - WindowRect.left) / 2;
-					int32_t MiddleY = WindowRect.top + (WindowRect.bottom - WindowRect.top) / 2;
-
-					POINT WindowCenter = {MiddleX, MiddleY};
-					ClientToScreen(hwnd, &WindowCenter);
-					SetCursorPos(WindowCenter.x, WindowCenter.y);
-
-					VirtualXPos += xPos - MiddleX;
-					VirtualYPos += yPos - MiddleY;
-
-					Data->Dispatcher->Dispatch(MouseMoveEvent(VirtualXPos, VirtualYPos));
-				}
-				else
-				{
-					Data->Dispatcher->Dispatch(MouseMoveEvent(xPos, yPos));
-				}
+				break;
 			}
-			break;
-		case WM_LBUTTONDOWN:
+
+			int32_t xPos = GET_X_LPARAM(lparam);
+			int32_t yPos = GET_Y_LPARAM(lparam);
+
+			if (Data->CaptureMouse)
 			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+				static int32_t VirtualXPos = 0;
+				static int32_t VirtualYPos = 0;
 
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true));
-			}
-			break;
-		case WM_LBUTTONUP:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false));
-			}
-			break;
-		case WM_MBUTTONDOWN:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true));
-			}
-			break;
-		case WM_MBUTTONUP:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false));
-			}
-			break;
-		case WM_RBUTTONDOWN:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true));
-			}
-			break;
-		case WM_RBUTTONUP:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false));
-			}
-			break;
-		case WM_MOUSEWHEEL:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
-
-				Data->Dispatcher->Dispatch(ScrollEvent(0, (uint32_t)zDelta));
-			}
-			break;
-		case WM_SIZE:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
+				RECT ScreenSpaceRect;
+				GetWindowRect(hwnd, &ScreenSpaceRect);
+				ClipCursor(&ScreenSpaceRect);
 
 				RECT WindowRect = {};
 				GetClientRect(hwnd, &WindowRect);
 
-				Data->Width = (uint64_t)WindowRect.right;
-				Data->Height = (uint64_t)WindowRect.bottom;
+				int32_t MiddleX = WindowRect.left + (WindowRect.right - WindowRect.left) / 2;
+				int32_t MiddleY = WindowRect.top + (WindowRect.bottom - WindowRect.top) / 2;
 
-				Data->Dispatcher->Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
+				POINT WindowCenter = {MiddleX, MiddleY};
+				ClientToScreen(hwnd, &WindowCenter);
+				SetCursorPos(WindowCenter.x, WindowCenter.y);
+
+				VirtualXPos += xPos - MiddleX;
+				VirtualYPos += yPos - MiddleY;
+
+				Data->Dispatcher->Dispatch(MouseMoveEvent(VirtualXPos, VirtualYPos));
 			}
-			break;
+			else
+			{
+				Data->Dispatcher->Dispatch(MouseMoveEvent(xPos, yPos));
+			}
+		}
+		break;
+		case WM_LBUTTONDOWN:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true));
+		}
+		break;
+		case WM_LBUTTONUP:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false));
+		}
+		break;
+		case WM_MBUTTONDOWN:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true));
+		}
+		break;
+		case WM_MBUTTONUP:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false));
+		}
+		break;
+		case WM_RBUTTONDOWN:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true));
+		}
+		break;
+		case WM_RBUTTONUP:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false));
+		}
+		break;
+		case WM_MOUSEWHEEL:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
+
+			Data->Dispatcher->Dispatch(ScrollEvent(0, (uint32_t)zDelta));
+		}
+		break;
+		case WM_SIZE:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
+			{
+				break;
+			}
+
+			RECT WindowRect = {};
+			GetClientRect(hwnd, &WindowRect);
+
+			Data->Width = (uint64_t)WindowRect.right;
+			Data->Height = (uint64_t)WindowRect.bottom;
+
+			Data->Dispatcher->Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
+		}
+		break;
 		case WM_SETFOCUS:
-			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-				if (!Data->ShowMouse)
+			if (!Data->ShowMouse)
+			{
+				while (ShowCursor(false) >= -1)
 				{
-					while (ShowCursor(false) >= -1)
-					{
-					}
 				}
 			}
-			break;
+		}
+		break;
 		case WM_KILLFOCUS:
+		{
+			ClipCursor(nullptr);
+
+			while (ShowCursor(true) < 0)
 			{
-				ClipCursor(nullptr);
-
-				while (ShowCursor(true) < 0)
-				{
-				}
 			}
-			break;
-
+		}
+		break;
 		case WM_MOVE:
-			{
-			}
-			break;
+		{
+		}
+		break;
 		case WM_CLOSE:
+		{
+			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+			if (Data == nullptr)
 			{
-				WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-				if (Data == nullptr)
-				{
-					break;
-				}
-
-				Data->Dispatcher->Dispatch(WindowCloseEvent());
+				break;
 			}
-			break;
+
+			Data->Dispatcher->Dispatch(WindowCloseEvent());
+		}
+		break;
 		case WM_DESTROY:
-			{
-			}
-			break;
+		{
+		}
+		break;
 		default:
 			return DefWindowProc(hwnd, msg, wparam, lparam);
 		}
