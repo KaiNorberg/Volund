@@ -56,7 +56,7 @@ namespace Volund
 
 		OpenGLShader() = default;
 
-		OpenGLShader(const std::string& FilePath);
+		OpenGLShader(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource);
 
 		~OpenGLShader() override;
 

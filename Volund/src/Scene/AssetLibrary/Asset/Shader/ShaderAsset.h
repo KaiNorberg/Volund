@@ -13,6 +13,7 @@ namespace Volund
 		ShaderAsset(AssetLibrary* Parent, const std::string& FilePath);
 
 	private:
+
 		Ref<Shader> _Shader;
 	};
 }

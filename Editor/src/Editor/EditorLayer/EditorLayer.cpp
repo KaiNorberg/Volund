@@ -4,7 +4,7 @@
 
 #include "VML/VML.h"
 
-#define LOAD_SCENE
+//#define LOAD_SCENE
 
 void EditorLayer::LoadScene(Ref<Scene> NewScene)
 {

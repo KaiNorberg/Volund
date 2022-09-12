@@ -8,7 +8,6 @@ namespace Volund
 	class Shader
 	{
 	public:
-		std::string GetFilePath();
 
 		virtual void Bind() = 0;
 
@@ -57,22 +56,11 @@ namespace Volund
 		/// </summary>
 		virtual void SetMat4x4(const std::string& Name, const Mat4x4& Value, bool Transpose = false) = 0;
 
-		static Ref<Shader> Create(const std::string& FilePath);
+		static Ref<Shader> Create(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource);
 
 		virtual ~Shader() = default;
 
 	protected:
-		struct Source
-		{
-			std::string VertexSource;
 
-			std::string FragmentSource;
-
-			std::string GeometrySource;
-		};
-
-		Source ParseShader(const std::string& FilePath) const;
-
-		std::string _FilePath;
 	};
 } //namespace Volund

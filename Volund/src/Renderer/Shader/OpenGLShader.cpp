@@ -106,36 +106,28 @@ namespace Volund
 		return UniformLocation;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& FilePath)
+	OpenGLShader::OpenGLShader(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource)
 	{
-		if (this->ID != NULL)
-		{
-			VOLUND_INFO("Shader (%s) already initialized.", FilePath.c_str());
-			return;
-		}
-
-		Source Source = this->ParseShader(FilePath);
-
 		uint32_t program = glCreateProgram();
 
 		uint32_t vs = NULL;
-		if (Source.VertexSource.length() > 1)
+		if (VertexSource.length() > 1)
 		{
-			vs = CompileShader(GL_VERTEX_SHADER, Source.VertexSource);
+			vs = CompileShader(GL_VERTEX_SHADER, VertexSource.c_str());
 			glAttachShader(program, vs);
 		}
 
 		uint32_t fs = NULL;
-		if (Source.FragmentSource.length() > 1)
+		if (FragmentSource.length() > 1)
 		{
-			fs = CompileShader(GL_FRAGMENT_SHADER, Source.FragmentSource);
+			fs = CompileShader(GL_FRAGMENT_SHADER, FragmentSource.c_str());
 			glAttachShader(program, fs);
 		}
 
 		uint32_t gs = NULL;
-		if (Source.GeometrySource.length() > 1)
+		if (GeometrySource.length() > 1)
 		{
-			gs = CompileShader(GL_GEOMETRY_SHADER, Source.GeometrySource);
+			gs = CompileShader(GL_GEOMETRY_SHADER, GeometrySource.c_str());
 			glAttachShader(program, gs);
 		}
 
@@ -158,7 +150,6 @@ namespace Volund
 		}
 
 		this->ID = program;
-		this->_FilePath = FilePath;
 	}
 
 	OpenGLShader::~OpenGLShader()
