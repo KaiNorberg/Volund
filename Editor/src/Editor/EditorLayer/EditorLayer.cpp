@@ -23,7 +23,7 @@ void EditorLayer::OnAttach()
 	this->_Window->SetFocus();
 
 	this->_Context = Context::Create(this->_Window);
-	this->_Context->SetVSync(false);
+	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
 	Renderer::Init(NewAPI);

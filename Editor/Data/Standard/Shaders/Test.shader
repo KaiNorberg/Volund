@@ -32,6 +32,8 @@ uniform int PointLightAmount;
 uniform PointLight PointLights[64];
 
 uniform vec3 EyePosition;
+
+//Material Uniforms
 uniform vec3 Color;
 
 in vec3 Position;
