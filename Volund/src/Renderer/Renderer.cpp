@@ -39,45 +39,72 @@ namespace Volund
 
 		_API->Clear();
 
-		_API->SetViewPort(0, 0, (int32_t)RenderingContext->GetWindow()->GetSize().x,
-		                  (int32_t)RenderingContext->GetWindow()->GetSize().y);
+		_API->SetViewPort(0, 0, (int32_t)RenderingContext->GetWindow()->GetSize().x, (int32_t)RenderingContext->GetWindow()->GetSize().y);
+
+		Discriminate(_SceneData.Submissions);
+		Sort(_SceneData.Submissions);
+
+		Shader* PreviousShader = nullptr;
+		Material* PreviousMaterial = nullptr;
 
 		for (Submission Data : _SceneData.Submissions)
 		{
-			Data.ObjectMaterial->UpdateShader();
 			Ref<Shader> ObjectShader = Data.ObjectMaterial->GetShader();
 
-			if (ObjectShader->HasUniform("PointLights[0].Color"))
+			if (PreviousShader != ObjectShader.get())
 			{
-				ObjectShader->SetInt("PointLightAmount", (int32_t)_SceneData.PointLights.size());
-
-				for (uint64_t i = 0; i < _SceneData.PointLights.size(); i++)
+				if (PreviousMaterial != Data.ObjectMaterial.get())
 				{
-					std::string Uniform = "PointLights[" + std::to_string(i) + "].";
-					ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);
-					ObjectShader->SetVec3(Uniform + "Position", _SceneData.PointLights[i].Position);
+					Data.ObjectMaterial->UpdateShader();
+
+					PreviousMaterial = Data.ObjectMaterial.get();
 				}
+
+				if (ObjectShader->HasUniform("PointLights[0].Color"))
+				{
+					ObjectShader->SetInt("PointLightAmount", (int32_t)_SceneData.PointLights.size());
+
+					for (uint64_t i = 0; i < _SceneData.PointLights.size(); i++)
+					{
+						std::string Uniform = "PointLights[" + std::to_string(i) + "].";
+						ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);
+						ObjectShader->SetVec3(Uniform + "Position", _SceneData.PointLights[i].Position);
+					}
+				}
+
+				if (ObjectShader->HasUniform("ViewProjMatrix"))
+				{
+					ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
+				}
+
+				if (ObjectShader->HasUniform("EyePosition"))
+				{
+					ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
+				}
+
+				PreviousShader = ObjectShader.get();
 			}
 
-			ObjectShader->SetMat4x4("ModelMatrix", Data.ModelMatrix);
-			ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
-			ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
+			if (ObjectShader->HasUniform("ModelMatrix"))
+			{
+				ObjectShader->SetMat4x4("ModelMatrix", Data.ModelMatrix);
+			}
 
 			Data.ObjectMesh->Bind();
 			_API->DrawIndexed(Data.ObjectMesh);
 		}
 
-		//_SceneData = SceneData();
 		RenderingContext->Flush();
 
 		InScene = false;
 	}
 
-	void Renderer::Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial)
+	void Renderer::Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination)
 	{
 		VOLUND_ASSERT(InScene, "Attempting to push a Submission to the Renderer while outside of a Renderer Scene!");
 
 		Submission NewSubmission = Submission();
+		NewSubmission.AllowDiscrimination = AllowDiscrimination;
 		NewSubmission.ModelMatrix = ModelMatrix;
 		NewSubmission.ObjectMesh = ObjectMesh;
 		NewSubmission.ObjectMaterial = ObjectMaterial;
@@ -89,5 +116,15 @@ namespace Volund
 	{
 		_API = API;
 		_API->Init();
+	}
+
+	void Renderer::Discriminate(std::vector<Submission>& Submissions)
+	{
+		//TODO
+	}
+
+	void Renderer::Sort(std::vector<Submission>& Submissions)
+	{
+		//TODO
 	}
 }

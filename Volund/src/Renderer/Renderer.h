@@ -29,7 +29,7 @@ namespace Volund
 
 		static void EndScene(const Ref<Context>& RenderingContext);
 
-		static void Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial);
+		static void Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination = true);
 
 		static void Init(const Ref<RenderingAPI>& API);
 
@@ -37,6 +37,7 @@ namespace Volund
 		
 		struct Submission
 		{
+			bool AllowDiscrimination;
 			Mat4x4 ModelMatrix = Mat4x4(1.0f);
 			Ref<Mesh> ObjectMesh;
 			Ref<Material> ObjectMaterial;
@@ -48,7 +49,12 @@ namespace Volund
 			Vec3 EyePosition = Vec3(1.0f);
 			std::vector<PointLightData> PointLights;
 			std::vector<Submission> Submissions;
+
 		} _SceneData;
+
+		static void Discriminate(std::vector<Submission>& Submissions);
+
+		static void Sort(std::vector<Submission>& Submissions);
 
 		static inline bool InScene = false;
 	
