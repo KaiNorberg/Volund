@@ -29,7 +29,7 @@ namespace Volund
 		glUniform1f(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetDouble(const std::string& Name, float Value)
+	void OpenGLShader::SetDouble(const std::string& Name, double Value)
 	{
 		this->Bind();
 		glUniform1d(this->GetUniformLocation(Name), Value);

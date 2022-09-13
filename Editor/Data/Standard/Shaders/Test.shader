@@ -32,6 +32,7 @@ uniform int PointLightAmount;
 uniform PointLight PointLights[64];
 
 uniform vec3 EyePosition;
+uniform vec3 Color;
 
 in vec3 Position;
 in vec2 TextureCoord;
@@ -52,7 +53,7 @@ void main()
 
         float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
 
-        Result += (Diffuse + Specular) * PointLights[i].Color;
+        Result += (Diffuse + Specular) * PointLights[i].Color * Color;
     }
 
     FragColor = vec4(Result, 1.0f);

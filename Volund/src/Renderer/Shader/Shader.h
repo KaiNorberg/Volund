@@ -29,7 +29,7 @@ namespace Volund
 		/// <summary>
 		/// Sets a double shader uniform.
 		/// </summary>
-		virtual void SetDouble(const std::string& Name, float Value) = 0;
+		virtual void SetDouble(const std::string& Name, double Value) = 0;
 
 		/// <summary>
 		/// Sets a vector2 shader uniform.

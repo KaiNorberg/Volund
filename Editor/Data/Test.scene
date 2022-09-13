@@ -15,7 +15,7 @@ Entities
 		}
 		Component1
 		{
-			Color [ 0.000000 0.000000 1.000000 ]
+			Color [ 1.000000 1.000000 1.000000 ]
 			Type [ PointLight ]
 		}
 	}
@@ -70,7 +70,7 @@ Entities
 		}
 		Component1
 		{
-			Color [ 1.000000 0.000000 0.000000 ]
+			Color [ 1.000000 1.000000 1.000000 ]
 			Type [ PointLight ]
 		}
 	}

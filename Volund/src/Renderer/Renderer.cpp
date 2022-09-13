@@ -44,11 +44,9 @@ namespace Volund
 
 		for (Submission Data : _SceneData.Submissions)
 		{
+			Data.ObjectMaterial->UpdateShader();
 			Ref<Shader> ObjectShader = Data.ObjectMaterial->GetShader();
-			ObjectShader->Bind();
 
-			ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
-			ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
 			if (ObjectShader->HasUniform("PointLights[0].Color"))
 			{
 				ObjectShader->SetInt("PointLightAmount", (int32_t)_SceneData.PointLights.size());
@@ -62,6 +60,8 @@ namespace Volund
 			}
 
 			ObjectShader->SetMat4x4("ModelMatrix", Data.ModelMatrix);
+			ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
+			ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
 
 			Data.ObjectMesh->Bind();
 			_API->DrawIndexed(Data.ObjectMesh);

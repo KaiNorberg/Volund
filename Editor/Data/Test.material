@@ -1,1 +1,10 @@
 Shader [ Standard/Shaders/Test.shader ]
+
+Values
+{
+	Color
+	{
+		Type [ RGB ]
+		Value [ 1.0, 0.0, 0.0 ]
+	}
+}

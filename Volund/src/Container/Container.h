@@ -3,7 +3,7 @@
 namespace Volund
 {
 	/// <summary>
-	/// A container that can store any type derived from T.
+	/// A container that can store any type that can be type cast from T.
 	/// </summary>
 	template<typename T>
 	class Container
@@ -17,16 +17,16 @@ namespace Volund
 		void Erase(uint64_t Index = 0);
 
 		template <typename D>
-		Ref<D> Get(uint64_t Index = 0);
+		Ref<D> Get(uint64_t Index = 0) const;
 
 		template <typename D>
-		bool Contains(uint64_t Index = 0);
+		bool Contains(uint64_t Index = 0) const;
 
 		template <typename D>
-		const std::vector<Ref<T>>& View();
+		const std::vector<Ref<T>>& View() const;
 
 		template <typename D>
-		uint64_t Size();
+		uint64_t Size() const;
 
 		std::vector<std::vector<Ref<T>>>::iterator begin();
 		std::vector<std::vector<Ref<T>>>::iterator end();
@@ -37,7 +37,7 @@ namespace Volund
 	private:
 
 		template <typename D>
-		uint64_t GetTypeID();
+		uint64_t GetTypeID() const;
 
 		static inline uint64_t _NewTypeID = 0;
 
@@ -71,7 +71,7 @@ namespace Volund
 
 	template <typename T>
 	template <typename D>
-	inline Ref<D> Container<T>::Get(uint64_t Index)
+	inline Ref<D> Container<T>::Get(uint64_t Index) const
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
@@ -85,7 +85,7 @@ namespace Volund
 
 	template <typename T>
 	template <typename D>
-	inline bool Container<T>::Contains(uint64_t Index)
+	inline bool Container<T>::Contains(uint64_t Index) const
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
@@ -94,7 +94,7 @@ namespace Volund
 
 	template<typename T>
 	template <typename D>
-	inline const std::vector<Ref<T>>& Container<T>::View()
+	inline const std::vector<Ref<T>>& Container<T>::View() const
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
@@ -108,7 +108,7 @@ namespace Volund
 
 	template <typename T>
 	template <typename D>
-	inline uint64_t Container<T>::Size()
+	inline uint64_t Container<T>::Size() const
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
@@ -122,7 +122,7 @@ namespace Volund
 
 	template<typename T>
 	template <typename D>
-	inline uint64_t Container<T>::GetTypeID()
+	inline uint64_t Container<T>::GetTypeID() const
 	{
 		static uint64_t ID = _NewTypeID++;
 

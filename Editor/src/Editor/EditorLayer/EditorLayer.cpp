@@ -23,7 +23,7 @@ void EditorLayer::OnAttach()
 	this->_Window->SetFocus();
 
 	this->_Context = Context::Create(this->_Window);
-	this->_Context->SetVSync(true);
+	this->_Context->SetVSync(false);
 	this->_Context->MakeCurrent();
 
 	Renderer::Init(NewAPI);
@@ -49,10 +49,10 @@ void EditorLayer::OnAttach()
 	CubeEnity->CreateComponent<MeshRenderer>(TeapotMesh, TestMaterial);
 
 	Ref<Entity> RedPointLight = NewScene->CreateEntity("RedPointLight", Vec3(10.0f, 5.0f, 0.0f));
-	RedPointLight->CreateComponent<PointLight>(RGB(1.0f, 0.0f, 0.0f));
+	RedPointLight->CreateComponent<PointLight>(RGB(1.0f, 1.0f, 1.0f));
 
 	Ref<Entity> BluePointLight = NewScene->CreateEntity("BluePointLight", Vec3(-10.0f, 5.0f, 0.0f));
-	BluePointLight->CreateComponent<PointLight>(RGB(0.0f, 0.0f, 1.0f));
+	BluePointLight->CreateComponent<PointLight>(RGB(1.0f, 1.0f, 1.0f));
 
 	NewScene->Serialize("Test.scene");
 
