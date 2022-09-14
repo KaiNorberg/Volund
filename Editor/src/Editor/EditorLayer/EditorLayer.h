@@ -6,8 +6,6 @@ class EditorLayer : public Volund::Layer
 {
 public:
 
-	void LoadScene(Ref<Scene> NewScene);
-
 	void OnAttach() override;
 
 	void OnDetach() override;
@@ -22,6 +20,8 @@ private:
 
 	Ref<Context> _Context;
 
-	Ref<Scene> _LoadedScene;
+	Ref<Scene> _Scene;
+
+	bool PlayScene;
 };
 
