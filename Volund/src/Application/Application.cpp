@@ -34,8 +34,6 @@ namespace Volund
 
 		while (this->_ShouldRun)
 		{
-			Timer T;
-
 			std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - OldTime;
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());

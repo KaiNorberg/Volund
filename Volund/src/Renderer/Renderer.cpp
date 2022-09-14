@@ -51,38 +51,38 @@ namespace Volund
 		{
 			Ref<Shader> ObjectShader = Data.ObjectMaterial->GetShader();
 
-			if (PreviousShader != ObjectShader.get())
+			if (PreviousMaterial != Data.ObjectMaterial.get())
 			{
-				if (PreviousMaterial != Data.ObjectMaterial.get())
+				Data.ObjectMaterial->UpdateShader();
+
+				if (PreviousShader != ObjectShader.get())
 				{
-					Data.ObjectMaterial->UpdateShader();
-
-					PreviousMaterial = Data.ObjectMaterial.get();
-				}
-
-				if (ObjectShader->HasUniform("PointLights[0].Color"))
-				{
-					ObjectShader->SetInt("PointLightAmount", (int32_t)_SceneData.PointLights.size());
-
-					for (uint64_t i = 0; i < _SceneData.PointLights.size(); i++)
+					if (ObjectShader->HasUniform("PointLights[0].Color"))
 					{
-						std::string Uniform = "PointLights[" + std::to_string(i) + "].";
-						ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);
-						ObjectShader->SetVec3(Uniform + "Position", _SceneData.PointLights[i].Position);
+						ObjectShader->SetInt("PointLightAmount", (int32_t)_SceneData.PointLights.size());
+
+						for (uint64_t i = 0; i < _SceneData.PointLights.size(); i++)
+						{
+							std::string Uniform = "PointLights[" + std::to_string(i) + "].";
+							ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);
+							ObjectShader->SetVec3(Uniform + "Position", _SceneData.PointLights[i].Position);
+						}
 					}
+
+					if (ObjectShader->HasUniform("ViewProjMatrix"))
+					{
+						ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
+					}
+
+					if (ObjectShader->HasUniform("EyePosition"))
+					{
+						ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
+					}
+
+					PreviousShader = ObjectShader.get();
 				}
 
-				if (ObjectShader->HasUniform("ViewProjMatrix"))
-				{
-					ObjectShader->SetMat4x4("ViewProjMatrix", _SceneData.ViewProjMatrix);
-				}
-
-				if (ObjectShader->HasUniform("EyePosition"))
-				{
-					ObjectShader->SetVec3("EyePosition", _SceneData.EyePosition);
-				}
-
-				PreviousShader = ObjectShader.get();
+				PreviousMaterial = Data.ObjectMaterial.get();
 			}
 
 			if (ObjectShader->HasUniform("ModelMatrix"))

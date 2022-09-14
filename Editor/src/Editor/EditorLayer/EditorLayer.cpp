@@ -23,7 +23,7 @@ void EditorLayer::OnAttach()
 	this->_Window->SetFocus();
 
 	this->_Context = Context::Create(this->_Window);
-	this->_Context->SetVSync(false);
+	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
 	Renderer::Init(NewAPI);
@@ -36,20 +36,18 @@ void EditorLayer::OnAttach()
 	auto TeapotMesh = NewScene->Assets.Create<MeshAsset>("Standard/Models/Teapot.obj");
 	auto CubeMesh = NewScene->Assets.Create<MeshAsset>("Standard/Models/Cube.obj");
 
-	auto TestMaterial = NewScene->Assets.Create<MaterialAsset>("Test.material");
+	auto RedMaterial = NewScene->Assets.Create<MaterialAsset>("Red.material");
+	auto BlueMaterial = NewScene->Assets.Create<MaterialAsset>("Blue.material");
 
 	Ref<Entity> CameraEntity = NewScene->CreateEntity("CameraEntity", Vec3(0.0f, 2.0f, 25.0f));
 	CameraEntity->CreateComponent<Camera>()->SetActive();
 	CameraEntity->CreateComponent<CameraMovement>(5.0f, 0.4f);
 
-	for (int i = 0; i < 100; i++)
-	{
-		Ref<Entity> CubeEnity = NewScene->CreateEntity("CubeEntity" + std::to_string(i), Vec3(-3.0f, -100.0f + i * 2, 0.0f));
-		CubeEnity->CreateComponent<MeshRenderer>(TeapotMesh, TestMaterial);
-	}
+	Ref<Entity> CubeEnity = NewScene->CreateEntity("CubeEntity", Vec3(-3.0f, 0.0f, 0.0f));
+	CubeEnity->CreateComponent<MeshRenderer>(CubeMesh, RedMaterial);
 
 	Ref<Entity> TeapotEnity = NewScene->CreateEntity("TeapotEntity", Vec3(3.0f, 0.0f, 0.0f));
-	TeapotEnity->CreateComponent<MeshRenderer>(TeapotMesh, TestMaterial);
+	TeapotEnity->CreateComponent<MeshRenderer>(TeapotMesh, BlueMaterial);
 
 	Ref<Entity> RedPointLight = NewScene->CreateEntity("RedPointLight", Vec3(10.0f, 5.0f, 0.0f));
 	RedPointLight->CreateComponent<PointLight>(RGB(1.0f, 1.0f, 1.0f));
