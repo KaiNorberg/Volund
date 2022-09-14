@@ -18,6 +18,7 @@
 #include <fstream>
 #include <future>
 #include <memory>
+#include <string_view>
 
 #include "Math/Math.h"
 

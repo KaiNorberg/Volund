@@ -37,7 +37,7 @@ namespace Volund
 		
 		struct Submission
 		{
-			bool AllowDiscrimination;
+			bool AllowDiscrimination = false;
 			Mat4x4 ModelMatrix = Mat4x4(1.0f);
 			Ref<Mesh> ObjectMesh;
 			Ref<Material> ObjectMaterial;
@@ -56,7 +56,7 @@ namespace Volund
 
 		static void Sort(std::vector<Submission>& Submissions);
 
-		static inline bool InScene = false;
+		static inline bool _InScene = false;
 	
 		static inline Ref<RenderingAPI> _API;
 	};

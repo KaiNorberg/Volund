@@ -59,7 +59,7 @@ namespace Volund
 		abort();
 	}
 
-	Logger::Logger(const std::string& Name)
+	Logger::Logger(std::string_view Name)
 	{
 		this->_Name = Name;
 	}

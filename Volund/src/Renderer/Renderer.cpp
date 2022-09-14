@@ -13,7 +13,7 @@ namespace Volund
 		_SceneData.EyePosition = EyePosition;
 		_SceneData.PointLights = PointLights;
 
-		InScene = true;
+		_InScene = true;
 	}
 
 	void Renderer::BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<Ref<PointLight>>& PointLights)
@@ -28,7 +28,7 @@ namespace Volund
 			_SceneData.PointLights.push_back({ Light->Color, Light->GetEntity()->GetComponent<Transform>()->Position });
 		}
 
-		InScene = true;
+		_InScene = true;
 	}
 
 	void Renderer::EndScene(const Ref<Context>& RenderingContext)
@@ -96,12 +96,12 @@ namespace Volund
 
 		RenderingContext->Flush();
 
-		InScene = false;
+		_InScene = false;
 	}
 
 	void Renderer::Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination)
 	{
-		VOLUND_ASSERT(InScene, "Attempting to push a Submission to the Renderer while outside of a Renderer Scene!");
+		VOLUND_ASSERT(_InScene, "Attempting to push a Submission to the Renderer while outside of a Renderer Scene!");
 
 		Submission NewSubmission = Submission();
 		NewSubmission.AllowDiscrimination = AllowDiscrimination;

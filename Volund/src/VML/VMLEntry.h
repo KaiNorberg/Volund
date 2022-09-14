@@ -11,12 +11,12 @@ namespace Volund
 		template <typename T>
 		operator T() const;
 
-		const std::string& String(uint32_t Index = 0) const;
+		std::string_view String(uint32_t Index = 0) const;
 
 		template <typename T>
 		T GetAs() const;
 
-		void PushBack(const std::string& Value);
+		void PushBack(std::string_view Value);
 
 		uint32_t Size() const;
 

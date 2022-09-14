@@ -10,7 +10,7 @@ namespace Volund
 	public:
 		Ref<Texture> Get();
 
-		TextureAsset(AssetLibrary* Parent, const std::string& FilePath);
+		TextureAsset(AssetLibrary* Parent, std::string_view FilePath);
 
 	private:
 		Ref<Texture> _Texture;

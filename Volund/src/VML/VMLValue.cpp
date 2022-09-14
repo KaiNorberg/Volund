@@ -34,7 +34,12 @@ namespace Volund
 		return this->_Value;
 	}
 
-	const std::string& VMLValue::String() const
+	VMLValue::operator std::string_view() const
+	{
+		return this->_Value;
+	}
+
+	std::string_view VMLValue::String() const
 	{
 		return this->_Value;
 	}

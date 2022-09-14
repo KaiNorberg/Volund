@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-	Ref<Shader> Shader::Create(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource)
+	Ref<Shader> Shader::Create(std::string_view VertexSource, std::string_view FragmentSource, std::string_view GeometrySource)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

@@ -21,7 +21,7 @@ namespace Volund
 
 	private:
 
-		bool WGLExtensionSupported(const std::string& Name) const;
+		bool WGLExtensionSupported(std::string_view Name) const;
 
 		void* _RenderingContext = nullptr;
 	};

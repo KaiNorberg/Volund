@@ -10,7 +10,7 @@
 
 namespace Volund
 {
-	Ref<Entity> Scene::CreateEntity(const std::string& Name)
+	Ref<Entity> Scene::CreateEntity(std::string_view Name)
 	{
 		Ref<Entity> NewEntity = std::make_shared<Entity>(this, Name);
 
@@ -25,7 +25,7 @@ namespace Volund
 		return NewEntity;
 	}
 
-	Ref<Entity> Scene::CreateEntity(const std::string& Name, const Vec3& Position, const Vec3& Rotation,
+	Ref<Entity> Scene::CreateEntity(std::string_view Name, const Vec3& Position, const Vec3& Rotation,
 	                                const Vec3& Scale)
 	{
 		Ref<Entity> NewEntity = this->CreateEntity(Name);
@@ -35,7 +35,7 @@ namespace Volund
 		return NewEntity;
 	}
 
-	bool Scene::DeleteEntity(const std::string& Name)
+	bool Scene::DeleteEntity(std::string_view Name)
 	{
 		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
@@ -46,11 +46,11 @@ namespace Volund
 			}
 		}
 
-		VOLUND_ERROR("Entity not found (%s)", Name.c_str());
+		VOLUND_ERROR("Entity not found (%s)", Name.data());
 		return false;
 	}
 
-	Ref<Entity> Scene::GetEntity(const std::string& Name)
+	Ref<Entity> Scene::GetEntity(std::string_view Name)
 	{
 		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
@@ -60,11 +60,11 @@ namespace Volund
 			}
 		}
 
-		VOLUND_ERROR("Entity not found (%s)", Name.c_str());
+		VOLUND_ERROR("Entity not found (%s)", Name.data());
 		return nullptr;
 	}
 
-	bool Scene::HasEntity(const std::string& Name) const
+	bool Scene::HasEntity(std::string_view Name) const
 	{
 		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
@@ -104,7 +104,7 @@ namespace Volund
 
 	}
 
-	Ref<Scene> Scene::Deserialize(const std::string& FilePath)
+	Ref<Scene> Scene::Deserialize(std::string_view FilePath)
 	{
 		VML SceneVML(FilePath);
 
@@ -125,7 +125,7 @@ namespace Volund
 
 			for (auto& [ComponentName, ComponentVML] : EntityVML)
 			{
-				const std::string& ComponentType = (ComponentVML.Get("Type")).String();
+				std::string_view ComponentType = (ComponentVML.Get("Type")).String();
 
 				if (ComponentType == "Camera")
 				{
@@ -175,7 +175,7 @@ namespace Volund
 				}
 				else
 				{
-					VOLUND_ERROR("Unknown Component type (%s)!", ComponentType.c_str());
+					VOLUND_ERROR("Unknown Component type (%s)!", ComponentType.data());
 				}
 			}
 		}
@@ -185,7 +185,7 @@ namespace Volund
 		return NewScene;
 	}
 
-	void Scene::Serialize(const std::string& FilePath)
+	void Scene::Serialize(std::string_view FilePath)
 	{
 		VML SceneVML;
 

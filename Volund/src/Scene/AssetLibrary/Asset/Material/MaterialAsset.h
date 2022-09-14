@@ -10,7 +10,7 @@ namespace Volund
 	public:
 		Ref<Material> Get();
 
-		MaterialAsset(AssetLibrary* Parent, const std::string& FilePath);
+		MaterialAsset(AssetLibrary* Parent, std::string_view FilePath);
 
 	private:
 		Ref<Material> _Material;

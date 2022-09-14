@@ -3,12 +3,12 @@
 
 namespace Volund
 {
-	const std::string& VMLEntry::String(uint32_t Index) const
+	std::string_view VMLEntry::String(uint32_t Index) const
 	{
 		return this->_Values[Index].String();
 	}
 
-	void VMLEntry::PushBack(const std::string& Value)
+	void VMLEntry::PushBack(std::string_view Value)
 	{
 		this->_Values.push_back(Value);
 	}

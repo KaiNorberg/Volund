@@ -25,7 +25,7 @@ namespace Volund
 
 		T GetValue();
 
-		MaterialValue(const std::string& Name, T Value);
+		MaterialValue(std::string_view Name, T Value);
 
 	private:
 
@@ -45,7 +45,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	inline MaterialValue<T>::MaterialValue(const std::string& Name, T Value)
+	inline MaterialValue<T>::MaterialValue(std::string_view Name, T Value)
 	{
 		this->_Name = Name;
 		this->_Value = Value;

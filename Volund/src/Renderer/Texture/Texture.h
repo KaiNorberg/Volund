@@ -13,7 +13,7 @@ namespace Volund
 
 		virtual void Bind(uint32_t Unit = 0) = 0;
 
-		static Ref<Texture> Create(const std::string& FilePath);
+		static Ref<Texture> Create(std::string_view FilePath);
 
 		virtual ~Texture() = default;
 

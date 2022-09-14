@@ -16,10 +16,10 @@ namespace Volund
 		const std::vector<Ref<MaterialValue<T>>> View() const;
 
 		template <typename T>
-		T Get(const std::string& Name) const;
+		T Get(std::string_view Name) const;
 
 		template <typename T>
-		void Set(const std::string& Name, T Value);
+		void Set(std::string_view Name, T Value);
 
 		void UpdateShader();
 
@@ -60,7 +60,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	inline T Material::Get(const std::string& Name) const
+	inline T Material::Get(std::string_view Name) const
 	{
 		for (const auto& View : this->_Container)
 		{
@@ -75,7 +75,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	inline void Material::Set(const std::string& Name, T Value)
+	inline void Material::Set(std::string_view Name, T Value)
 	{
 		this->_Container.PushBack(std::make_shared<MaterialValue<T>>(Name, Value));
 	}

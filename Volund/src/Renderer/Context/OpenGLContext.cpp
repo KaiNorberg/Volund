@@ -42,12 +42,12 @@ namespace Volund
 		GetWindow()->SwapBuffers();
 	}
 
-	bool OpenGLContext::WGLExtensionSupported(const std::string& Name) const
+	bool OpenGLContext::WGLExtensionSupported(std::string_view Name) const
 	{
 		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress(
 			"wglGetExtensionsStringEXT");
 
-		return strstr(_wglGetExtensionsStringEXT(), Name.c_str()) != nullptr;
+		return strstr(_wglGetExtensionsStringEXT(), Name.data()) != nullptr;
 	}
 
 	OpenGLContext::OpenGLContext(const Ref<Window>& TargetWindow)

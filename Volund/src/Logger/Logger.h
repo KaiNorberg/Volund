@@ -15,7 +15,7 @@ namespace Volund
 
 		void Error(const char* Format, ...) const;
 
-		Logger(const std::string& Name);
+		Logger(std::string_view Name);
 
 	private:
 		static Logger _CoreLogger;

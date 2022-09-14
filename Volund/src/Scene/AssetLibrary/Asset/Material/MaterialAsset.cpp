@@ -10,7 +10,7 @@ namespace Volund
 		return this->_Material;
 	}
 
-	MaterialAsset::MaterialAsset(AssetLibrary* Parent, const std::string& FilePath)
+	MaterialAsset::MaterialAsset(AssetLibrary* Parent, std::string_view FilePath)
 	{
 		this->_Parent = Parent;
 
@@ -51,7 +51,7 @@ namespace Volund
 			}
 			else
 			{
-				VOLUND_ERROR("Invalid type found in Material Asset (%s)!", FilePath.c_str());
+				VOLUND_ERROR("Invalid type found in Material Asset (%s)!", FilePath.data());
 			}
 		}
 	}

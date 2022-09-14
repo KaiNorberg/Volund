@@ -43,7 +43,7 @@ namespace Volund
 
 		Entity() = default;
 
-		Entity(Scene* Parent, const std::string& Name = "");
+		Entity(Scene* Parent, std::string_view Name = "");
 
 		~Entity();
 

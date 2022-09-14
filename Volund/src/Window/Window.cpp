@@ -259,7 +259,7 @@ namespace Volund
 		SendMessage((HWND)this->_Handle, WM_SETFOCUS, 0, 0);
 	}
 
-	void Window::SetCursorMode(const std::string& NewMode)
+	void Window::SetCursorMode(std::string_view NewMode)
 	{
 		if (NewMode == "Normal")
 		{
@@ -283,11 +283,11 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_ERROR("Unrecognized Cursor Mode (%s)", NewMode.c_str());
+			VOLUND_ERROR("Unrecognized Cursor Mode (%s)", NewMode.data());
 		}
 	}
 
-	void Window::SetTitle(const std::string& Title)
+	void Window::SetTitle(std::string_view Title)
 	{
 		SetWindowText((HWND)this->_Handle, this->ConvertToWString(Title).c_str());
 	}
@@ -314,7 +314,7 @@ namespace Volund
 		return this->_DeviceContext;
 	}
 
-	std::wstring Window::ConvertToWString(const std::string& String)
+	std::wstring Window::ConvertToWString(std::string_view String)
 	{
 		return std::wstring(String.begin(), String.end());
 	}

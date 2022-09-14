@@ -8,7 +8,7 @@ namespace Volund
 		return this->_Texture;
 	}
 
-	TextureAsset::TextureAsset(AssetLibrary* Parent, const std::string& FilePath)
+	TextureAsset::TextureAsset(AssetLibrary* Parent, std::string_view FilePath)
 	{
 		this->_Parent = Parent;
 

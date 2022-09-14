@@ -14,7 +14,7 @@ namespace Volund
 		void SetVertexBuffer(Ref<VertexBuffer>& Buffer) override;
 		void SetIndexBuffer(Ref<IndexBuffer>& Buffer) override;
 
-		OpenGLMesh(const std::string& FilePath);
+		OpenGLMesh(std::string_view FilePath);
 
 		OpenGLMesh(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer);
 

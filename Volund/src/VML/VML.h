@@ -11,30 +11,30 @@ namespace Volund
 	{
 	public:
 
-		bool ContainsNode(const std::string& Name) const;
+		bool ContainsNode(std::string_view Name) const;
 
-		bool ContainsEntry(const std::string& Name) const;
+		bool ContainsEntry(std::string_view Name) const;
 
-		VMLEntry const& Get(const std::string& Name) const;
+		VMLEntry const& Get(std::string_view Name) const;
 
-		VMLEntry& Get(const std::string& Name);
+		VMLEntry& Get(std::string_view Name);
 
-		VML& operator[](const std::string& Name);
+		VML& operator[](std::string_view Name);
 
-		void Write(const std::string& FilePath);
+		void Write(std::string_view FilePath);
 
 		std::string ToString(uint32_t Indentation = 0);
 
-		void PushBack(const std::string& Name, const VML& Node);
+		void PushBack(std::string_view Name, const VML& Node);
 
-		void PushBack(const std::string& Name, const VMLEntry& Entry);
+		void PushBack(std::string_view Name, const VMLEntry& Entry);
 
 		std::map<std::string, VML>::const_iterator begin() const;
 		std::map<std::string, VML>::const_iterator end() const;
 
 		VML() = default;
 
-		VML(const std::string& FilePath);
+		VML(std::string_view FilePath);
 
 	private:
 
@@ -59,9 +59,9 @@ namespace Volund
 
 		void Parse(const std::vector<Token>& Tokens, int& Index);
 
-		uint32_t GetOccurrencesAtStart(const std::string& String, char Character);
+		uint32_t GetOccurrencesAtStart(std::string_view String, char Character);
 
-		void Split(std::vector<std::string>* Out, const std::string& String, char Delimiter);
+		void Split(std::vector<std::string>* Out, std::string_view String, char Delimiter);
 
 		std::map<std::string, VML> _Nodes;
 		std::map<std::string, VMLEntry> _Entries;

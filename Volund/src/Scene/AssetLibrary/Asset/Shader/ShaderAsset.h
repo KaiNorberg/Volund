@@ -10,7 +10,7 @@ namespace Volund
 	public:
 		Ref<Shader> Get();
 
-		ShaderAsset(AssetLibrary* Parent, const std::string& FilePath);
+		ShaderAsset(AssetLibrary* Parent, std::string_view FilePath);
 
 	private:
 

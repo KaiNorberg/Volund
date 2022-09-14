@@ -26,9 +26,9 @@ namespace Volund
 
 		void SetFocus() const;
 
-		void SetCursorMode(const std::string& NewMode);
+		void SetCursorMode(std::string_view NewMode);
 
-		void SetTitle(const std::string& Title);
+		void SetTitle(std::string_view Title);
 
 		Vec2 GetSize() const;
 
@@ -41,7 +41,7 @@ namespace Volund
 		~Window();
 
 	private:
-		std::wstring ConvertToWString(const std::string& String);
+		std::wstring ConvertToWString(std::string_view String);
 
 		void* _Handle = nullptr;
 

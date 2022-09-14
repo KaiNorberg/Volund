@@ -5,65 +5,65 @@
 
 namespace Volund
 {
-	bool VML::ContainsNode(const std::string& Name) const
+	bool VML::ContainsNode(std::string_view Name) const
 	{
-		return this->_Nodes.contains(Name);
+		return this->_Nodes.contains(Name.data());
 	}
 
-	bool VML::ContainsEntry(const std::string& Name) const
+	bool VML::ContainsEntry(std::string_view Name) const
 	{
-		return this->_Entries.contains(Name);
+		return this->_Entries.contains(Name.data());
 	}
 
-	VMLEntry const& VML::Get(const std::string& Name) const
+	VMLEntry const& VML::Get(std::string_view Name) const
 	{
 		if (this->ContainsEntry(Name))
 		{
-			return this->_Entries.at(Name);
+			return this->_Entries.at(Name.data());
 		}
 		else
 		{
-			VOLUND_ERROR("Unable to find VML entry (%s)!", Name.c_str());
+			VOLUND_ERROR("Unable to find VML entry (%s)!", Name.data());
 		}
 	
 		return this->_Entries.at("");
 	}
 
-	VMLEntry& VML::Get(const std::string& Name)
+	VMLEntry& VML::Get(std::string_view Name)
 	{
 		if (this->ContainsEntry(Name))
 		{
-			return this->_Entries[Name];
+			return this->_Entries[Name.data()];
 		}
 		else
 		{
-			VOLUND_ERROR("Unable to find VML entry (%s)!", Name.c_str());
+			VOLUND_ERROR("Unable to find VML entry (%s)!", Name.data());
 		}	
 
 		return this->_Entries.at("");
 	}
 
-	VML& VML::operator[](const std::string& Name)
+	VML& VML::operator[](std::string_view Name)
 	{
 		if (this->ContainsNode(Name))
 		{
-			return this->_Nodes[Name];
+			return this->_Nodes[Name.data()];
 		}
 		else
 		{
-			VOLUND_ERROR("Unable to find VML node (%s)!", Name.c_str());
+			VOLUND_ERROR("Unable to find VML node (%s)!", Name.data());
 		}
 
 		return this->_Nodes.at("");
 	}
 
-	void VML::Write(const std::string& FilePath)
+	void VML::Write(std::string_view FilePath)
 	{
-		std::ofstream File(FilePath, std::ofstream::out | std::ofstream::trunc);
+		std::ofstream File(FilePath.data(), std::ofstream::out | std::ofstream::trunc);
 
 		if (File.fail())
 		{
-			VOLUND_ERROR("Unable to write to VML file (%s)!", FilePath.c_str());
+			VOLUND_ERROR("Unable to write to VML file (%s)!", FilePath.data());
 		}
 
 		File << this->ToString();
@@ -95,14 +95,14 @@ namespace Volund
 		return Result;
 	}
 
-	void VML::PushBack(const std::string& Name, const VML& Node)
+	void VML::PushBack(std::string_view Name, const VML& Node)
 	{
-		this->_Nodes[Name] = Node;
+		this->_Nodes[Name.data()] = Node;
 	}
 
-	void VML::PushBack(const std::string& Name, const VMLEntry& Entry)
+	void VML::PushBack(std::string_view Name, const VMLEntry& Entry)
 	{
-		this->_Entries[Name] = Entry;
+		this->_Entries[Name.data()] = Entry;
 	}
 
 	std::map<std::string, VML>::const_iterator VML::begin() const
@@ -239,7 +239,7 @@ namespace Volund
 		}
 	}
 
-	uint32_t VML::GetOccurrencesAtStart(const std::string& String, char Character)
+	uint32_t VML::GetOccurrencesAtStart(std::string_view String, char Character)
 	{
 		uint32_t Occurrences = 0;
 		for (uint64_t i = 0; i < String.size(); i++)
@@ -257,7 +257,7 @@ namespace Volund
 		return Occurrences;
 	}
 
-	void VML::Split(std::vector<std::string>* Out, const std::string& String, char Delimiter)
+	void VML::Split(std::vector<std::string>* Out, std::string_view String, char Delimiter)
 	{
 		Out->reserve(16);
 
@@ -266,20 +266,20 @@ namespace Volund
 		{
 			if (String[i] == Delimiter)
 			{
-				Out->push_back(String.substr(OldIndex, i - OldIndex));
+				Out->push_back((std::string)String.substr(OldIndex, i - OldIndex));
 				OldIndex = i + 1;
 			}
 		}
-		Out->push_back(String.substr(OldIndex, String.size()));
+		Out->push_back((std::string)String.substr(OldIndex, String.size()));
 	}
 
-	VML::VML(const std::string& FilePath)
+	VML::VML(std::string_view FilePath)
 	{
-		VOLUND_INFO("Loading VML file (%s)...", FilePath.c_str());
+		VOLUND_INFO("Loading VML file (%s)...", FilePath.data());
 
-		FILE* File = fopen(FilePath.c_str(), "r");
+		FILE* File = fopen(FilePath.data(), "r");
 
-		VOLUND_ASSERT(File, "Unable to open VML file (%s)!", FilePath.c_str());
+		VOLUND_ASSERT(File, "Unable to open VML file (%s)!", FilePath.data());
 
 		std::vector<Token> Tokens;
 		Tokenize(&Tokens, File);

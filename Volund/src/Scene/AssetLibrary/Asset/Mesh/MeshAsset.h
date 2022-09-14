@@ -10,7 +10,7 @@ namespace Volund
 	public:
 		Ref<Mesh> Get();
 
-		MeshAsset(AssetLibrary* Parent, const std::string& FilePath);
+		MeshAsset(AssetLibrary* Parent, std::string_view FilePath);
 
 	private:
 		Ref<Mesh> _Mesh;

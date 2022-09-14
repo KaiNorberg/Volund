@@ -53,7 +53,7 @@ namespace Volund
 		return EntityVML;
 	}
 
-	Entity::Entity(Scene* Parent, const std::string& Name)
+	Entity::Entity(Scene* Parent, std::string_view Name)
 	{
 		this->_Parent = Parent;
 		this->_Name = Name;

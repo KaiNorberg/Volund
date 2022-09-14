@@ -11,15 +11,15 @@ namespace Volund
 	class Scene
 	{
 	public:
-		Ref<Entity> CreateEntity(const std::string& Name);
+		Ref<Entity> CreateEntity(std::string_view Name);
 
-		Ref<Entity> CreateEntity(const std::string& Name, const Vec3& Position, const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
+		Ref<Entity> CreateEntity(std::string_view Name, const Vec3& Position, const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
 
-		bool DeleteEntity(const std::string& Name);
+		bool DeleteEntity(std::string_view Name);
 
-		Ref<Entity> GetEntity(const std::string& Name);
+		Ref<Entity> GetEntity(std::string_view Name);
 
-		bool HasEntity(const std::string& Name) const;
+		bool HasEntity(std::string_view Name) const;
 
 		template <typename T>
 		const std::vector<Ref<T>> ComponentView();
@@ -32,9 +32,9 @@ namespace Volund
 
 		virtual void OnUpdate(TimeStep);
 
-		static Ref<Scene> Deserialize(const std::string& FilePath);
+		static Ref<Scene> Deserialize(std::string_view FilePath);
 
-		void Serialize(const std::string& FilePath);
+		void Serialize(std::string_view FilePath);
 
 		AssetLibrary Assets;
 

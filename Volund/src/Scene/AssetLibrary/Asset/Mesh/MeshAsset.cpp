@@ -12,7 +12,7 @@ namespace Volund
 		return this->_Mesh;
 	}
 
-	MeshAsset::MeshAsset(AssetLibrary* Parent, const std::string& FilePath)
+	MeshAsset::MeshAsset(AssetLibrary* Parent, std::string_view FilePath)
 	{
 		this->_Parent = Parent;
 

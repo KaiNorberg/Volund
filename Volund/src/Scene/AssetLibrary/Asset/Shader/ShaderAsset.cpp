@@ -8,7 +8,7 @@ namespace Volund
 		return this->_Shader;
 	}
 
-	ShaderAsset::ShaderAsset(AssetLibrary* Parent, const std::string& FilePath)
+	ShaderAsset::ShaderAsset(AssetLibrary* Parent, std::string_view FilePath)
 	{
 		this->_Parent = Parent;
 
@@ -22,11 +22,11 @@ namespace Volund
 			GEOMETRY = 2
 		};
 
-		VOLUND_INFO("Loading Shader (%s)...", FilePath.c_str());
+		VOLUND_INFO("Loading Shader (%s)...", FilePath.data());
 
-		std::ifstream File(FilePath);
+		std::ifstream File(FilePath.data());
 
-		VOLUND_ASSERT(File, "Unable to load Shader (%s).", FilePath.c_str());
+		VOLUND_ASSERT(File, "Unable to load Shader (%s).", FilePath.data());
 
 		std::string Line;
 		std::stringstream SourceStrings[3];

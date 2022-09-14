@@ -12,13 +12,13 @@ namespace Volund
 	{
 	public:
 		template <typename T>
-		Ref<T> Get(const std::string& FilePath);
+		Ref<T> Get(std::string_view FilePath);
 
 		template <typename T>
 		Ref<T> Get(uint32_t Index);
 
 		template <typename T>
-		Ref<T> Create(const std::string& FilePath);
+		Ref<T> Create(std::string_view FilePath);
 
 		template <typename T>
 		uint32_t Amount();
@@ -38,7 +38,7 @@ namespace Volund
 	};
 
 	template <typename T>
-	Ref<T> AssetLibrary::Get(const std::string& FilePath)
+	Ref<T> AssetLibrary::Get(std::string_view FilePath)
 	{
 		for (uint64_t i = 0; i < this->_AssetContainer.Size<T>(); i++)
 		{
@@ -48,7 +48,7 @@ namespace Volund
 			}
 		}
 
-		VOLUND_ERROR("Unable to find Asset (%s)!", FilePath.c_str());
+		VOLUND_ERROR("Unable to find Asset (%s)!", FilePath.data());
 
 		return nullptr;
 	}
@@ -60,7 +60,7 @@ namespace Volund
 	}
 
 	template <typename T>
-	Ref<T> AssetLibrary::Create(const std::string& FilePath)
+	Ref<T> AssetLibrary::Create(std::string_view FilePath)
 	{
 		Ref<T> NewAsset = std::make_shared<T>(this, FilePath);
 

@@ -7,9 +7,9 @@
 
 namespace Volund
 {
-	bool OpenGLShader::HasUniform(const std::string& Name)
+	bool OpenGLShader::HasUniform(std::string_view Name)
 	{
-		return UniformLocations.contains(Name) || glGetUniformLocation(this->ID, Name.c_str()) != 0;
+		return UniformLocations.contains(Name.data()) || glGetUniformLocation(this->ID, Name.data()) != 0;
 	}
 
 	void OpenGLShader::Bind()
@@ -17,58 +17,58 @@ namespace Volund
 		glUseProgram(this->ID);
 	}
 
-	void OpenGLShader::SetInt(const std::string& Name, int32_t Value)
+	void OpenGLShader::SetInt(std::string_view Name, int32_t Value)
 	{
 		this->Bind();
 		glUniform1i(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetFloat(const std::string& Name, float Value)
+	void OpenGLShader::SetFloat(std::string_view Name, float Value)
 	{
 		this->Bind();
 		glUniform1f(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetDouble(const std::string& Name, double Value)
+	void OpenGLShader::SetDouble(std::string_view Name, double Value)
 	{
 		this->Bind();
 		glUniform1d(this->GetUniformLocation(Name), Value);
 	}
 
-	void OpenGLShader::SetVec2(const std::string& Name, const Vec2& Value)
+	void OpenGLShader::SetVec2(std::string_view Name, const Vec2& Value)
 	{
 		this->Bind();
 		glUniform2fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetVec3(const std::string& Name, const Vec3& Value)
+	void OpenGLShader::SetVec3(std::string_view Name, const Vec3& Value)
 	{
 		this->Bind();
 		glUniform3fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetVec4(const std::string& Name, const Vec4& Value)
+	void OpenGLShader::SetVec4(std::string_view Name, const Vec4& Value)
 	{
 		this->Bind();
 		glUniform4fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetMat3x3(const std::string& Name, const Mat3x3& Value, bool Transpose)
+	void OpenGLShader::SetMat3x3(std::string_view Name, const Mat3x3& Value, bool Transpose)
 	{
 		this->Bind();
 		glUniformMatrix3fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
-	void OpenGLShader::SetMat4x4(const std::string& Name, const Mat4x4& Value, bool Transpose)
+	void OpenGLShader::SetMat4x4(std::string_view Name, const Mat4x4& Value, bool Transpose)
 	{
 		this->Bind();
 		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
-	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
+	uint32_t OpenGLShader::CompileShader(uint32_t type, std::string_view source)
 	{
 		uint32_t id = glCreateShader(type);
-		const char* src = source.c_str();
+		const char* src = source.data();
 		glShaderSource(id, 1, &src, nullptr);
 		glCompileShader(id);
 
@@ -89,45 +89,45 @@ namespace Volund
 		return id;
 	}
 
-	uint32_t OpenGLShader::GetUniformLocation(const std::string& Name)
+	uint32_t OpenGLShader::GetUniformLocation(std::string_view Name)
 	{
-		if (UniformLocations.contains(Name))
+		if (UniformLocations.contains(Name.data()))
 		{
-			return UniformLocations[Name];
+			return UniformLocations[Name.data()];
 		}
-		int32_t UniformLocation = glGetUniformLocation(this->ID, Name.c_str());
+		int32_t UniformLocation = glGetUniformLocation(this->ID, Name.data());
 
 		if (UniformLocation == -1)
 		{
-			VOLUND_WARNING("Unknown Uniform specified (%s)", Name.c_str());
+			VOLUND_WARNING("Unknown Uniform specified (%s)", Name.data());
 		}
 
-		UniformLocations[Name] = UniformLocation;
+		UniformLocations[Name.data()] = UniformLocation;
 		return UniformLocation;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource)
+	OpenGLShader::OpenGLShader(std::string_view VertexSource, std::string_view FragmentSource, std::string_view GeometrySource)
 	{
 		uint32_t program = glCreateProgram();
 
 		uint32_t vs = NULL;
 		if (VertexSource.length() > 1)
 		{
-			vs = CompileShader(GL_VERTEX_SHADER, VertexSource.c_str());
+			vs = CompileShader(GL_VERTEX_SHADER, VertexSource.data());
 			glAttachShader(program, vs);
 		}
 
 		uint32_t fs = NULL;
 		if (FragmentSource.length() > 1)
 		{
-			fs = CompileShader(GL_FRAGMENT_SHADER, FragmentSource.c_str());
+			fs = CompileShader(GL_FRAGMENT_SHADER, FragmentSource.data());
 			glAttachShader(program, fs);
 		}
 
 		uint32_t gs = NULL;
 		if (GeometrySource.length() > 1)
 		{
-			gs = CompileShader(GL_GEOMETRY_SHADER, GeometrySource.c_str());
+			gs = CompileShader(GL_GEOMETRY_SHADER, GeometrySource.data());
 			glAttachShader(program, gs);
 		}
 

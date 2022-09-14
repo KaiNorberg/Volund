@@ -14,10 +14,12 @@ namespace Volund
 
 		operator std::string() const;
 
+		operator std::string_view() const;
+
 		template <typename T>
 		T GetAs() const;
 
-		const std::string& String() const;
+		std::string_view String() const;
 
 		template <typename T>
 		VMLValue(const T Value);
@@ -31,6 +33,12 @@ namespace Volund
 	inline T VMLValue::GetAs() const
 	{
 		return this->operator T();
+	}
+
+	template <>
+	inline VMLValue::VMLValue(std::string_view Value)
+	{
+		this->_Value = Value;
 	}
 
 	template <>
