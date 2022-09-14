@@ -4,6 +4,8 @@
 
 namespace Volund
 {
+	using ProcCatch = void*(*)(void*, uint32_t, uint64_t, uint64_t);
+
 	struct WindowData
 	{
 		uint64_t Width = 0;
@@ -13,6 +15,8 @@ namespace Volund
 
 		bool CaptureMouse = false;
 		bool ShowMouse = true;
+
+		ProcCatch ProcedureCatch = nullptr;
 
 		Ref<EventDispatcher> Dispatcher = nullptr;
 	};
@@ -33,6 +37,10 @@ namespace Volund
 		Vec2 GetSize() const;
 
 		float GetAspectRatio() const;
+
+		void SetProcedureCatch(ProcCatch ProcedureCatch);
+
+		void* GetHandle() const;
 
 		void* GetDeviceContext() const;
 

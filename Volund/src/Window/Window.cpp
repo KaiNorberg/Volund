@@ -10,6 +10,16 @@ namespace Volund
 {
 	LRESULT CALLBACK WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
 	{
+		WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+
+		if (Data != nullptr && Data->ProcedureCatch != nullptr)
+		{
+			if (Data->ProcedureCatch(hwnd, msg, wparam, lparam))
+			{
+				return true;
+			}
+		}
+
 		switch (msg)
 		{
 		case WM_CREATE:
@@ -18,8 +28,6 @@ namespace Volund
 		break;
 		case WM_KEYDOWN:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -30,8 +38,6 @@ namespace Volund
 		break;
 		case WM_KEYUP:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -42,8 +48,6 @@ namespace Volund
 		break;
 		case WM_MOUSEMOVE:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr || GetFocus() != hwnd)
 			{
 				break;
@@ -84,8 +88,6 @@ namespace Volund
 		break;
 		case WM_LBUTTONDOWN:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -96,8 +98,6 @@ namespace Volund
 		break;
 		case WM_LBUTTONUP:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -108,8 +108,6 @@ namespace Volund
 		break;
 		case WM_MBUTTONDOWN:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -120,8 +118,6 @@ namespace Volund
 		break;
 		case WM_MBUTTONUP:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -132,8 +128,6 @@ namespace Volund
 		break;
 		case WM_RBUTTONDOWN:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -144,8 +138,6 @@ namespace Volund
 		break;
 		case WM_RBUTTONUP:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -156,8 +148,6 @@ namespace Volund
 		break;
 		case WM_MOUSEWHEEL:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -170,8 +160,6 @@ namespace Volund
 		break;
 		case WM_SIZE:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (Data == nullptr)
 			{
 				break;
@@ -188,8 +176,6 @@ namespace Volund
 		break;
 		case WM_SETFOCUS:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
 			if (!Data->ShowMouse)
 			{
 				while (ShowCursor(false) >= -1)
@@ -307,6 +293,16 @@ namespace Volund
 		{
 			return (float)this->_Data.Width / (float)this->_Data.Height;
 		}
+	}
+
+	void Window::SetProcedureCatch(ProcCatch ProcedureCatch)
+	{
+		this->_Data.ProcedureCatch = ProcedureCatch;
+	}
+
+	void* Window::GetHandle() const
+	{
+		return this->_Handle;
 	}
 
 	void* Window::GetDeviceContext() const

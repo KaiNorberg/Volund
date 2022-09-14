@@ -77,31 +77,20 @@ namespace Volund
 		return false;
 	}
 
-	void Scene::Update(TimeStep TS)
+	void Scene::OnUpdate(TimeStep TS)
 	{
-		this->OnUpdate(TS);
 		for (const auto& Entity : this->_Entities)
 		{
 			Entity->OnUpdate(TS);
 		}
 	}
 
-	void Scene::EventCallback(Event* E)
+	void Scene::OnEvent(Event* E)
 	{
-		this->OnEvent(E);
 		for (const auto& Entity : this->_Entities)
 		{
 			Entity->OnEvent(E);
 		}
-	}
-
-	void Scene::OnEvent(Event*)
-	{
-	}
-
-	void Scene::OnUpdate(TimeStep)
-	{
-
 	}
 
 	Ref<Scene> Scene::Deserialize(std::string_view FilePath)

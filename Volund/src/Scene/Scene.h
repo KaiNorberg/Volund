@@ -24,10 +24,6 @@ namespace Volund
 		template <typename T>
 		const std::vector<Ref<T>> ComponentView();
 
-		void Update(TimeStep TS);
-
-		void EventCallback(Event* E);
-
 		virtual void OnEvent(Event*);
 
 		virtual void OnUpdate(TimeStep);
@@ -39,8 +35,6 @@ namespace Volund
 		AssetLibrary Assets;
 
 		Scene();
-
-		virtual ~Scene() = default;
 
 	private:
 		std::vector<Ref<Entity>> _Entities;

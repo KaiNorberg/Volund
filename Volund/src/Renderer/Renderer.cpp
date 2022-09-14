@@ -94,8 +94,6 @@ namespace Volund
 			_API->DrawIndexed(Data.ObjectMesh);
 		}
 
-		RenderingContext->Flush();
-
 		_InScene = false;
 	}
 
