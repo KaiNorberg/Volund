@@ -1,5 +1,5 @@
-Materials [ Red.material Red.material ]
-Meshes [ Standard/Models/Teapot.obj Standard/Models/Teapot.obj ]
+Materials [ Red.material Blue.material ]
+Meshes [ Standard/Models/Teapot.obj Standard/Models/Cube.obj ]
 Shaders [ Standard/Shaders/Test.shader ]
 Textures [ ]
 Entities

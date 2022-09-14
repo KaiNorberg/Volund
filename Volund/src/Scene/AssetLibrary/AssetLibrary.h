@@ -86,7 +86,7 @@ namespace Volund
 		VMLEntry Result;
 		for (uint64_t i = 0; i < this->_AssetContainer.Size<T>(); i++)
 		{
-			Result.PushBack(this->_AssetContainer.Get<T>()->GetFilePath());
+			Result.PushBack(this->_AssetContainer.Get<T>(i)->GetFilePath());
 		}
 		return Result;
 	}
