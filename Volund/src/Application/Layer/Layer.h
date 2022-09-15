@@ -23,6 +23,9 @@ namespace Volund
 		virtual void OnEvent(Event*) {};
 
 		virtual ~Layer() {}
+
+	protected:
+
 	private:		
 		friend class Application;
 

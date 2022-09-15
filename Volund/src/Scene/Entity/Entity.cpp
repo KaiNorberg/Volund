@@ -16,7 +16,7 @@ namespace Volund
 
 	void Entity::OnEvent(Event* E) const
 	{
-		for (const auto& ComponentView : this->ComponentContainer)
+		for (const auto& ComponentView : this->_ComponentContainer)
 		{
 			for (const auto& Component : ComponentView)
 			{
@@ -27,7 +27,7 @@ namespace Volund
 
 	void Entity::OnUpdate(TimeStep TS) const
 	{
-		for (const auto& ComponentView : this->ComponentContainer)
+		for (const auto& ComponentView : this->_ComponentContainer)
 		{
 			for (const auto& Component : ComponentView)
 			{
@@ -41,7 +41,7 @@ namespace Volund
 		VML EntityVML;
 
 		uint32_t i = 0;
-		for (const auto& ComponentView : this->ComponentContainer)
+		for (const auto& ComponentView : this->_ComponentContainer)
 		{
 			for (const auto& Component : ComponentView)
 			{
@@ -61,7 +61,7 @@ namespace Volund
 
 	Entity::~Entity()
 	{
-		for (const auto& ComponentView : this->ComponentContainer)
+		for (const auto& ComponentView : this->_ComponentContainer)
 		{
 			for (const auto& Component : ComponentView)
 			{

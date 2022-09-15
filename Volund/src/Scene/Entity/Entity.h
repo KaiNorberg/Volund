@@ -53,7 +53,7 @@ namespace Volund
 
 		std::string _Name;
 
-		Container<Component> ComponentContainer;
+		Container<Component> _ComponentContainer;
 	};
 
 	template <typename T, class... ARGS>
@@ -63,7 +63,7 @@ namespace Volund
 		NewComponent->SetParent(this);
 		NewComponent->OnCreate();
 
-		this->ComponentContainer.PushBack(NewComponent);
+		this->_ComponentContainer.PushBack(NewComponent);
 	
 		return NewComponent;
 	}
@@ -71,31 +71,31 @@ namespace Volund
 	template <typename T>
 	void Entity::DeleteComponent(uint32_t Index)
 	{
-		this->ComponentContainer.Get<T>()->OnDelete();
-		this->ComponentContainer.Erase<T>(Index);
+		this->_ComponentContainer.Get<T>()->OnDelete();
+		this->_ComponentContainer.Erase<T>(Index);
 	}
 
 	template <typename T>
 	Ref<T> Entity::GetComponent(uint32_t Index)
 	{
-		return this->ComponentContainer.Get<T>(Index);
+		return this->_ComponentContainer.Get<T>(Index);
 	}
 
 	template <typename T>
 	bool Entity::HasComponent(uint32_t Index)
 	{
-		return this->ComponentContainer.Contains<T>(Index);
+		return this->_ComponentContainer.Contains<T>(Index);
 	}
 
 	template <typename T>
 	uint32_t Entity::ComponentAmount()
 	{
-		return this->ComponentContainer.Size<T>();
+		return this->_ComponentContainer.Size<T>();
 	}
 
 	template <typename T>
 	const std::vector<Ref<Component>>& Entity::ComponentView()
 	{
-		return this->ComponentContainer.View<T>();
+		return this->_ComponentContainer.View<T>();
 	}
 }

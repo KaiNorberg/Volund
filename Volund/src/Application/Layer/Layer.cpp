@@ -8,6 +8,7 @@ namespace Volund
 		return this->_Parent;
 
 	}
+	
 	void Layer::SetParent(Application* Parent)
 	{
 		this->_Parent = Parent;

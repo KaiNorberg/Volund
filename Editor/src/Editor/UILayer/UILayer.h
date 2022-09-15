@@ -2,11 +2,9 @@
 
 using namespace Volund;
 
-class EditorLayer : public Volund::Layer
+class UILayer : public Volund::Layer
 {
 public:
-
-	Ref<Window> GetWindow();
 
 	void OnAttach() override;
 
@@ -18,10 +16,7 @@ public:
 
 private:
 
-	Ref<Window> _Window;
+	void BeginDockSpace();
 
-	Ref<Context> _Context;
-
-	Ref<Scene> _Scene;
 };
 

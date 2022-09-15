@@ -11,13 +11,6 @@ namespace Volund
 		this->Loop();
 	}
 
-	void Application::AttachLayer(Layer* L)
-	{
-		this->_LayerStack.push_back(Ref<Layer>(L));
-		L->SetParent(this);
-		L->OnAttach();
-	}
-
 	void Application::Terminate()
 	{
 		this->_ShouldRun = false;
@@ -38,9 +31,12 @@ namespace Volund
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());
 
-			for (Ref<Layer> L : _LayerStack)
+			for (const auto& View : this->_LayerContainer)
 			{
-				L->OnUpdate(TS);
+				for (const auto& Layer : View)
+				{
+					Layer->OnUpdate(TS);
+				}
 			}
 		}
 	}
@@ -60,10 +56,12 @@ namespace Volund
 
 	Application::~Application()
 	{
-		for (const auto& L : this->_LayerStack)
+		for (const auto& View : this->_LayerContainer)
 		{
-			L->OnDetach();
+			for (const auto& Layer : View)
+			{
+				Layer->OnDetach();
+			}
 		}
-		this->_LayerStack.clear();
 	}
 }
