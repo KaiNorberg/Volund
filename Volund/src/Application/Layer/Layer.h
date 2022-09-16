@@ -12,6 +12,9 @@ namespace Volund
 	{
 	public:
 
+		template <typename T>
+		Ref<T> GetLayer(uint32_t Index = 0);
+
 		Application* GetApp();
 
 		virtual void OnAttach() {};
@@ -24,8 +27,6 @@ namespace Volund
 
 		virtual ~Layer() {}
 
-	protected:
-
 	private:		
 		friend class Application;
 
@@ -33,4 +34,10 @@ namespace Volund
 
 		Application* _Parent = nullptr;
 	};
+
+	template<typename T>
+	inline Ref<T> Layer::GetLayer(uint32_t Index)
+	{
+		return this->GetApp()->GetLayer<T>(Index);
+	}
 }

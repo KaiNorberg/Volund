@@ -4,20 +4,25 @@
 
 #include "VML/VML.h"
 
-Ref<Window> EditorLayer::GetWindow()
+const Ref<Window> EditorLayer::GetWindow()
 {
 	return this->_Window;
 }
 
+const Ref<Scene> EditorLayer::GetScene()
+{
+	return this->_Scene;
+}
+
 void EditorLayer::LoadScene(const std::filesystem::path& FilePath)
 {
-	this->_CurrentScene = Scene::Deserialize(FilePath.string());
+	this->_Scene = Scene::Deserialize(FilePath.string());
 }
 
 void EditorLayer::LoadProject(const std::filesystem::path& FilePath)
 {
-	std::filesystem::current_path(FilePath.parent_path());
 	this->_CurrentProject = VML(FilePath.string());
+	std::filesystem::current_path(FilePath.parent_path());
 }
 
 void EditorLayer::OnAttach()
@@ -25,7 +30,7 @@ void EditorLayer::OnAttach()
 	this->_API = RenderingAPI::Create(RenderingAPI::API::OPENGL);
 
 	auto NewEventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
-	this->_Window = Ref<Window>(new Window(NewEventDispatcher, 500, 500, false));
+	this->_Window = Ref<Window>(new Window(NewEventDispatcher, 1980, 1080, false));
 
 	this->_Window->SetTitle("Volund Editor");
 	this->_Window->SetCursorMode("Normal");
@@ -45,32 +50,41 @@ void EditorLayer::OnDetach()
 
 void EditorLayer::OnUpdate(TimeStep TS)
 {
+	//TEMP
+	static bool First = true;
+	if (First)
+	{
+		this->LoadProject("TestProject/TestProject.vproj");
+		this->LoadScene("Scenes/Test.vscene");
+		First = false;
+	}
+
 	this->_Context->MakeCurrent();
 	this->_Context->Flush();
 	this->_API->Clear();
 
-	Camera* ActiveCamera = Camera::GetActiveCamera(this->_CurrentScene);
+	Camera* ActiveCamera = Camera::GetActiveCamera(this->_Scene);
 
 	if (ActiveCamera != nullptr)
 	{
 		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix(this->_Context->GetWindow()->GetAspectRatio()) * ActiveCamera->GetViewMatrix();
 		Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
-		auto& PointLights = this->_CurrentScene->ComponentView<PointLight>();
+		auto& PointLights = this->_Scene->ComponentView<PointLight>();
 
 		Renderer::BeginScene(ViewProjMatrix, EyePosition, PointLights);
 
-		if (_CurrentScene != nullptr)
+		if (_Scene != nullptr)
 		{
-			this->_CurrentScene->OnUpdate(TS);
+			this->_Scene->OnUpdate(TS);
 		}
 	
 		Renderer::EndScene(this->_Context);
 	}
 	else
 	{
-		if (_CurrentScene != nullptr)
+		if (_Scene != nullptr)
 		{
-			this->_CurrentScene->OnUpdate(TS);
+			this->_Scene->OnUpdate(TS);
 		}
 	}
 
@@ -88,8 +102,8 @@ void EditorLayer::OnEvent(Event* E)
 	break;
 	}
 
-	if (this->_CurrentScene != nullptr)
+	if (this->_Scene != nullptr)
 	{
-		this->_CurrentScene->OnEvent(E);
+		this->_Scene->OnEvent(E);
 	}
 }

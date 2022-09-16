@@ -11,7 +11,10 @@ namespace Volund
 	public:
 
 		template <typename D>
-		void PushBack(Ref<D> const& Entry);
+		void PushBack(const Ref<D>& Entry);
+
+		template <typename D>
+		void PushBack(D* Entry);
 
 		template <typename D>
 		void Erase(uint64_t Index = 0);
@@ -46,13 +49,24 @@ namespace Volund
 
 	template <typename T>
 	template <typename D>
-	inline void Container<T>::PushBack(Ref<D> const& Entry)
+	inline void Container<T>::PushBack(const Ref<D>& Entry)
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
 		this->_Data.resize(TypeID + 1);
 
 		this->_Data[TypeID].push_back(Entry);
+	}
+
+	template <typename T>
+	template <typename D>
+	inline void Container<T>::PushBack(D* Entry)
+	{
+		static uint64_t TypeID = this->GetTypeID<D>();
+
+		this->_Data.resize(TypeID + 1);
+
+		this->_Data[TypeID].push_back(Ref<D>(Entry));
 	}
 
 	template <typename T>

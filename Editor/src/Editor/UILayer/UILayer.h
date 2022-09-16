@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Widget/Widget.h"
+
 using namespace Volund;
 
 class UILayer : public Volund::Layer
@@ -20,5 +22,6 @@ private:
 
 	void BeginDockSpace();
 
+	Container<Widget> _WidgetContainer;
 };
 

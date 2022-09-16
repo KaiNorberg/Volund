@@ -196,6 +196,26 @@ namespace Volund
 		SceneVML.Write(FilePath);
 	}
 
+	std::vector<Ref<Entity>>::iterator Scene::begin()
+	{
+		return this->_Entities.begin();
+	}
+
+	std::vector<Ref<Entity>>::iterator Scene::end()
+	{
+		return this->_Entities.end();
+	}
+
+	std::vector<Ref<Entity>>::const_iterator Scene::begin() const
+	{
+		return this->_Entities.begin();
+	}
+
+	std::vector<Ref<Entity>>::const_iterator Scene::end() const
+	{
+		return this->_Entities.end();
+	}
+
 	Scene::Scene()
 	{
 		VOLUND_INFO("Initializing Scene...");

@@ -1,5 +1,8 @@
 #pragma once
 
+#pragma warning( push )
+#pragma warning( disable : 4305 )
+
 static void SetupImGuiStyle()
 {
 	// Darcula style by ice1000 from ImThemes
@@ -90,3 +93,5 @@ static void SetupImGuiStyle()
 	style.Colors[ImGuiCol_NavWindowingDimBg] = ImVec4(0.800000011920929, 0.800000011920929, 0.800000011920929, 0.2000000029802322);
 	style.Colors[ImGuiCol_ModalWindowDimBg] = ImVec4(0.800000011920929, 0.800000011920929, 0.800000011920929, 0.3499999940395355);
 }
+
+#pragma warning(pop)

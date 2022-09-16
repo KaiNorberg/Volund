@@ -6,7 +6,8 @@ class EditorLayer : public Volund::Layer
 {
 public:
 
-	Ref<Window> GetWindow();
+	const Ref<Window> GetWindow();
+	const Ref<Scene> GetScene();
 
 	void LoadScene(const std::filesystem::path& FilePath);
 
@@ -24,7 +25,7 @@ private:
 
 	VML _CurrentProject;
 
-	Ref<Scene> _CurrentScene;
+	Ref<Scene> _Scene;
 
 	Ref<RenderingAPI> _API;
 

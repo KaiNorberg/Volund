@@ -34,6 +34,12 @@ namespace Volund
 
 		AssetLibrary Assets;
 
+		std::vector<Ref<Entity>>::iterator begin();
+		std::vector<Ref<Entity>>::iterator end();
+
+		std::vector<Ref<Entity>>::const_iterator begin() const;
+		std::vector<Ref<Entity>>::const_iterator end() const;
+
 		Scene();
 
 	private:

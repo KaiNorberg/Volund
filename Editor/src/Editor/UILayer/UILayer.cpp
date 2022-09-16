@@ -1,4 +1,4 @@
-#include "PCH/PCH.h"
+ #include "PCH/PCH.h"
 
 #include "UILayer.h"
 
@@ -15,6 +15,8 @@
 
 #include "ImGuiStyle.h"
 
+#include "Widget/SceneWidget/SceneWidget.h"
+
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 void UILayer::OnAttach()
@@ -24,15 +26,20 @@ void UILayer::OnAttach()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.Fonts->AddFontFromFileTTF("Data/Fonts/Inter-Regular.ttf", 16.0f);
 
 	SetupImGuiStyle();
+	//ImGui::StyleColorsDark();
 
-	auto EditorWindow = this->GetApp()->GetLayer<EditorLayer>()->GetWindow();
+	auto EditorWindow = GetLayer<EditorLayer>()->GetWindow();
 
 	EditorWindow->SetProcedureCatch((Volund::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 
 	ImGui_ImplWin32_Init(EditorWindow->GetHandle());
 	ImGui_ImplOpenGL3_Init();
+
+
+	this->_WidgetContainer.PushBack(new SceneWidget(this));
 }
 
 void UILayer::OnDetach()
@@ -75,15 +82,37 @@ void UILayer::OnUpdate(TimeStep TS)
 			ImGui::EndMenu();
 		}
 
+		if (ImGui::BeginMenu("Widgets"))
+		{
+			for (const auto& View : this->_WidgetContainer)
+			{
+				for (const auto& Widget : View)
+				{
+					if (ImGui::MenuItem(Widget->GetName()))
+					{
+						Widget->_IsActive = true;
+					}
+				}
+			}
+
+			ImGui::EndMenu();
+		}
+
         ImGui::EndMenuBar();
     }
 
-    ImGui::Begin("Test");
-    ImGui::Text("Hello, World!");
-    ImGui::End();
+	for (const auto& View : this->_WidgetContainer)
+	{
+		for (const auto& Widget : View)
+		{
+			if (Widget->_IsActive)
+			{
+				Widget->OnUpdate();
+			}
+		}
+	}
 
 	ImGui::End();
-
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
