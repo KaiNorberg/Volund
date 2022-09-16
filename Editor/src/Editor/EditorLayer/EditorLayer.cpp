@@ -9,9 +9,20 @@ Ref<Window> EditorLayer::GetWindow()
 	return this->_Window;
 }
 
+void EditorLayer::LoadScene(const std::filesystem::path& FilePath)
+{
+	this->_CurrentScene = Scene::Deserialize(FilePath.string());
+}
+
+void EditorLayer::LoadProject(const std::filesystem::path& FilePath)
+{
+	std::filesystem::current_path(FilePath.parent_path());
+	this->_CurrentProject = VML(FilePath.string());
+}
+
 void EditorLayer::OnAttach()
 {
-	auto NewAPI = RenderingAPI::Create(RenderingAPI::API::OPENGL);
+	this->_API = RenderingAPI::Create(RenderingAPI::API::OPENGL);
 
 	auto NewEventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
 	this->_Window = Ref<Window>(new Window(NewEventDispatcher, 500, 500, false));
@@ -24,9 +35,7 @@ void EditorLayer::OnAttach()
 	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
-	Renderer::Init(NewAPI);
-
-	this->_Scene = Scene::Deserialize("Test.scene");
+	Renderer::Init(this->_API);
 }
 
 void EditorLayer::OnDetach()
@@ -38,29 +47,30 @@ void EditorLayer::OnUpdate(TimeStep TS)
 {
 	this->_Context->MakeCurrent();
 	this->_Context->Flush();
+	this->_API->Clear();
 
-	Camera* ActiveCamera = Camera::GetActiveCamera(this->_Scene);
+	Camera* ActiveCamera = Camera::GetActiveCamera(this->_CurrentScene);
 
 	if (ActiveCamera != nullptr)
 	{
 		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix(this->_Context->GetWindow()->GetAspectRatio()) * ActiveCamera->GetViewMatrix();
 		Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
-		auto& PointLights = this->_Scene->ComponentView<PointLight>();
+		auto& PointLights = this->_CurrentScene->ComponentView<PointLight>();
 
 		Renderer::BeginScene(ViewProjMatrix, EyePosition, PointLights);
 
-		if (_Scene != nullptr)
+		if (_CurrentScene != nullptr)
 		{
-			this->_Scene->OnUpdate(TS);
+			this->_CurrentScene->OnUpdate(TS);
 		}
 	
 		Renderer::EndScene(this->_Context);
 	}
 	else
 	{
-		if (_Scene != nullptr)
+		if (_CurrentScene != nullptr)
 		{
-			this->_Scene->OnUpdate(TS);
+			this->_CurrentScene->OnUpdate(TS);
 		}
 	}
 
@@ -78,8 +88,8 @@ void EditorLayer::OnEvent(Event* E)
 	break;
 	}
 
-	if (this->_Scene != nullptr)
+	if (this->_CurrentScene != nullptr)
 	{
-		this->_Scene->OnEvent(E);
+		this->_CurrentScene->OnEvent(E);
 	}
 }

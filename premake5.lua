@@ -95,7 +95,6 @@ project "Editor"
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
-	debugdir "%{prj.name}/Data"
 
 	files
 	{
@@ -143,7 +142,7 @@ project "Editor"
 		runtime "Release"
 		targetdir (TargetDir .. "/Editor")
 		postbuildcommands {
-			"xcopy Data\\* ..\\" .. TargetDir .. "\\Editor /Q /E /Y /I /S"
+			"xcopy Standard\\* ..\\" .. TargetDir .. "\\Editor\\Standard /Q /E /Y /I /S"
 		}
 		
 project "Glad"

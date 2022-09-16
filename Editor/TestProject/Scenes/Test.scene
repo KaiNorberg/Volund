@@ -1,4 +1,4 @@
-Materials [ Red.material Blue.material ]
+Materials [ Materials/Red.material Materials/Blue.material ]
 Meshes [ Standard/Models/Teapot.obj Standard/Models/Cube.obj ]
 Shaders [ Standard/Shaders/Test.shader ]
 Textures [ ]
@@ -48,7 +48,7 @@ Entities
 		}
 		Component1
 		{
-			Material [ Red.material ]
+			Material [ Materials/Red.material ]
 			Mesh [ Standard/Models/Cube.obj ]
 			Type [ MeshRenderer ]
 		}
@@ -79,7 +79,7 @@ Entities
 		}
 		Component1
 		{
-			Material [ Blue.material ]
+			Material [ Materials/Blue.material ]
 			Mesh [ Standard/Models/Teapot.obj ]
 			Type [ MeshRenderer ]
 		}

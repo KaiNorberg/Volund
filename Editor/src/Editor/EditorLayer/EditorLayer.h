@@ -8,6 +8,10 @@ public:
 
 	Ref<Window> GetWindow();
 
+	void LoadScene(const std::filesystem::path& FilePath);
+
+	void LoadProject(const std::filesystem::path& FilePath);
+
 	void OnAttach() override;
 
 	void OnDetach() override;
@@ -18,10 +22,14 @@ public:
 
 private:
 
+	VML _CurrentProject;
+
+	Ref<Scene> _CurrentScene;
+
+	Ref<RenderingAPI> _API;
+
 	Ref<Window> _Window;
 
 	Ref<Context> _Context;
-
-	Ref<Scene> _Scene;
 };
 
