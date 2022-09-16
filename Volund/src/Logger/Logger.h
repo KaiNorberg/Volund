@@ -21,6 +21,8 @@ namespace Volund
 		static Logger _CoreLogger;
 		static Logger _ClientLogger;
 
+		static std::string FormatString(const char* Format, ...);
+
 		std::string _Name;
 	};
 }

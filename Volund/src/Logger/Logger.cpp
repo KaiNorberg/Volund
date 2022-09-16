@@ -3,6 +3,10 @@
 #include "PCH/PCH.h"
 #include "Logger.h"
 
+#ifdef VOLUND_DIST
+#include <Windows.h>
+#endif
+
 namespace Volund
 {
 	Logger Logger::_CoreLogger = Logger("VOLUND");
@@ -56,11 +60,32 @@ namespace Volund
 
 		va_end(Args);
 
+		#ifdef VOLUND_DIST
+		std::string FormatedString = FormatString(Format, Args);
+		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
+		#endif
+
 		abort();
 	}
 
 	Logger::Logger(std::string_view Name)
 	{
 		this->_Name = Name;
+	}
+
+	std::string Logger::FormatString(const char* Format, ...)
+	{
+		std::va_list Args;
+		va_start(Args, Format);
+
+		size_t Size = std::vsnprintf(nullptr, 0, Format, Args) + 1;
+
+		std::string FormatedString;
+		FormatedString.resize(Size);
+		std::vsnprintf(FormatedString.data(), Size, Format, Args);
+
+		va_end(Args);
+
+		return FormatedString;
 	}
 } //namespace Volund

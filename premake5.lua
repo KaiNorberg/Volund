@@ -81,7 +81,6 @@ project "Volund"
 		
 project "Editor"
 	location "Editor"
-	kind "ConsoleApp"
 	language "C++"
 	cppdialect "C++20"
 	systemversion "latest"
@@ -130,16 +129,19 @@ project "Editor"
 		defines "VOLUND_DEBUG"
 		symbols "On"
 		runtime "Debug"
+		kind "ConsoleApp"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
 		optimize "On"
 		runtime "Release"
+		kind "ConsoleApp"
 
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "On"
-		runtime "Release"
+		runtime "Release"	
+		kind "WindowedApp"
 		targetdir (TargetDir .. "/Editor")
 		postbuildcommands {
 			"xcopy Standard\\* ..\\" .. TargetDir .. "\\Editor\\Standard /Q /E /Y /I /S"
