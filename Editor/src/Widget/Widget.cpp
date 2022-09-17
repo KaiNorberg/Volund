@@ -3,10 +3,131 @@
 
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <misc/cpp/imgui_stdlib.h>
 
-void Widget::DrawVec3Control(std::string_view Name, Volund::Vec3& Value, float Speed, float DefaultValue)
+void Widget::Align(float Width, float Alignment)
 {
-	ImGui::PushID(Name.data());
+	float Avail = ImGui::GetContentRegionAvail().x;
+	float Off = (Avail - Width) * Alignment;
+	if (Off > 0.0f)
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + Off);
+}
+
+std::string Widget::TextSelectorControl(const std::string& Name, const std::string& Default, const std::vector<std::string>& SelectableValues)
+{
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 100);
+
+	ImGui::Text(Name.data());
+	ImGui::NextColumn();
+	Align(10, 0.01f);
+
+	float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+	ImVec2 ButtonSize(-FLT_MIN, LineHeight);
+
+	std::string SelectedValue;
+	if (ImGui::TreeNodeEx((void*)Name.data(), ImGuiTreeNodeFlags_Framed, Default.c_str()))
+	{
+		for (auto& SelectableValue : SelectableValues)
+		{
+			if (ImGui::Button(SelectableValue.c_str(), ButtonSize))
+			{
+				SelectedValue = SelectableValue;
+			}
+		}
+
+		ImGui::TreePop();
+	}
+
+	ImGui::Columns(1);
+
+	ImGui::NextColumn();
+
+	if (!SelectedValue.empty())
+	{
+		return SelectedValue;
+	}
+	else
+	{
+		return "";
+	}
+}
+
+std::string Widget::TextControl(const std::string& Name, const std::string& Default)
+{
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 100);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+	ImGui::Text(Name.data());
+	ImGui::NextColumn();
+	Align(10, 0.01f);
+
+	ImGui::PushID((void*)Name.data());
+
+	std::string Value = Default;
+	bool Changed = ImGui::InputText("##1234", &Value);
+
+	ImGui::Columns(1);
+
+	ImGui::PopStyleVar();
+	ImGui::NextColumn();
+
+	ImGui::PopID();
+
+	if (Changed && ImGui::IsKeyPressed(ImGuiKey_Enter))
+	{
+		return Value;
+	}
+	else
+	{
+		return "";
+	}
+}
+
+void Widget::BoolControl(const std::string& Name, bool* Value)
+{
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 100);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+	ImGui::PushID((void*)Value);
+
+	ImGui::Text(Name.c_str());
+	ImGui::NextColumn();
+	Align(10, 0.05f);
+	ImGui::Checkbox("##", Value);
+	ImGui::NextColumn();
+
+	ImGui::PopID();
+
+	ImGui::Columns(1);
+	ImGui::PopStyleVar();
+}
+
+void Widget::FloatControl(const std::string& Name, float* Value)
+{
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 100);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+
+	ImGui::PushID((void*)Value);
+
+	ImGui::Text(Name.c_str());
+	ImGui::NextColumn();
+	Align(10, 0.05f);
+	ImGui::DragFloat("##", Value);
+	ImGui::NextColumn();
+
+	ImGui::PopID();
+
+	ImGui::Columns(1);
+	ImGui::PopStyleVar();
+}
+
+void Widget::Vec3Control(std::string_view Name, Volund::Vec3* Value, float Speed, float DefaultValue)
+{
+	ImGui::PushID((void*)Name.data());
 
 	ImGui::Columns(2);
 	ImGui::SetColumnWidth(0, 100);
@@ -26,13 +147,13 @@ void Widget::DrawVec3Control(std::string_view Name, Volund::Vec3& Value, float S
 
 	if (ImGui::Button("X", ButtonSize))
 	{
-		Value.x = DefaultValue;
+		Value->x = DefaultValue;
 	}
 
 	ImGui::PopStyleColor(3);
 
 	ImGui::SameLine();
-	ImGui::DragFloat("##X", &Value.x, Speed);
+	ImGui::DragFloat("##X", &Value->x, Speed);
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
 
@@ -42,13 +163,13 @@ void Widget::DrawVec3Control(std::string_view Name, Volund::Vec3& Value, float S
 
 	if (ImGui::Button("Y", ButtonSize))
 	{
-		Value.y = DefaultValue;
+		Value->y = DefaultValue;
 	}
 
 	ImGui::PopStyleColor(3);
 
 	ImGui::SameLine();
-	ImGui::DragFloat("##Y", &Value.y, Speed);
+	ImGui::DragFloat("##Y", &Value->y, Speed);
 	ImGui::PopItemWidth();
 	ImGui::SameLine();
 
@@ -58,13 +179,13 @@ void Widget::DrawVec3Control(std::string_view Name, Volund::Vec3& Value, float S
 
 	if (ImGui::Button("Z", ButtonSize))
 	{
-		Value.z = DefaultValue;
+		Value->z = DefaultValue;
 	}
 
 	ImGui::PopStyleColor(3);
 
 	ImGui::SameLine();
-	ImGui::DragFloat("##Z", &Value.z, Speed);
+	ImGui::DragFloat("##Z", &Value->z, Speed);
 	ImGui::PopItemWidth();
 
 	ImGui::PopStyleVar();

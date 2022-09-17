@@ -7,7 +7,12 @@ class EditorLayer : public Volund::Layer
 public:
 
 	const Ref<Window> GetWindow();
+
 	const Ref<Scene> GetScene();
+
+	const Ref<VML> GetProject();
+
+	void SaveScene(const std::filesystem::path& FilePath);
 
 	void LoadScene(const std::filesystem::path& FilePath);
 
@@ -23,7 +28,7 @@ public:
 
 private:
 
-	VML _CurrentProject;
+	Ref<VML> _Project;
 
 	Ref<Scene> _Scene;
 

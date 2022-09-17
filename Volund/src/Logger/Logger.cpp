@@ -45,6 +45,11 @@ namespace Volund
 		vprintf(Format, Args);
 		printf("\n");
 
+		#ifdef VOLUND_DIST
+		std::string FormatedString = FormatString(Format, Args);
+		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"WARNING!", MB_ICONWARNING | MB_OK);
+		#endif
+
 		va_end(Args);
 	}
 

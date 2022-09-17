@@ -85,6 +85,30 @@ namespace Volund
 		}
 	}
 
+	void Scene::CreateAsset(std::string_view FilePath)
+	{
+		if (FilePath.ends_with(".vmaterial"))
+		{
+			this->Assets.Create<Volund::MaterialAsset>(FilePath);
+		}
+		else if (FilePath.ends_with(".vshader"))
+		{
+			this->Assets.Create<Volund::ShaderAsset>(FilePath);
+		}
+		else if (FilePath.ends_with(".obj"))
+		{
+			this->Assets.Create<Volund::MeshAsset>(FilePath);
+		}
+		else if (FilePath.ends_with(".jpg") || FilePath.ends_with(".png") || FilePath.ends_with(".bmp"))
+		{
+			this->Assets.Create<Volund::TextureAsset>(FilePath);
+		}
+		else
+		{
+			VOLUND_WARNING("Unrecognized file format!");
+		}
+	}
+
 	void Scene::OnEvent(Event* E)
 	{
 		for (const auto& Entity : this->_Entities)
@@ -122,7 +146,7 @@ namespace Volund
 
 					if (ComponentVML.Get("IsActive"))
 					{
-						NewEntity->CreateComponent<Camera>()->SetActive();
+						NewCamera->SetActive();
 					}
 
 					NewCamera->FOV = ComponentVML.Get("FOV");
@@ -145,10 +169,11 @@ namespace Volund
 				else if (ComponentType == "PointLight")
 				{
 					VMLEntry ColorVML = ComponentVML.Get("Color");
+					VMLEntry BrightnessVML = ComponentVML.Get("Brightness");
 
 					RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
 
-					NewEntity->CreateComponent<PointLight>(Color);
+					NewEntity->CreateComponent<PointLight>(Color, BrightnessVML);
 				}
 				else if (ComponentType == "Transform")
 				{

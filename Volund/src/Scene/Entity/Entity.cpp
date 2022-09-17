@@ -9,6 +9,11 @@ namespace Volund
 		return this->_Name;
 	}
 
+	void Entity::SetName(std::string_view NewName)
+	{
+		this->_Name = NewName;
+	}
+
 	Scene* Entity::GetScene() const
 	{
 		return this->_Parent;

@@ -14,6 +14,23 @@ const Ref<Scene> EditorLayer::GetScene()
 	return this->_Scene;
 }
 
+const Ref<VML> EditorLayer::GetProject()
+{
+	return this->_Project;
+}
+
+void EditorLayer::SaveScene(const std::filesystem::path& FilePath)
+{
+	if (this->_Scene != nullptr)
+	{
+		this->_Scene->Serialize(FilePath.string());
+	}
+	else
+	{
+		VOLUND_WARNING("Cant save a scene without a loaded scene!");
+	}
+}
+
 void EditorLayer::LoadScene(const std::filesystem::path& FilePath)
 {
 	this->_Scene = Scene::Deserialize(FilePath.string());
@@ -21,8 +38,15 @@ void EditorLayer::LoadScene(const std::filesystem::path& FilePath)
 
 void EditorLayer::LoadProject(const std::filesystem::path& FilePath)
 {
-	this->_CurrentProject = VML(FilePath.string());
-	std::filesystem::current_path(FilePath.parent_path());
+	if (FilePath.extension() == ".vproj")
+	{
+		this->_Project = Ref<VML>(new VML(FilePath.string()));
+		std::filesystem::current_path(FilePath.parent_path());
+	}
+	else
+	{
+		VOLUND_WARNING("That is not a valid Project file!");
+	}
 }
 
 void EditorLayer::OnAttach()
@@ -50,15 +74,6 @@ void EditorLayer::OnDetach()
 
 void EditorLayer::OnUpdate(TimeStep TS)
 {
-	//TEMP
-	static bool First = true;
-	if (First)
-	{
-		this->LoadProject("TestProject/TestProject.vproj");
-		this->LoadScene("Scenes/Test.vscene");
-		First = false;
-	}
-
 	this->_Context->MakeCurrent();
 	this->_Context->Flush();
 	this->_API->Clear();

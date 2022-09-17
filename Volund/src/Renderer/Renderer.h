@@ -16,6 +16,7 @@ namespace Volund
 	struct PointLightData
 	{
 		RGB Color;
+		float Brightness;
 		Vec3 Position;
 	};
 

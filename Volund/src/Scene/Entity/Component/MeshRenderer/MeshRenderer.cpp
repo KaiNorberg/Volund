@@ -24,10 +24,30 @@ namespace Volund
 
 		MeshRendererVML.PushBack("Type", VMLEntry("MeshRenderer"));
 
-		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetFilePath()));
-		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetFilePath()));
+		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetName()));
+		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetName()));
 
 		return MeshRendererVML;
+	}
+
+	void MeshRenderer::SetMesh(Ref<MeshAsset> _NewMesh)
+	{
+		this->_Mesh = _NewMesh;
+	}
+
+	void MeshRenderer::SetMaterial(Ref<MaterialAsset> _NewMaterial)
+	{
+		this->_Material = _NewMaterial;
+	}
+
+	const Ref<MeshAsset> MeshRenderer::GetMesh()
+	{
+		return this->_Mesh;
+	}
+
+	const Ref<MaterialAsset> MeshRenderer::GetMaterial()
+	{
+		return this->_Material;
 	}
 
 	MeshRenderer::MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial)

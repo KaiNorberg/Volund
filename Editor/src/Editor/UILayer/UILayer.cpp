@@ -38,7 +38,6 @@ void UILayer::OnAttach()
 	ImGui_ImplWin32_Init(EditorWindow->GetHandle());
 	ImGui_ImplOpenGL3_Init();
 
-
 	this->_WidgetContainer.PushBack(new SceneWidget(this));
 }
 
@@ -56,62 +55,11 @@ void UILayer::OnUpdate(TimeStep TS)
 	ImGui::NewFrame();
 
 	this->BeginDockSpace();
-
-    if (ImGui::BeginMenuBar())
-    {
-		if (ImGui::BeginMenu("File"))
-		{
-			if (ImGui::BeginMenu("Open"))
-			{
-				if (ImGui::MenuItem("Project"))
-				{
-					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-					Editor->LoadProject(this->OpenFileDialog());
-				}
-
-				//TEMP
-				if (ImGui::MenuItem("Scene"))
-				{
-					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-					Editor->LoadScene(this->OpenFileDialog());
-				}
-
-				ImGui::EndMenu();
-			}
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Widgets"))
-		{
-			for (const auto& View : this->_WidgetContainer)
-			{
-				for (const auto& Widget : View)
-				{
-					if (ImGui::MenuItem(Widget->GetName()))
-					{
-						Widget->_IsActive = true;
-					}
-				}
-			}
-
-			ImGui::EndMenu();
-		}
-
-        ImGui::EndMenuBar();
-    }
-
-	for (const auto& View : this->_WidgetContainer)
 	{
-		for (const auto& Widget : View)
-		{
-			if (Widget->_IsActive)
-			{
-				Widget->OnUpdate();
-			}
-		}
-	}
+		this->DrawMenuBar();
 
+		this->DrawWidgets();
+	}	
 	ImGui::End();
 
 	ImGui::Render();
@@ -121,67 +69,6 @@ void UILayer::OnUpdate(TimeStep TS)
 void UILayer::OnEvent(Event* E)
 {
 
-}
-
-std::string UILayer::OpenFileDialog()
-{
-    //  CREATE FILE OBJECT INSTANCE
-    HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-    if (FAILED(f_SysHr))
-    {
-        return std::string();
-    }
-
-    // CREATE FileOpenDialog OBJECT
-    IFileOpenDialog* f_FileSystem;
-    f_SysHr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&f_FileSystem));
-    if (FAILED(f_SysHr)) 
-    {
-        CoUninitialize();
-        return std::string();
-    }
-
-    //  SHOW OPEN FILE DIALOG WINDOW
-    f_SysHr = f_FileSystem->Show(NULL);
-    if (FAILED(f_SysHr)) 
-    {
-        f_FileSystem->Release();
-        CoUninitialize();
-        return std::string();
-    }
-
-    //  RETRIEVE FILE NAME FROM THE SELECTED ITEM
-    IShellItem* f_Files;
-    f_SysHr = f_FileSystem->GetResult(&f_Files);
-    if (FAILED(f_SysHr)) 
-    {
-        f_FileSystem->Release();
-        CoUninitialize();
-        return std::string();
-    }
-
-    //  STORE AND CONVERT THE FILE NAME
-    PWSTR f_Path;
-    f_SysHr = f_Files->GetDisplayName(SIGDN_FILESYSPATH, &f_Path);
-    if (FAILED(f_SysHr)) 
-    {
-        f_Files->Release();
-        f_FileSystem->Release();
-        CoUninitialize();
-        return std::string();
-    }
-
-    //  FORMAT AND STORE THE FILE PATH
-    std::wstring path(f_Path);
-    std::string c(path.begin(), path.end());
-
-	//  SUCCESS, CLEAN UP
-	CoTaskMemFree(f_Path);
-	f_Files->Release();
-	f_FileSystem->Release();
-	CoUninitialize();
-
-    return c;
 }
 
 void UILayer::BeginDockSpace()
@@ -208,4 +95,137 @@ void UILayer::BeginDockSpace()
 
 	ImGuiID DockspaceID = ImGui::GetID("MyDockSpace");
 	ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
+}
+
+void UILayer::DrawMenuBar()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::BeginMenu("Open"))
+			{
+				if (ImGui::MenuItem("Project"))
+				{
+					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
+					Editor->LoadProject(this->OpenFileDialog());
+				}
+
+				if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+				{
+					if (ImGui::MenuItem("Scene"))
+					{
+						auto Editor = this->GetApp()->GetLayer<EditorLayer>();
+						Editor->LoadScene(this->OpenFileDialog());
+					}
+				}
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Save"))
+			{
+				if (ImGui::MenuItem("Scene"))
+				{
+					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
+					Editor->SaveScene(this->OpenFileDialog());
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+		{
+			if (ImGui::BeginMenu("Widgets"))
+			{
+				for (const auto& View : this->_WidgetContainer)
+				{
+					for (const auto& Widget : View)
+					{
+						if (ImGui::MenuItem(Widget->GetName()))
+						{
+							Widget->_IsActive = true;
+						}
+					}
+				}
+
+				ImGui::EndMenu();
+			}
+		}
+
+		ImGui::EndMenuBar();
+	}
+}
+
+void UILayer::DrawWidgets()
+{
+	if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+	{
+		for (const auto& View : this->_WidgetContainer)
+		{
+			for (const auto& Widget : View)
+			{
+				if (Widget->_IsActive)
+				{
+					Widget->OnUpdate();
+				}
+			}
+		}
+	}
+}
+
+std::string UILayer::OpenFileDialog()
+{
+	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+	if (FAILED(f_SysHr))
+	{
+		return std::string();
+	}
+
+	IFileOpenDialog* f_FileSystem = nullptr;
+	f_SysHr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&f_FileSystem));
+	if (FAILED(f_SysHr))
+	{
+		CoUninitialize();
+		return std::string();
+	}
+
+	f_SysHr = f_FileSystem->Show(NULL);
+	if (FAILED(f_SysHr))
+	{
+		f_FileSystem->Release();
+		CoUninitialize();
+		return std::string();
+	}
+
+	IShellItem* f_Files;
+	f_SysHr = f_FileSystem->GetResult(&f_Files);
+	if (FAILED(f_SysHr))
+	{
+		f_FileSystem->Release();
+		CoUninitialize();
+		return std::string();
+	}
+
+	PWSTR f_Path;
+	f_SysHr = f_Files->GetDisplayName(SIGDN_FILESYSPATH, &f_Path);
+	if (FAILED(f_SysHr))
+	{
+		f_Files->Release();
+		f_FileSystem->Release();
+		CoUninitialize();
+		return std::string();
+	}
+
+	std::wstring path(f_Path);
+	std::string c(path.begin(), path.end());
+
+	CoTaskMemFree(f_Path);
+	f_Files->Release();
+	f_FileSystem->Release();
+	CoUninitialize();
+
+	return c;
 }

@@ -53,7 +53,10 @@ namespace Volund
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
-		this->_Data.resize(TypeID + 1);
+		while (this->_Data.size() <= TypeID)
+		{
+			this->_Data.push_back(std::vector<Ref<T>>());
+		}
 
 		this->_Data[TypeID].push_back(Entry);
 	}
@@ -64,7 +67,10 @@ namespace Volund
 	{
 		static uint64_t TypeID = this->GetTypeID<D>();
 
-		this->_Data.resize(TypeID + 1);
+		while (this->_Data.size() <= TypeID)
+		{
+			this->_Data.push_back(std::vector<Ref<T>>());
+		}
 
 		this->_Data[TypeID].push_back(Ref<D>(Entry));
 	}
@@ -80,7 +86,7 @@ namespace Volund
 			VOLUND_ERROR("Container of type (%s) does not contain derived type (%s) with index (%d)!", typeid(T).name(), typeid(D).name(), Index);
 		}
 
-		this->_Data[TypeID].erase(Index);
+		this->_Data[TypeID].erase(this->_Data[TypeID].begin() + Index);
 	}
 
 	template <typename T>

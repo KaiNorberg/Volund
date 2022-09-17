@@ -15,8 +15,8 @@ Entities
 		}
 		Component1
 		{
+			Brightness [ 1.000000 ]
 			Color [ 1.000000 1.000000 1.000000 ]
-			Brightness [ 1.0 ]
 			Type [ PointLight ]
 		}
 	}
@@ -31,7 +31,7 @@ Entities
 		}
 		Component1
 		{
-			FOV [ 70.000000 ]
+			FOV [ 31.000000 ]
 			FarPlane [ 100.000000 ]
 			IsActive [ 1 ]
 			NearPlane [ 0.100000 ]
@@ -65,8 +65,8 @@ Entities
 		}
 		Component1
 		{
+			Brightness [ 1.000000 ]
 			Color [ 1.000000 1.000000 1.000000 ]
-			Brightness [ 1.0 ]
 			Type [ PointLight ]
 		}
 	}

@@ -24,6 +24,8 @@ namespace Volund
 		template <typename T>
 		const std::vector<Ref<T>> ComponentView();
 
+		void CreateAsset(std::string_view FilePath);
+
 		virtual void OnEvent(Event*);
 
 		virtual void OnUpdate(TimeStep);

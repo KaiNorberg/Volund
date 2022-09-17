@@ -210,7 +210,9 @@ project "ImGui"
 		"Editor/vendor/imgui/backends/imgui_impl_opengl3.cpp",
 		"Editor/vendor/imgui/backends/imgui_impl_opengl3.h",
 		"Editor/vendor/imgui/backends/imgui_impl_win32.cpp",
-		"Editor/vendor/imgui/backends/imgui_impl_win32.h"
+		"Editor/vendor/imgui/backends/imgui_impl_win32.h",
+		"Editor/vendor/imgui/misc/cpp/imgui_stdlib.cpp",
+		"Editor/vendor/imgui/misc/cpp/imgui_stdlib.h"
 	}
 
 	filter "system:windows"

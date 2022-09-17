@@ -25,7 +25,7 @@ namespace Volund
 		_SceneData.PointLights.reserve(PointLights.size());
 		for (auto const& Light : PointLights)
 		{
-			_SceneData.PointLights.push_back({ Light->Color, Light->GetEntity()->GetComponent<Transform>()->Position });
+			_SceneData.PointLights.push_back({ Light->Color, Light->Brightness, Light->GetEntity()->GetComponent<Transform>()->Position });
 		}
 
 		_InScene = true;
@@ -65,6 +65,7 @@ namespace Volund
 						{
 							std::string Uniform = "PointLights[" + std::to_string(i) + "].";
 							ObjectShader->SetVec3(Uniform + "Color", _SceneData.PointLights[i].Color);
+							ObjectShader->SetFloat(Uniform + "Brightness", _SceneData.PointLights[i].Brightness);
 							ObjectShader->SetVec3(Uniform + "Position", _SceneData.PointLights[i].Position);
 						}
 					}

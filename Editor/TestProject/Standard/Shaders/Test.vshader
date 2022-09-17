@@ -26,6 +26,7 @@ void main()
 struct PointLight
 {
     vec3 Color;
+    float Brightness;
     vec3 Position;
 };
 uniform int PointLightAmount;
@@ -55,7 +56,7 @@ void main()
 
         float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
 
-        Result += (Diffuse + Specular) * PointLights[i].Color * Color;
+        Result += (Diffuse + Specular) * PointLights[i].Color * PointLights[i].Brightness * Color;
     }
 
     FragColor = vec4(Result, 1.0f);

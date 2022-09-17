@@ -15,6 +15,8 @@ namespace Volund
 	public:
 		std::string GetName();
 
+		void SetName(std::string_view NewName);
+
 		Scene* GetScene() const;
 
 		template <typename T, class... ARGS>

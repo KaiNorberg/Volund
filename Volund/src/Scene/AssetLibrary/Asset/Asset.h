@@ -7,6 +7,9 @@ namespace Volund
 	class Asset
 	{
 	public:
+
+		std::string GetName();
+
 		std::string GetFilePath();
 
 		Asset() = default;

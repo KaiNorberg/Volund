@@ -18,9 +18,13 @@ public:
 
 private:
 
-	std::string OpenFileDialog();
-
 	void BeginDockSpace();
+
+	void DrawMenuBar();
+
+	void DrawWidgets();
+
+	std::string OpenFileDialog();
 
 	Container<Widget> _WidgetContainer;
 };
