@@ -2,7 +2,7 @@
 
 #include "Widget/Widget.h"
 
-class SceneWidget : public Widget
+class EntitiesWidget : public Widget
 {
 public:
 
@@ -10,17 +10,11 @@ public:
 
 	void OnUpdate() override;
 
-	SceneWidget(Volund::Layer* Parent);
+	EntitiesWidget(Volund::Layer* Parent);
 
 private:
 
 	void DrawEntityTab(Volund::Ref<Volund::Scene> Scene);
-
-	void DrawAssetTab(Volund::Ref<Volund::Scene> Scene);
-
-	void DrawFileExplorer(Volund::Ref<Volund::Scene> Scene);
-
-	void DrawDirectory(Volund::Ref<Volund::Scene> Scene, std::filesystem::path DirectoryPath);
 
 	void DrawEntityNode(Volund::Ref<Volund::Entity> Entity);
 
@@ -29,6 +23,5 @@ private:
 	void DrawComponentView(const std::vector<Volund::Ref<Volund::Component>>& ComponentView, std::string_view Name, std::function<void(Volund::Ref<Volund::Component>)> DrawFunction);
 
 	std::string _SelectedEntity;
-
 };
 

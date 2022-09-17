@@ -15,7 +15,8 @@
 
 #include "ImGuiStyle.h"
 
-#include "Widget/SceneWidget/SceneWidget.h"
+#include "Widget/EntitiesWidget/EntitiesWidget.h"
+#include "Widget/AssetsWidget/AssetsWidget.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -38,7 +39,8 @@ void UILayer::OnAttach()
 	ImGui_ImplWin32_Init(EditorWindow->GetHandle());
 	ImGui_ImplOpenGL3_Init();
 
-	this->_WidgetContainer.PushBack(new SceneWidget(this));
+	this->_WidgetContainer.PushBack(new EntitiesWidget(this));
+	this->_WidgetContainer.PushBack(new AssetsWidget(this));
 }
 
 void UILayer::OnDetach()

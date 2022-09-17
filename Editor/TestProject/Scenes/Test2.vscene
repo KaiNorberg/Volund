@@ -1,4 +1,4 @@
-Materials [ Materials/Red.vmaterial Materials/Green.vmaterial Materials/Blue.vmaterial ]
+Materials [ Materials/Red.vmaterial Materials/Blue.vmaterial Materials\Green.vmaterial ]
 Meshes [ Standard/Models/Teapot.obj Standard/Models/Cube.obj ]
 Shaders [ Standard/Shaders/Test.vshader ]
 Textures [ ]
@@ -42,14 +42,14 @@ Entities
 	{
 		Component0
 		{
-			Position [ -3.000000 0.000000 0.000000 ]
+			Position [ -3.600000 0.800000 -5.300000 ]
 			Rotation [ 0.000000 -0.000000 0.000000 ]
 			Scale [ 1.000000 1.000000 1.000000 ]
 			Type [ Transform ]
 		}
 		Component1
 		{
-			Material [ Red ]
+			Material [ Green ]
 			Mesh [ Cube ]
 			Type [ MeshRenderer ]
 		}
