@@ -24,35 +24,35 @@ namespace Volund
 
 		MeshRendererVML.PushBack("Type", VMLEntry("MeshRenderer"));
 
-		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh.GetFilePath()));
-		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material.GetFilePath()));
+		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetFilePath()));
+		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetFilePath()));
 
 		return MeshRendererVML;
 	}
 
-	void MeshRenderer::SetMesh(Asset<Mesh> _NewMesh)
+	void MeshRenderer::SetMesh(Ref<Mesh> _NewMesh)
 	{
 		this->_Mesh = _NewMesh;
 	}
 
-	void MeshRenderer::SetMaterial(Asset<Material> _NewMaterial)
+	void MeshRenderer::SetMaterial(Ref<Material> _NewMaterial)
 	{
 		this->_Material = _NewMaterial;
 	}
 
-	const Asset<Mesh>& MeshRenderer::GetMesh()
+	const Ref<Mesh>& MeshRenderer::GetMesh()
 	{
 		return this->_Mesh;
 	}
 
-	const Asset<Material>& MeshRenderer::GetMaterial()
+	const Ref<Material>& MeshRenderer::GetMaterial()
 	{
 		return this->_Material;
 	}
 
 	MeshRenderer::MeshRenderer(std::string_view MeshFilePath, std::string_view MaterialFilePath)
 	{
-		this->_Mesh = Asset<Mesh>::Load(MeshFilePath);
-		this->_Material = Asset<Material>::Load(MaterialFilePath);
+		this->_Mesh = Mesh::Create(MeshFilePath);
+		this->_Material = Material::Create(MaterialFilePath);
 	}
 }

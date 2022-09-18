@@ -8,6 +8,9 @@ namespace Volund
 	class Mesh
 	{
 	public:
+
+		std::string GetFilePath();
+
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
@@ -26,6 +29,9 @@ namespace Volund
 		virtual ~Mesh() = default;
 
 	protected:
+
+		std::string _FilePath;
+
 		Ref<VertexBuffer> _VertexBuffer;
 		Ref<IndexBuffer> _IndexBuffer;
 	};

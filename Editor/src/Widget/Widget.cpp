@@ -53,6 +53,21 @@ std::string Widget::TextSelectorControl(const std::string& Name, const std::stri
 	}
 }
 
+std::string Widget::FileSelectorControl(const std::string& Name, const std::string& Default, const std::string& FileExtension)
+{
+	std::vector<std::string> Assets;
+	for (const auto& File : std::filesystem::recursive_directory_iterator(std::filesystem::current_path()))
+	{
+		auto FilePath = File.path();
+		if (!File.is_directory() && FilePath.extension() == FileExtension)
+		{
+			FilePath = std::filesystem::relative(FilePath, std::filesystem::current_path());
+			Assets.push_back(FilePath.string());
+		}
+	}
+	return TextSelectorControl(Name, Default, Assets);
+}
+
 std::string Widget::TextControl(const std::string& Name, const std::string& Default)
 {
 	ImGui::Columns(2);

@@ -9,6 +9,11 @@
 
 namespace Volund
 {
+	std::string Mesh::GetFilePath()
+	{
+		return this->_FilePath;
+	}
+
 	Ref<VertexBuffer> Mesh::GetVertexBuffer()
 	{
 		return this->_VertexBuffer;
@@ -38,7 +43,10 @@ namespace Volund
 
 		Ref<IndexBuffer> IBuffer = IndexBuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
 
-		return Mesh::Create(VBuffer, IBuffer);
+		Ref<Mesh> NewMesh = Mesh::Create(VBuffer, IBuffer);
+		NewMesh->_FilePath = FilePath;
+
+		return NewMesh;
 	}
 
 	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)

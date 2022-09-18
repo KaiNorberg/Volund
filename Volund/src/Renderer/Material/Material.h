@@ -12,7 +12,7 @@ namespace Volund
 	{
 	public:
 
-		std::string_view GetFilePath();
+		std::string GetFilePath();
 
 		template <typename T>
 		const std::vector<Ref<MaterialValue<T>>> View() const;
@@ -31,9 +31,9 @@ namespace Volund
 
 		static Ref<Material> Create(Ref<Shader> ObjectShader);
 
-		Material(Ref<Shader> ObjectShader);
-
 	private:
+
+		Material(Ref<Shader> ObjectShader);
 
 		Container<BaseMaterialValue> _Container;
 

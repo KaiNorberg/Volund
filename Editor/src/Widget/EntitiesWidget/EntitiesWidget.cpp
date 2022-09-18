@@ -159,16 +159,16 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 		{
 			auto MeshRenderer = std::dynamic_pointer_cast<Volund::MeshRenderer>(Component);
 
-			auto SelectedMaterial = AssetSelectorControl<Volund::Material>("Material", MeshRenderer->GetMaterial().GetName(), ".vmaterial");
+			auto SelectedMaterial = FileSelectorControl("Material", MeshRenderer->GetMaterial()->GetFilePath(), ".vmaterial");
 			if (SelectedMaterial != "")
 			{
-				MeshRenderer->SetMaterial(Asset<Material>::Load(SelectedMaterial));
+				MeshRenderer->SetMaterial(Material::Create(SelectedMaterial));
 			}
 
-			auto SelectedMesh = AssetSelectorControl<Volund::Mesh>("Mesh", MeshRenderer->GetMesh().GetName(), ".obj");
+			auto SelectedMesh = FileSelectorControl("Mesh", MeshRenderer->GetMesh()->GetFilePath(), ".obj");
 			if (SelectedMesh != "")
 			{
-				MeshRenderer->SetMesh(Asset<Mesh>::Load(SelectedMesh));
+				MeshRenderer->SetMesh(Mesh::Create(SelectedMesh));
 			}
 		});
 	}		

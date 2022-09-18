@@ -3,11 +3,9 @@
 
 #include "VML/VML.h"
 
-#include "Asset/Asset.h"
-
 namespace Volund
 {
-	std::string_view Material::GetFilePath()
+	std::string Material::GetFilePath()
 	{
 		return this->_FilePath;
 	}
@@ -49,11 +47,10 @@ namespace Volund
 	{
 		VML MaterialVML(FilePath);
 
-		Ref<Shader> ObjectShader = Asset<Shader>::Load(MaterialVML.Get("Shader").String());
+		Ref<Shader> ObjectShader = Shader::Create(MaterialVML.Get("Shader").String());
 
 		Ref<Material> NewMaterial = Material::Create(ObjectShader);
-
-		NewMaterial = Material::Create(ObjectShader);
+		NewMaterial->_FilePath = FilePath;
 
 		for (auto& [ValueName, Value] : MaterialVML["Values"])
 		{
@@ -93,7 +90,7 @@ namespace Volund
 
 	Ref<Material> Material::Create(Ref<Shader> ObjectShader)
 	{
-		return std::make_shared<Material>(ObjectShader);
+		return Ref<Material>(new Material(ObjectShader));
 	}
 
 	Material::Material(Ref<Shader> DrawShader)

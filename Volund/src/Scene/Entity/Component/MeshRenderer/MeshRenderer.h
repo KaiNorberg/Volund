@@ -2,8 +2,6 @@
 
 #include "../Component.h"
 
-#include "Asset/Asset.h"
-
 #include "Renderer/Material/Material.h"
 #include "Renderer/Mesh/Mesh.h"
 
@@ -17,18 +15,18 @@ namespace Volund
 
 		VML Serialize() override;
 
-		void SetMesh(Asset<Mesh> _NewMesh);
+		void SetMesh(Ref<Mesh> _NewMesh);
 
-		void SetMaterial(Asset<Material> _NewMaterial);
+		void SetMaterial(Ref<Material> _NewMaterial);
 
-		const Asset<Mesh>& GetMesh();
+		const Ref<Mesh>& GetMesh();
 
-		const Asset<Material>& GetMaterial();
+		const Ref<Material>& GetMaterial();
 
 		MeshRenderer(std::string_view MeshFilePath, std::string_view MaterialFilePath);
 
 	private:
-		Asset<Mesh> _Mesh;
-		Asset<Material> _Material;
+		Ref<Mesh> _Mesh;
+		Ref<Material> _Material;
 	};
 }
