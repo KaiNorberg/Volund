@@ -56,6 +56,8 @@ namespace Volund
 		/// </summary>
 		virtual void SetMat4x4(std::string_view Name, const Mat4x4& Value, bool Transpose = false) = 0;
 
+		static Ref<Shader> Create(std::string_view FilePath);
+
 		static Ref<Shader> Create(std::string_view VertexSource, std::string_view FragmentSource, std::string_view GeometrySource);
 
 		virtual ~Shader() = default;

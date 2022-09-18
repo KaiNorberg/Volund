@@ -2,8 +2,6 @@
 
 #include "Entity/Entity.h"
 
-#include "AssetLibrary/AssetLibrary.h"
-
 namespace Volund
 {
 	class Event;
@@ -24,8 +22,6 @@ namespace Volund
 		template <typename T>
 		const std::vector<Ref<T>> ComponentView();
 
-		void CreateAsset(std::string_view FilePath);
-
 		virtual void OnEvent(Event*);
 
 		virtual void OnUpdate(TimeStep);
@@ -33,8 +29,6 @@ namespace Volund
 		static Ref<Scene> Deserialize(std::string_view FilePath);
 
 		void Serialize(std::string_view FilePath);
-
-		AssetLibrary Assets;
 
 		std::vector<Ref<Entity>>::iterator begin();
 		std::vector<Ref<Entity>>::iterator end();

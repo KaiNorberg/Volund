@@ -96,6 +96,8 @@ namespace Volund
 		}
 
 		_InScene = false;
+
+		_SceneData = SceneData();
 	}
 
 	void Renderer::Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination)

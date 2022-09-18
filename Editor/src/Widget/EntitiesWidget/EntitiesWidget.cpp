@@ -159,44 +159,16 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 		{
 			auto MeshRenderer = std::dynamic_pointer_cast<Volund::MeshRenderer>(Component);
 
-			std::vector<std::string> Materials;
-			auto& MaterialView = Scene->Assets.View<Volund::MaterialAsset>();
-			for (auto& Material : MaterialView)
-			{
-				Materials.push_back(Material->GetName());
-			}
-			std::string SelectedMaterial = TextSelectorControl("Material", MeshRenderer->GetMaterial()->GetName(), Materials);
+			auto SelectedMaterial = AssetSelectorControl<Volund::Material>("Material", MeshRenderer->GetMaterial().GetName(), ".vmaterial");
 			if (SelectedMaterial != "")
 			{
-				if (Scene->Assets.Contains<Volund::MaterialAsset>(SelectedMaterial))
-				{
-					auto Material = Scene->Assets.Get<Volund::MaterialAsset>(SelectedMaterial);
-					MeshRenderer->SetMaterial(Material);
-				}
-				else
-				{
-					VOLUND_WARNING("Unable to find MaterialAsset (%s)", SelectedMaterial.c_str());
-				}
+				MeshRenderer->SetMaterial(Asset<Material>::Load(SelectedMaterial));
 			}
 
-			std::vector<std::string> Meshes;
-			auto& MeshView = Scene->Assets.View<Volund::MeshAsset>();
-			for (auto& Mesh : MeshView)
-			{
-				Meshes.push_back(Mesh->GetName());
-			}
-			std::string SelectedMesh = TextSelectorControl("Mesh", MeshRenderer->GetMesh()->GetName(), Meshes);
+			auto SelectedMesh = AssetSelectorControl<Volund::Mesh>("Mesh", MeshRenderer->GetMesh().GetName(), ".obj");
 			if (SelectedMesh != "")
 			{
-				if (Scene->Assets.Contains<Volund::MeshAsset>(SelectedMesh))
-				{
-					auto Mesh = Scene->Assets.Get<Volund::MeshAsset>(SelectedMesh);
-					MeshRenderer->SetMesh(Mesh);
-				}
-				else
-				{
-					VOLUND_WARNING("Unable to find MeshAsset (%s)", SelectedMesh.c_str());
-				}
+				MeshRenderer->SetMesh(Asset<Mesh>::Load(SelectedMesh));
 			}
 		});
 	}		

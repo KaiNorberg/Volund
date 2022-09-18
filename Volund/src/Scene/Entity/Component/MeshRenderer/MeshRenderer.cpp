@@ -15,7 +15,7 @@ namespace Volund
 		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 		Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
-		Renderer::Submit(ModelMatrix, this->_Mesh->Get(), this->_Material->Get());
+		Renderer::Submit(ModelMatrix, this->_Mesh, this->_Material);
 	}
 
 	VML MeshRenderer::Serialize()
@@ -24,35 +24,35 @@ namespace Volund
 
 		MeshRendererVML.PushBack("Type", VMLEntry("MeshRenderer"));
 
-		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetName()));
-		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetName()));
+		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh.GetFilePath()));
+		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material.GetFilePath()));
 
 		return MeshRendererVML;
 	}
 
-	void MeshRenderer::SetMesh(Ref<MeshAsset> _NewMesh)
+	void MeshRenderer::SetMesh(Asset<Mesh> _NewMesh)
 	{
 		this->_Mesh = _NewMesh;
 	}
 
-	void MeshRenderer::SetMaterial(Ref<MaterialAsset> _NewMaterial)
+	void MeshRenderer::SetMaterial(Asset<Material> _NewMaterial)
 	{
 		this->_Material = _NewMaterial;
 	}
 
-	const Ref<MeshAsset> MeshRenderer::GetMesh()
+	const Asset<Mesh>& MeshRenderer::GetMesh()
 	{
 		return this->_Mesh;
 	}
 
-	const Ref<MaterialAsset> MeshRenderer::GetMaterial()
+	const Asset<Material>& MeshRenderer::GetMaterial()
 	{
 		return this->_Material;
 	}
 
-	MeshRenderer::MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial)
+	MeshRenderer::MeshRenderer(std::string_view MeshFilePath, std::string_view MaterialFilePath)
 	{
-		this->_Mesh = ObjectMesh;
-		this->_Material = ObjectMaterial;
+		this->_Mesh = Asset<Mesh>::Load(MeshFilePath);
+		this->_Material = Asset<Material>::Load(MaterialFilePath);
 	}
 }

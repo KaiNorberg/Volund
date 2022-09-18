@@ -16,7 +16,6 @@
 #include "ImGuiStyle.h"
 
 #include "Widget/EntitiesWidget/EntitiesWidget.h"
-#include "Widget/AssetsWidget/AssetsWidget.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -40,7 +39,6 @@ void UILayer::OnAttach()
 	ImGui_ImplOpenGL3_Init();
 
 	this->_WidgetContainer.PushBack(new EntitiesWidget(this));
-	this->_WidgetContainer.PushBack(new AssetsWidget(this));
 }
 
 void UILayer::OnDetach()
@@ -138,24 +136,26 @@ void UILayer::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
-		if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+		if (ImGui::BeginMenu("Widgets"))
 		{
-			if (ImGui::BeginMenu("Widgets"))
+			for (const auto& View : this->_WidgetContainer)
 			{
-				for (const auto& View : this->_WidgetContainer)
+				for (const auto& Widget : View)
 				{
-					for (const auto& Widget : View)
+					if (ImGui::MenuItem(Widget->GetName()))
 					{
-						if (ImGui::MenuItem(Widget->GetName()))
-						{
-							Widget->_IsActive = true;
-						}
+						Widget->_IsActive = true;
 					}
 				}
-
-				ImGui::EndMenu();
 			}
+
+			ImGui::EndMenu();
 		}
+
+		if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+		{
+		}
+
 
 		ImGui::EndMenuBar();
 	}
@@ -163,16 +163,13 @@ void UILayer::DrawMenuBar()
 
 void UILayer::DrawWidgets()
 {
-	if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+	for (const auto& View : this->_WidgetContainer)
 	{
-		for (const auto& View : this->_WidgetContainer)
+		for (const auto& Widget : View)
 		{
-			for (const auto& Widget : View)
+			if (Widget->_IsActive)
 			{
-				if (Widget->_IsActive)
-				{
-					Widget->OnUpdate();
-				}
+				Widget->OnUpdate();
 			}
 		}
 	}

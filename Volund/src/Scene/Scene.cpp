@@ -1,7 +1,6 @@
 #include "PCH/PCH.h"
 
 #include "Scene.h"
-#include "AssetLibrary/Asset/Assets.h"
 
 #include "EventDispatcher/Event.h"
 #include "Scene/Entity/Component/Components.h"
@@ -85,30 +84,6 @@ namespace Volund
 		}
 	}
 
-	void Scene::CreateAsset(std::string_view FilePath)
-	{
-		if (FilePath.ends_with(".vmaterial"))
-		{
-			this->Assets.Create<Volund::MaterialAsset>(FilePath);
-		}
-		else if (FilePath.ends_with(".vshader"))
-		{
-			this->Assets.Create<Volund::ShaderAsset>(FilePath);
-		}
-		else if (FilePath.ends_with(".obj"))
-		{
-			this->Assets.Create<Volund::MeshAsset>(FilePath);
-		}
-		else if (FilePath.ends_with(".jpg") || FilePath.ends_with(".png") || FilePath.ends_with(".bmp"))
-		{
-			this->Assets.Create<Volund::TextureAsset>(FilePath);
-		}
-		else
-		{
-			VOLUND_WARNING("Unrecognized file format!");
-		}
-	}
-
 	void Scene::OnEvent(Event* E)
 	{
 		for (const auto& Entity : this->_Entities)
@@ -123,16 +98,7 @@ namespace Volund
 
 		Ref<Scene> NewScene = std::make_shared<Scene>();
 
-		NewScene->Assets.Deserialize<MeshAsset>(SceneVML.Get("Meshes"));
-
-		NewScene->Assets.Deserialize<ShaderAsset>(SceneVML.Get("Shaders"));
-
-		NewScene->Assets.Deserialize<TextureAsset>(SceneVML.Get("Textures"));
-
-		NewScene->Assets.Deserialize<MaterialAsset>(SceneVML.Get("Materials"));
-
-		VML& EntitiesVML = SceneVML["Entities"];
-		for (auto& [EntityName, EntityVML] : EntitiesVML)
+		for (auto& [EntityName, EntityVML] : SceneVML)
 		{
 			Ref<Entity> NewEntity = NewScene->CreateEntity(EntityName);
 
@@ -159,12 +125,7 @@ namespace Volund
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
-					Ref<MeshAsset> ObjectMesh = NewScene->Assets.Get<MeshAsset>(
-						ComponentVML.Get("Mesh").GetAs<std::string>());
-					Ref<MaterialAsset> ObjectMaterial = NewScene->Assets.Get<MaterialAsset>(
-						ComponentVML.Get("Material").GetAs<std::string>());
-
-					NewEntity->CreateComponent<MeshRenderer>(ObjectMesh, ObjectMaterial);
+					NewEntity->CreateComponent<MeshRenderer>(ComponentVML.Get("Mesh"), ComponentVML.Get("Material"));
 				}
 				else if (ComponentType == "PointLight")
 				{
@@ -202,14 +163,6 @@ namespace Volund
 	void Scene::Serialize(std::string_view FilePath)
 	{
 		VML SceneVML;
-
-		SceneVML.PushBack("Meshes", this->Assets.Serialize<MeshAsset>());
-
-		SceneVML.PushBack("Shaders", this->Assets.Serialize<ShaderAsset>());
-
-		SceneVML.PushBack("Textures", this->Assets.Serialize<TextureAsset>());
-
-		SceneVML.PushBack("Materials", this->Assets.Serialize<MaterialAsset>());
 
 		VML EntitiesVML;
 		for (uint64_t i = 0; i < this->_Entities.size(); i++)

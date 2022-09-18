@@ -8,7 +8,6 @@
 #include "Renderer/Context/Context.h"
 
 #include "Scene/Scene.h"
-#include "Scene/AssetLibrary/Asset/Assets.h"
 #include "Scene/Entity/Entity.h"
 #include "Scene/Entity/Component/Components.h"
 

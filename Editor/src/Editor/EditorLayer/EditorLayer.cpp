@@ -33,15 +33,26 @@ void EditorLayer::SaveScene(const std::filesystem::path& FilePath)
 
 void EditorLayer::LoadScene(const std::filesystem::path& FilePath)
 {
+	if (FilePath.empty())
+	{
+		return;
+	}
+
 	this->_Scene = Scene::Deserialize(FilePath.string());
 }
 
 void EditorLayer::LoadProject(const std::filesystem::path& FilePath)
 {
+	if (FilePath.empty())
+	{
+		return;
+	}
+
 	if (FilePath.extension() == ".vproj")
 	{
 		this->_Project = Ref<VML>(new VML(FilePath.string()));
 		std::filesystem::current_path(FilePath.parent_path());
+		this->LoadScene(this->_Project->Get("Scenes")[0].GetAs<std::string>());
 	}
 	else
 	{

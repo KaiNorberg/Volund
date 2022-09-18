@@ -3,15 +3,11 @@
 
 namespace Volund
 {
-	std::string Asset::GetName()
+	std::string BaseAsset::GetName() const
 	{
 		if (this->_FilePath.contains('\\'))
 		{
 			return std::string(this->_FilePath.begin() + this->_FilePath.find_last_of('\\') + 1, this->_FilePath.begin() + this->_FilePath.find_last_of('.'));
-		}
-		else if (this->_FilePath.contains('/'))
-		{
-			return std::string(this->_FilePath.begin() + this->_FilePath.find_last_of('/') + 1, this->_FilePath.begin() + this->_FilePath.find_last_of('.'));
 		}
 		else
 		{
@@ -19,8 +15,14 @@ namespace Volund
 		}
 	}
 
-	std::string Asset::GetFilePath()
+	std::string BaseAsset::GetFilePath() const
 	{
 		return this->_FilePath;
+	}
+
+	BaseAsset::BaseAsset(std::string_view FilePath)
+	{
+		this->_FilePath = FilePath;
+		std::replace(this->_FilePath.begin(), this->_FilePath.begin(), '/', '\\');
 	}
 }

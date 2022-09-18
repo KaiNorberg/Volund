@@ -2,30 +2,33 @@
 
 #include "../Component.h"
 
-#include "Scene/AssetLibrary/Asset/Material/MaterialAsset.h"
-#include "Scene/AssetLibrary/Asset/Mesh/MeshAsset.h"
+#include "Asset/Asset.h"
+
+#include "Renderer/Material/Material.h"
+#include "Renderer/Mesh/Mesh.h"
 
 namespace Volund
 {
 	class MeshRenderer : public Component
 	{
 	public:
+
 		void OnUpdate(TimeStep TS) override;
 
 		VML Serialize() override;
 
-		void SetMesh(Ref<MeshAsset> _NewMesh);
+		void SetMesh(Asset<Mesh> _NewMesh);
 
-		void SetMaterial(Ref<MaterialAsset> _NewMaterial);
+		void SetMaterial(Asset<Material> _NewMaterial);
 
-		const Ref<MeshAsset> GetMesh();
+		const Asset<Mesh>& GetMesh();
 
-		const Ref<MaterialAsset> GetMaterial();
+		const Asset<Material>& GetMaterial();
 
-		MeshRenderer(Ref<MeshAsset> ObjectMesh, Ref<MaterialAsset> ObjectMaterial);
+		MeshRenderer(std::string_view MeshFilePath, std::string_view MaterialFilePath);
 
 	private:
-		Ref<MeshAsset> _Mesh;
-		Ref<MaterialAsset> _Material;
+		Asset<Mesh> _Mesh;
+		Asset<Material> _Material;
 	};
 }

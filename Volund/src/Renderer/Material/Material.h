@@ -12,6 +12,8 @@ namespace Volund
 	{
 	public:
 
+		std::string_view GetFilePath();
+
 		template <typename T>
 		const std::vector<Ref<MaterialValue<T>>> View() const;
 
@@ -25,6 +27,8 @@ namespace Volund
 
 		Ref<Shader> GetShader();
 
+		static Ref<Material> Create(std::string_view FilePath);
+
 		static Ref<Material> Create(Ref<Shader> ObjectShader);
 
 		Material(Ref<Shader> ObjectShader);
@@ -34,6 +38,8 @@ namespace Volund
 		Container<BaseMaterialValue> _Container;
 
 		Ref<Shader> _Shader;
+
+		std::string _FilePath;
 	};
 
 	template<typename T>
