@@ -4,8 +4,8 @@ namespace Volund
 {
 	struct FramebufferSpec
 	{
-		uint32_t Width;
-		uint32_t Height;
+		uint32_t Width = 0;
+		uint32_t Height = 0;
 		uint32_t Samples = 1;
 
 		bool SwapChainTarget = false;
@@ -22,7 +22,9 @@ namespace Volund
 		virtual void Invalidate() = 0;
 
 		virtual uint32_t GetColorAttachment() = 0;
-		
+
+		void SetSpec(const FramebufferSpec& Spec);
+
 		const FramebufferSpec& GetSpec() const;
 
 		static Ref<Framebuffer> Create(const FramebufferSpec& Spec);

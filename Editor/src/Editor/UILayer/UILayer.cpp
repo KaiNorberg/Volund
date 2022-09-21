@@ -16,6 +16,7 @@
 #include "ImGuiStyle.h"
 
 #include "Widget/EntitiesWidget/EntitiesWidget.h"
+#include "Widget/ViewportWidget/ViewportWidget.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
@@ -39,6 +40,7 @@ void UILayer::OnAttach()
 	ImGui_ImplOpenGL3_Init();
 
 	this->_WidgetContainer.PushBack(new EntitiesWidget(this));
+	this->_WidgetContainer.PushBack(new ViewportWidget(this));
 }
 
 void UILayer::OnDetach()
@@ -75,7 +77,7 @@ void UILayer::BeginDockSpace()
 {
 	static bool Open = true;
 
-	static ImGuiDockNodeFlags DockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+	static ImGuiDockNodeFlags DockspaceFlags;
 	static ImGuiWindowFlags WindowFlags =
 		ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground |
 		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |

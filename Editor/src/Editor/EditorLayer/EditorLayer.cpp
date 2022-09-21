@@ -4,6 +4,11 @@
 
 #include "VML/VML.h"
 
+const Ref<Context> EditorLayer::GetContext()
+{
+	return this->_Context;
+}
+
 const Ref<Window> EditorLayer::GetWindow()
 {
 	return this->_Window;
@@ -17,6 +22,11 @@ const Ref<Scene> EditorLayer::GetScene()
 const Ref<VML> EditorLayer::GetProject()
 {
 	return this->_Project;
+}
+
+const Ref<RenderingAPI> EditorLayer::GetAPI()
+{
+	return this->_API;
 }
 
 void EditorLayer::SaveScene(const std::filesystem::path& FilePath)
@@ -86,33 +96,10 @@ void EditorLayer::OnDetach()
 void EditorLayer::OnUpdate(TimeStep TS)
 {
 	this->_Context->MakeCurrent();
+
 	this->_Context->Flush();
+
 	this->_API->Clear();
-
-	Camera* ActiveCamera = Camera::GetActiveCamera(this->_Scene);
-
-	if (ActiveCamera != nullptr)
-	{
-		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix(this->_Context->GetWindow()->GetAspectRatio()) * ActiveCamera->GetViewMatrix();
-		Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
-		auto& PointLights = this->_Scene->ComponentView<PointLight>();
-
-		Renderer::BeginScene(ViewProjMatrix, EyePosition, PointLights);
-
-		if (_Scene != nullptr)
-		{
-			this->_Scene->OnUpdate(TS);
-		}
-	
-		Renderer::EndScene(this->_Context);
-	}
-	else
-	{
-		if (_Scene != nullptr)
-		{
-			this->_Scene->OnUpdate(TS);
-		}
-	}
 
 	this->_Window->Update();
 }

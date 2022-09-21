@@ -6,11 +6,15 @@ class EditorLayer : public Volund::Layer
 {
 public:
 
+	const Ref<Context> GetContext();
+
 	const Ref<Window> GetWindow();
 
 	const Ref<Scene> GetScene();
 
 	const Ref<VML> GetProject();
+
+	const Ref<RenderingAPI> GetAPI();
 
 	void SaveScene(const std::filesystem::path& FilePath);
 
@@ -37,7 +41,5 @@ private:
 	Ref<Window> _Window;
 
 	Ref<Context> _Context;
-
-	Ref<Framebuffer> _Framebuffer;
 };
 

@@ -28,7 +28,7 @@ namespace Volund
 
 		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<Ref<PointLight>>& PointLights);
 
-		static void EndScene(const Ref<Context>& RenderingContext);
+		static void EndScene();
 
 		static void Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination = true);
 

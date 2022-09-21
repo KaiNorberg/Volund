@@ -31,16 +31,8 @@ namespace Volund
 		_InScene = true;
 	}
 
-	void Renderer::EndScene(const Ref<Context>& RenderingContext)
+	void Renderer::EndScene()
 	{
-		RenderingContext->MakeCurrent();
-
-		_API->SetClearColor(RGBA(0.0f, 0.0f, 0.0f, 1.0f));
-
-		_API->Clear();
-
-		_API->SetViewPort(0, 0, (int32_t)RenderingContext->GetWindow()->GetSize().x, (int32_t)RenderingContext->GetWindow()->GetSize().y);
-
 		Discriminate(_SceneData.Submissions);
 		Sort(_SceneData.Submissions);
 

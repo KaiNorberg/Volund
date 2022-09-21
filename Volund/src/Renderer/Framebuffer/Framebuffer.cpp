@@ -7,6 +7,11 @@
 
 namespace Volund
 {
+	void Framebuffer::SetSpec(const FramebufferSpec& Spec)
+	{
+		this->_Spec = Spec;
+	}
+
 	const FramebufferSpec& Framebuffer::GetSpec() const
 	{
 		return this->_Spec;
