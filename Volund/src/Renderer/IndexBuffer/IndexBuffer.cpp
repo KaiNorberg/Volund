@@ -1,30 +1,30 @@
 #include "PCH/PCH.h"
 
-#include "IndexBuffer.h"
+#include "Indexbuffer.h"
 
-#include "OpenGLIndexBuffer.h"
+#include "OpenGLIndexbuffer.h"
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
-	uint32_t IndexBuffer::GetCount() const
+	uint32_t Indexbuffer::GetCount() const
 	{
 		return this->_Count;
 	}
 
-	Ref<IndexBuffer> IndexBuffer::Create(uint32_t Indices[], uint32_t Size)
+	Ref<Indexbuffer> Indexbuffer::Create(uint32_t Indices[], uint32_t Size)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return std::make_shared<OpenGLIndexBuffer>(Indices, Size);
+			return std::make_shared<OpenGLIndexbuffer>(Indices, Size);
 		}
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a IndexBuffer without a specified GraphicsAPI!");
+			VOLUND_ERROR("Creating a Indexbuffer without a specified GraphicsAPI!");
 			return nullptr;
 		}
 		break;

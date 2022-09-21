@@ -14,34 +14,34 @@ namespace Volund
 		return this->_FilePath;
 	}
 
-	Ref<VertexBuffer> Mesh::GetVertexBuffer()
+	Ref<Vertexbuffer> Mesh::GetVertexbuffer()
 	{
-		return this->_VertexBuffer;
+		return this->_Vertexbuffer;
 	}
 
-	Ref<IndexBuffer> Mesh::GetIndexBuffer()
+	Ref<Indexbuffer> Mesh::GetIndexbuffer()
 	{
-		return this->_IndexBuffer;
+		return this->_Indexbuffer;
 	}
 
-	const Ref<VertexBuffer> Mesh::GetVertexBuffer() const
+	const Ref<Vertexbuffer> Mesh::GetVertexbuffer() const
 	{
-		return this->_VertexBuffer;
+		return this->_Vertexbuffer;
 	}
 
-	const Ref<IndexBuffer> Mesh::GetIndexBuffer() const
+	const Ref<Indexbuffer> Mesh::GetIndexbuffer() const
 	{
-		return this->_IndexBuffer;
+		return this->_Indexbuffer;
 	}
 
 	Ref<Mesh> Mesh::Create(std::string_view FilePath)
 	{
 		ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(FilePath);
 
-		Ref<VertexBuffer> VBuffer = VertexBuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
+		Ref<Vertexbuffer> VBuffer = Vertexbuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
 		VBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT2, VertexAttributeType::FLOAT3 });
 
-		Ref<IndexBuffer> IBuffer = IndexBuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
+		Ref<Indexbuffer> IBuffer = Indexbuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
 
 		Ref<Mesh> NewMesh = Mesh::Create(VBuffer, IBuffer);
 		NewMesh->_FilePath = FilePath;
@@ -49,7 +49,7 @@ namespace Volund
 		return NewMesh;
 	}
 
-	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& VBuffer, Ref<IndexBuffer>& IBuffer)
+	Ref<Mesh> Mesh::Create(Ref<Vertexbuffer>& VBuffer, Ref<Indexbuffer>& IBuffer)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

@@ -7,6 +7,8 @@
 
 #include "VML/VML.h"
 
+#include "AssetLibrary/AssetLibrary.h"
+
 namespace Volund
 {
 	Ref<Entity> Scene::CreateEntity(std::string_view Name)
@@ -125,7 +127,10 @@ namespace Volund
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
-					NewEntity->CreateComponent<MeshRenderer>(ComponentVML.Get("Mesh"), ComponentVML.Get("Material"));
+					Ref<Mesh> MeshAsset = AssetLibrary::Load<Mesh>(ComponentVML.Get("Mesh"));				
+					Ref<Material> MaterialAsset = AssetLibrary::Load<Material>(ComponentVML.Get("Material"));
+
+					NewEntity->CreateComponent<MeshRenderer>(MeshAsset, MaterialAsset);
 				}
 				else if (ComponentType == "PointLight")
 				{

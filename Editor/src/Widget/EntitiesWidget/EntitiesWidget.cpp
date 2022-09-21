@@ -162,13 +162,13 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 			auto SelectedMaterial = FileSelectorControl("Material", MeshRenderer->GetMaterial()->GetFilePath(), ".vmaterial");
 			if (SelectedMaterial != "")
 			{
-				MeshRenderer->SetMaterial(Material::Create(SelectedMaterial));
+				MeshRenderer->SetMaterial(AssetLibrary::Load<Material>(SelectedMaterial));
 			}
 
 			auto SelectedMesh = FileSelectorControl("Mesh", MeshRenderer->GetMesh()->GetFilePath(), ".obj");
 			if (SelectedMesh != "")
 			{
-				MeshRenderer->SetMesh(Mesh::Create(SelectedMesh));
+				MeshRenderer->SetMesh(AssetLibrary::Load<Mesh>(SelectedMesh));
 			}
 		});
 	}		

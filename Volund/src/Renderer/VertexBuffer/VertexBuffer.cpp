@@ -1,8 +1,8 @@
 #include "PCH/PCH.h"
 
-#include "VertexBuffer.h"
+#include "Vertexbuffer.h"
 
-#include "OpenGLVertexBuffer.h"
+#include "OpenGLVertexbuffer.h"
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
@@ -10,23 +10,23 @@
 
 namespace Volund
 {
-	uint32_t VertexBuffer::GetCount() const
+	uint32_t Vertexbuffer::GetCount() const
 	{
 		return this->_Count;
 	}
 
-	Ref<VertexBuffer> VertexBuffer::Create(float Vertices[], uint32_t Count)
+	Ref<Vertexbuffer> Vertexbuffer::Create(float Vertices[], uint32_t Count)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case RenderingAPI::API::OPENGL:
 		{
-			return std::make_shared<OpenGLVertexBuffer>(Vertices, Count);
+			return std::make_shared<OpenGLVertexbuffer>(Vertices, Count);
 		}
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a VertexBuffer without a specified GraphicsAPI!");
+			VOLUND_ERROR("Creating a Vertexbuffer without a specified GraphicsAPI!");
 			return nullptr;
 		}
 		break;

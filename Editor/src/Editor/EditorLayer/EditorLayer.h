@@ -37,5 +37,7 @@ private:
 	Ref<Window> _Window;
 
 	Ref<Context> _Context;
+
+	Ref<Framebuffer> _Framebuffer;
 };
 

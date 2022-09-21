@@ -5,6 +5,8 @@
 
 #include "Scene/Entity/Component/Transform/Transform.h"
 
+#include "AssetLibrary/AssetLibrary.h"
+
 namespace Volund
 {
 	void MeshRenderer::OnUpdate(TimeStep TS)
@@ -30,14 +32,14 @@ namespace Volund
 		return MeshRendererVML;
 	}
 
-	void MeshRenderer::SetMesh(Ref<Mesh> _NewMesh)
+	void MeshRenderer::SetMesh(Ref<Mesh> NewMesh)
 	{
-		this->_Mesh = _NewMesh;
+		this->_Mesh = NewMesh;
 	}
 
-	void MeshRenderer::SetMaterial(Ref<Material> _NewMaterial)
+	void MeshRenderer::SetMaterial(Ref<Material> NewMaterial)
 	{
-		this->_Material = _NewMaterial;
+		this->_Material = NewMaterial;
 	}
 
 	const Ref<Mesh>& MeshRenderer::GetMesh()
@@ -50,9 +52,9 @@ namespace Volund
 		return this->_Material;
 	}
 
-	MeshRenderer::MeshRenderer(std::string_view MeshFilePath, std::string_view MaterialFilePath)
+	MeshRenderer::MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef)
 	{
-		this->_Mesh = Mesh::Create(MeshFilePath);
-		this->_Material = Material::Create(MaterialFilePath);
+		this->_Mesh = MeshRef;
+		this->_Material = MaterialRef;
 	}
 }

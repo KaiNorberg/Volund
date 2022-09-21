@@ -15,15 +15,15 @@ namespace Volund
 
 		VML Serialize() override;
 
-		void SetMesh(Ref<Mesh> _NewMesh);
+		void SetMesh(Ref<Mesh> NewMesh);
 
-		void SetMaterial(Ref<Material> _NewMaterial);
+		void SetMaterial(Ref<Material> NewMaterial);
 
 		const Ref<Mesh>& GetMesh();
 
 		const Ref<Material>& GetMaterial();
 
-		MeshRenderer(std::string_view MeshFilePath, std::string_view MaterialFilePath);
+		MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef);
 
 	private:
 		Ref<Mesh> _Mesh;

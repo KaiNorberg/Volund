@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-	class VertexBuffer
+	class Vertexbuffer
 	{
 	public:
 		virtual void Bind() = 0;
@@ -16,9 +16,9 @@ namespace Volund
 		virtual void SetLayout(const VertexLayout& Layout) = 0;
 		virtual VertexLayout GetLayout() = 0;
 
-		static Ref<VertexBuffer> Create(float Vertices[], uint32_t Count);
+		static Ref<Vertexbuffer> Create(float Vertices[], uint32_t Count);
 
-		virtual ~VertexBuffer() = default;
+		virtual ~Vertexbuffer() = default;
 	private:
 		uint32_t _Count;
 	};

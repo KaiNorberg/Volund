@@ -1,10 +1,10 @@
 #pragma once
 
-#include "VertexBuffer.h"
+#include "Vertexbuffer.h"
 
 namespace Volund
 {
-	class OpenGLVertexBuffer : public VertexBuffer
+	class OpenGLVertexbuffer : public Vertexbuffer
 	{
 	public:
 		void Bind() override;
@@ -14,13 +14,13 @@ namespace Volund
 		void SetLayout(const VertexLayout& Layout) override;
 		VertexLayout GetLayout() override;
 
-		OpenGLVertexBuffer(float Vertices[], uint32_t Count);
+		OpenGLVertexbuffer(float Vertices[], uint32_t Count);
 
-		~OpenGLVertexBuffer() override;
+		~OpenGLVertexbuffer() override;
 
 	private:
 		VertexLayout _Layout;
 
-		uint32_t _Buffer;
+		uint32_t _ID;
 	};
 }
