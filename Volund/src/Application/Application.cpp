@@ -11,6 +11,11 @@ namespace Volund
 		this->Loop();
 	}
 
+	Ref<EventDispatcher> Application::GetEventDispatcher()
+	{
+		return this->_EventDispatcher;
+	}
+
 	void Application::Terminate()
 	{
 		this->_ShouldRun = false;
@@ -19,6 +24,17 @@ namespace Volund
 	bool Application::ShouldRun() const
 	{
 		return this->_ShouldRun;
+	}
+
+	void Application::OnEvent(Event* E)
+	{
+		for (const auto& View : this->_LayerContainer)
+		{
+			for (const auto& Layer : View)
+			{
+				Layer->OnEvent(E);
+			}
+		}
 	}
 
 	void Application::Loop() const
@@ -51,7 +67,9 @@ namespace Volund
 		VOLUND_INFO("Initializing application (Distribution)...");
 #else
 		VOLUND_WARNING("Initializing application (Unknown)...");
-#endif
+#endif	
+		
+		this->_EventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
 	}
 
 	Application::~Application()

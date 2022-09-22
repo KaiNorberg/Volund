@@ -10,7 +10,9 @@ public:
 
 	virtual const char* GetName() = 0;
 
-	virtual void OnUpdate() = 0;
+	virtual void OnEvent(Volund::Event* E) {};
+
+	virtual void OnUpdate(Volund::TimeStep TS) = 0;
 
 	virtual ~Widget() = default;
 

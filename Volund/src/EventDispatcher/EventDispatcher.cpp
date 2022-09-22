@@ -7,9 +7,9 @@
 
 namespace Volund
 {
-	EventDispatcher::EventDispatcher(Layer* L)
+	EventDispatcher::EventDispatcher(Application* App)
 	{
-		this->_Layer = L;
+		this->_Application = App;
 	}
 
 	EventDispatcher::~EventDispatcher()
@@ -17,8 +17,8 @@ namespace Volund
 
 	}
 
-	void EventDispatcher::SendEventToLayer(Event* E) const
+	void EventDispatcher::SendEventToApp(Event* E) const
 	{
-		this->_Layer->OnEvent(E);
+		this->_Application->OnEvent(E);
 	}
 }

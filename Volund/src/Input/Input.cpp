@@ -46,8 +46,8 @@ namespace Volund
 		case EventType::KEY:
 		{
 			KeyEvent* KE = (KeyEvent*)E;
-			this->_Keys[KE->GetKey()] += KE->GetIsDown();
-			this->_Keys[KE->GetKey()] *= KE->GetIsDown();
+			this->_Keys[KE->GetKey()] += KE->IsDown();
+			this->_Keys[KE->GetKey()] *= KE->IsDown();
 			this->_Keys[KE->GetKey()] = Math::Min(this->_Keys[KE->GetKey()], (int8_t)100);
 		}
 		break;
@@ -55,8 +55,8 @@ namespace Volund
 		{
 			MouseButtonEvent* MBE = (MouseButtonEvent*)E;
 
-			this->_MouseButtons[MBE->GetButton()] += MBE->GetIsDown();
-			this->_MouseButtons[MBE->GetButton()] *= MBE->GetIsDown();
+			this->_MouseButtons[MBE->GetButton()] += MBE->IsDown();
+			this->_MouseButtons[MBE->GetButton()] *= MBE->IsDown();
 			this->_MouseButtons[MBE->GetButton()] = Math::Min(this->_MouseButtons[MBE->GetButton()], (int8_t)100);
 		}
 		break;

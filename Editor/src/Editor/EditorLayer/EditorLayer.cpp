@@ -74,8 +74,7 @@ void EditorLayer::OnAttach()
 {
 	this->_API = RenderingAPI::Create(RenderingAPI::API::OPENGL);
 
-	auto NewEventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
-	this->_Window = Ref<Window>(new Window(NewEventDispatcher, 1980, 1080, false));
+	this->_Window = Ref<Window>(new Window(this->GetApp()->GetEventDispatcher(), 1980, 1080, false));
 
 	this->_Window->SetTitle("Volund Editor");
 	this->_Window->SetCursorMode("Normal");

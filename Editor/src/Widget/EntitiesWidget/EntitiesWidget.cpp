@@ -12,7 +12,7 @@ const char* EntitiesWidget::GetName()
 	return "Entities";
 }
 
-void EntitiesWidget::OnUpdate()
+void EntitiesWidget::OnUpdate(TimeStep TS)
 {
 	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
 

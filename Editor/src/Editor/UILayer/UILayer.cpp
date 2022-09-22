@@ -60,7 +60,16 @@ void UILayer::OnUpdate(TimeStep TS)
 	{
 		this->DrawMenuBar();
 
-		this->DrawWidgets();
+		for (const auto& View : this->_WidgetContainer)
+		{
+			for (const auto& Widget : View)
+			{
+				if (Widget->_IsActive)
+				{
+					Widget->OnUpdate(TS);
+				}
+			}
+		}
 	}	
 	ImGui::End();
 
@@ -70,7 +79,16 @@ void UILayer::OnUpdate(TimeStep TS)
 
 void UILayer::OnEvent(Event* E)
 {
-
+	for (const auto& View : this->_WidgetContainer)
+	{
+		for (const auto& Widget : View)
+		{
+			if (Widget->_IsActive)
+			{
+				Widget->OnEvent(E);
+			}
+		}
+	}
 }
 
 void UILayer::BeginDockSpace()
@@ -156,20 +174,6 @@ void UILayer::DrawMenuBar()
 
 
 		ImGui::EndMenuBar();
-	}
-}
-
-void UILayer::DrawWidgets()
-{
-	for (const auto& View : this->_WidgetContainer)
-	{
-		for (const auto& Widget : View)
-		{
-			if (Widget->_IsActive)
-			{
-				Widget->OnUpdate();
-			}
-		}
 	}
 }
 

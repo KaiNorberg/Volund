@@ -44,7 +44,7 @@ namespace Volund
 
 		void* GetDeviceContext() const;
 
-		Window(Ref<EventDispatcher>& Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
+		Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
 
 		~Window();
 

@@ -45,7 +45,7 @@ namespace Volund
 
 		uint32_t GetKey() const { return _Key; }
 
-		bool GetIsDown() const { return _IsDown; }
+		bool IsDown() const { return _IsDown; }
 
 		KeyEvent(uint32_t Key, bool IsDown) : _Key(Key), _IsDown(IsDown) {}
 
@@ -61,7 +61,7 @@ namespace Volund
 
 		uint32_t GetButton() const { return _Button; }
 
-		bool GetIsDown() const { return _IsDown; }
+		bool IsDown() const { return _IsDown; }
 
 		MouseButtonEvent(uint32_t Button, bool IsDown) : _Button(Button), _IsDown(IsDown) {}
 

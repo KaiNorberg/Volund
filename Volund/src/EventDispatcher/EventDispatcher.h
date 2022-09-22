@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-	class Layer;
+	class Application;
 
 	class EventDispatcher
 	{
@@ -12,19 +12,19 @@ namespace Volund
 		template <typename T>
 		void Dispatch(T E);
 
-		EventDispatcher(Layer* L);
+		EventDispatcher(Application* App);
 
 		~EventDispatcher();
 
 	private:
-		void SendEventToLayer(Event* E) const;
+		void SendEventToApp(Event* E) const;
 
-		Layer* _Layer;
+		Application* _Application;
 	};
 
 	template <typename T>
 	void EventDispatcher::Dispatch(T E)
 	{
-		this->SendEventToLayer(static_cast<Event*>(&E));
+		this->SendEventToApp(static_cast<Event*>(&E));
 	}
 }

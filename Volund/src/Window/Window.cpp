@@ -315,7 +315,7 @@ namespace Volund
 		return std::wstring(String.begin(), String.end());
 	}
 
-	Window::Window(Ref<EventDispatcher>& Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
+	Window::Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
 	{
 		VOLUND_INFO("Creating window...");
 

@@ -8,7 +8,7 @@ public:
 
 	const char* GetName() override;
 
-	void OnUpdate() override;
+	void OnUpdate(Volund::TimeStep TS) override;
 
 	EntitiesWidget(Volund::Layer* Parent);
 
