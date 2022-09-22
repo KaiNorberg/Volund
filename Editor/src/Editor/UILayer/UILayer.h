@@ -24,7 +24,7 @@ private:
 
 	void DrawWidgets();
 
-	std::string OpenFileDialog();
+	std::string OpenFileDialog(const std::wstring& Title, const std::wstring& Extension);
 
 	Container<Widget> _WidgetContainer;
 };

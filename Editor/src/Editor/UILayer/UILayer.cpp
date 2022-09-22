@@ -110,7 +110,7 @@ void UILayer::DrawMenuBar()
 				if (ImGui::MenuItem("Project"))
 				{
 					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-					Editor->LoadProject(this->OpenFileDialog());
+					Editor->LoadProject(this->OpenFileDialog(L"Open Project", L"*.vproj"));
 				}
 
 				if (GetLayer<EditorLayer>()->GetProject() != nullptr)
@@ -118,18 +118,18 @@ void UILayer::DrawMenuBar()
 					if (ImGui::MenuItem("Scene"))
 					{
 						auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-						Editor->LoadScene(this->OpenFileDialog());
+						Editor->LoadScene(this->OpenFileDialog(L"Open Scene", L"*.vscene"));
 					}
 				}
 				ImGui::EndMenu();
 			}
 
-			if (ImGui::BeginMenu("Save"))
+			if (ImGui::BeginMenu("Save As"))
 			{
 				if (ImGui::MenuItem("Scene"))
 				{
 					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-					Editor->SaveScene(this->OpenFileDialog());
+					Editor->SaveScene(this->OpenFileDialog(L"Save Scene", L"*.vscene"));
 				}
 
 				ImGui::EndMenu();
@@ -154,10 +154,6 @@ void UILayer::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
-		if (GetLayer<EditorLayer>()->GetProject() != nullptr)
-		{
-		}
-
 
 		ImGui::EndMenuBar();
 	}
@@ -177,7 +173,7 @@ void UILayer::DrawWidgets()
 	}
 }
 
-std::string UILayer::OpenFileDialog()
+std::string UILayer::OpenFileDialog(const std::wstring& Title, const std::wstring& Extension)
 {
 	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 	if (FAILED(f_SysHr))
@@ -187,6 +183,17 @@ std::string UILayer::OpenFileDialog()
 
 	IFileOpenDialog* f_FileSystem = nullptr;
 	f_SysHr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&f_FileSystem));
+
+	f_FileSystem->SetTitle(Title.c_str());
+
+	std::wstring ExtensionName = Extension.substr(2);
+	COMDLG_FILTERSPEC ComFlgFS[] =
+	{
+		{ExtensionName.c_str(), Extension.c_str()}
+	};
+
+	f_FileSystem->SetFileTypes(1, ComFlgFS);
+
 	if (FAILED(f_SysHr))
 	{
 		CoUninitialize();

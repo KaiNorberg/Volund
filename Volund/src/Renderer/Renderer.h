@@ -12,31 +12,30 @@
 
 namespace Volund
 {
-	class PointLight;
-	struct PointLightData
-	{
-		RGB Color;
-		float Brightness;
-		Vec3 Position;
-	};
-
 	class Renderer
 	{
 	public:
 
-		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<PointLightData>& PointLights);	
-
-		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition, const std::vector<Ref<PointLight>>& PointLights);
+		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition);	
 
 		static void EndScene();
 
-		static void Submit(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination = true);
+		static void SubmitPointLight(const RGB& Color, float Brightness, const Vec3& Position);
+
+		static void SubmitObject(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination = true);
 
 		static void Init(const Ref<RenderingAPI>& API);
 
 	private:		
 		
-		struct Submission
+		struct PointLight
+		{
+			RGB Color;
+			float Brightness;
+			Vec3 Position;
+		};
+
+		struct Object
 		{
 			bool AllowDiscrimination = false;
 			Mat4x4 ModelMatrix = Mat4x4(1.0f);
@@ -48,14 +47,14 @@ namespace Volund
 		{
 			Mat4x4 ViewProjMatrix = Mat4x4(1.0f);
 			Vec3 EyePosition = Vec3(1.0f);
-			std::vector<PointLightData> PointLights;
-			std::vector<Submission> Submissions;
+			std::vector<PointLight> PointLights;
+			std::vector<Object> Objects;
 
 		} _SceneData;
 
-		static void Discriminate(std::vector<Submission>& Submissions);
+		static void Discriminate(std::vector<Object>& Submissions);
 
-		static void Sort(std::vector<Submission>& Submissions);
+		static void Sort(std::vector<Object>& Submissions);
 
 		static inline bool _InScene = false;
 	

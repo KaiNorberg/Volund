@@ -167,16 +167,18 @@ namespace Volund
 
 	void Scene::Serialize(std::string_view FilePath)
 	{
+		VOLUND_INFO("Serializing Scene...");
+
 		VML SceneVML;
 
-		VML EntitiesVML;
 		for (uint64_t i = 0; i < this->_Entities.size(); i++)
 		{
-			EntitiesVML.PushBack(this->_Entities[i]->GetName(), this->_Entities[i]->Serialize());
+			SceneVML.PushBack(this->_Entities[i]->GetName(), this->_Entities[i]->Serialize());
 		}
-		SceneVML.PushBack("Entities", EntitiesVML);
 
 		SceneVML.Write(FilePath);
+
+		VOLUND_INFO("Finished serializing Scene!");
 	}
 
 	std::vector<Ref<Entity>>::iterator Scene::begin()

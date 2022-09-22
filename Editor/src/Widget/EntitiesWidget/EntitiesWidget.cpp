@@ -182,6 +182,17 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 			ImGui::ColorPicker3("##Color", glm::value_ptr(PointLight->Color), ImGuiColorEditFlags_Float);
 		});
 	}
+	if (Entity->HasComponent<Volund::CameraMovement>())
+	{
+		auto& View = Entity->ComponentView<Volund::CameraMovement>();
+		this->DrawComponentView(View, "CameraMovement", [this](Volund::Ref<Volund::Component> Component)
+		{
+			auto CameraMovement = std::dynamic_pointer_cast<Volund::CameraMovement>(Component);
+
+			FloatControl("Speed", &CameraMovement->Speed);
+			FloatControl("Sensitivity", &CameraMovement->Sensitivity);
+		});
+	}
 }
 
 void EntitiesWidget::DrawComponentView(const std::vector<Volund::Ref<Volund::Component>>& ComponentView, std::string_view Name, std::function<void(Volund::Ref<Volund::Component>)> DrawFunction)

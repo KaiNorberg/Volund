@@ -2,8 +2,19 @@
 
 #include "PointLight.h"
 
+#include "Renderer/Renderer.h"
+
+#include "Scene/Entity/Component/Transform/Transform.h"
+
 namespace Volund
 {
+	void PointLight::OnUpdate(TimeStep TS)
+	{
+		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+
+		Renderer::SubmitPointLight(this->Color, this->Brightness, EntityTransform->Position);
+	}
+
 	VML PointLight::Serialize()
 	{
 		VML PointLightVML;

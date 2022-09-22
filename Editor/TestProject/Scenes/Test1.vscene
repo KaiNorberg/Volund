@@ -9,8 +9,8 @@ BluePointLight
 	}
 	Component1
 	{
+		Brightness [ 1.000000 ]
 		Color [ 1.000000 1.000000 1.000000 ]
-		Brightness [ 1.0 ]
 		Type [ PointLight ]
 	}
 }
@@ -59,8 +59,8 @@ RedPointLight
 	}
 	Component1
 	{
+		Brightness [ 1.000000 ]
 		Color [ 1.000000 1.000000 1.000000 ]
-		Brightness [ 1.0 ]
 		Type [ PointLight ]
 	}
 }

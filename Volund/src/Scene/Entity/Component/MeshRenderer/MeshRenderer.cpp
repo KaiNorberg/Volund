@@ -17,7 +17,7 @@ namespace Volund
 		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
 		Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
-		Renderer::Submit(ModelMatrix, this->_Mesh, this->_Material);
+		Renderer::SubmitObject(ModelMatrix, this->_Mesh, this->_Material);
 	}
 
 	VML MeshRenderer::Serialize()

@@ -17,45 +17,38 @@ void ViewportWidget::OnUpdate()
 	ImGui::Begin("Viewport");
 
 	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
-	auto Context = this->_Parent->GetLayer<EditorLayer>()->GetContext();
-	auto API = this->_Parent->GetLayer<EditorLayer>()->GetAPI();
 
-	auto FramebufferSpec = this->_Framebuffer->GetSpec();
-	auto ViewportSize = ImGui::GetContentRegionAvail();
-
-	Camera* ActiveCamera = Camera::GetActiveCamera(Scene);
-
-	if (ActiveCamera != nullptr)
+	if (Scene != nullptr)
 	{
+		auto Context = this->_Parent->GetLayer<EditorLayer>()->GetContext();
+		auto API = this->_Parent->GetLayer<EditorLayer>()->GetAPI();
+
+		auto FramebufferSpec = this->_Framebuffer->GetSpec();
+		auto ViewportSize = ImGui::GetContentRegionAvail();
+
 		float AspectRatio = (float)ViewportSize.x / (float)ViewportSize.y;
-		Mat4x4 ViewProjMatrix = ActiveCamera->GetProjectionMatrix(AspectRatio) * ActiveCamera->GetViewMatrix();
-		Vec3 EyePosition = ActiveCamera->GetEntity()->GetComponent<Transform>()->Position;
-		auto& PointLights = Scene->ComponentView<PointLight>();
+		Quat Quaternion = Quat(Math::ToRadians(this->_EyeRotation));
+		Mat4x4 ViewProjMatrix = glm::perspective(glm::radians(70.0f), AspectRatio, 0.1f, 1000.0f) *
+			glm::lookAt(this->_EyePosition, this->_EyePosition + Quaternion * Math::Back, Quaternion * Math::Up);
 
 		this->_Framebuffer->Bind();
 		API->Clear();
 		API->SetViewPort(0, 0, FramebufferSpec.Width, FramebufferSpec.Height);
 
-		Renderer::BeginScene(ViewProjMatrix, EyePosition, PointLights);
+		Renderer::BeginScene(ViewProjMatrix, this->_EyePosition);
 
-		if (Scene != nullptr)
-		{
-			Scene->OnUpdate(0.0f);
-		}
+		Scene->OnUpdate(0.0f);
 
 		Renderer::EndScene();
 
 		this->_Framebuffer->Unbind();
+
+		ImGui::Image((void*)this->_Framebuffer->GetColorAttachment(), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
 	{
-		if (Scene != nullptr)
-		{
-			Scene->OnUpdate(0.0f);
-		}
+		ImGui::Text("No Scene Loaded!");
 	}
-
-	ImGui::Image((void*)this->_Framebuffer->GetColorAttachment(), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
 
 	ImGui::End();
 }
