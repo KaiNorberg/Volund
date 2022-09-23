@@ -7,9 +7,9 @@
 
 namespace Volund
 {
-	std::string Material::GetFilePath()
+	std::string Material::GetFilepath()
 	{
-		return this->_FilePath;
+		return this->_Filepath;
 	}
 
 	void Material::UpdateShader()
@@ -45,14 +45,14 @@ namespace Volund
 		return this->_Shader;
 	}
 
-	Ref<Material> Material::Create(std::string_view FilePath)
+	Ref<Material> Material::Create(std::string_view Filepath)
 	{
-		VML MaterialVML(FilePath);
+		VML MaterialVML(Filepath);
 
 		Ref<Shader> ObjectShader = AssetLibrary::Load<Shader>((std::string)MaterialVML.Get("Shader").String());
 
 		Ref<Material> NewMaterial = Material::Create(ObjectShader);
-		NewMaterial->_FilePath = FilePath;
+		NewMaterial->_Filepath = Filepath;
 
 		for (auto& [ValueName, Value] : MaterialVML["Values"])
 		{
@@ -87,7 +87,7 @@ namespace Volund
 			}
 			else
 			{
-				VOLUND_ERROR("Invalid type found in Material Asset (%s)!", FilePath.data());
+				VOLUND_ERROR("Invalid type found in Material Asset (%s)!", Filepath.data());
 			}
 		}
 

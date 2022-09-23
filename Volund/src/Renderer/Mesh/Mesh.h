@@ -9,7 +9,7 @@ namespace Volund
 	{
 	public:
 
-		std::string GetFilePath();
+		std::string GetFilepath();
 
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
@@ -22,7 +22,7 @@ namespace Volund
 		const Ref<Vertexbuffer> GetVertexbuffer() const;
 		const Ref<Indexbuffer> GetIndexbuffer() const;
 
-		static Ref<Mesh> Create(std::string_view FilePath);
+		static Ref<Mesh> Create(std::string_view Filepath);
 
 		static Ref<Mesh> Create(Ref<Vertexbuffer>& VBuffer, Ref<Indexbuffer>& IBuffer);
 
@@ -30,7 +30,7 @@ namespace Volund
 
 	protected:
 
-		std::string _FilePath;
+		std::string _Filepath;
 
 		Ref<Vertexbuffer> _Vertexbuffer;
 		Ref<Indexbuffer> _Indexbuffer;

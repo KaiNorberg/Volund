@@ -7,21 +7,21 @@ namespace Volund
 	public:
 
 		template <typename T>
-		static Ref<T> Load(const std::string& FilePath);
+		static Ref<T> Load(const std::string& Filepath);
 		
 	};
 
 	template<typename T>
-	inline Ref<T> AssetLibrary::Load(const std::string& FilePath)
+	inline Ref<T> AssetLibrary::Load(const std::string& Filepath)
 	{
 		static std::vector<std::pair<std::string, Ref<T>>> AssetCache;
 		
 		Ref<T> Return;
 		for (int i = 0; i < AssetCache.size(); i++)
 		{
-			auto& [AssetFilePath, Referance] = AssetCache[i];
+			auto& [AssetFilepath, Referance] = AssetCache[i];
 
-			if (AssetFilePath == FilePath)
+			if (AssetFilepath == Filepath)
 			{
 				Return = Referance;
 			}
@@ -37,8 +37,8 @@ namespace Volund
 
 		if (Return == nullptr)
 		{
-			Ref<T> NewAsset = T::Create(FilePath);
-			AssetCache.push_back({FilePath, NewAsset});
+			Ref<T> NewAsset = T::Create(Filepath);
+			AssetCache.push_back({Filepath, NewAsset});
 			return NewAsset;
 		}
 		else

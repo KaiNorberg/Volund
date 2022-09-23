@@ -16,10 +16,17 @@ const Ref<Window> EditorLayer::GetWindow()
 
 const Ref<Scene> EditorLayer::GetScene()
 {
-	return this->_Scene;
+	if (this->_Project != nullptr)
+	{
+		return this->_Project->GetScene();
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
-const Ref<VML> EditorLayer::GetProject()
+const Ref<Project> EditorLayer::GetProject()
 {
 	return this->_Project;
 }
@@ -29,40 +36,16 @@ const Ref<RenderingAPI> EditorLayer::GetAPI()
 	return this->_API;
 }
 
-void EditorLayer::SaveScene(const std::filesystem::path& FilePath)
+void EditorLayer::LoadProject(const std::filesystem::path& Filepath)
 {
-	if (this->_Scene != nullptr)
-	{
-		this->_Scene->Serialize(FilePath.string());
-	}
-	else
-	{
-		VOLUND_WARNING("Cant save a scene without a loaded scene!");
-	}
-}
-
-void EditorLayer::LoadScene(const std::filesystem::path& FilePath)
-{
-	if (FilePath.empty())
+	if (Filepath.empty())
 	{
 		return;
 	}
 
-	this->_Scene = Scene::Deserialize(FilePath.string());
-}
-
-void EditorLayer::LoadProject(const std::filesystem::path& FilePath)
-{
-	if (FilePath.empty())
+	if (Filepath.extension() == ".vproj")
 	{
-		return;
-	}
-
-	if (FilePath.extension() == ".vproj")
-	{
-		this->_Project = Ref<VML>(new VML(FilePath.string()));
-		std::filesystem::current_path(FilePath.parent_path());
-		this->LoadScene(this->_Project->Get("Scenes")[0].GetAs<std::string>());
+		this->_Project = Ref<Project>(new Project(Filepath.string()));
 	}
 	else
 	{
@@ -112,10 +95,5 @@ void EditorLayer::OnEvent(Event* E)
 		this->GetApp()->Terminate();
 	}
 	break;
-	}
-
-	if (this->_Scene != nullptr)
-	{
-		this->_Scene->OnEvent(E);
 	}
 }

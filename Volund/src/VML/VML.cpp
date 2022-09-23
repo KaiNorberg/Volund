@@ -57,13 +57,13 @@ namespace Volund
 		return this->_Nodes.at("");
 	}
 
-	void VML::Write(std::string_view FilePath)
+	void VML::Write(std::string_view Filepath)
 	{
-		std::ofstream File(FilePath.data(), std::ofstream::out | std::ofstream::trunc);
+		std::ofstream File(Filepath.data(), std::ofstream::out | std::ofstream::trunc);
 
 		if (File.fail())
 		{
-			VOLUND_ERROR("Unable to write to VML file (%s)!", FilePath.data());
+			VOLUND_ERROR("Unable to write to VML file (%s)!", Filepath.data());
 		}
 
 		File << this->ToString();
@@ -273,13 +273,13 @@ namespace Volund
 		Out->push_back((std::string)String.substr(OldIndex, String.size()));
 	}
 
-	VML::VML(std::string_view FilePath)
+	VML::VML(std::string_view Filepath)
 	{
-		VOLUND_INFO("Loading VML file (%s)...", FilePath.data());
+		VOLUND_INFO("Loading VML file (%s)...", Filepath.data());
 
-		FILE* File = fopen(FilePath.data(), "r");
+		FILE* File = fopen(Filepath.data(), "r");
 
-		VOLUND_ASSERT(File, "Unable to open VML file (%s)!", FilePath.data());
+		VOLUND_ASSERT(File, "Unable to open VML file (%s)!", Filepath.data());
 
 		std::vector<Token> Tokens;
 		Tokenize(&Tokens, File);

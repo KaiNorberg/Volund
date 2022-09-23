@@ -14,7 +14,7 @@ const char* EntitiesWidget::GetName()
 
 void EntitiesWidget::OnUpdate(TimeStep TS)
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
+	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetProject()->GetScene();
 
 	if (ImGui::Begin("Entities", &this->_IsActive))
 	{
@@ -218,7 +218,7 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 			std::string DefaultMaterial = "";
 			if (MeshRenderer->GetMaterial() != nullptr)
 			{
-				DefaultMaterial = MeshRenderer->GetMaterial()->GetFilePath();
+				DefaultMaterial = MeshRenderer->GetMaterial()->GetFilepath();
 			}
 			auto SelectedMaterial = FileSelectorControl("Material", DefaultMaterial, ".vmaterial");
 			if (SelectedMaterial != "")
@@ -229,7 +229,7 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 			std::string DefaultMesh = "";
 			if (MeshRenderer->GetMesh() != nullptr)
 			{
-				DefaultMesh = MeshRenderer->GetMesh()->GetFilePath();
+				DefaultMesh = MeshRenderer->GetMesh()->GetFilepath();
 			}
 			auto SelectedMesh = FileSelectorControl("Mesh", DefaultMesh, ".obj");
 			if (SelectedMesh != "")

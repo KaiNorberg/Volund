@@ -94,9 +94,9 @@ namespace Volund
 		}
 	}
 
-	Ref<Scene> Scene::Deserialize(std::string_view FilePath)
+	Ref<Scene> Scene::Deserialize(std::string_view Filepath)
 	{
-		VML SceneVML(FilePath);
+		VML SceneVML(Filepath);
 
 		Ref<Scene> NewScene = std::make_shared<Scene>();
 
@@ -165,7 +165,7 @@ namespace Volund
 		return NewScene;
 	}
 
-	void Scene::Serialize(std::string_view FilePath)
+	void Scene::Serialize(std::string_view Filepath)
 	{
 		VOLUND_INFO("Serializing Scene...");
 
@@ -176,7 +176,7 @@ namespace Volund
 			SceneVML.PushBack(this->_Entities[i]->GetName(), this->_Entities[i]->Serialize());
 		}
 
-		SceneVML.Write(FilePath);
+		SceneVML.Write(Filepath);
 
 		VOLUND_INFO("Finished serializing Scene!");
 	}

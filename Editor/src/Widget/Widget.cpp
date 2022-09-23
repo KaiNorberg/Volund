@@ -58,11 +58,11 @@ std::string Widget::FileSelectorControl(const std::string& Name, const std::stri
 	std::vector<std::string> Assets;
 	for (const auto& File : std::filesystem::recursive_directory_iterator(std::filesystem::current_path()))
 	{
-		auto FilePath = File.path();
-		if (!File.is_directory() && FilePath.extension() == FileExtension)
+		auto Filepath = File.path();
+		if (!File.is_directory() && Filepath.extension() == FileExtension)
 		{
-			FilePath = std::filesystem::relative(FilePath, std::filesystem::current_path());
-			Assets.push_back(FilePath.string());
+			Filepath = std::filesystem::relative(Filepath, std::filesystem::current_path());
+			Assets.push_back(Filepath.string());
 		}
 	}
 	return TextSelectorControl(Name, Default, Assets);

@@ -26,9 +26,9 @@ namespace Volund
 
 		virtual void OnUpdate(TimeStep);
 
-		static Ref<Scene> Deserialize(std::string_view FilePath);
+		static Ref<Scene> Deserialize(std::string_view Filepath);
 
-		void Serialize(std::string_view FilePath);
+		void Serialize(std::string_view Filepath);
 
 		std::vector<Ref<Entity>>::iterator begin();
 		std::vector<Ref<Entity>>::iterator end();

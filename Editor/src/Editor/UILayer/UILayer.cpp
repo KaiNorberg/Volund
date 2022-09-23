@@ -4,10 +4,11 @@
 
 #include "VML/VML.h"
 
+#include "FileDialog/FileDialog.h"
+
 #include "Editor/EditorLayer/EditorLayer.h"
 
 #include <windows.h>
-#include <shlobj.h>   
 
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
@@ -123,34 +124,67 @@ void UILayer::DrawMenuBar()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
-			if (ImGui::BeginMenu("Open"))
+			auto Editor = GetLayer<EditorLayer>();
+
+			if (ImGui::BeginMenu("Project"))
 			{
-				if (ImGui::MenuItem("Project"))
+				if (ImGui::MenuItem("New"))
 				{
-					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-					Editor->LoadProject(this->OpenFileDialog(L"Open Project", L"*.vproj"));
+					//auto Editor = GetLayer<EditorLayer>();
+					//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
 				}
 
-				if (GetLayer<EditorLayer>()->GetProject() != nullptr)
+				if (ImGui::MenuItem("Open"))
 				{
-					if (ImGui::MenuItem("Scene"))
+					Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+				}
+
+				if (Editor->GetProject() != nullptr)
+				{
+					if (ImGui::MenuItem("Save"))
 					{
-						auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-						Editor->LoadScene(this->OpenFileDialog(L"Open Scene", L"*.vscene"));
+						Editor->GetProject()->Save(Editor->GetProject()->GetVMLFilepath());
 					}
-				}
-				ImGui::EndMenu();
-			}
 
-			if (ImGui::BeginMenu("Save As"))
+					if (ImGui::MenuItem("Save As"))
+					{
+						Editor->GetProject()->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+					}
+
+				}
+
+				ImGui::EndMenu();
+			}		
+
+			if (Editor->GetProject() != nullptr)
 			{
-				if (ImGui::MenuItem("Scene"))
+				if (ImGui::BeginMenu("Scene"))
 				{
-					auto Editor = this->GetApp()->GetLayer<EditorLayer>();
-					Editor->SaveScene(this->OpenFileDialog(L"Save Scene", L"*.vscene"));
-				}
+					auto Editor = GetLayer<EditorLayer>();
 
-				ImGui::EndMenu();
+					if (ImGui::MenuItem("New"))
+					{
+						//auto Editor = GetLayer<EditorLayer>();
+						//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+					}
+
+					if (ImGui::MenuItem("Open"))
+					{
+						Editor->GetProject()->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", Editor->GetWindow()));
+					}
+
+					if (ImGui::MenuItem("Save"))
+					{
+						Editor->GetProject()->SaveScene(Editor->GetProject()->GetSceneFilepath());
+					}
+
+					if (ImGui::MenuItem("Save As"))
+					{
+						Editor->GetProject()->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", Editor->GetWindow()));
+					}
+
+					ImGui::EndMenu();
+				}
 			}
 
 			ImGui::EndMenu();
@@ -175,69 +209,4 @@ void UILayer::DrawMenuBar()
 
 		ImGui::EndMenuBar();
 	}
-}
-
-std::string UILayer::OpenFileDialog(const std::wstring& Title, const std::wstring& Extension)
-{
-	HRESULT f_SysHr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-	if (FAILED(f_SysHr))
-	{
-		return std::string();
-	}
-
-	IFileOpenDialog* f_FileSystem = nullptr;
-	f_SysHr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&f_FileSystem));
-
-	f_FileSystem->SetTitle(Title.c_str());
-
-	std::wstring ExtensionName = Extension.substr(2);
-	COMDLG_FILTERSPEC ComFlgFS[] =
-	{
-		{ExtensionName.c_str(), Extension.c_str()}
-	};
-
-	f_FileSystem->SetFileTypes(1, ComFlgFS);
-
-	if (FAILED(f_SysHr))
-	{
-		CoUninitialize();
-		return std::string();
-	}
-
-	f_SysHr = f_FileSystem->Show(NULL);
-	if (FAILED(f_SysHr))
-	{
-		f_FileSystem->Release();
-		CoUninitialize();
-		return std::string();
-	}
-
-	IShellItem* f_Files;
-	f_SysHr = f_FileSystem->GetResult(&f_Files);
-	if (FAILED(f_SysHr))
-	{
-		f_FileSystem->Release();
-		CoUninitialize();
-		return std::string();
-	}
-
-	PWSTR f_Path;
-	f_SysHr = f_Files->GetDisplayName(SIGDN_FILESYSPATH, &f_Path);
-	if (FAILED(f_SysHr))
-	{
-		f_Files->Release();
-		f_FileSystem->Release();
-		CoUninitialize();
-		return std::string();
-	}
-
-	std::wstring path(f_Path);
-	std::string c(path.begin(), path.end());
-
-	CoTaskMemFree(f_Path);
-	f_Files->Release();
-	f_FileSystem->Release();
-	CoUninitialize();
-
-	return c;
 }

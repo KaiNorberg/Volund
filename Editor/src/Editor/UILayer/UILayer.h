@@ -22,8 +22,6 @@ private:
 
 	void DrawMenuBar();
 
-	std::string OpenFileDialog(const std::wstring& Title, const std::wstring& Extension);
-
 	Container<Widget> _WidgetContainer;
 };
 

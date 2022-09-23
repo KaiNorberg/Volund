@@ -26,8 +26,8 @@ namespace Volund
 
 		MeshRendererVML.PushBack("Type", VMLEntry("MeshRenderer"));
 
-		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetFilePath()));
-		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetFilePath()));
+		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetFilepath()));
+		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetFilepath()));
 
 		return MeshRendererVML;
 	}

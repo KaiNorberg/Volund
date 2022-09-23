@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Project/Project.h"
+
 using namespace Volund;
 
 class EditorLayer : public Volund::Layer
@@ -12,15 +14,11 @@ public:
 
 	const Ref<Scene> GetScene();
 
-	const Ref<VML> GetProject();
+	const Ref<Project> GetProject();
 
 	const Ref<RenderingAPI> GetAPI();
 
-	void SaveScene(const std::filesystem::path& FilePath);
-
-	void LoadScene(const std::filesystem::path& FilePath);
-
-	void LoadProject(const std::filesystem::path& FilePath);
+	void LoadProject(const std::filesystem::path& Filepath);
 
 	void OnAttach() override;
 
@@ -32,9 +30,7 @@ public:
 
 private:
 
-	Ref<VML> _Project;
-
-	Ref<Scene> _Scene;
+	Ref<Project> _Project;
 
 	Ref<RenderingAPI> _API;
 

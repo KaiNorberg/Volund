@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-	Ref<Shader> Shader::Create(std::string_view FilePath)
+	Ref<Shader> Shader::Create(std::string_view Filepath)
 	{
 		enum class ShaderType
 		{
@@ -18,11 +18,11 @@ namespace Volund
 			GEOMETRY = 2
 		};
 
-		VOLUND_INFO("Loading Shader (%s)...", FilePath.data());
+		VOLUND_INFO("Loading Shader (%s)...", Filepath.data());
 
-		std::ifstream File(FilePath.data());
+		std::ifstream File(Filepath.data());
 
-		VOLUND_ASSERT(File, "Unable to load Shader (%s).", FilePath.data());
+		VOLUND_ASSERT(File, "Unable to load Shader (%s).", Filepath.data());
 
 		std::string Line;
 		std::stringstream SourceStrings[3];

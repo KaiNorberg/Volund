@@ -9,10 +9,10 @@ namespace Volund
 		std::vector<V> Vertices;
 		std::vector<I> Indices;
 
-		ModelLoader(std::string_view FilePath);
+		ModelLoader(std::string_view Filepath);
 
 	private:
-		void LoadOBJ(std::string_view FilePath);
+		void LoadOBJ(std::string_view Filepath);
 
 		struct ArrayHasher
 		{
@@ -31,22 +31,22 @@ namespace Volund
 	};
 
 	template <typename V, typename I>
-	ModelLoader<V, I>::ModelLoader(std::string_view FilePath)
+	ModelLoader<V, I>::ModelLoader(std::string_view Filepath)
 	{
-		VOLUND_INFO("Loading OBJ file (%s)...", FilePath.data());
+		VOLUND_INFO("Loading OBJ file (%s)...", Filepath.data());
 
-		if (FilePath.ends_with(".obj"))
+		if (Filepath.ends_with(".obj"))
 		{
-			this->LoadOBJ(FilePath);
+			this->LoadOBJ(Filepath);
 		}
 		else
 		{
-			VOLUND_WARNING("Unable to read unknown model file type (%s)!", FilePath.data());
+			VOLUND_WARNING("Unable to read unknown model file type (%s)!", Filepath.data());
 		}
 	}
 
 	template <typename V, typename I>
-	void ModelLoader<V, I>::LoadOBJ(std::string_view FilePath)
+	void ModelLoader<V, I>::LoadOBJ(std::string_view Filepath)
 	{
 		std::vector<V> Geometry;
 		std::vector<V> TextureCoords;
@@ -54,11 +54,11 @@ namespace Volund
 
 		std::unordered_map<std::array<V, 8>, I, ArrayHasher> VertexToIndexMap;
 
-		FILE* File = fopen(FilePath.data(), "r");
+		FILE* File = fopen(Filepath.data(), "r");
 
 		if (File == nullptr)
 		{
-			VOLUND_ERROR("Unable to open OBJ file (%s)!", FilePath.data());
+			VOLUND_ERROR("Unable to open OBJ file (%s)!", Filepath.data());
 		}
 
 		while (true)
@@ -75,7 +75,7 @@ namespace Volund
 			if (strcmp(LineHeader, "v") == 0)
 			{
 				float X, Y, Z = 0.0f;
-				VOLUND_ASSERT(fscanf(File, "%f %f %f\n", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", FilePath.data());
+				VOLUND_ASSERT(fscanf(File, "%f %f %f\n", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
 
 				Geometry.push_back(X);
 				Geometry.push_back(Y);
@@ -84,7 +84,7 @@ namespace Volund
 			else if (strcmp(LineHeader, "vt") == 0)
 			{
 				float X, Y = 0.0f;
-				VOLUND_ASSERT(fscanf(File, "%f %f\n", &X, &Y) == 2, "Unable to parse OBJ file (%s)!", FilePath.data());
+				VOLUND_ASSERT(fscanf(File, "%f %f\n", &X, &Y) == 2, "Unable to parse OBJ file (%s)!", Filepath.data());
 
 				TextureCoords.push_back(X);
 				TextureCoords.push_back(Y);
@@ -92,7 +92,7 @@ namespace Volund
 			else if (strcmp(LineHeader, "vn") == 0)
 			{
 				float X, Y, Z = 0.0f;
-				VOLUND_ASSERT(fscanf(File, "%f %f %f\n", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", FilePath.data());
+				VOLUND_ASSERT(fscanf(File, "%f %f %f\n", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
 
 				Normals.push_back(X);
 				Normals.push_back(Y);
@@ -107,7 +107,7 @@ namespace Volund
 					if (!Geometry.empty() && !TextureCoords.empty() && !Normals.empty())
 					{
 						uint32_t GeometryIndex, TextureCoordsIndex, NormalsIndex;
-						VOLUND_ASSERT(fscanf(File, "%d/%d/%d", &GeometryIndex, &TextureCoordsIndex, &NormalsIndex) == 3, "Unable to parse OBJ file (%s)!", FilePath.data());
+						VOLUND_ASSERT(fscanf(File, "%d/%d/%d", &GeometryIndex, &TextureCoordsIndex, &NormalsIndex) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
 						GeometryIndex = (GeometryIndex - 1) * 3;
 						TextureCoordsIndex = (TextureCoordsIndex - 1) * 2;
 						NormalsIndex = (NormalsIndex - 1) * 3;
@@ -127,7 +127,7 @@ namespace Volund
 					else if (!Geometry.empty() && TextureCoords.empty() && Normals.empty())
 					{
 						uint32_t GeometryIndex;
-						VOLUND_ASSERT(fscanf(File, "%d", &GeometryIndex) == 1, "Unable to parse OBJ file (%s)!", FilePath.data());
+						VOLUND_ASSERT(fscanf(File, "%d", &GeometryIndex) == 1, "Unable to parse OBJ file (%s)!", Filepath.data());
 						GeometryIndex = (GeometryIndex - 1) * 3;
 
 						Vertex =
@@ -144,7 +144,7 @@ namespace Volund
 					}
 					else
 					{
-						VOLUND_ERROR("Unable to parse OBJ file (%s)!", FilePath.data());
+						VOLUND_ERROR("Unable to parse OBJ file (%s)!", Filepath.data());
 					}
 
 					if (VertexToIndexMap.contains(Vertex))

@@ -21,7 +21,7 @@ namespace Volund
 
 		VML& operator[](std::string_view Name);
 
-		void Write(std::string_view FilePath);
+		void Write(std::string_view Filepath);
 
 		std::string ToString(uint32_t Indentation = 0);
 
@@ -34,7 +34,7 @@ namespace Volund
 
 		VML() = default;
 
-		VML(std::string_view FilePath);
+		VML(std::string_view Filepath);
 
 	private:
 

@@ -9,9 +9,9 @@
 
 namespace Volund
 {
-	std::string Mesh::GetFilePath()
+	std::string Mesh::GetFilepath()
 	{
-		return this->_FilePath;
+		return this->_Filepath;
 	}
 
 	Ref<Vertexbuffer> Mesh::GetVertexbuffer()
@@ -34,9 +34,9 @@ namespace Volund
 		return this->_Indexbuffer;
 	}
 
-	Ref<Mesh> Mesh::Create(std::string_view FilePath)
+	Ref<Mesh> Mesh::Create(std::string_view Filepath)
 	{
-		ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(FilePath);
+		ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(Filepath);
 
 		Ref<Vertexbuffer> VBuffer = Vertexbuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
 		VBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT2, VertexAttributeType::FLOAT3 });
@@ -44,7 +44,7 @@ namespace Volund
 		Ref<Indexbuffer> IBuffer = Indexbuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
 
 		Ref<Mesh> NewMesh = Mesh::Create(VBuffer, IBuffer);
-		NewMesh->_FilePath = FilePath;
+		NewMesh->_Filepath = Filepath;
 
 		return NewMesh;
 	}
