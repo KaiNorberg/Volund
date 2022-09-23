@@ -67,15 +67,19 @@ void EntitiesWidget::DrawEntityTab(Volund::Ref<Volund::Scene> Scene)
 			{
 				if (Entity->GetName().find(SearchTerm) != std::string::npos)
 				{
-					this->DrawEntityNode(Entity);
+					if (!this->DrawEntityNode(Scene, Entity))
+					{
+						break;
+					}
 				}
 			}
 		}
+
 		ImGui::EndListBox();
 	}
 }
 
-void EntitiesWidget::DrawEntityNode(Volund::Ref<Volund::Entity> Entity)
+bool EntitiesWidget::DrawEntityNode(Volund::Ref<Volund::Scene> Scene, Volund::Ref<Volund::Entity> Entity)
 {
 	ImGui::PushID((void*)Entity.get());
 
@@ -101,7 +105,21 @@ void EntitiesWidget::DrawEntityNode(Volund::Ref<Volund::Entity> Entity)
 		ImGui::TreePop();
 	}
 
+	bool EntityAlive = true;
+	if (ImGui::BeginPopupContextItem())
+	{
+		if (ImGui::MenuItem("Delete"))
+		{
+			Scene->DeleteEntity(Entity->GetName());
+			EntityAlive = false;
+		}
+
+		ImGui::EndPopup();
+	}
+
 	ImGui::PopID();
+
+	return EntityAlive;
 }
 
 void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::Ref<Volund::Scene> Scene)

@@ -29,6 +29,11 @@ namespace Volund
 		return stof(this->_Value);
 	}
 
+	VMLValue::operator double() const
+	{
+		return stod(this->_Value);
+	}
+
 	VMLValue::operator std::string() const
 	{
 		return this->_Value;

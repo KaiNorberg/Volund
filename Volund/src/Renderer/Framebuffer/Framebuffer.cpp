@@ -12,7 +12,7 @@ namespace Volund
 		this->_Spec = Spec;
 	}
 
-	const FramebufferSpec& Framebuffer::GetSpec() const
+	const FramebufferSpec Framebuffer::GetSpec() const
 	{
 		return this->_Spec;
 	}

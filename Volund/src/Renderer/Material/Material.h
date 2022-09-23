@@ -23,6 +23,9 @@ namespace Volund
 		template <typename T>
 		void Set(std::string_view Name, T Value);
 
+		template <typename T>
+		void Has(std::string_view Name);
+
 		void UpdateShader();
 
 		Ref<Shader> GetShader();
@@ -68,14 +71,11 @@ namespace Volund
 	template<typename T>
 	inline T Material::Get(std::string_view Name) const
 	{
-		for (const auto& View : this->_Container)
+		for (const auto& Value : this->_Container.View<MaterialValue<T>>())
 		{
-			for (const auto& Value : View)
+			if (Value->GetName() == Name)
 			{
-				if (Value->GetName() == Name)
-				{
-					return *(static_cast<MaterialValue<T>*>(Value));
-				}
+				return *(static_cast<MaterialValue<T>*>(Value));
 			}
 		}
 	}
@@ -84,5 +84,19 @@ namespace Volund
 	inline void Material::Set(std::string_view Name, T Value)
 	{
 		this->_Container.PushBack(std::make_shared<MaterialValue<T>>(Name, Value));
+	}
+
+	template<typename T>
+	inline void Material::Has(std::string_view Name)
+	{
+		for (const auto& Value : this->_Container.View<MaterialValue<T>>())
+		{
+			if (Value->GetName() == Name)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

@@ -12,6 +12,8 @@ namespace Volund
 
 		operator float() const;
 
+		operator double() const;
+
 		operator std::string() const;
 
 		operator std::string_view() const;

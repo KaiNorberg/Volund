@@ -25,7 +25,7 @@ namespace Volund
 
 		void SetSpec(const FramebufferSpec& Spec);
 
-		const FramebufferSpec& GetSpec() const;
+		const FramebufferSpec GetSpec() const;
 
 		static Ref<Framebuffer> Create(const FramebufferSpec& Spec);
 

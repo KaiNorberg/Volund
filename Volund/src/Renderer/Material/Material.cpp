@@ -64,6 +64,10 @@ namespace Volund
 			{
 				NewMaterial->Set(ValueName, (float)Value.Get("Value"));
 			}
+			else if (ValueType == "double")
+			{
+				NewMaterial->Set(ValueName, (double)Value.Get("Value"));
+			}
 			else if (ValueType == "Vec2")
 			{
 				VMLEntry Vec2Value = Value.Get("Value");

@@ -22,13 +22,11 @@ private:
 
 	struct
 	{
+		float DragSpeed = 0.01f;
+
 		float Speed = 10.0f;
 
 		float Sensitivity = 0.5f;
-
-		float Smoothing = 20.0f;
-
-		Volund::Vec3 Velocity = Volund::Vec3(0.0f);
 
 		Volund::Vec3 Position = Volund::Vec3(0.0f, 2.0f, 10.0f);
 
@@ -38,7 +36,7 @@ private:
 
 	Volund::Input _Input;
 
-	Volund::IVec2 _OldMousePosition = Volund::IVec2(0.0f);
+	Volund::IVec2 _OldMousePosition = Volund::IVec2(0);
 
 	Volund::Ref<Volund::Framebuffer> _Framebuffer;
 };

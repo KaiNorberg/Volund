@@ -62,7 +62,15 @@ void ViewportWidget::MoveEye(Volund::TimeStep TS)
 		this->_Eye.Rotation -= Vec3(Delta.y, Delta.x, 0.0f) * this->_Eye.Sensitivity;
 		this->_Eye.Rotation.x = Math::Clamp(this->_Eye.Rotation.x, -89.0f, 89.0f);
 	}
-	
+	else if (this->_Input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_MIDDLE))
+	{
+		Quat EyeQuaternion = Quat(Math::ToRadians(this->_Eye.Rotation));
+
+		IVec2 Delta = _Input.GetMousePosition() - this->_OldMousePosition;
+
+		this->_Eye.Position += EyeQuaternion * -Math::Right * (float)Delta.x * this->_Eye.DragSpeed + EyeQuaternion * Math::Up * (float)Delta.y * this->_Eye.DragSpeed;
+	}
+
 	this->_OldMousePosition = _Input.GetMousePosition();
 }
 

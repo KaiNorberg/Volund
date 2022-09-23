@@ -16,7 +16,7 @@ private:
 
 	void DrawEntityTab(Volund::Ref<Volund::Scene> Scene);
 
-	void DrawEntityNode(Volund::Ref<Volund::Entity> Entity);
+	bool DrawEntityNode(Volund::Ref<Volund::Scene> Scene, Volund::Ref<Volund::Entity> Entity);
 
 	void DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::Ref<Volund::Scene> Scene);
 
