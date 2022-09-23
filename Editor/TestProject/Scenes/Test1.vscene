@@ -1,20 +1,4 @@
-BluePointLight
-{
-	Component0
-	{
-		Position [ -10.000000 5.000000 0.000000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
-	}
-	Component1
-	{
-		Brightness [ 1.000000 ]
-		Color [ 1.000000 1.000000 1.000000 ]
-		Type [ PointLight ]
-	}
-}
-CameraEntity
+Camera
 {
 	Component0
 	{
@@ -32,7 +16,7 @@ CameraEntity
 		Type [ Camera ]
 	}
 }
-CubeEntity
+Cube
 {
 	Component0
 	{
@@ -48,7 +32,39 @@ CubeEntity
 		Type [ MeshRenderer ]
 	}
 }
-RedPointLight
+GreenCube
+{
+	Component0
+	{
+		Position [ 0.000000 2.700000 -7.100000 ]
+		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	Component1
+	{
+		Material [ Materials\Green.vmaterial ]
+		Mesh [ Standard\Models\Cube.obj ]
+		Type [ MeshRenderer ]
+	}
+}
+PointLight1
+{
+	Component0
+	{
+		Position [ -10.000000 5.000000 0.000000 ]
+		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	Component1
+	{
+		Brightness [ 1.000000 ]
+		Color [ 1.000000 1.000000 1.000000 ]
+		Type [ PointLight ]
+	}
+}
+PointLight2
 {
 	Component0
 	{
@@ -64,7 +80,7 @@ RedPointLight
 		Type [ PointLight ]
 	}
 }
-TeapotEntity
+Teapot
 {
 	Component0
 	{

@@ -29,8 +29,8 @@ void UILayer::OnAttach()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.Fonts->AddFontFromFileTTF("Data/Fonts/Inter-Regular.ttf", 16.0f);
 
-	SetupImGuiStyle();
-	//ImGui::StyleColorsDark();
+	//SetupImGuiStyle();
+	ImGui::StyleColorsDark();
 
 	auto EditorWindow = GetLayer<EditorLayer>()->GetWindow();
 

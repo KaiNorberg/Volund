@@ -23,6 +23,8 @@ namespace Volund
 
 		const Ref<Material>& GetMaterial();
 
+		MeshRenderer() = default;
+
 		MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef);
 
 	private:

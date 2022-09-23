@@ -33,6 +33,8 @@ namespace Volund
 
 		VML Serialize() override;
 
+		Camera() = default;
+
 	private:
 		static inline std::unordered_map<Scene*, Camera*> ActiveCameras = {};
 	};

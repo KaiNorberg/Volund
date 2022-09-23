@@ -11,13 +11,13 @@ namespace Volund
 {
 	void MeshRenderer::OnUpdate(TimeStep TS)
 	{
-		VOLUND_ASSERT(this->GetEntity()->HasComponent<Transform>(),
-		              "MeshRenderer unable to find a Transform component!");
+		if (this->_Mesh != nullptr && this->_Material != nullptr && this->GetEntity()->HasComponent<Transform>())
+		{
+			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+			Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
-		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
-		Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
-
-		Renderer::SubmitObject(ModelMatrix, this->_Mesh, this->_Material);
+			Renderer::SubmitObject(ModelMatrix, this->_Mesh, this->_Material);
+		}
 	}
 
 	VML MeshRenderer::Serialize()

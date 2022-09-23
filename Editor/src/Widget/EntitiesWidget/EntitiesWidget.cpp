@@ -132,6 +132,44 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 		Entity->SetName(EntityName);
 	}
 
+	ImGui::SameLine();
+
+	if (ImGui::Button("Add Component"))
+	{
+		ImGui::OpenPopup("Add Component");
+	}
+
+	if (ImGui::BeginPopup("Add Component"))
+	{
+		if (ImGui::MenuItem("Transform"))
+		{
+			Entity->CreateComponent<Transform>();
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Camera"))
+		{
+			Entity->CreateComponent<Camera>();
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("MeshRenderer"))
+		{
+			Entity->CreateComponent<MeshRenderer>();
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("PointLight"))
+		{
+			Entity->CreateComponent<PointLight>();
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("CameraMovement"))
+		{
+			Entity->CreateComponent<CameraMovement>();
+			ImGui::CloseCurrentPopup();
+		}
+
+		ImGui::EndPopup();
+	}
+
 	if (Entity->HasComponent<Volund::Transform>())
 	{
 		auto& View = Entity->ComponentView<Volund::Transform>();
@@ -177,13 +215,23 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 		{
 			auto MeshRenderer = std::dynamic_pointer_cast<Volund::MeshRenderer>(Component);
 
-			auto SelectedMaterial = FileSelectorControl("Material", MeshRenderer->GetMaterial()->GetFilePath(), ".vmaterial");
+			std::string DefaultMaterial = "";
+			if (MeshRenderer->GetMaterial() != nullptr)
+			{
+				DefaultMaterial = MeshRenderer->GetMaterial()->GetFilePath();
+			}
+			auto SelectedMaterial = FileSelectorControl("Material", DefaultMaterial, ".vmaterial");
 			if (SelectedMaterial != "")
 			{
 				MeshRenderer->SetMaterial(AssetLibrary::Load<Material>(SelectedMaterial));
 			}
 
-			auto SelectedMesh = FileSelectorControl("Mesh", MeshRenderer->GetMesh()->GetFilePath(), ".obj");
+			std::string DefaultMesh = "";
+			if (MeshRenderer->GetMesh() != nullptr)
+			{
+				DefaultMesh = MeshRenderer->GetMesh()->GetFilePath();
+			}
+			auto SelectedMesh = FileSelectorControl("Mesh", DefaultMesh, ".obj");
 			if (SelectedMesh != "")
 			{
 				MeshRenderer->SetMesh(AssetLibrary::Load<Mesh>(SelectedMesh));
