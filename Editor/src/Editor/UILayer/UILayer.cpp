@@ -28,10 +28,10 @@ void UILayer::OnAttach()
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
 
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.Fonts->AddFontFromFileTTF("Data/Fonts/Inter-Regular.ttf", 16.0f);
+	io.Fonts->AddFontFromFileTTF("Data/Fonts/OpenSans-Regular.ttf", 18.0f);
 
-	//SetupImGuiStyle();
-	ImGui::StyleColorsDark();
+	SetupImGuiStyle();
+	//ImGui::StyleColorsDark();
 
 	auto EditorWindow = GetLayer<EditorLayer>()->GetWindow();
 
@@ -190,26 +190,26 @@ void UILayer::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Widgets"))
-		{
-			for (const auto& View : this->_WidgetContainer)
-			{
-				for (const auto& Widget : View)
-				{
-					if (ImGui::MenuItem(Widget->GetName()))
-					{
-						Widget->_IsActive = true;
-					}
-				}
-			}
-
-			ImGui::EndMenu();
-		}
-
 		auto Project = GetLayer<EditorLayer>()->GetProject();
 
 		if (Project != nullptr)
 		{
+			if (ImGui::BeginMenu("Widgets"))
+			{
+				for (const auto& View : this->_WidgetContainer)
+				{
+					for (const auto& Widget : View)
+					{
+						if (ImGui::MenuItem(Widget->GetName()))
+						{
+							Widget->_IsActive = true;
+						}
+					}
+				}
+
+				ImGui::EndMenu();
+			}
+
 			std::string ProjectName = std::filesystem::path(Project->GetVMLFilepath()).filename().string();
 			std::string SceneName = std::filesystem::path(Project->GetSceneFilepath()).filename().string();
 
