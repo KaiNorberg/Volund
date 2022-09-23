@@ -24,7 +24,7 @@ protected:
 
 	static std::string TextControl(const std::string& Name, const std::string& Default);
 	
-	static std::string FileSelectorControl(const std::string& Name, const std::string& Default, const std::string& FileExtension);
+	static std::string FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, Volund::Ref<Volund::Window> Owner);
 
 	static void BoolControl(const std::string& Name, bool* Value);
 

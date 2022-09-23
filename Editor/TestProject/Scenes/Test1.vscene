@@ -36,7 +36,7 @@ GreenCube
 {
 	Component0
 	{
-		Position [ 0.000000 2.700000 -7.100000 ]
+		Position [ -6.800000 4.500000 -7.600000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
@@ -68,7 +68,7 @@ PointLight2
 {
 	Component0
 	{
-		Position [ 10.000000 5.000000 0.000000 ]
+		Position [ 10.000000 5.900000 0.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
@@ -85,7 +85,7 @@ Teapot
 	Component0
 	{
 		Position [ 3.000000 0.000000 0.000000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Rotation [ 0.000000 -0.000001 1.599834 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
 	}

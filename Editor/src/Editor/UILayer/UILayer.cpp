@@ -206,6 +206,16 @@ void UILayer::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
+		auto Project = GetLayer<EditorLayer>()->GetProject();
+
+		if (Project != nullptr)
+		{
+			std::string ProjectName = std::filesystem::path(Project->GetVMLFilepath()).filename().string();
+			std::string SceneName = std::filesystem::path(Project->GetSceneFilepath()).filename().string();
+
+			ImGui::SameLine(ImGui::GetWindowWidth() - ImGui::CalcTextSize(ProjectName.c_str()).x - ImGui::CalcTextSize(SceneName.c_str()).x - 50);
+			ImGui::Text("%s | %s", ProjectName.c_str(), SceneName.c_str());
+		}
 
 		ImGui::EndMenuBar();
 	}

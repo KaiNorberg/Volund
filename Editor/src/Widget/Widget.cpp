@@ -5,6 +5,8 @@
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
 
+#include "FileDialog/FileDialog.h"
+
 void Widget::Align(float Width, float Alignment)
 {
 	float Avail = ImGui::GetContentRegionAvail().x;
@@ -53,19 +55,28 @@ std::string Widget::TextSelectorControl(const std::string& Name, const std::stri
 	}
 }
 
-std::string Widget::FileSelectorControl(const std::string& Name, const std::string& Default, const std::string& FileExtension)
+std::string Widget::FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, Volund::Ref<Volund::Window> Owner)
 {
-	std::vector<std::string> Assets;
-	for (const auto& File : std::filesystem::recursive_directory_iterator(std::filesystem::current_path()))
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 100);
+
+	ImGui::Text(Name.data());
+	ImGui::NextColumn();
+	Align(10, 0.01f);
+
+	float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+	ImVec2 ButtonSize(-FLT_MIN, LineHeight);
+
+	if (ImGui::Button(Default.c_str(), ButtonSize))
 	{
-		auto Filepath = File.path();
-		if (!File.is_directory() && Filepath.extension() == FileExtension)
-		{
-			Filepath = std::filesystem::relative(Filepath, std::filesystem::current_path());
-			Assets.push_back(Filepath.string());
-		}
+		return std::filesystem::relative(FileDialog::OpenFile(Filter, Owner), std::filesystem::current_path()).string();
 	}
-	return TextSelectorControl(Name, Default, Assets);
+
+	ImGui::Columns(1);
+
+	ImGui::NextColumn();
+
+	return std::string();
 }
 
 std::string Widget::TextControl(const std::string& Name, const std::string& Default)
@@ -150,11 +161,11 @@ void Widget::Vec3Control(std::string_view Name, Volund::Vec3* Value, float Speed
 	ImGui::Text(Name.data());
 	ImGui::NextColumn();
 
-	ImGui::PushMultiItemsWidths(3, ImGui::CalcItemWidth());
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
-
 	float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 	ImVec2 ButtonSize(LineHeight + 3.0f, LineHeight);
+
+	ImGui::PushMultiItemsWidths(3, ImGui::GetContentRegionAvail().x - ButtonSize.x * 3);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
 
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));

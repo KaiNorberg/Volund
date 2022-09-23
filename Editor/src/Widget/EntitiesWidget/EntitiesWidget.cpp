@@ -214,13 +214,14 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 		this->DrawComponentView(View, "MeshRenderer", [this, Scene](Volund::Ref<Volund::Component> Component)
 		{
 			auto MeshRenderer = std::dynamic_pointer_cast<Volund::MeshRenderer>(Component);
+			auto Window = this->_Parent->GetLayer<EditorLayer>()->GetWindow();
 
 			std::string DefaultMaterial = "";
 			if (MeshRenderer->GetMaterial() != nullptr)
 			{
 				DefaultMaterial = MeshRenderer->GetMaterial()->GetFilepath();
 			}
-			auto SelectedMaterial = FileSelectorControl("Material", DefaultMaterial, ".vmaterial");
+			auto SelectedMaterial = FileSelectorControl("Material", DefaultMaterial, "Volund Material (*.vmaterial)\0*.vmaterial\0", Window);
 			if (SelectedMaterial != "")
 			{
 				MeshRenderer->SetMaterial(AssetLibrary::Load<Material>(SelectedMaterial));
@@ -231,7 +232,7 @@ void EntitiesWidget::DrawInspector(Volund::Ref<Volund::Entity> Entity, Volund::R
 			{
 				DefaultMesh = MeshRenderer->GetMesh()->GetFilepath();
 			}
-			auto SelectedMesh = FileSelectorControl("Mesh", DefaultMesh, ".obj");
+			auto SelectedMesh = FileSelectorControl("Mesh", DefaultMesh, "Volund Mesh (*.obj)\0*.obj\0", Window);
 			if (SelectedMesh != "")
 			{
 				MeshRenderer->SetMesh(AssetLibrary::Load<Mesh>(SelectedMesh));

@@ -1,6 +1,8 @@
 #include "PCH/PCH.h"
 #include "Project.h"
 
+#include <windows.h>
+
 namespace Volund
 {
 	void Project::Save(const std::string& Filepath)
@@ -15,7 +17,40 @@ namespace Volund
 	{
 		if (!Filepath.empty())
 		{
-			this->_Scene = Scene::Deserialize(Filepath);
+			if (this->_Scene != nullptr)
+			{
+				uint32_t Confirmation =
+					MessageBox(NULL, (LPCWSTR)L"Do you wish to save the current scene?\nAny unsaved changes will be lost!",
+						(LPCWSTR)L"Account Details", MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2);
+
+				switch (Confirmation)
+				{
+				case IDYES:
+				{
+					this->_Scene->Serialize(this->_SceneFilepath);
+					this->_Scene = Scene::Deserialize(Filepath);
+					this->_SceneFilepath = Filepath;
+
+				}
+				break;
+				case IDNO:
+				{
+					this->_Scene = Scene::Deserialize(Filepath);
+					this->_SceneFilepath = Filepath;
+				}
+				break;
+				default:
+				{
+				
+				}
+				break;
+				}
+			}
+			else
+			{
+				this->_Scene = Scene::Deserialize(Filepath);
+				this->_SceneFilepath = Filepath;
+			}
 		}
 	}
 
