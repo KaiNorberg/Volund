@@ -5,3 +5,4 @@
 #include "MeshRenderer/MeshRenderer.h"
 #include "PointLight/PointLight.h"
 #include "Transform/Transform.h"
+#include "Tag/Tag.h"

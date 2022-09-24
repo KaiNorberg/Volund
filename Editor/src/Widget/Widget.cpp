@@ -7,6 +7,26 @@
 
 #include "FileDialog/FileDialog.h"
 
+void Widget::StartCombo()
+{
+	ImGui::Columns(2);
+	ImGui::SetColumnWidth(0, 100);
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+}
+
+void Widget::NextColumn()
+{
+	ImGui::NextColumn();
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+}
+
+void Widget::EndCombo()
+{
+	ImGui::PopStyleVar();
+	ImGui::Columns(1);
+	ImGui::NextColumn();	
+}
+
 void Widget::Align(float Width, float Alignment)
 {
 	float Avail = ImGui::GetContentRegionAvail().x;
@@ -17,12 +37,10 @@ void Widget::Align(float Width, float Alignment)
 
 std::string Widget::TextSelectorControl(const std::string& Name, const std::string& Default, const std::vector<std::string>& SelectableValues)
 {
-	ImGui::Columns(2);
-	ImGui::SetColumnWidth(0, 100);
+	StartCombo();
 
 	ImGui::Text(Name.data());
-	ImGui::NextColumn();
-	Align(10, 0.01f);
+	NextColumn();
 
 	float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 	ImVec2 ButtonSize(-FLT_MIN, LineHeight);
@@ -41,9 +59,7 @@ std::string Widget::TextSelectorControl(const std::string& Name, const std::stri
 		ImGui::TreePop();
 	}
 
-	ImGui::Columns(1);
-
-	ImGui::NextColumn();
+	EndCombo();
 
 	if (!SelectedValue.empty())
 	{
@@ -57,47 +73,37 @@ std::string Widget::TextSelectorControl(const std::string& Name, const std::stri
 
 std::string Widget::FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, Volund::Ref<Volund::Window> Owner)
 {
-	ImGui::Columns(2);
-	ImGui::SetColumnWidth(0, 100);
+	StartCombo();
 
 	ImGui::Text(Name.data());
-	ImGui::NextColumn();
-	Align(10, 0.01f);
+	NextColumn();
 
 	float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 	ImVec2 ButtonSize(-FLT_MIN, LineHeight);
 
 	if (ImGui::Button(Default.c_str(), ButtonSize))
 	{
+		EndCombo();
 		return std::filesystem::relative(FileDialog::OpenFile(Filter, Owner), std::filesystem::current_path()).string();
 	}
 
-	ImGui::Columns(1);
-
-	ImGui::NextColumn();
-
+	EndCombo();
 	return std::string();
 }
 
 std::string Widget::TextControl(const std::string& Name, const std::string& Default)
 {
-	ImGui::Columns(2);
-	ImGui::SetColumnWidth(0, 100);
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+	ImGui::PushID((void*)Name.data());
+
+	StartCombo();
 
 	ImGui::Text(Name.data());
-	ImGui::NextColumn();
-	Align(10, 0.01f);
-
-	ImGui::PushID((void*)Name.data());
+	NextColumn();
 
 	std::string Value = Default;
 	bool Changed = ImGui::InputText("##1234", &Value);
 
-	ImGui::Columns(1);
-
-	ImGui::PopStyleVar();
-	ImGui::NextColumn();
+	EndCombo();
 
 	ImGui::PopID();
 
@@ -113,42 +119,32 @@ std::string Widget::TextControl(const std::string& Name, const std::string& Defa
 
 void Widget::BoolControl(const std::string& Name, bool* Value)
 {
-	ImGui::Columns(2);
-	ImGui::SetColumnWidth(0, 100);
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+	StartCombo();
 
 	ImGui::PushID((void*)Value);
 
 	ImGui::Text(Name.c_str());
-	ImGui::NextColumn();
-	Align(10, 0.05f);
+	NextColumn();
 	ImGui::Checkbox("##", Value);
-	ImGui::NextColumn();
 
 	ImGui::PopID();
 
-	ImGui::Columns(1);
-	ImGui::PopStyleVar();
+	EndCombo();
 }
 
 void Widget::FloatControl(const std::string& Name, float* Value)
 {
-	ImGui::Columns(2);
-	ImGui::SetColumnWidth(0, 100);
-	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+	StartCombo();
 
 	ImGui::PushID((void*)Value);
 
 	ImGui::Text(Name.c_str());
-	ImGui::NextColumn();
-	Align(10, 0.05f);
+	NextColumn();
 	ImGui::DragFloat("##", Value);
-	ImGui::NextColumn();
 
 	ImGui::PopID();
 
-	ImGui::Columns(1);
-	ImGui::PopStyleVar();
+	EndCombo();
 }
 
 void Widget::Vec3Control(std::string_view Name, Volund::Vec3* Value, float Speed, float DefaultValue)

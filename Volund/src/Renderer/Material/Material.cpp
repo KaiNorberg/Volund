@@ -3,8 +3,6 @@
 
 #include "VML/VML.h"
 
-#include "AssetLibrary/AssetLibrary.h"
-
 namespace Volund
 {
 	std::string Material::GetFilepath()
@@ -49,7 +47,7 @@ namespace Volund
 	{
 		VML MaterialVML(Filepath);
 
-		Ref<Shader> ObjectShader = AssetLibrary::Load<Shader>((std::string)MaterialVML.Get("Shader").String());
+		Ref<Shader> ObjectShader = Shader::Create((std::string)MaterialVML.Get("Shader").String());
 
 		Ref<Material> NewMaterial = Material::Create(ObjectShader);
 		NewMaterial->_Filepath = Filepath;

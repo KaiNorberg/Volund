@@ -1,64 +1,151 @@
 #pragma once
 
-#include "Entity/Entity.h"
+#include "EventDispatcher/Event.h"
+
+#include "Component/Component.h"
+
+#include "Container/Container.h"
 
 namespace Volund
 {
-	class Event;
+	using Entity = uint64_t;
+	using Registry = std::vector<std::pair<Entity, Container<Component>>>;
 
 	class Scene
 	{
 	public:
-		Ref<Entity> CreateEntity(std::string_view Name);
 
-		Ref<Entity> CreateEntity(std::string_view Name, const Vec3& Position, const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
+		Entity CreateEntity();
 
-		bool DeleteEntity(std::string_view Name);
+		void DestroyEntity(Entity entity);
 
-		Ref<Entity> GetEntity(std::string_view Name);
+		bool HasEntity(Entity entity) const;
 
-		bool HasEntity(std::string_view Name) const;
+		void DeleteComponent(Component* component);
 
 		template <typename T>
-		const std::vector<Ref<T>> ComponentView();
+		void DeleteComponent(Entity entity, uint64_t Index = 0);
 
-		virtual void OnEvent(Event*);
+		template <typename T, class... ARGS>
+		Ref<T> CreateComponent(Entity entity, ARGS&&... Args);
 
-		virtual void OnUpdate(TimeStep);
+		template <typename T>
+		bool HasComponent(Entity entity, uint64_t Index = 0);
+
+		template <typename T>
+		Ref<T> GetComponent(Entity entity, uint64_t Index = 0);
+
+		template <typename T>
+		const std::vector<Ref<Component>>& View(Entity entity) const;
+
+		void OnEvent(Event* E);
+
+		void OnUpdate(TimeStep TS);
 
 		static Ref<Scene> Deserialize(std::string_view Filepath);
 
 		void Serialize(std::string_view Filepath);
 
-		std::vector<Ref<Entity>>::iterator begin();
-		std::vector<Ref<Entity>>::iterator end();
+		Registry::iterator begin();
+		Registry::iterator end();
 
-		std::vector<Ref<Entity>>::const_iterator begin() const;
-		std::vector<Ref<Entity>>::const_iterator end() const;
+		Registry::const_iterator begin() const;
+		Registry::const_iterator end() const;
 
 		Scene();
 
 	private:
-		std::vector<Ref<Entity>> _Entities;
+
+		uint64_t FindEntity(Entity entity) const;
+
+		uint64_t _NewEntity = 1;
+
+		Registry _Registry;
 	};
 
-	template <typename T>
-	const std::vector<Ref<T>> Scene::ComponentView()
+	template<typename T>
+	inline void Scene::DeleteComponent(Entity entity, uint64_t Index)
 	{
-		std::vector<Ref<T>> ComponentView;
-		for (const auto& Entity : _Entities)
-		{
-			if (Entity->HasComponent<T>())
-			{
-				const auto& View = Entity->ComponentView<T>();
-				ComponentView.reserve(View.size());
-				for (const auto& Component : View)
-				{
-					ComponentView.push_back(std::dynamic_pointer_cast<T>(Component));
-				}
-			}
-		}
+		uint64_t Index = this->FindEntity(entity);
 
-		return ComponentView;
+		if (Index != -1)
+		{
+			this->_Registry[Index].second.Get<T>(Index)->OnDelete();
+			this->_Registry[Index].second.Erase<T>(Index);
+		}
+		else
+		{
+			VOLUND_ERROR("Unable to find entity (%d)", entity);
+		}
+	}
+
+	template<typename T, class ...ARGS>
+	inline Ref<T> Scene::CreateComponent(Entity entity, ARGS && ...Args)
+	{
+		uint64_t Index = this->FindEntity(entity);
+
+		if (Index != -1)
+		{
+			Ref<T> NewComponent = std::make_shared<T>(Args...);
+			NewComponent->Init(this, entity);
+			NewComponent->OnCreate();
+			this->_Registry[Index].second.PushBack(NewComponent);
+
+			return NewComponent;
+		}
+		else
+		{
+			VOLUND_ERROR("Unable to find entity (%d)", entity);
+			return nullptr;
+		}
+	}
+
+	template<typename T>
+	inline bool Scene::HasComponent(Entity entity, uint64_t Index)
+	{
+		uint64_t RegistryIndex = this->FindEntity(entity);
+
+		if (RegistryIndex != -1)
+		{
+			return this->_Registry[RegistryIndex].second.Contains<T>(Index);
+
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	template<typename T>
+	inline Ref<T> Scene::GetComponent(Entity entity, uint64_t Index)
+	{
+		uint64_t RegistryIndex = this->FindEntity(entity);
+
+		if (RegistryIndex != -1)
+		{
+			return this->_Registry[RegistryIndex].second.Get<T>(Index);
+
+		}
+		else
+		{
+			VOLUND_ERROR("Unable to find entity (%d)", entity);
+			return nullptr;
+		}
+	}
+
+	template<typename T>
+	inline const std::vector<Ref<Component>>& Scene::View(Entity entity) const
+	{
+		uint64_t Index = this->FindEntity(entity);
+
+		if (Index != -1)
+		{
+			return this->_Registry[Index].second.View<T>();
+		}
+		else
+		{
+			VOLUND_ERROR("Unable to find entity (%d)", entity);
+			return this->_Registry[Index].second.View<T>();
+		}
 	}
 }

@@ -105,7 +105,7 @@ void ViewportWidget::DrawViewport(Volund::TimeStep TS)
 
 		this->_Framebuffer->Unbind();
 
-		ImGui::Image((void*)this->_Framebuffer->GetColorAttachment(), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*)(uint64_t)this->_Framebuffer->GetColorAttachment(), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
 	{

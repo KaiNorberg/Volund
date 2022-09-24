@@ -2,9 +2,9 @@
 
 #include "CameraMovement.h"
 
-#include "Scene/Entity/Component/Transform/Transform.h"
+#include "Scene/Component/Transform/Transform.h"
 
-#include "Scene/Entity/Entity.h"
+#include "Scene/Scene.h"
 
 namespace Volund
 {
@@ -27,7 +27,7 @@ namespace Volund
 
 	void CameraMovement::OnUpdate(TimeStep TS)
 	{
-		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 		if (_Input.IsHeld('W'))
 		{

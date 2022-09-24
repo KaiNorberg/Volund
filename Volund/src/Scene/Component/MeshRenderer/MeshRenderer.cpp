@@ -3,17 +3,15 @@
 
 #include "Renderer/Renderer.h"
 
-#include "Scene/Entity/Component/Transform/Transform.h"
-
-#include "AssetLibrary/AssetLibrary.h"
+#include "Scene/Component/Transform/Transform.h"
 
 namespace Volund
 {
 	void MeshRenderer::OnUpdate(TimeStep TS)
 	{
-		if (this->_Mesh != nullptr && this->_Material != nullptr && this->GetEntity()->HasComponent<Transform>())
+		if (this->_Mesh != nullptr && this->_Material != nullptr && this->GetScene()->HasComponent<Transform>(this->GetEntity()))
 		{
-			Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 			Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
 			Renderer::SubmitObject(ModelMatrix, this->_Mesh, this->_Material);

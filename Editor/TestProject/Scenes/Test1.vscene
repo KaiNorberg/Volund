@@ -1,4 +1,4 @@
-Camera
+Entity1
 {
 	Component0
 	{
@@ -9,14 +9,19 @@ Camera
 	}
 	Component1
 	{
-		FOV [ 70.000000 ]
+		FOV [ 90.000000 ]
 		FarPlane [ 100.000000 ]
 		IsActive [ 1 ]
 		NearPlane [ 0.100000 ]
 		Type [ Camera ]
 	}
+	Component2
+	{
+		String [ Camera ]
+		Type [ Tag ]
+	}
 }
-Cube
+Entity2
 {
 	Component0
 	{
@@ -31,8 +36,13 @@ Cube
 		Mesh [ Standard\Models\Cube.obj ]
 		Type [ MeshRenderer ]
 	}
+	Component2
+	{
+		String [ RedCube ]
+		Type [ Tag ]
+	}
 }
-GreenCube
+Entity3
 {
 	Component0
 	{
@@ -47,8 +57,13 @@ GreenCube
 		Mesh [ Standard\Models\Cube.obj ]
 		Type [ MeshRenderer ]
 	}
+	Component2
+	{
+		String [ GreenCube ]
+		Type [ Tag ]
+	}
 }
-PointLight1
+Entity4
 {
 	Component0
 	{
@@ -63,8 +78,13 @@ PointLight1
 		Color [ 1.000000 1.000000 1.000000 ]
 		Type [ PointLight ]
 	}
+	Component2
+	{
+		String [ PointLight1 ]
+		Type [ Tag ]
+	}
 }
-PointLight2
+Entity5
 {
 	Component0
 	{
@@ -79,13 +99,24 @@ PointLight2
 		Color [ 1.000000 1.000000 1.000000 ]
 		Type [ PointLight ]
 	}
+	Component2
+	{
+		Brightness [ 1.000000 ]
+		Color [ 1.000000 1.000000 1.000000 ]
+		Type [ PointLight ]
+	}
+	Component3
+	{
+		String [ PointLight2 ]
+		Type [ Tag ]
+	}
 }
-Teapot
+Entity6
 {
 	Component0
 	{
 		Position [ 3.000000 0.000000 0.000000 ]
-		Rotation [ 0.000000 -0.000001 1.599834 ]
+		Rotation [ 0.000000 -0.000001 1.599833 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
 	}
@@ -94,5 +125,10 @@ Teapot
 		Material [ Materials\Blue.vmaterial ]
 		Mesh [ Standard\Models\Teapot.obj ]
 		Type [ MeshRenderer ]
+	}
+	Component2
+	{
+		String [ Teapot ]
+		Type [ Tag ]
 	}
 }

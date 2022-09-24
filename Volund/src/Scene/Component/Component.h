@@ -8,12 +8,13 @@
 
 namespace Volund
 {
-	class Entity;
+	class Scene;
+
+	using Entity = uint64_t;
 
 	class Component
 	{
 	public:
-		Entity* GetEntity() const;
 
 		virtual void OnCreate() {};
 
@@ -28,12 +29,19 @@ namespace Volund
 		Component() = default;
 
 		virtual ~Component() = default;
+	
+	protected:
+
+		Entity GetEntity() const;
+
+		Scene* GetScene() const;
 
 	private:
-		friend class Entity;
+		friend class Scene;
 
-		void SetParent(Entity* Parent);
+		void Init(Scene* scene, Entity entity);
 
-		Entity* _Parent = nullptr;
+		Scene* _Scene = nullptr;
+		Entity _Entity = NULL;
 	};
 }

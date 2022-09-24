@@ -8,6 +8,10 @@ class UILayer : public Volund::Layer
 {
 public:
 
+	std::string GetSelectedEntity();
+
+	void SetSelectedEntity(const std::string& NewEntity);
+
 	void OnAttach() override;
 
 	void OnDetach() override;
@@ -22,6 +26,12 @@ private:
 
 	void DrawMenuBar();
 
+	void DrawProjectMenu();
+
+	void DrawSceneMenu();
+
 	Container<Widget> _WidgetContainer;
+
+	std::string _SelectedEntity;
 };
 

@@ -18,6 +18,12 @@ public:
 
 protected:
 
+	static void StartCombo();
+
+	static void NextColumn();
+
+	static void EndCombo();
+
 	static void Align(float Width, float Alignment);
 
 	static std::string TextSelectorControl(const std::string& Name, const std::string& Default, const std::vector<std::string>& SelectableValues);
@@ -33,4 +39,6 @@ protected:
 	static void Vec3Control(std::string_view Name, Volund::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
 
 	Volund::Layer* _Parent = nullptr;
+
+	static inline Volund::Entity _SelectedEntity = NULL;
 };

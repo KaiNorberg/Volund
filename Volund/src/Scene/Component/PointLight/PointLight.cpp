@@ -4,13 +4,13 @@
 
 #include "Renderer/Renderer.h"
 
-#include "Scene/Entity/Component/Transform/Transform.h"
+#include "Scene/Component/Transform/Transform.h"
 
 namespace Volund
 {
 	void PointLight::OnUpdate(TimeStep TS)
 	{
-		Ref<Transform> EntityTransform = this->GetEntity()->GetComponent<Transform>();
+		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 		Renderer::SubmitPointLight(this->Color, this->Brightness, EntityTransform->Position);
 	}

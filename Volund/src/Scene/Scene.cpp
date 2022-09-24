@@ -2,95 +2,79 @@
 
 #include "Scene.h"
 
-#include "EventDispatcher/Event.h"
-#include "Scene/Entity/Component/Components.h"
+#include "Scene/Component/Components.h"
 
 #include "VML/VML.h"
 
-#include "AssetLibrary/AssetLibrary.h"
-
 namespace Volund
 {
-	Ref<Entity> Scene::CreateEntity(std::string_view Name)
+	Entity Scene::CreateEntity()
 	{
-		Ref<Entity> NewEntity = std::make_shared<Entity>(this, Name);
+		Entity NewEntity = this->_NewEntity;
 
-		if (this->HasEntity(NewEntity->GetName()))
-		{
-			VOLUND_WARNING("Duplicate entity detected");
-			return nullptr;
-		}
+		this->_Registry.push_back(std::pair<Entity, Container<Component>>(NewEntity, Container<Component>()));
 
-		this->_Entities.push_back(NewEntity);
-
+		this->_NewEntity++;
 		return NewEntity;
 	}
 
-	Ref<Entity> Scene::CreateEntity(std::string_view Name, const Vec3& Position, const Vec3& Rotation,
-	                                const Vec3& Scale)
+	void Scene::DestroyEntity(Entity entity)
 	{
-		Ref<Entity> NewEntity = this->CreateEntity(Name);
+		uint64_t Index = this->FindEntity(entity);
 
-		NewEntity->CreateComponent<Transform>(Position, Rotation, Scale);
-
-		return NewEntity;
+		if (Index != -1)
+		{
+			this->_Registry.erase(this->_Registry.begin() + Index);
+		}
+		else
+		{
+			VOLUND_ERROR("Unable to find entity (%d)", entity);
+		}
 	}
 
-	bool Scene::DeleteEntity(std::string_view Name)
+	bool Scene::HasEntity(Entity entity) const
 	{
-		for (uint64_t i = 0; i < this->_Entities.size(); i++)
-		{
-			if (this->_Entities[i]->GetName() == Name)
-			{
-				this->_Entities.erase(this->_Entities.begin() + (int64_t)i);
-				return true;
-			}
-		}
-
-		VOLUND_ERROR("Entity not found (%s)", Name.data());
-		return false;
+		return this->FindEntity(entity) != -1;
 	}
 
-	Ref<Entity> Scene::GetEntity(std::string_view Name)
+	void Scene::DeleteComponent(Component* component)
 	{
-		for (uint64_t i = 0; i < this->_Entities.size(); i++)
+		for (auto& [entity, Container] : this->_Registry)
 		{
-			if (this->_Entities[i]->GetName() == Name)
+			if (Container.Erase(component))
 			{
-				return this->_Entities[i];
+				return;
 			}
-		}
-
-		VOLUND_ERROR("Entity not found (%s)", Name.data());
-		return nullptr;
-	}
-
-	bool Scene::HasEntity(std::string_view Name) const
-	{
-		for (uint64_t i = 0; i < this->_Entities.size(); i++)
-		{
-			if (this->_Entities[i]->GetName() == Name)
-			{
-				return true;
-			}
-		}
-
-		return false;
+		}			
+		
+		VOLUND_ERROR("Unable to find component (%d)", component);
 	}
 
 	void Scene::OnUpdate(TimeStep TS)
 	{
-		for (const auto& Entity : this->_Entities)
+		for (const auto& [entity, Container] : this->_Registry)
 		{
-			Entity->OnUpdate(TS);
+			for (const auto& View : Container)
+			{
+				for (const auto& component : View)
+				{
+					component->OnUpdate(TS);
+				}
+			}
 		}
 	}
 
 	void Scene::OnEvent(Event* E)
 	{
-		for (const auto& Entity : this->_Entities)
+		for (const auto& [entity, Container] : this->_Registry)
 		{
-			Entity->OnEvent(E);
+			for (const auto& View : Container)
+			{
+				for (const auto& component : View)
+				{
+					component->OnEvent(E);
+				}
+			}
 		}
 	}
 
@@ -102,7 +86,7 @@ namespace Volund
 
 		for (auto& [EntityName, EntityVML] : SceneVML)
 		{
-			Ref<Entity> NewEntity = NewScene->CreateEntity(EntityName);
+			Entity NewEntity = NewScene->CreateEntity();
 
 			for (auto& [ComponentName, ComponentVML] : EntityVML)
 			{
@@ -110,7 +94,7 @@ namespace Volund
 
 				if (ComponentType == "Camera")
 				{
-					Ref<Camera> NewCamera = NewEntity->CreateComponent<Camera>();
+					Ref<Camera> NewCamera = NewScene->CreateComponent<Camera>(NewEntity);
 
 					if (ComponentVML.Get("IsActive"))
 					{
@@ -123,14 +107,14 @@ namespace Volund
 				}
 				else if (ComponentType == "CameraMovement")
 				{
-					NewEntity->CreateComponent<CameraMovement>(ComponentVML.Get("Speed"), ComponentVML.Get("Sensitivity"));
+					NewScene->CreateComponent<CameraMovement>(NewEntity, ComponentVML.Get("Speed"), ComponentVML.Get("Sensitivity"));
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
-					Ref<Mesh> MeshAsset = AssetLibrary::Load<Mesh>(ComponentVML.Get("Mesh"));				
-					Ref<Material> MaterialAsset = AssetLibrary::Load<Material>(ComponentVML.Get("Material"));
+					Ref<Mesh> MeshAsset = Mesh::Create(ComponentVML.Get("Mesh"));				
+					Ref<Material> MaterialAsset = Material::Create(ComponentVML.Get("Material").String());
 
-					NewEntity->CreateComponent<MeshRenderer>(MeshAsset, MaterialAsset);
+					NewScene->CreateComponent<MeshRenderer>(NewEntity, MeshAsset, MaterialAsset);
 				}
 				else if (ComponentType == "PointLight")
 				{
@@ -139,7 +123,7 @@ namespace Volund
 
 					RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
 
-					NewEntity->CreateComponent<PointLight>(Color, BrightnessVML);
+					NewScene->CreateComponent<PointLight>(NewEntity, Color, BrightnessVML);
 				}
 				else if (ComponentType == "Transform")
 				{
@@ -151,7 +135,13 @@ namespace Volund
 					Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2].GetAs<float>());
 					Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
 
-					NewEntity->CreateComponent<Transform>(Position, Rotation, Scale);
+					NewScene->CreateComponent<Transform>(NewEntity, Position, Rotation, Scale);
+				}
+				else if (ComponentType == "Tag")
+				{
+					std::string String = ComponentVML.Get("String");
+
+					NewScene->CreateComponent<Tag>(NewEntity, String);
 				}
 				else
 				{
@@ -171,9 +161,19 @@ namespace Volund
 
 		VML SceneVML;
 
-		for (uint64_t i = 0; i < this->_Entities.size(); i++)
+		for (const auto& [entity, Container] : this->_Registry)
 		{
-			SceneVML.PushBack(this->_Entities[i]->GetName(), this->_Entities[i]->Serialize());
+			VML EntityVML;
+			uint32_t i = 0;
+			for (const auto& ComponentView : Container)
+			{
+				for (const auto& Component : ComponentView)
+				{
+					EntityVML.PushBack("Component" + std::to_string(i), Component->Serialize());
+					i++;
+				}
+			}
+			SceneVML.PushBack("Entity" + std::to_string(entity), EntityVML);
 		}
 
 		SceneVML.Write(Filepath);
@@ -181,24 +181,37 @@ namespace Volund
 		VOLUND_INFO("Finished serializing Scene!");
 	}
 
-	std::vector<Ref<Entity>>::iterator Scene::begin()
+	Registry::iterator Scene::begin()
 	{
-		return this->_Entities.begin();
+		return this->_Registry.begin();
 	}
 
-	std::vector<Ref<Entity>>::iterator Scene::end()
+	Registry::iterator Scene::end()
 	{
-		return this->_Entities.end();
+		return this->_Registry.end();
 	}
 
-	std::vector<Ref<Entity>>::const_iterator Scene::begin() const
+	Registry::const_iterator Scene::begin() const
 	{
-		return this->_Entities.begin();
+		return this->_Registry.begin();
 	}
 
-	std::vector<Ref<Entity>>::const_iterator Scene::end() const
+	Registry::const_iterator Scene::end() const
 	{
-		return this->_Entities.end();
+		return this->_Registry.end();
+	}
+
+	uint64_t Scene::FindEntity(Entity entity) const
+	{
+		for (int i = 0; i < this->_Registry.size(); i++)
+		{
+			if (_Registry[i].first == entity)
+			{
+				return i;
+			}
+		}
+
+		return -1;
 	}
 
 	Scene::Scene()

@@ -1,8 +1,8 @@
 #include "PCH/PCH.h"
 #include "Renderer.h"
 
-#include "Scene/Entity/Component/Transform/Transform.h"
-#include "Scene/Entity/Component/PointLight/PointLight.h"
+#include "Scene/Component/Transform/Transform.h"
+#include "Scene/Component/PointLight/PointLight.h"
 
 namespace Volund
 {

@@ -19,6 +19,8 @@ namespace Volund
 		template <typename D>
 		void Erase(uint64_t Index = 0);
 
+		bool Erase(void* Address);
+
 		template <typename D>
 		Ref<D> Get(uint64_t Index = 0) const;
 
@@ -147,6 +149,24 @@ namespace Volund
 		static uint64_t ID = _NewTypeID++;
 
 		return ID;
+	}
+
+	template<typename T>
+	inline bool Container<T>::Erase(void* Address)
+	{
+		for (auto& View : this->_Data)
+		{
+			for (int i = 0; i < View.size(); i++)
+			{
+				if (View[i].get() == Address)
+				{
+					View.erase(View.begin() + i);
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	template<typename T>
