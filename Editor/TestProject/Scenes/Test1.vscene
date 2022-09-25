@@ -32,14 +32,14 @@ Entity2
 	}
 	Component1
 	{
-		Material [ Materials\Red.vmaterial ]
-		Mesh [ Standard\Models\Cube.obj ]
-		Type [ MeshRenderer ]
+		String [ RedCube ]
+		Type [ Tag ]
 	}
 	Component2
 	{
-		String [ RedCube ]
-		Type [ Tag ]
+		Material [ Materials\Red.vmaterial ]
+		Mesh [ Standard\Models\Cube.obj ]
+		Type [ MeshRenderer ]
 	}
 }
 Entity3
@@ -53,14 +53,14 @@ Entity3
 	}
 	Component1
 	{
-		Material [ Materials\Green.vmaterial ]
-		Mesh [ Standard\Models\Cube.obj ]
-		Type [ MeshRenderer ]
+		String [ GreenCube ]
+		Type [ Tag ]
 	}
 	Component2
 	{
-		String [ GreenCube ]
-		Type [ Tag ]
+		Material [ Materials\Green.vmaterial ]
+		Mesh [ Standard\Models\Cube.obj ]
+		Type [ MeshRenderer ]
 	}
 }
 Entity4
@@ -74,14 +74,14 @@ Entity4
 	}
 	Component1
 	{
-		Brightness [ 1.000000 ]
-		Color [ 1.000000 1.000000 1.000000 ]
-		Type [ PointLight ]
+		String [ PointLight1 ]
+		Type [ Tag ]
 	}
 	Component2
 	{
-		String [ PointLight1 ]
-		Type [ Tag ]
+		Brightness [ 1.000000 ]
+		Color [ 1.000000 1.000000 1.000000 ]
+		Type [ PointLight ]
 	}
 }
 Entity5
@@ -95,20 +95,14 @@ Entity5
 	}
 	Component1
 	{
-		Brightness [ 1.000000 ]
-		Color [ 1.000000 1.000000 1.000000 ]
-		Type [ PointLight ]
+		String [ PointLight2 ]
+		Type [ Tag ]
 	}
 	Component2
 	{
 		Brightness [ 1.000000 ]
 		Color [ 1.000000 1.000000 1.000000 ]
 		Type [ PointLight ]
-	}
-	Component3
-	{
-		String [ PointLight2 ]
-		Type [ Tag ]
 	}
 }
 Entity6
@@ -122,13 +116,13 @@ Entity6
 	}
 	Component1
 	{
-		Material [ Materials\Blue.vmaterial ]
-		Mesh [ Standard\Models\Teapot.obj ]
-		Type [ MeshRenderer ]
+		String [ Teapot ]
+		Type [ Tag ]
 	}
 	Component2
 	{
-		String [ Teapot ]
-		Type [ Tag ]
+		Material [ Materials\Blue.vmaterial ]
+		Mesh [ Standard\Models\Teapot.obj ]
+		Type [ MeshRenderer ]
 	}
 }

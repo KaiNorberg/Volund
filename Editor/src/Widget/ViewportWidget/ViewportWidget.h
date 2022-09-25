@@ -12,7 +12,7 @@ public:
 
 	void OnUpdate(Volund::TimeStep TS) override;
 
-	ViewportWidget(Volund::Layer* Parent);
+	ViewportWidget(Volund::Layer* Parent, bool Active = false);
 
 private:
 

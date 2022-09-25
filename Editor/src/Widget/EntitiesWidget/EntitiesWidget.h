@@ -10,7 +10,7 @@ public:
 
 	void OnUpdate(Volund::TimeStep TS) override;
 
-	EntitiesWidget(Volund::Layer* Parent);
+	EntitiesWidget(Volund::Layer* Parent, bool Active = false);
 
 private:
 

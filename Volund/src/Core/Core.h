@@ -9,6 +9,11 @@
 #define VOLUND_MOUSE_BUTTON_LEFT 0
 #define VOLUND_MOUSE_BUTTON_RIGHT 1
 
+#define VOLUND_KEY_ENTER 13
+#define VOLUND_KEY_SHIFT 16
+#define VOLUND_KEY_CONTROL 17
+
+
 namespace Volund
 {
 	/// <summary>

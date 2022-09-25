@@ -221,7 +221,8 @@ void InspectorWidget::DrawComponentView(const std::vector<Volund::Ref<Volund::Co
 	}
 }
 
-InspectorWidget::InspectorWidget(Volund::Layer* Parent)
+InspectorWidget::InspectorWidget(Volund::Layer* Parent, bool Active)
 {
 	this->_Parent = Parent;
+	this->_IsActive = Active;
 }

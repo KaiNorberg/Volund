@@ -12,7 +12,7 @@ public:
 
 	void OnUpdate(Volund::TimeStep TS) override;
 
-	InspectorWidget(Volund::Layer* Parent);
+	InspectorWidget(Volund::Layer* Parent, bool Active = false);
 
 private:
 

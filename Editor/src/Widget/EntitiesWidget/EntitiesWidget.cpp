@@ -14,7 +14,7 @@ const char* EntitiesWidget::GetName()
 
 void EntitiesWidget::OnUpdate(TimeStep TS)
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetProject()->GetScene();
+	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
 
 	if (ImGui::Begin("Entities", &this->_IsActive))
 	{
@@ -102,7 +102,8 @@ bool EntitiesWidget::DrawEntityNode(Volund::Ref<Volund::Scene> Scene, Volund::En
 	return EntityAlive;
 }
 
-EntitiesWidget::EntitiesWidget(Volund::Layer* Parent)
+EntitiesWidget::EntitiesWidget(Volund::Layer* Parent, bool Active)
 {
 	this->_Parent = Parent;
+	this->_IsActive = Active;
 }

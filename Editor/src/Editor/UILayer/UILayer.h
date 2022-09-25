@@ -22,6 +22,8 @@ public:
 
 private:
 
+	void HandleShortcuts();
+
 	void BeginDockSpace();
 
 	void DrawMenuBar();
@@ -33,5 +35,7 @@ private:
 	Container<Widget> _WidgetContainer;
 
 	std::string _SelectedEntity;
+
+	Input _Input;
 };
 

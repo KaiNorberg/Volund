@@ -24,9 +24,10 @@ void ViewportWidget::OnUpdate(TimeStep TS)
 	this->DrawViewport(TS);
 }
 
-ViewportWidget::ViewportWidget(Volund::Layer* Parent)
+ViewportWidget::ViewportWidget(Volund::Layer* Parent, bool Active)
 {
 	this->_Parent = Parent;
+	this->_IsActive = Active;
 
 	Volund::FramebufferSpec Spec;
 	Spec.Height = 1080;
