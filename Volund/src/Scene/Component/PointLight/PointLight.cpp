@@ -3,6 +3,7 @@
 #include "PointLight.h"
 
 #include "Renderer/Renderer.h"
+#include "Scene/Scene.h"
 
 #include "Scene/Component/Transform/Transform.h"
 
@@ -12,7 +13,12 @@ namespace Volund
 	{
 		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-		Renderer::SubmitPointLight(this->Color, this->Brightness, EntityTransform->Position);
+		RendererLight Light;
+		Light.Position = EntityTransform->Position;
+		Light.Brightness = this->Brightness;
+		Light.Color = this->Color;
+
+		Renderer::Submit(Light);
 	}
 
 	VML PointLight::Serialize()

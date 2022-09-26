@@ -89,21 +89,18 @@ void ViewportWidget::DrawViewport(Volund::TimeStep TS)
 		auto FramebufferSpec = this->_Framebuffer->GetSpec();
 		auto ViewportSize = ImGui::GetContentRegionAvail();
 
-		float AspectRatio = (float)ViewportSize.x / (float)ViewportSize.y;	
-		Quat EyeQuaternion = Quat(Math::ToRadians(this->_Eye.Rotation));
-		Mat4x4 ViewProjMatrix = glm::perspective(glm::radians(70.0f), AspectRatio, 0.1f, 1000.0f) *
-			glm::lookAt(this->_Eye.Position, this->_Eye.Position + EyeQuaternion * Math::Back, EyeQuaternion * Math::Up);
-
 		this->_Framebuffer->Bind();
 		API->Clear();
-		API->SetViewPort(0, 0, FramebufferSpec.Width, FramebufferSpec.Height);
+		API->SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
 
-		Renderer::BeginScene(ViewProjMatrix, this->_Eye.Position);
+		Quat EyeQuaternion = Quat(Math::ToRadians(this->_Eye.Rotation));
+		Mat4x4 ViewMatrix = glm::lookAt(this->_Eye.Position, this->_Eye.Position + EyeQuaternion * Math::Back, EyeQuaternion * Math::Up);
+		Mat4x4 ProjectionMatrix = glm::perspective(glm::radians(70.0f), (float)ViewportSize.x / (float)ViewportSize.y, 0.1f, 1000.0f);
+		Renderer::Begin(ViewMatrix, ProjectionMatrix);
 
 		Scene->OnUpdate(0.0f);
 
-		Renderer::EndScene();
-
+		Renderer::End();
 		this->_Framebuffer->Unbind();
 
 		ImGui::Image((void*)(uint64_t)this->_Framebuffer->GetColorAttachment(), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));

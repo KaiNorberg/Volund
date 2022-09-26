@@ -67,7 +67,7 @@ void EditorLayer::OnAttach()
 	this->_Context->SetVSync(true);
 	this->_Context->MakeCurrent();
 
-	Renderer::Init(this->_API);
+	Renderer::Init(new ForwardRenderer(this->_API));
 }
 
 void EditorLayer::OnDetach()

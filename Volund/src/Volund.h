@@ -3,8 +3,10 @@
 #include "PCH/PCH.h"
 
 #include "Application/Application.h"
+#include "Window/Window.h"
 
 #include "Renderer/Renderer.h"
+#include "Renderer/ForwardRenderer.h"
 #include "Renderer/Framebuffer/Framebuffer.h"
 #include "Renderer/Context/Context.h"
 

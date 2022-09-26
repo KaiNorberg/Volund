@@ -9,7 +9,7 @@ namespace Volund
 {
 	bool OpenGLShader::HasUniform(std::string_view Name)
 	{
-		return UniformLocations.contains(Name.data()) || glGetUniformLocation(this->ID, Name.data()) != 0;
+		return UniformLocations.contains(Name.data()) || glGetUniformLocation(this->ID, Name.data()) != -1;
 	}
 
 	void OpenGLShader::Bind()

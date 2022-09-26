@@ -9,15 +9,15 @@ out vec3 Position;
 out vec2 TextureCoord;
 out vec3 Normal;
 
-uniform mat4 ViewProjMatrix;
-uniform mat4 ModelMatrix;
+uniform mat4 _ViewProjMatrix;
+uniform mat4 _ModelMatrix;
 
 void main()
 {
-    Position = vec3(ModelMatrix * vec4(Vertex_Position, 1.0));
+    Position = vec3(_ModelMatrix * vec4(Vertex_Position, 1.0));
     TextureCoord = Vertex_TextureCoord;
     Normal = Vertex_Normal;
-    gl_Position = ViewProjMatrix * ModelMatrix * vec4(Vertex_Position, 1.0f);
+    gl_Position = _ViewProjMatrix * _ModelMatrix * vec4(Vertex_Position, 1.0f);
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT
@@ -29,10 +29,10 @@ struct PointLight
     float Brightness;
     vec3 Position;
 };
-uniform int PointLightAmount;
-uniform PointLight PointLights[64];
+uniform int _PointLightAmount;
+uniform PointLight _PointLights[64];
 
-uniform vec3 EyePosition;
+uniform vec3 _EyePosition;
 
 //Material Uniforms
 uniform vec3 Color;
@@ -46,17 +46,17 @@ out vec4 FragColor;
 void main()
 {
     vec3 Result;
-    for (int i = 0; i < PointLightAmount; i++)
+    for (int i = 0; i < _PointLightAmount; i++)
     { 
-        vec3 LightDir = normalize(PointLights[i].Position - Position); 
+        vec3 LightDir = normalize(_PointLights[i].Position - Position);
         float Diffuse = max(dot(Normal, LightDir), 0.0);
 
-        vec3 ViewDir = normalize(EyePosition - Position);
+        vec3 ViewDir = normalize(_EyePosition - Position);
         vec3 ReflectDir = reflect(-LightDir, Normal);
 
         float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
 
-        Result += (Diffuse + Specular) * PointLights[i].Color * PointLights[i].Brightness * Color;
+        Result += (Diffuse + Specular) * _PointLights[i].Color * _PointLights[i].Brightness * Color;
     }
 
     FragColor = vec4(Result, 1.0f);

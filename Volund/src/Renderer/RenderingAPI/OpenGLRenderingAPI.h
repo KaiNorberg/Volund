@@ -3,6 +3,8 @@
 #include "RenderingAPI.h"
 #include "Renderer/Mesh/Mesh.h"
 
+#include "Renderer/Framebuffer/Framebuffer.h"
+
 namespace Volund
 {
 	class OpenGLRenderingAPI : public RenderingAPI

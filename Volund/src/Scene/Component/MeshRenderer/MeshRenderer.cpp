@@ -1,6 +1,7 @@
 #include "PCH/PCH.h"
 #include "MeshRenderer.h"
 
+#include "Scene/Scene.h"
 #include "Renderer/Renderer.h"
 
 #include "Scene/Component/Transform/Transform.h"
@@ -12,9 +13,13 @@ namespace Volund
 		if (this->_Mesh != nullptr && this->_Material != nullptr && this->GetScene()->HasComponent<Transform>(this->GetEntity()))
 		{
 			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
-			Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
 
-			Renderer::SubmitObject(ModelMatrix, this->_Mesh, this->_Material);
+			RendererCommand Command;
+			Command.ModelMatrix = EntityTransform->GetModelMatrix();
+			Command.mesh = this->_Mesh;
+			Command.material = this->_Material;
+
+			Renderer::Submit(Command);
 		}
 	}
 

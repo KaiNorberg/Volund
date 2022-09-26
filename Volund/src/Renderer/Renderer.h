@@ -1,64 +1,81 @@
 #pragma once
 
-#include "Renderer/Mesh/Mesh.h"
-#include "Scene/Scene.h"
-#include "RenderingAPI/RenderingAPI.h"
-#include "Context/Context.h"
-#include "Shader/Shader.h"
+#include "Mesh/Mesh.h"
 #include "Material/Material.h"
-#include "Texture/Texture.h"
-
-#include "Window/Window.h"
+#include "RenderingAPI/RenderingAPI.h"
 
 namespace Volund
 {
-	class Renderer
+	struct RendererCommand
+	{
+		Mat4x4 ModelMatrix;
+		Ref<Mesh> mesh;
+		Ref<Material> material;
+	};
+
+	struct RendererLight
+	{
+		RGB Color;
+		Vec3 Position;
+		float Brightness;
+	};
+
+	class RendererInstance
 	{
 	public:
 
-		static void BeginScene(Mat4x4& ViewProjMatrix, Vec3& EyePosition);	
+		virtual void Begin(const Mat4x4& ViewMatrix, const Mat4x4& ProjectionMatrix) = 0;
 
-		static void EndScene();
+		virtual void Submit(const RendererCommand& Command) = 0;
 
-		static void SubmitPointLight(const RGB& Color, float Brightness, const Vec3& Position);
+		virtual void Submit(const RendererLight& Light) = 0;
 
-		static void SubmitObject(Mat4x4& ModelMatrix, const Ref<Mesh>& ObjectMesh, const Ref<Material>& ObjectMaterial, bool AllowDiscrimination = true);
+		virtual void End() = 0;
 
-		static void Init(const Ref<RenderingAPI>& API);
+		RendererInstance() = delete;
 
-	private:		
+		RendererInstance(Ref<RenderingAPI> API);
+
+		virtual ~RendererInstance() = default;
+
+	protected:
+
+		struct Data
+		{
+			Mat4x4 ViewMatrix;
+			Mat4x4 ProjectionMatrix;
+			std::vector<RendererCommand> CommandQueue;
+			std::vector<RendererLight> Lights;
+		} _Data;
+
+		Ref<RenderingAPI> _API;
+
+	private:
+	};
+
+	class Renderer
+	{
+	public:
 		
-		struct PointLight
-		{
-			RGB Color;
-			float Brightness;
-			Vec3 Position;
-		};
+		static void Init(const Ref<RendererInstance>& Instance);
 
-		struct Object
-		{
-			bool AllowDiscrimination = false;
-			Mat4x4 ModelMatrix = Mat4x4(1.0f);
-			Ref<Mesh> ObjectMesh;
-			Ref<Material> ObjectMaterial;
-		};
+		static void Init(RendererInstance* Instance);
 
-		static inline struct SceneData
-		{
-			Mat4x4 ViewProjMatrix = Mat4x4(1.0f);
-			Vec3 EyePosition = Vec3(1.0f);
-			std::vector<PointLight> PointLights;
-			std::vector<Object> Objects;
+		static void Reset();
 
-		} _SceneData;
+		static void Begin(const Mat4x4& ViewMatrix, const Mat4x4& ProjectionMatrix);
 
-		static void Discriminate(std::vector<Object>& Submissions);
+		static void Submit(const RendererCommand& Command);
 
-		static void Sort(std::vector<Object>& Submissions);
+		static void Submit(const RendererLight& Light);
 
-		static inline bool _InScene = false;
-	
-		static inline Ref<RenderingAPI> _API;
+		static void End();
+
+		Renderer() = delete;
+
+	private:
+
+		static inline Ref<RendererInstance> _Instance;
 	};
 }
 
