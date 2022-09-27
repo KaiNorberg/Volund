@@ -1,20 +1,21 @@
 #include "PCH/PCH.h"
 #include "EntitiesWidget.h"
 
+#include "UI/UI.h"
+#include "Editor/Editor.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
-
-#include "Editor/EditorLayer/EditorLayer.h"
 
 const char* EntitiesWidget::GetName()
 {
 	return "Entities";
 }
 
-void EntitiesWidget::OnUpdate(TimeStep TS)
+void EntitiesWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
+	auto Scene = this->_UI->GetProject()->GetScene();
 
 	if (ImGui::Begin("Entities", &this->_IsActive))
 	{
@@ -36,9 +37,9 @@ void EntitiesWidget::OnUpdate(TimeStep TS)
 				for (auto& [Entity, Container] : *Scene)
 				{
 					std::string EntityName = "#" + std::to_string(Entity);
-					if (Scene->HasComponent<Volund::Tag>(Entity))
+					if (Scene->HasComponent<VL::Tag>(Entity))
 					{
-						EntityName += " | " + Scene->GetComponent<Volund::Tag>(Entity)->String;
+						EntityName += " | " + Scene->GetComponent<VL::Tag>(Entity)->String;
 					}
 
 					if (EntityName.find(SearchTerm) != std::string::npos)
@@ -60,7 +61,7 @@ void EntitiesWidget::OnUpdate(TimeStep TS)
 	ImGui::End();
 }
 
-bool EntitiesWidget::DrawEntityNode(Volund::Ref<Volund::Scene> Scene, Volund::Entity Entity, const std::string& EntityName)
+bool EntitiesWidget::DrawEntityNode(VL::Ref<VL::Scene> Scene, VL::Entity Entity, const std::string& EntityName)
 {
 	ImGui::PushID((void*)Entity);
 
@@ -100,10 +101,4 @@ bool EntitiesWidget::DrawEntityNode(Volund::Ref<Volund::Scene> Scene, Volund::En
 	ImGui::PopID();
 
 	return EntityAlive;
-}
-
-EntitiesWidget::EntitiesWidget(Volund::Layer* Parent, bool Active)
-{
-	this->_Parent = Parent;
-	this->_IsActive = Active;
 }

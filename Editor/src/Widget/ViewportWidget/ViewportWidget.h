@@ -8,17 +8,17 @@ public:
 
 	const char* GetName() override;
 
-	void OnEvent(Volund::Event* E) override;
+	void OnEvent(VL::Event* E) override;
 
-	void OnUpdate(Volund::TimeStep TS) override;
+	void Draw(VL::TimeStep TS) override;
 
-	ViewportWidget(Volund::Layer* Parent, bool Active = false);
+	ViewportWidget(UI* ui, bool Active = false);
 
 private:
 
-	void MoveEye(Volund::TimeStep TS);
+	void MoveEye(VL::TimeStep TS);
 
-	void DrawViewport(Volund::TimeStep TS);
+	void DrawViewport(VL::TimeStep TS);
 
 	struct
 	{
@@ -28,16 +28,16 @@ private:
 
 		float Sensitivity = 0.5f;
 
-		Volund::Vec3 Position = Volund::Vec3(0.0f, 2.0f, 10.0f);
+		VL::Vec3 Position = VL::Vec3(0.0f, 2.0f, 10.0f);
 
-		Volund::Vec3 Rotation = Volund::Vec3(0.0f);
+		VL::Vec3 Rotation = VL::Vec3(0.0f);
 
 	} _Eye;
 
-	Volund::Input _Input;
+	VL::Input _Input;
 
-	Volund::IVec2 _OldMousePosition = Volund::IVec2(0);
+	VL::IVec2 _OldMousePosition = VL::IVec2(0);
 
-	Volund::Ref<Volund::Framebuffer> _Framebuffer;
+	VL::Ref<VL::Framebuffer> _Framebuffer;
 };
 

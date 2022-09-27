@@ -4,31 +4,49 @@
 
 namespace Volund
 {
-	class RenderingAPI
+	enum class GraphicsAPI
+	{
+		NONE,
+		OPENGL
+	};
+
+	class RenderingAPIInstance
 	{
 	public:
-		enum API
-		{
-			NONE,
-			OPENGL
-		};
-
-		virtual void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) = 0;
-
-		virtual void SetClearColor(const RGBA& Color) = 0;
 
 		virtual void Clear() = 0;
 
+		virtual void SetClearColor(const RGBA& Color) = 0;
+
+		virtual void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) = 0;
+
 		virtual void DrawIndexed(const Ref<Mesh>& VArray) = 0;
 
-		virtual void Init() = 0;
+		virtual ~RenderingAPIInstance() = default;
+	};
 
-		static API GetSelectedAPI();
+	class RenderingAPI
+	{
+	public:
 
-		static Ref<RenderingAPI> Create(API SelectedAPI);
+		static void Clear();
+
+		static void SetClearColor(const RGBA& Color);
+
+		static void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height);
+
+		static void DrawIndexed(const Ref<Mesh>& VArray);
+
+		static void Select(GraphicsAPI API);
+			
+		static void Init();
+
+		static GraphicsAPI GetSelectedAPI();
 
 	private:
 
-		static inline API _SelectedAPI;
+		static inline Ref<RenderingAPIInstance> _Instance;
+
+		static inline GraphicsAPI _SelectedAPI;
 	};
 }

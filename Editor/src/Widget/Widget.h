@@ -1,20 +1,23 @@
 #pragma once
 
-#include "Renderer/Mesh/Mesh.h"
+
+class UI;
 
 class Widget
 {
 public:
 
-	bool _IsActive = false;
-
 	virtual const char* GetName() = 0;
 
-	virtual void OnEvent(Volund::Event* E) {};
+	virtual void OnEvent(VL::Event* E) {};
 
-	virtual void OnUpdate(Volund::TimeStep TS) = 0;
+	virtual void Draw(VL::TimeStep TS) = 0;
+
+	Widget(UI* ui, bool Active = false);
 
 	virtual ~Widget() = default;
+
+	bool _IsActive = false;
 
 protected:
 
@@ -30,15 +33,15 @@ protected:
 
 	static std::string TextControl(const std::string& Name, const std::string& Default);
 	
-	static std::string FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, Volund::Ref<Volund::Window> Owner);
+	static std::string FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, VL::Ref<VL::Window> Owner);
 
 	static void BoolControl(const std::string& Name, bool* Value);
 
 	static void FloatControl(const std::string& Name, float* Value);
 
-	static void Vec3Control(std::string_view Name, Volund::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
+	static void Vec3Control(std::string_view Name, VL::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
 
-	Volund::Layer* _Parent = nullptr;
+	UI* _UI = nullptr;
 
-	static inline Volund::Entity _SelectedEntity = NULL;
+	static inline VL::Entity _SelectedEntity = NULL;
 };

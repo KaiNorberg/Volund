@@ -1,12 +1,12 @@
  #include "PCH/PCH.h"
 
-#include "UILayer.h"
+#include "UI.h"
+
+#include "Editor/Editor.h"
 
 #include "VML/VML.h"
 
 #include "FileDialog/FileDialog.h"
-
-#include "Editor/EditorLayer/EditorLayer.h"
 
 #include "Widget/EntitiesWidget/EntitiesWidget.h"
 #include "Widget/ViewportWidget/ViewportWidget.h"
@@ -22,42 +22,17 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-void UILayer::OnAttach()
+Ref<Window> UI::GetWindow()
 {
-	static std::string IniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
-
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.Fonts->AddFontFromFileTTF("Data/Fonts/OpenSans-Regular.ttf", 18.0f);
-	io.IniFilename = IniFilename.c_str();
-
-	SetupImGuiStyle();
-	//ImGui::StyleColorsDark();
-
-	auto EditorWindow = GetLayer<EditorLayer>()->GetWindow();
-
-	EditorWindow->SetProcedureCatch((Volund::ProcCatch)ImGui_ImplWin32_WndProcHandler);
-
-	ImGui_ImplWin32_Init(EditorWindow->GetHandle());
-	ImGui_ImplOpenGL3_Init();
-
-	this->_WidgetContainer.PushBack(new EntitiesWidget(this, true));
-	this->_WidgetContainer.PushBack(new ViewportWidget(this, true));
-	this->_WidgetContainer.PushBack(new InspectorWidget(this, true));
+	return this->_Window;
 }
 
-void UILayer::OnDetach()
+Ref<Project> UI::GetProject()
 {
-	ImGui::SaveIniSettingsToDisk(NULL);
-	ImGui_ImplWin32_Shutdown();
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui::DestroyContext();
+	return this->_Project;
 }
 
-void UILayer::OnUpdate(TimeStep TS)
+void UI::Draw(VL::TimeStep TS)
 {
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
@@ -73,7 +48,7 @@ void UILayer::OnUpdate(TimeStep TS)
 			{
 				if (Widget->_IsActive)
 				{
-					Widget->OnUpdate(TS);
+					Widget->Draw(TS);
 				}
 			}
 		}
@@ -84,7 +59,7 @@ void UILayer::OnUpdate(TimeStep TS)
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
-void UILayer::OnEvent(Event* E)
+void UI::OnEvent(Event* E)
 {
 	this->_Input.HandleEvent(E);
 
@@ -102,65 +77,63 @@ void UILayer::OnEvent(Event* E)
 	}
 }
 
-void UILayer::HandleShortcuts()
+void UI::HandleShortcuts()
 {
 	if (this->_Input.IsHeld(VOLUND_KEY_CONTROL))
 	{
-		auto Editor = GetLayer<EditorLayer>();
-
 		if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
 		{
 			if (this->_Input.IsPressed('N'))
 			{
 				//auto Editor = GetLayer<EditorLayer>();
-				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 			}
 
 			if (this->_Input.IsPressed('O'))
 			{
-				Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+				this->_Project->Load(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 			}
 
-			if (Editor->GetProject() != nullptr)
+			if (this->_Project->Loaded())
 			{
 				if (this->_Input.IsPressed('S'))
 				{
-					Editor->GetProject()->Save(Editor->GetProject()->GetVMLFilepath());
+					this->_Project->Save(this->_Project->GetVMLFilepath());
 				}
 
 				if (this->_Input.IsPressed('A'))
 				{
-					Editor->GetProject()->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+					this->_Project->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 				}
 			}
 		}
-		else if (Editor->GetProject() != nullptr)
+		else if (this->_Project->Loaded())
 		{
 			if (this->_Input.IsPressed('N'))
 			{
 				//auto Editor = GetLayer<EditorLayer>();
-				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 			}
 
 			if (this->_Input.IsPressed('O'))
 			{
-				Editor->GetProject()->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", Editor->GetWindow()));
+				this->_Project->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
 			}
 
 			if (this->_Input.IsPressed('S'))
 			{
-				Editor->GetProject()->SaveScene(Editor->GetProject()->GetSceneFilepath());
+				this->_Project->SaveScene(this->_Project->GetSceneFilepath());
 			}
 
 			if (this->_Input.IsPressed('A'))
 			{
-				Editor->GetProject()->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", Editor->GetWindow()));
+				this->_Project->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
 			}
 		}
 	}
 }
 
-void UILayer::BeginDockSpace()
+void UI::BeginDockSpace()
 {
 	static bool Open = true;
 
@@ -186,7 +159,7 @@ void UILayer::BeginDockSpace()
 	ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
 }
 
-void UILayer::DrawMenuBar()
+void UI::DrawMenuBar()
 {
 	if (ImGui::BeginMenuBar())
 	{
@@ -198,8 +171,6 @@ void UILayer::DrawMenuBar()
 
 			ImGui::EndMenu();
 		}
-
-		auto Project = GetLayer<EditorLayer>()->GetProject();
 
 		if (ImGui::BeginMenu("Widgets"))
 		{
@@ -216,6 +187,8 @@ void UILayer::DrawMenuBar()
 
 			ImGui::EndMenu();
 		}
+		 
+		auto Project = this->_Project;
 
 		if (Project != nullptr)
 		{
@@ -229,71 +202,102 @@ void UILayer::DrawMenuBar()
 	}
 }
 
-void UILayer::DrawProjectMenu()
+void UI::DrawProjectMenu()
 {
-	auto Editor = GetLayer<EditorLayer>();
-
 	if (ImGui::BeginMenu("Project"))
 	{
 		if (ImGui::MenuItem("New", "Ctrl+Shift+N"))
 		{
 			//auto Editor = GetLayer<EditorLayer>();
-			//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+			//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 		}
 
 		if (ImGui::MenuItem("Open", "Ctrl+Shift+O"))
 		{
-			Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+			this->_Project->Load(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 		}
 
-		if (Editor->GetProject() != nullptr)
+		if (this->_Project->Loaded())
 		{
 			if (ImGui::MenuItem("Save", "Ctrl+Shift+S"))
 			{
-				Editor->GetProject()->Save(Editor->GetProject()->GetVMLFilepath());
+				this->_Project->Save(this->_Project->GetVMLFilepath());
 			}
 
 			if (ImGui::MenuItem("Save As", "Ctrl+Shift+A"))
 			{
-				Editor->GetProject()->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+				this->_Project->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 			}
-
 		}
 
 		ImGui::EndMenu();
 	}
 }
 
-void UILayer::DrawSceneMenu()
+void UI::DrawSceneMenu()
 {
-	auto Editor = GetLayer<EditorLayer>();
-
-	if (Editor->GetProject() != nullptr)
+	if (this->_Project->Loaded())
 	{
 		if (ImGui::BeginMenu("Scene"))
 		{
 			if (ImGui::MenuItem("New", "Ctrl+N"))
 			{
 				//auto Editor = GetLayer<EditorLayer>();
-				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", Editor->GetWindow()));
+				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 			}
 
 			if (ImGui::MenuItem("Open", "Ctrl+O"))
 			{
-				Editor->GetProject()->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", Editor->GetWindow()));
+				this->_Project->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
 			}
 
 			if (ImGui::MenuItem("Save", "Ctrl+S"))
 			{
-				Editor->GetProject()->SaveScene(Editor->GetProject()->GetSceneFilepath());
+				this->_Project->SaveScene(this->_Project->GetSceneFilepath());
 			}
 
 			if (ImGui::MenuItem("Save As", "Ctrl+A"))
 			{
-				Editor->GetProject()->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", Editor->GetWindow()));
+				this->_Project->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
 			}
 
 			ImGui::EndMenu();
 		}
 	}
+}
+
+UI::UI(Ref<Window> Window, Ref<Project> Project)
+{
+	static std::string IniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
+
+	this->_Window = Window;
+	this->_Project = Project;
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.Fonts->AddFontFromFileTTF("Data/Fonts/OpenSans-Regular.ttf", 18.0f);
+	io.IniFilename = IniFilename.c_str();
+
+	SetupImGuiStyle();
+	//ImGui::StyleColorsDark();
+
+	this->_Window->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+
+	ImGui_ImplWin32_Init(this->_Window->GetHandle());
+	ImGui_ImplOpenGL3_Init();
+
+	this->_WidgetContainer.PushBack(new EntitiesWidget(this, true));
+	this->_WidgetContainer.PushBack(new ViewportWidget(this, true));
+	this->_WidgetContainer.PushBack(new InspectorWidget(this, true));
+}
+
+UI::~UI()
+{
+	ImGui::SaveIniSettingsToDisk(NULL);
+	ImGui_ImplWin32_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui::DestroyContext();
 }

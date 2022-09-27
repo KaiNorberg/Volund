@@ -17,7 +17,7 @@ namespace Volund
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case RenderingAPI::API::OPENGL:
+		case GraphicsAPI::OPENGL:
 		{
 			return std::make_shared<OpenGLIndexbuffer>(Indices, Size);
 		}

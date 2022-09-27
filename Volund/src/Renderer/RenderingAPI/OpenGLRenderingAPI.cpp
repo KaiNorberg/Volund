@@ -117,7 +117,7 @@ namespace Volund
 		glDrawElements(GL_TRIANGLES, VArray->GetIndexbuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 	}
 
-	void OpenGLRenderingAPI::Init()
+	OpenGLRenderingAPI::OpenGLRenderingAPI()
 	{
 		VOLUND_ASSERT(gladLoadGL(), "Failed to load OpenGL");
 
@@ -139,10 +139,5 @@ namespace Volund
 		VOLUND_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
 		VOLUND_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));
 		VOLUND_INFO("OpenGL Vendor: %s", (const char*)glGetString(GL_VENDOR));
-	}
-
-	OpenGLRenderingAPI::OpenGLRenderingAPI()
-	{
-
 	}
 }

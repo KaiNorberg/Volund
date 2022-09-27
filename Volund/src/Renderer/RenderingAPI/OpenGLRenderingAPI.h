@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-	class OpenGLRenderingAPI : public RenderingAPI
+	class OpenGLRenderingAPI : public RenderingAPIInstance
 	{
 	public:
 
@@ -18,8 +18,6 @@ namespace Volund
 		void Clear() override;
 
 		void DrawIndexed(const Ref<Mesh>& VArray) override;
-
-		void Init() override;
 
 		OpenGLRenderingAPI();
 

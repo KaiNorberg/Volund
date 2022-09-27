@@ -3,12 +3,6 @@
 
 namespace Volund
 {
-	RendererInstance::RendererInstance(Ref<RenderingAPI> API)
-	{
-		this->_API = API;
-		API->Init();
-	}
-
 	void Renderer::Init(const Ref<RendererInstance>& Instance)
 	{
 		_Instance = Instance;

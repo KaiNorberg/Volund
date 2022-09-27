@@ -32,9 +32,7 @@ namespace Volund
 
 		virtual void End() = 0;
 
-		RendererInstance() = delete;
-
-		RendererInstance(Ref<RenderingAPI> API);
+		RendererInstance() = default;
 
 		virtual ~RendererInstance() = default;
 

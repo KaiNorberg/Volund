@@ -10,9 +10,9 @@ public:
 
 	const char* GetName() override;
 
-	void OnUpdate(Volund::TimeStep TS) override;
+	void Draw(VL::TimeStep TS) override;
 
-	InspectorWidget(Volund::Layer* Parent, bool Active = false);
+	using Widget::Widget;
 
 private:
 
@@ -20,6 +20,6 @@ private:
 
 	void DrawAddComponents();
 
-	void DrawComponentView(const std::vector<Volund::Ref<Volund::Component>>& ComponentView, std::string_view Name, std::function<void(Volund::Ref<Volund::Component>)> DrawFunction);
+	void DrawComponentView(const std::vector<VL::Ref<VL::Component>>& ComponentView, std::string_view Name, std::function<void(VL::Ref<VL::Component>)> DrawFunction);
 };
 

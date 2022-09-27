@@ -4,7 +4,7 @@
 #include <windows.h>
 #include <commdlg.h>
 
-std::string FileDialog::OpenFile(const char* Filter, Volund::Ref<Volund::Window> Owner)
+std::string FileDialog::OpenFile(const char* Filter, VL::Ref<VL::Window> Owner)
 {
 	OPENFILENAMEA ofn;
 	CHAR szFile[260] = { 0 };
@@ -26,7 +26,7 @@ std::string FileDialog::OpenFile(const char* Filter, Volund::Ref<Volund::Window>
 	return std::string();
 }
 
-std::string FileDialog::SaveFile(const char* Filter, Volund::Ref<Volund::Window> Owner)
+std::string FileDialog::SaveFile(const char* Filter, VL::Ref<VL::Window> Owner)
 {
 	OPENFILENAMEA ofn;
 	CHAR szFile[260] = { 0 };

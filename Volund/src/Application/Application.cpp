@@ -8,6 +8,7 @@ namespace Volund
 {
 	void Application::Run()
 	{
+		this->OnRun();
 		this->Loop();
 	}
 
@@ -18,6 +19,7 @@ namespace Volund
 
 	void Application::Terminate()
 	{
+		this->OnTerminate();
 		this->_ShouldRun = false;
 	}
 
@@ -28,16 +30,25 @@ namespace Volund
 
 	void Application::OnEvent(Event* E)
 	{
-		for (const auto& View : this->_LayerContainer)
-		{
-			for (const auto& Layer : View)
-			{
-				Layer->OnEvent(E);
-			}
-		}
+
 	}
 
-	void Application::Loop() const
+	void Application::OnUpdate(TimeStep TS)
+	{
+
+	}
+
+	void Application::OnRun()
+	{
+
+	}
+
+	void Application::OnTerminate()
+	{
+
+	}
+
+	void Application::Loop()
 	{
 		std::chrono::time_point<std::chrono::steady_clock> OldTime = std::chrono::high_resolution_clock::now();
 
@@ -47,13 +58,7 @@ namespace Volund
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());
 
-			for (const auto& View : this->_LayerContainer)
-			{
-				for (const auto& Layer : View)
-				{
-					Layer->OnUpdate(TS);
-				}
-			}
+			this->OnUpdate(TS);
 		}
 	}
 
@@ -74,12 +79,6 @@ namespace Volund
 
 	Application::~Application()
 	{
-		for (const auto& View : this->_LayerContainer)
-		{
-			for (const auto& Layer : View)
-			{
-				Layer->OnDetach();
-			}
-		}
+
 	}
 }

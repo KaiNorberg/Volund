@@ -310,6 +310,12 @@ namespace Volund
 		return this->_DeviceContext;
 	}
 
+	void Window::Show()
+	{		
+		ShowWindow((HWND)this->_Handle, SW_SHOW);
+		UpdateWindow((HWND)this->_Handle);
+	}
+
 	std::wstring Window::ConvertToWString(std::string_view String)
 	{
 		return std::wstring(String.begin(), String.end());
@@ -415,9 +421,6 @@ namespace Volund
 		VOLUND_ASSERT(SetPixelFormat((HDC)this->_DeviceContext, PixelFormat, &PFD), "Unable to set Pixel Format!");
 
 		SetWindowLongPtr((HWND)this->_Handle, GWLP_USERDATA, (LONG_PTR)&this->_Data);
-
-		ShowWindow((HWND)this->_Handle, SW_SHOW);
-		UpdateWindow((HWND)this->_Handle);
 	}
 
 	Window::~Window()

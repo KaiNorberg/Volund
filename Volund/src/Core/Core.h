@@ -13,7 +13,6 @@
 #define VOLUND_KEY_SHIFT 16
 #define VOLUND_KEY_CONTROL 17
 
-
 namespace Volund
 {
 	/// <summary>
@@ -28,3 +27,5 @@ namespace Volund
 	template <typename T>
 	using Ref = std::shared_ptr<T>;
 }
+
+namespace VL = Volund;

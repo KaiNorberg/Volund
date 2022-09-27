@@ -15,7 +15,7 @@ namespace Volund
 
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-			case RenderingAPI::API::OPENGL:
+			case GraphicsAPI::OPENGL:
 			{
 				FloatID = GL_FLOAT;
 				IntID = GL_INT;

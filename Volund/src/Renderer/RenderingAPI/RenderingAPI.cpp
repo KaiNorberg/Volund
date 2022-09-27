@@ -7,35 +7,50 @@
 
 namespace Volund
 {
-	RenderingAPI::API RenderingAPI::GetSelectedAPI()
+	void RenderingAPI::Clear()
 	{
-		return _SelectedAPI;
+		_Instance->Clear();
 	}
 
-	Ref<RenderingAPI> RenderingAPI::Create(API SelectedAPI)
+	void RenderingAPI::SetClearColor(const RGBA& Color)
 	{
-		if (SelectedAPI != API::NONE || SelectedAPI == _SelectedAPI)
-		{
-			_SelectedAPI = SelectedAPI;
-		}
-		else
-		{
-			VOLUND_ERROR("Unable to create a RenderingAPI more then once!");
-		}
+		_Instance->SetClearColor(Color);
+	}
+	
+	void RenderingAPI::SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height)
+	{
+		_Instance->SetViewPort(X, Y, Width, Height);
+	}
 
-		switch (GetSelectedAPI())
+	void RenderingAPI::DrawIndexed(const Ref<Mesh>& VArray)
+	{
+		_Instance->DrawIndexed(VArray);
+	}
+
+	void RenderingAPI::Select(GraphicsAPI API)
+	{
+		_SelectedAPI = API;
+	}
+
+	void RenderingAPI::Init()
+	{
+		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case API::OPENGL:
+		case GraphicsAPI::OPENGL:
 		{
-			return std::make_shared<OpenGLRenderingAPI>();
+			_Instance = std::make_shared<OpenGLRenderingAPI>();
 		}
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a RenderingAPI without a specified API!");
-			return nullptr;
+			VOLUND_ERROR("Initializing the RenderingAPI without a specified GraphicsAPI!");
 		}
 		break;
 		}
+	}
+
+	GraphicsAPI RenderingAPI::GetSelectedAPI()
+	{
+		return _SelectedAPI;
 	}
 }

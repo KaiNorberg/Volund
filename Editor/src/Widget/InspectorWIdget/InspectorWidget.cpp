@@ -2,20 +2,21 @@
 
 #include "InspectorWidget.h"
 
+#include "UI/UI.h"
+#include "Editor/Editor.h"
+
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
-
-#include "Editor/EditorLayer/EditorLayer.h"
 
 const char* InspectorWidget::GetName()
 {
 	return "InspectorWidget";
 }
 
-void InspectorWidget::OnUpdate(Volund::TimeStep TS)
+void InspectorWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
+	auto Scene = this->_UI->GetProject()->GetScene();
 
 	ImGui::Begin("Inspector", &this->_IsActive);
 
@@ -37,14 +38,14 @@ void InspectorWidget::OnUpdate(Volund::TimeStep TS)
 
 void InspectorWidget::DrawComponents()
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
+	auto Scene = this->_UI->GetProject()->GetScene();
 
-	if (Scene->HasComponent<Volund::Tag>(_SelectedEntity))
+	if (Scene->HasComponent<VL::Tag>(_SelectedEntity))
 	{
-		auto& View = Scene->View<Volund::Tag>(_SelectedEntity);
-		this->DrawComponentView(View, "Transform", [this](Volund::Ref<Volund::Component> Component)
+		auto& View = Scene->View<VL::Tag>(_SelectedEntity);
+		this->DrawComponentView(View, "Transform", [this](VL::Ref<VL::Component> Component)
 		{
-			auto Tag = std::dynamic_pointer_cast<Volund::Tag>(Component);
+			auto Tag = std::dynamic_pointer_cast<VL::Tag>(Component);
 
 			std::string NewTag = TextControl("Tag", Tag->String);
 			if (NewTag != "")
@@ -53,15 +54,15 @@ void InspectorWidget::DrawComponents()
 			}
 		});
 	}
-	if (Scene->HasComponent<Volund::Transform>(_SelectedEntity))
+	if (Scene->HasComponent<VL::Transform>(_SelectedEntity))
 	{
-		auto& View = Scene->View<Volund::Transform>(_SelectedEntity);
-		this->DrawComponentView(View, "Transform", [this](Volund::Ref<Volund::Component> Component)
+		auto& View = Scene->View<VL::Transform>(_SelectedEntity);
+		this->DrawComponentView(View, "Transform", [this](VL::Ref<VL::Component> Component)
 		{
-			auto Transform = std::dynamic_pointer_cast<Volund::Transform>(Component);
-			Volund::Vec3 Position = Transform->Position;
-			Volund::Vec3 Rotation = Transform->GetRotation();
-			Volund::Vec3 Scale = Transform->Scale;
+			auto Transform = std::dynamic_pointer_cast<VL::Transform>(Component);
+			VL::Vec3 Position = Transform->Position;
+			VL::Vec3 Rotation = Transform->GetRotation();
+			VL::Vec3 Scale = Transform->Scale;
 
 			Vec3Control("Position", &Position, 0.1f, 0.0f);
 			Vec3Control("Rotation", &Rotation, 0.1f, 0.0f);
@@ -72,12 +73,12 @@ void InspectorWidget::DrawComponents()
 			Transform->Scale = Scale;
 		});
 	}
-	if (Scene->HasComponent<Volund::Camera>(_SelectedEntity))
+	if (Scene->HasComponent<VL::Camera>(_SelectedEntity))
 	{
-		auto& View = Scene->View<Volund::Camera>(_SelectedEntity);
-		this->DrawComponentView(View, "Camera", [this](Volund::Ref<Volund::Component> Component)
+		auto& View = Scene->View<VL::Camera>(_SelectedEntity);
+		this->DrawComponentView(View, "Camera", [this](VL::Ref<VL::Component> Component)
 		{
-			auto Camera = std::dynamic_pointer_cast<Volund::Camera>(Component);
+			auto Camera = std::dynamic_pointer_cast<VL::Camera>(Component);
 
 			bool IsActive = Camera->IsActive();
 			BoolControl("Active", &IsActive);
@@ -91,13 +92,13 @@ void InspectorWidget::DrawComponents()
 			FloatControl("NearPlane", &Camera->NearPlane);
 		});
 	}
-	if (Scene->HasComponent<Volund::MeshRenderer>(_SelectedEntity))
+	if (Scene->HasComponent<VL::MeshRenderer>(_SelectedEntity))
 	{
-		auto& View = Scene->View<Volund::MeshRenderer>(_SelectedEntity);
-		this->DrawComponentView(View, "MeshRenderer", [this, Scene](Volund::Ref<Volund::Component> Component)
+		auto& View = Scene->View<VL::MeshRenderer>(_SelectedEntity);
+		this->DrawComponentView(View, "MeshRenderer", [this, Scene](VL::Ref<VL::Component> Component)
 		{
-			auto MeshRenderer = std::dynamic_pointer_cast<Volund::MeshRenderer>(Component);
-			auto Window = this->_Parent->GetLayer<EditorLayer>()->GetWindow();
+			auto MeshRenderer = std::dynamic_pointer_cast<VL::MeshRenderer>(Component);
+			auto Window = this->_UI->GetWindow();
 
 			std::string DefaultMaterial = "No Material Selected!";
 			if (MeshRenderer->GetMaterial() != nullptr)
@@ -122,22 +123,22 @@ void InspectorWidget::DrawComponents()
 			}
 		});
 	}
-	if (Scene->HasComponent<Volund::PointLight>(_SelectedEntity))
+	if (Scene->HasComponent<VL::PointLight>(_SelectedEntity))
 	{
-		auto& View = Scene->View<Volund::PointLight>(_SelectedEntity);
-		this->DrawComponentView(View, "PointLight", [this](Volund::Ref<Volund::Component> Component)
+		auto& View = Scene->View<VL::PointLight>(_SelectedEntity);
+		this->DrawComponentView(View, "PointLight", [this](VL::Ref<VL::Component> Component)
 		{
-			auto PointLight = std::dynamic_pointer_cast<Volund::PointLight>(Component);
+			auto PointLight = std::dynamic_pointer_cast<VL::PointLight>(Component);
 
 			ImGui::ColorPicker3("##Color", glm::value_ptr(PointLight->Color), ImGuiColorEditFlags_Float);
 		});
 	}
-	if (Scene->HasComponent<Volund::CameraMovement>(_SelectedEntity))
+	if (Scene->HasComponent<VL::CameraMovement>(_SelectedEntity))
 	{
-		auto& View = Scene->View<Volund::CameraMovement>(_SelectedEntity);
-		this->DrawComponentView(View, "CameraMovement", [this](Volund::Ref<Volund::Component> Component)
+		auto& View = Scene->View<VL::CameraMovement>(_SelectedEntity);
+		this->DrawComponentView(View, "CameraMovement", [this](VL::Ref<VL::Component> Component)
 		{
-			auto CameraMovement = std::dynamic_pointer_cast<Volund::CameraMovement>(Component);
+			auto CameraMovement = std::dynamic_pointer_cast<VL::CameraMovement>(Component);
 
 			FloatControl("Speed", &CameraMovement->Speed);
 			FloatControl("Sensitivity", &CameraMovement->Sensitivity);
@@ -147,7 +148,7 @@ void InspectorWidget::DrawComponents()
 
 void InspectorWidget::DrawAddComponents()
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
+	auto Scene = this->_UI->GetProject()->GetScene();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 
@@ -194,9 +195,9 @@ void InspectorWidget::DrawAddComponents()
 	}
 }
 
-void InspectorWidget::DrawComponentView(const std::vector<Volund::Ref<Volund::Component>>& ComponentView, std::string_view Name, std::function<void(Volund::Ref<Volund::Component>)> DrawFunction)
+void InspectorWidget::DrawComponentView(const std::vector<VL::Ref<VL::Component>>& ComponentView, std::string_view Name, std::function<void(VL::Ref<VL::Component>)> DrawFunction)
 {
-	auto Scene = this->_Parent->GetLayer<EditorLayer>()->GetScene();
+	auto Scene = this->_UI->GetProject()->GetScene();
 
 	for (auto& Component : ComponentView)
 	{
@@ -219,10 +220,4 @@ void InspectorWidget::DrawComponentView(const std::vector<Volund::Ref<Volund::Co
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
 	}
-}
-
-InspectorWidget::InspectorWidget(Volund::Layer* Parent, bool Active)
-{
-	this->_Parent = Parent;
-	this->_IsActive = Active;
 }

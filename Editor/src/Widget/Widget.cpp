@@ -7,6 +7,12 @@
 
 #include "FileDialog/FileDialog.h"
 
+Widget::Widget(UI* ui, bool Active)
+{
+	this->_UI = ui;
+	this->_IsActive = Active;
+}
+
 void Widget::StartCombo()
 {
 	ImGui::Columns(2);
@@ -71,7 +77,7 @@ std::string Widget::TextSelectorControl(const std::string& Name, const std::stri
 	}
 }
 
-std::string Widget::FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, Volund::Ref<Volund::Window> Owner)
+std::string Widget::FileSelectorControl(const std::string& Name, const std::string& Default, const char* Filter, VL::Ref<VL::Window> Owner)
 {
 	StartCombo();
 
@@ -147,7 +153,7 @@ void Widget::FloatControl(const std::string& Name, float* Value)
 	EndCombo();
 }
 
-void Widget::Vec3Control(std::string_view Name, Volund::Vec3* Value, float Speed, float DefaultValue)
+void Widget::Vec3Control(std::string_view Name, VL::Vec3* Value, float Speed, float DefaultValue)
 {
 	ImGui::PushID((void*)Name.data());
 

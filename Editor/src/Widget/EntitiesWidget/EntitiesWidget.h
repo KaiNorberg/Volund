@@ -8,12 +8,12 @@ public:
 
 	const char* GetName() override;
 
-	void OnUpdate(Volund::TimeStep TS) override;
+	void Draw(VL::TimeStep TS) override;
 
-	EntitiesWidget(Volund::Layer* Parent, bool Active = false);
+	using Widget::Widget;
 
 private:
 
-	bool DrawEntityNode(Volund::Ref<Volund::Scene> Scene, Volund::Entity Entity, const std::string& EntityName);
+	bool DrawEntityNode(VL::Ref<VL::Scene> Scene, VL::Entity Entity, const std::string& EntityName);
 };
 

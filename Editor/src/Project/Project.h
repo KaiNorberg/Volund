@@ -1,35 +1,34 @@
 #pragma once
 
-namespace Volund
+class Project
 {
-	class Project
-	{
-	public:
+public:
 
-		void Save(const std::string& Filepath);
+	bool Loaded();
 
-		void LoadScene(const std::string& Filepath);
+	void Save(const std::string& Filepath);
 
-		void SaveScene(const std::string& Filepath);
+	void Load(const std::filesystem::path& Filepath);
+
+	void LoadScene(const std::string& Filepath);
+
+	void SaveScene(const std::string& Filepath);
 		
-		std::string GetVMLFilepath();
+	std::string GetVMLFilepath();
 
-		std::string GetSceneFilepath();
+	std::string GetSceneFilepath();
 
-		const Volund::Ref<Volund::VML> GetVML() const;
+	const VL::Ref<VL::VML> GetVML() const;
 
-		const Volund::Ref<Volund::Scene> GetScene() const;
+	const VL::Ref<VL::Scene> GetScene() const;
 
-		Project(const std::filesystem::path& Filepath);
+private:
 
-	private:
+	VL::Ref<VL::VML> _VML;
 
-		Volund::Ref<Volund::VML> _VML;
+	VL::Ref<VL::Scene> _Scene;
 
-		Volund::Ref<Volund::Scene> _Scene;
+	std::string _VMLFilepath;
 
-		std::string _VMLFilepath;
-
-		std::string _SceneFilepath;
-	};
-}
+	std::string _SceneFilepath;
+};

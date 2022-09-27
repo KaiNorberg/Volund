@@ -3,93 +3,95 @@
 
 #include <windows.h>
 
-namespace Volund
+bool Project::Loaded()
 {
-	void Project::Save(const std::string& Filepath)
+	return !this->_VMLFilepath.empty();
+}
+
+void Project::Save(const std::string& Filepath)
+{
+	if (!Filepath.empty())
 	{
-		if (!Filepath.empty())
-		{
-			this->_VML->Write(Filepath);
-		}
+		this->_VML->Write(Filepath);
 	}
+}
 
-	void Project::LoadScene(const std::string& Filepath)
+void Project::Load(const std::filesystem::path& Filepath)
+{
+	this->_VMLFilepath = Filepath.string();
+	this->_VML = VL::Ref<VL::VML>(new VL::VML(this->_VMLFilepath));
+
+	std::filesystem::current_path(Filepath.parent_path());
+
+	this->_SceneFilepath = this->_VML->Get("MainScene").String();
+	this->_Scene = VL::Scene::Deserialize(this->_SceneFilepath);
+}
+
+void Project::LoadScene(const std::string& Filepath)
+{
+	if (!Filepath.empty())
 	{
-		if (!Filepath.empty())
+		if (this->_Scene != nullptr)
 		{
-			if (this->_Scene != nullptr)
+			uint32_t Confirmation =
+				MessageBox(NULL, (LPCWSTR)L"Do you wish to save the current scene?\nAny unsaved changes will be lost!",
+					(LPCWSTR)L"Account Details", MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2);
+
+			switch (Confirmation)
 			{
-				uint32_t Confirmation =
-					MessageBox(NULL, (LPCWSTR)L"Do you wish to save the current scene?\nAny unsaved changes will be lost!",
-						(LPCWSTR)L"Account Details", MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2);
+			case IDYES:
+			{
+				this->_Scene->Serialize(this->_SceneFilepath);
+				this->_Scene = VL::Scene::Deserialize(Filepath);
+				this->_SceneFilepath = Filepath;
 
-				switch (Confirmation)
-				{
-				case IDYES:
-				{
-					this->_Scene->Serialize(this->_SceneFilepath);
-					this->_Scene = Scene::Deserialize(Filepath);
-					this->_SceneFilepath = Filepath;
-
-				}
-				break;
-				case IDNO:
-				{
-					this->_Scene = Scene::Deserialize(Filepath);
-					this->_SceneFilepath = Filepath;
-				}
-				break;
-				default:
-				{
-				
-				}
-				break;
-				}
 			}
-			else
+			break;
+			case IDNO:
 			{
-				this->_Scene = Scene::Deserialize(Filepath);
+				this->_Scene = VL::Scene::Deserialize(Filepath);
 				this->_SceneFilepath = Filepath;
 			}
+			break;
+			default:
+			{
+				
+			}
+			break;
+			}
 		}
-	}
-
-	void Project::SaveScene(const std::string& Filepath)
-	{
-		if (!Filepath.empty())
+		else
 		{
-			this->_Scene->Serialize(Filepath);
+			this->_Scene = VL::Scene::Deserialize(Filepath);
+			this->_SceneFilepath = Filepath;
 		}
 	}
+}
 
-	std::string Project::GetVMLFilepath()
+void Project::SaveScene(const std::string& Filepath)
+{
+	if (!Filepath.empty())
 	{
-		return this->_VMLFilepath;
+		this->_Scene->Serialize(Filepath);
 	}
+}
 
-	std::string Project::GetSceneFilepath()
-	{
-		return this->_SceneFilepath;
-	}
+std::string Project::GetVMLFilepath()
+{
+	return this->_VMLFilepath;
+}
 
-	const Volund::Ref<Volund::VML> Project::GetVML() const
-	{
-		return this->_VML;
-	}
+std::string Project::GetSceneFilepath()
+{
+	return this->_SceneFilepath;
+}
 
-	const Volund::Ref<Volund::Scene> Project::GetScene() const
-	{
-		return this->_Scene;
-	}
+const VL::Ref<VL::VML> Project::GetVML() const
+{
+	return this->_VML;
+}
 
-	Project::Project(const std::filesystem::path& Filepath)
-	{
-		this->_VMLFilepath = Filepath.string();
-		this->_VML = Volund::Ref<Volund::VML>(new VML(this->_VMLFilepath));
-
-		std::filesystem::current_path(Filepath.parent_path());
-
-		this->_SceneFilepath = this->_VML->Get("MainScene").String();
-		this->_Scene = Scene::Deserialize(this->_SceneFilepath);
-	}
+const VL::Ref<VL::Scene> Project::GetScene() const
+{
+	return this->_Scene;
 }
