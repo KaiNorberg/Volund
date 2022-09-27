@@ -7,6 +7,16 @@
 
 namespace Volund
 {
+	uint32_t Framebuffer::GetAttachment(uint32_t Index)
+	{
+		return this->_ColorAttachments[Index];
+	}
+
+	uint32_t Framebuffer::GetDepthAttachment()
+	{
+		return this->_DepthAttachment;
+	}
+
 	void Framebuffer::SetSpec(const FramebufferSpec& Spec)
 	{
 		this->_Spec = Spec;

@@ -9,8 +9,26 @@
 namespace Volund
 {
 	uint32_t VertexAttribute::GetDataType() const
-	{
-		return this->FloatID * (((uint32_t)this->_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + this->IntID * ((uint32_t)this->_Type &
+	{	
+		uint32_t FloatID;
+		uint32_t IntID;
+
+		switch (RenderingAPI::GetSelectedAPI())
+		{
+			case RenderingAPI::API::OPENGL:
+			{
+				FloatID = GL_FLOAT;
+				IntID = GL_INT;
+			}
+			break;
+			default:
+			{
+				VOLUND_ERROR("Unknown API in VertexAttribute!");
+			}
+			break;
+		}
+
+		return FloatID * (((uint32_t)this->_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + IntID * ((uint32_t)this->_Type &
 			VOLUND_ATTRIBUTE_INT);
 	}
 
@@ -29,21 +47,9 @@ namespace Volund
 		return this->_Name;
 	}
 
-	VertexAttribute::VertexAttribute(VertexAttributeType Type, std::string Name) : _Name(Name), _Type(Type)
+	VertexAttribute::VertexAttribute(VertexAttributeType Type, std::string Name)
 	{
-		switch (RenderingAPI::GetSelectedAPI())
-		{
-		case RenderingAPI::API::OPENGL:
-		{
-			this->FloatID = GL_FLOAT;
-			this->IntID = GL_INT;
-		}
-		break;
-		default:
-		{
-			VOLUND_ERROR("Creating a VertexAttribute without a specified GraphicsAPI!");
-		}
-		break;
-		}
+		this->_Type = Type;
+		this->_Name = Name;
 	}
 }

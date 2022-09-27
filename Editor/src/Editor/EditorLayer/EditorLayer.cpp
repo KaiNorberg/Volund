@@ -55,7 +55,7 @@ void EditorLayer::LoadProject(const std::filesystem::path& Filepath)
 
 void EditorLayer::OnAttach()
 {
-	this->_API = RenderingAPI::Create(RenderingAPI::API::OPENGL);
+	this->_API = RenderingAPI::Create(RenderingAPI::OPENGL);
 
 	this->_Window = Ref<Window>(new Window(this->GetApp()->GetEventDispatcher(), 1980, 1080, false));
 

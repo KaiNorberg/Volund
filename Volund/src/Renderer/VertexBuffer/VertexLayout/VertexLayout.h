@@ -22,6 +22,7 @@ namespace Volund
 	class VertexAttribute
 	{
 	public:
+
 		uint32_t GetDataType() const;
 
 		uint32_t GetByteSize() const;
@@ -33,8 +34,6 @@ namespace Volund
 		VertexAttribute(VertexAttributeType Type, std::string Name = "");
 
 	private:
-		uint32_t FloatID = 0;
-		uint32_t IntID = 0;
 
 		std::string _Name;
 

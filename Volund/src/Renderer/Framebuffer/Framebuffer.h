@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Renderer/TextureSpec/TextureSpec.h"
+
 namespace Volund
 {
 	struct FramebufferSpec
@@ -7,6 +9,9 @@ namespace Volund
 		uint32_t Width = 0;
 		uint32_t Height = 0;
 		uint32_t Samples = 1;
+
+		std::vector<TextureSpec> ColorAttachments;
+		TextureSpec DepthAttachment;
 
 		bool SwapChainTarget = false;
 	};
@@ -21,7 +26,9 @@ namespace Volund
 
 		virtual void Invalidate() = 0;
 
-		virtual uint32_t GetColorAttachment() = 0;
+		uint32_t GetAttachment(uint32_t Index);
+
+		uint32_t GetDepthAttachment();
 
 		void SetSpec(const FramebufferSpec& Spec);
 
@@ -33,6 +40,10 @@ namespace Volund
 
 	protected:
 	
-		FramebufferSpec _Spec;
+		FramebufferSpec _Spec;		
+		
+		std::vector<uint32_t> _ColorAttachments;
+
+		uint32_t _DepthAttachment;
 	};
 }

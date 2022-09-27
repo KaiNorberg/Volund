@@ -32,6 +32,8 @@ ViewportWidget::ViewportWidget(Volund::Layer* Parent, bool Active)
 	Volund::FramebufferSpec Spec;
 	Spec.Height = 1080;
 	Spec.Width = 1980;
+	Spec.ColorAttachments = { TextureFormat::RGBA8 };
+	Spec.DepthAttachment = TextureFormat::DEPTH24STENCIL8;
 	this->_Framebuffer = Volund::Framebuffer::Create(Spec);
 }
 
@@ -103,7 +105,7 @@ void ViewportWidget::DrawViewport(Volund::TimeStep TS)
 		Renderer::End();
 		this->_Framebuffer->Unbind();
 
-		ImGui::Image((void*)(uint64_t)this->_Framebuffer->GetColorAttachment(), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image((void*)(uint64_t)this->_Framebuffer->GetAttachment(0), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
 	{

@@ -3,6 +3,8 @@
 
 #include "OpenGLMesh.h"
 
+#include "Renderer/RenderingAPI/RenderingAPI.h"
+
 #include <glad/include/glad/glad.h>
 
 namespace Volund
@@ -35,8 +37,7 @@ namespace Volund
 		for (uint64_t i = 0; i < Layout.size(); i++)
 		{
 			glEnableVertexAttribArray((GLuint)i);
-			glVertexAttribPointer((GLuint)i, Layout[i].GetElementCount(), Layout[i].GetDataType(), GL_FALSE, Stride,
-			                      (const void*)Offset);
+			glVertexAttribPointer((GLuint)i, Layout[i].GetElementCount(), Layout[i].GetDataType(), GL_FALSE, Stride, (const void*)Offset);
 			Offset += Layout[i].GetByteSize();
 		}
 	}
