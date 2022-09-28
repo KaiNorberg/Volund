@@ -2,7 +2,6 @@
 
 #include "InspectorWidget.h"
 
-#include "UI/UI.h"
 #include "Editor/Editor.h"
 
 #include <imgui.h>
@@ -16,7 +15,7 @@ const char* InspectorWidget::GetName()
 
 void InspectorWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_UI->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetProject()->GetScene();
 
 	ImGui::Begin("Inspector", &this->_IsActive);
 
@@ -38,7 +37,7 @@ void InspectorWidget::Draw(VL::TimeStep TS)
 
 void InspectorWidget::DrawComponents()
 {
-	auto Scene = this->_UI->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetProject()->GetScene();
 
 	if (Scene->HasComponent<VL::Tag>(_SelectedEntity))
 	{
@@ -98,7 +97,7 @@ void InspectorWidget::DrawComponents()
 		this->DrawComponentView(View, "MeshRenderer", [this, Scene](VL::Ref<VL::Component> Component)
 		{
 			auto MeshRenderer = std::dynamic_pointer_cast<VL::MeshRenderer>(Component);
-			auto Window = this->_UI->GetWindow();
+			auto Window = this->_Editor->GetWindow();
 
 			std::string DefaultMaterial = "No Material Selected!";
 			if (MeshRenderer->GetMaterial() != nullptr)
@@ -108,7 +107,7 @@ void InspectorWidget::DrawComponents()
 			auto SelectedMaterial = FileSelectorControl("Material", DefaultMaterial, "Volund Material (*.vmaterial)\0*.vmaterial\0", Window);
 			if (SelectedMaterial != "")
 			{
-				MeshRenderer->SetMaterial(Material::Create(SelectedMaterial));
+				MeshRenderer->SetMaterial(VL::Material::Create(SelectedMaterial));
 			}
 
 			std::string DefaultMesh = "No Mesh Selected!";
@@ -119,7 +118,7 @@ void InspectorWidget::DrawComponents()
 			auto SelectedMesh = FileSelectorControl("Mesh", DefaultMesh, "Volund Mesh (*.obj)\0*.obj\0", Window);
 			if (SelectedMesh != "")
 			{
-				MeshRenderer->SetMesh(Mesh::Create(SelectedMesh));
+				MeshRenderer->SetMesh(VL::Mesh::Create(SelectedMesh));
 			}
 		});
 	}
@@ -148,7 +147,7 @@ void InspectorWidget::DrawComponents()
 
 void InspectorWidget::DrawAddComponents()
 {
-	auto Scene = this->_UI->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetProject()->GetScene();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 
@@ -162,32 +161,32 @@ void InspectorWidget::DrawAddComponents()
 	{
 		if (ImGui::MenuItem("Tag"))
 		{
-			Scene->CreateComponent<Tag>(_SelectedEntity);
+			Scene->CreateComponent<VL::Tag>(_SelectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 		if (ImGui::MenuItem("Transform"))
 		{
-			Scene->CreateComponent<Transform>(_SelectedEntity);
+			Scene->CreateComponent<VL::Transform>(_SelectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 		if (ImGui::MenuItem("Camera"))
 		{
-			Scene->CreateComponent<Camera>(_SelectedEntity);
+			Scene->CreateComponent<VL::Camera>(_SelectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 		if (ImGui::MenuItem("MeshRenderer"))
 		{
-			Scene->CreateComponent<MeshRenderer>(_SelectedEntity);
+			Scene->CreateComponent<VL::MeshRenderer>(_SelectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 		if (ImGui::MenuItem("PointLight"))
 		{
-			Scene->CreateComponent<PointLight>(_SelectedEntity);
+			Scene->CreateComponent<VL::PointLight>(_SelectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 		if (ImGui::MenuItem("CameraMovement"))
 		{
-			Scene->CreateComponent<CameraMovement>(_SelectedEntity);
+			Scene->CreateComponent<VL::CameraMovement>(_SelectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 
@@ -197,7 +196,7 @@ void InspectorWidget::DrawAddComponents()
 
 void InspectorWidget::DrawComponentView(const std::vector<VL::Ref<VL::Component>>& ComponentView, std::string_view Name, std::function<void(VL::Ref<VL::Component>)> DrawFunction)
 {
-	auto Scene = this->_UI->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetProject()->GetScene();
 
 	for (auto& Component : ComponentView)
 	{

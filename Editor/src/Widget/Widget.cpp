@@ -7,9 +7,11 @@
 
 #include "FileDialog/FileDialog.h"
 
-Widget::Widget(UI* ui, bool Active)
+#include "Editor/Editor.h"
+
+Widget::Widget(Editor* editor, bool Active)
 {
-	this->_UI = ui;
+	this->_Editor = editor;
 	this->_IsActive = Active;
 }
 

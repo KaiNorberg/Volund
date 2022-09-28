@@ -1,34 +1,46 @@
 #pragma once
 
+#include "Widget/Widget.h"
+
 #include "Project/Project.h"
 
-class UI;
-
-using namespace Volund;
-
-class Editor : public Volund::Application
+class Editor : public VL::Application
 {
 public:
 
-	const Ref<Context> GetContext();
+	VL::Ref<Project> GetProject();
 
-	const Ref<Window> GetWindow();
+	VL::Ref<VL::Window> GetWindow();
 
 	void OnRun() override;
 
 	void OnTerminate() override;
 
-	void OnUpdate(TimeStep TS) override;
+	void OnUpdate(VL::TimeStep TS) override;
 
-	void OnEvent(Event* E) override;
+	void OnEvent(VL::Event* E) override;
 
 private:	
+
+	void Draw(VL::TimeStep TS);
+
+	void HandleShortcuts();
+
+	void BeginDockSpace();
+
+	void DrawMenuBar();
+
+	void DrawProjectMenu();
+
+	void DrawSceneMenu();
+
+	VL::Ref<Project> _Project;
+
+	VL::Ref<VL::Window> _Window;
+
+	VL::Ref<VL::Context> _Context;
 	
-	Ref<Project> _Project;
+	VL::Container<Widget> _WidgetContainer;
 
-	Ref<Window> _Window;
-
-	Ref<Context> _Context;
-
-	Ref<UI> _UI;
+	VL::Input _Input;
 };

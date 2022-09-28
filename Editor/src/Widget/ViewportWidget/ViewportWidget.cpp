@@ -1,7 +1,6 @@
 #include "PCH/PCH.h"
 #include "ViewportWidget.h"
 
-#include "UI/UI.h"
 #include "Editor/Editor.h"
 
 #include <imgui.h>
@@ -25,8 +24,8 @@ void ViewportWidget::Draw(VL::TimeStep TS)
 	this->DrawViewport(TS);
 }
 
-ViewportWidget::ViewportWidget(UI* ui, bool Active)
-	: Widget(ui, Active)
+ViewportWidget::ViewportWidget(Editor* editor, bool Active)
+	: Widget(editor, Active)
 {
 	VL::FramebufferSpec Spec;
 	Spec.Height = 1080;
@@ -80,7 +79,7 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 {
 	ImGui::Begin("Viewport");
 
-	auto Scene = this->_UI->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetProject()->GetScene();
 
 	if (Scene != nullptr)
 	{
@@ -98,10 +97,10 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 
 		Scene->OnUpdate(0.0f);
 
-		Renderer::End();
+		VL::Renderer::End();
 		this->_Framebuffer->Unbind();
 
-		ImGui::Image((void*)(uint64_t)this->_Framebuffer->GetAttachment(0), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
 	{

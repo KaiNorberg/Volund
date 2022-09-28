@@ -12,7 +12,7 @@ public:
 
 	void Draw(VL::TimeStep TS) override;
 
-	ViewportWidget(UI* ui, bool Active = false);
+	ViewportWidget(Editor* editor, bool Active = false);
 
 private:
 

@@ -39,6 +39,7 @@ namespace Volund
 		glGenFramebuffers(1, &this->_ID);
 		glBindFramebuffer(GL_FRAMEBUFFER, this->_ID);
 
+		std::vector<GLenum> Buffers;
 		for (int i = 0; i < this->_Spec.ColorAttachments.size(); i++)
 		{
 			uint32_t NewAttachment;
@@ -53,6 +54,11 @@ namespace Volund
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, this->_Spec.Width, this->_Spec.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
 			}
 			break;
+			case TextureFormat::RED_INTEGER:
+			{
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, this->_Spec.Width, this->_Spec.Height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+			}
+			break;
 			default:
 			{
 				VOLUND_INFO("Unknown TextureFormat!");
@@ -63,11 +69,16 @@ namespace Volund
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+			VOLUND_INFO("%d", GL_COLOR_ATTACHMENT0 + i);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, NewAttachment, 0);
+
+			Buffers.push_back(GL_COLOR_ATTACHMENT0 + i);
 
 			this->_ColorAttachments.push_back(NewAttachment);
 		}
-	
+
+		glDrawBuffers(this->_Spec.ColorAttachments.size(), Buffers.data());
+
 		if (this->_Spec.DepthAttachment.Format != TextureFormat::NONE)
 		{
 			glGenTextures(1, &this->_DepthAttachment);
@@ -93,7 +104,7 @@ namespace Volund
 		}
 
 		//VOLUND_ASSERT(glCheckFramebufferStatus(this->_ID) == GL_FRAMEBUFFER_COMPLETE, "Error occurred while creating Framebuffer!"); False positive?
-
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 

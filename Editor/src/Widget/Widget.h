@@ -1,7 +1,6 @@
 #pragma once
 
-
-class UI;
+class Editor;
 
 class Widget
 {
@@ -13,7 +12,7 @@ public:
 
 	virtual void Draw(VL::TimeStep TS) = 0;
 
-	Widget(UI* ui, bool Active = false);
+	Widget(Editor* editor, bool Active = false);
 
 	virtual ~Widget() = default;
 
@@ -41,7 +40,7 @@ protected:
 
 	static void Vec3Control(std::string_view Name, VL::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
 
-	UI* _UI = nullptr;
+	Editor* _Editor = nullptr;
 
 	static inline VL::Entity _SelectedEntity = NULL;
 };

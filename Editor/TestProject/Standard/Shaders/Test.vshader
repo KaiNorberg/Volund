@@ -41,7 +41,7 @@ in vec3 Position;
 in vec2 TextureCoord;
 in vec3 Normal;
 
-out vec4 FragColor;
+layout(location = 0) out vec4 FragColor;
 
 void main()
 {

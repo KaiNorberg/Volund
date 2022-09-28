@@ -1,7 +1,6 @@
 #include "PCH/PCH.h"
 #include "EntitiesWidget.h"
 
-#include "UI/UI.h"
 #include "Editor/Editor.h"
 
 #include <imgui.h>
@@ -15,7 +14,7 @@ const char* EntitiesWidget::GetName()
 
 void EntitiesWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_UI->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetProject()->GetScene();
 
 	if (ImGui::Begin("Entities", &this->_IsActive))
 	{

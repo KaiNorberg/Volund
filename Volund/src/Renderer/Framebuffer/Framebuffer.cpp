@@ -9,7 +9,15 @@ namespace Volund
 {
 	uint32_t Framebuffer::GetAttachment(uint32_t Index)
 	{
-		return this->_ColorAttachments[Index];
+		if (Index >= this->_ColorAttachments.size())
+		{
+			VOLUND_ERROR("Index out of range!");
+			return 0;
+		}
+		else
+		{
+			return this->_ColorAttachments[Index];
+		}
 	}
 
 	uint32_t Framebuffer::GetDepthAttachment()
