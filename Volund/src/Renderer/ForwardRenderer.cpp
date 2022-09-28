@@ -22,6 +22,20 @@ namespace Volund
 
 	void ForwardRenderer::End()
 	{
+		Mat4x4 ViewProjMatrix = this->_Data.ProjectionMatrix * this->_Data.ViewMatrix;
+		Vec3 EyePosition = Vec3(this->_Data.ViewMatrix[0][3], this->_Data.ViewMatrix[1][3], this->_Data.ViewMatrix[2][3]);
+		this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
+		this->_CameraUniforms->Set("EyePosition", &EyePosition);
+
+		uint32_t LightAmount = this->_Data.Lights.size();
+		this->_LightsUniforms->Set("LightAmount", &LightAmount);
+		for (uint64_t i = 0; i < LightAmount; i++)
+		{
+			this->_LightsUniforms->Set("Color" + std::to_string(i), &this->_Data.Lights[i].Color);
+			this->_LightsUniforms->Set("Brightness" + std::to_string(i), &this->_Data.Lights[i].Brightness);
+			this->_LightsUniforms->Set("Position" + std::to_string(i), &this->_Data.Lights[i].Position);
+		}		
+
 		for (const auto& Command : this->_Data.CommandQueue)
 		{
 			Command.material->UpdateShader();
@@ -33,32 +47,32 @@ namespace Volund
 				MaterialShader->SetMat4x4("_ModelMatrix", Command.ModelMatrix);
 			}
 
-			if (MaterialShader->HasUniform("_EyePosition"))
-			{
-				Vec3 EyePosition = Vec3(this->_Data.ViewMatrix[0][3], this->_Data.ViewMatrix[1][3], this->_Data.ViewMatrix[2][3]);
-				MaterialShader->SetVec3("_EyePosition", EyePosition);
-			}
-
-			if (MaterialShader->HasUniform("_ViewProjMatrix"))
-			{
-				MaterialShader->SetMat4x4("_ViewProjMatrix", this->_Data.ProjectionMatrix * this->_Data.ViewMatrix);
-			}
-
-			if (MaterialShader->HasUniform("_PointLights[0].Color"))
-			{
-				MaterialShader->SetInt("_PointLightAmount", this->_Data.Lights.size());
-
-				for (uint64_t i = 0; i < this->_Data.Lights.size(); i++)
-				{
-					std::string Uniform = "_PointLights[" + std::to_string(i) + "].";
-					MaterialShader->SetVec3(Uniform + "Color", this->_Data.Lights[i].Color);
-					MaterialShader->SetFloat(Uniform + "Brightness", this->_Data.Lights[i].Brightness);
-					MaterialShader->SetVec3(Uniform + "Position", this->_Data.Lights[i].Position);
-				}
-			}
-
 			Command.mesh->Bind();
 			this->_API->DrawIndexed(Command.mesh);
 		}
+	}
+
+	ForwardRenderer::ForwardRenderer()
+	{
+		this->_CameraUniforms = UniformBuffer::Create();
+		this->_CameraUniforms->Push<Mat4x4>("ViewProjMatrix");
+		this->_CameraUniforms->Push<Mat4x4>("EyePosition");
+		this->_CameraUniforms->Allocate(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
+
+		this->_LightsUniforms = UniformBuffer::Create();
+		this->_LightsUniforms->Push<int>("LightAmount");
+		for (uint64_t i = 0; i < 64; i++)
+		{
+			this->_LightsUniforms->Push<Vec3>("Color" + std::to_string(i));
+		}		
+		for (uint64_t i = 0; i < 64; i++)
+		{
+			this->_LightsUniforms->Push<Vec3>("Brightness" + std::to_string(i));
+		}		
+		for (uint64_t i = 0; i < 64; i++)
+		{
+			this->_LightsUniforms->Push<Vec3>("Position" + std::to_string(i));
+		}
+		this->_LightsUniforms->Allocate(VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS);
 	}
 }

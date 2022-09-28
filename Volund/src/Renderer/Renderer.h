@@ -4,6 +4,11 @@
 #include "Material/Material.h"
 #include "RenderingAPI/RenderingAPI.h"
 
+#include "UniformBuffer/UniformBuffer.h"
+
+#define VOLUND_UNIFORM_BUFFER_BINDING_CAMERA 0
+#define VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS 1
+
 namespace Volund
 {
 	struct RendererCommand
@@ -47,6 +52,10 @@ namespace Volund
 		} _Data;
 
 		Ref<RenderingAPI> _API;
+
+		Ref<UniformBuffer> _CameraUniforms;
+
+		Ref<UniformBuffer> _LightsUniforms;
 
 	private:
 	};
