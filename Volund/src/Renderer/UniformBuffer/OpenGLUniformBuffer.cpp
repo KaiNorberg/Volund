@@ -20,12 +20,19 @@ namespace Volund
 		}
 	}
 
-	void OpenGLUniformBuffer::Allocate(uint32_t Binding)
+	void OpenGLUniformBuffer::Allocate()
 	{
 		glGenBuffers(1, &this->_ID);
 		glBindBuffer(GL_UNIFORM_BUFFER, this->_ID);
-		glBufferData(GL_UNIFORM_BUFFER, this->_Size, nullptr, GL_DYNAMIC_DRAW); // allocate 152 bytes of memory
+		glBufferData(GL_UNIFORM_BUFFER, this->_Size, nullptr, GL_DYNAMIC_DRAW); // allocate 152 bytes of memory		
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	}
+
+	void OpenGLUniformBuffer::Assign(uint32_t Binding)
+	{
+		glBindBuffer(GL_UNIFORM_BUFFER, this->_ID);
 		glBindBufferBase(GL_UNIFORM_BUFFER, Binding, this->_ID);
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()
@@ -35,4 +42,5 @@ namespace Volund
 			glDeleteBuffers(1, &this->_ID);
 		}
 	}
+
 }

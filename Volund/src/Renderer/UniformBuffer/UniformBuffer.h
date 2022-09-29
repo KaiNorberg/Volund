@@ -17,7 +17,9 @@ namespace Volund
 
 		virtual void Set(const std::string& Name, const void* Data) = 0;
 
-		virtual void Allocate(uint32_t Binding) = 0;
+		virtual void Allocate() = 0;
+
+		virtual void Assign(uint32_t Binding) = 0;
 
 		static Ref<UniformBuffer> Create();
 
@@ -28,7 +30,6 @@ namespace Volund
 		struct Uniform
 		{
 			uint32_t DataSize;
-			uint32_t BaseAlignment;
 			uint32_t Offset;
 		};
 		std::map<std::string, Uniform> _Uniforms;
@@ -45,7 +46,7 @@ namespace Volund
 	{
 		uint32_t BaseAlignment = sizeof(float);
 		uint32_t AlignedOffset = Math::RoundUp(this->_Size, BaseAlignment);
-		_Uniforms[Name] = { sizeof(T), BaseAlignment, AlignedOffset };
+		_Uniforms[Name] = { sizeof(T), AlignedOffset };
 		this->_Size = AlignedOffset + BaseAlignment;
 	}
 
@@ -54,7 +55,7 @@ namespace Volund
 	{
 		uint32_t BaseAlignment = 4 * sizeof(float);
 		uint32_t AlignedOffset = Math::RoundUp(this->_Size, BaseAlignment);
-		_Uniforms[Name] = { sizeof(T), BaseAlignment, AlignedOffset };
+		_Uniforms[Name] = { sizeof(T), AlignedOffset };
 		this->_Size = AlignedOffset + BaseAlignment;
 	}
 
@@ -63,7 +64,7 @@ namespace Volund
 	{
 		uint32_t BaseAlignment = 4 * sizeof(float);
 		uint32_t AlignedOffset = Math::RoundUp(this->_Size, BaseAlignment);
-		_Uniforms[Name] = {sizeof(T), 4 * BaseAlignment, AlignedOffset};
+		_Uniforms[Name] = {sizeof(T), AlignedOffset};
 		this->_Size = AlignedOffset + 4 * BaseAlignment;
 	}
 }
