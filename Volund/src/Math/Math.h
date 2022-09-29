@@ -113,6 +113,8 @@ namespace Volund
 			return Max(Lower, Min(N, Upper));
 		}
 
+		static int RoundUp(int N, int M);
+
 	private:
 	};
 }

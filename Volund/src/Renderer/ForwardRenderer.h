@@ -16,7 +16,7 @@ namespace Volund
 
 		void End() override;
 
-		using RendererInstance::RendererInstance;
+		ForwardRenderer();
 
 	private:		
 
