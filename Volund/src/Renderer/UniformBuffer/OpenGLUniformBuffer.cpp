@@ -10,7 +10,9 @@ namespace Volund
 		if (this->_ID != 0)
 		{
 			Uniform uniform = this->_Uniforms[Name];
-			glNamedBufferSubData(this->_ID, uniform.Offset, uniform.Size, Data);
+			glBindBuffer(GL_UNIFORM_BUFFER, this->_ID);
+			glBufferSubData(GL_UNIFORM_BUFFER, uniform.Offset, uniform.DataSize, Data);
+			glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		}
 		else
 		{
@@ -20,8 +22,9 @@ namespace Volund
 
 	void OpenGLUniformBuffer::Allocate(uint32_t Binding)
 	{
-		glCreateBuffers(1, &this->_ID);
-		glNamedBufferData(this->_ID, this->_Size, nullptr, GL_DYNAMIC_DRAW);
+		glGenBuffers(1, &this->_ID);
+		glBindBuffer(GL_UNIFORM_BUFFER, this->_ID);
+		glBufferData(GL_UNIFORM_BUFFER, this->_Size, nullptr, GL_DYNAMIC_DRAW); // allocate 152 bytes of memory
 		glBindBufferBase(GL_UNIFORM_BUFFER, Binding, this->_ID);
 	}
 

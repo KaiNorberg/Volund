@@ -27,14 +27,14 @@ namespace Volund
 		this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
 		this->_CameraUniforms->Set("EyePosition", &EyePosition);
 
-		uint32_t LightAmount = this->_Data.Lights.size();
+		uint32_t LightAmount = (uint32_t)this->_Data.Lights.size();
 		this->_LightsUniforms->Set("LightAmount", &LightAmount);
 		for (uint64_t i = 0; i < LightAmount; i++)
 		{
-			this->_LightsUniforms->Set("Color" + std::to_string(i), &this->_Data.Lights[i].Color);
-			this->_LightsUniforms->Set("Brightness" + std::to_string(i), &this->_Data.Lights[i].Brightness);
+			Vec3 LightColor = this->_Data.Lights[i].Color * this->_Data.Lights[i].Brightness;
 			this->_LightsUniforms->Set("Position" + std::to_string(i), &this->_Data.Lights[i].Position);
-		}		
+			this->_LightsUniforms->Set("Color" + std::to_string(i), &LightColor);
+		} 
 
 		for (const auto& Command : this->_Data.CommandQueue)
 		{
@@ -54,24 +54,21 @@ namespace Volund
 
 	ForwardRenderer::ForwardRenderer()
 	{
-		this->_CameraUniforms = UniformBuffer::Create();
-		this->_CameraUniforms->Push<Mat4x4>("ViewProjMatrix");
-		this->_CameraUniforms->Push<Mat4x4>("EyePosition");
+		this->_CameraUniforms = UniformBuffer::Create();		
+		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
+		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
+
 		this->_CameraUniforms->Allocate(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
 
 		this->_LightsUniforms = UniformBuffer::Create();
-		this->_LightsUniforms->Push<int>("LightAmount");
+		this->_LightsUniforms->PushScalar<int>("LightAmount");			
 		for (uint64_t i = 0; i < 64; i++)
 		{
-			this->_LightsUniforms->Push<Vec3>("Color" + std::to_string(i));
-		}		
+			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
+		}
 		for (uint64_t i = 0; i < 64; i++)
 		{
-			this->_LightsUniforms->Push<Vec3>("Brightness" + std::to_string(i));
-		}		
-		for (uint64_t i = 0; i < 64; i++)
-		{
-			this->_LightsUniforms->Push<Vec3>("Position" + std::to_string(i));
+			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
 		}
 		this->_LightsUniforms->Allocate(VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS);
 	}

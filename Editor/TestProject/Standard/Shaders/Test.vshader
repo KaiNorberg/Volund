@@ -9,13 +9,12 @@ out vec3 Position;
 out vec2 TextureCoord;
 out vec3 Normal;
 
-layout(packed, binding = 0) uniform Camera
+layout(std140, binding = 0) uniform Camera
 {
     mat4 ViewProjMatrix;
     vec3 EyePosition;
 };
 
-//uniform mat4 _ViewProjMatrix;
 uniform mat4 _ModelMatrix;
 
 void main()
@@ -29,22 +28,39 @@ void main()
 #VOLUND_SHADER_TYPE FRAGMENT
 #version 460
 
-layout(packed, binding = 0) uniform Camera
+in vec3 Position;
+in vec2 TextureCoord;
+in vec3 Normal;
+
+layout(std140, binding = 0) uniform Camera
 {
-    mat4 ViewProjMatrix; 
+    mat4 ViewProjMatrix;
     vec3 EyePosition;
+};
+
+layout(std140, binding = 1) uniform LightsUniform
+{
+    int LightAmount;
+    vec3 LightPositions[64];    
+    vec3 LightColors[64];
 };
 
 //Material Uniforms
 uniform vec3 Color;
 
-in vec3 Position;
-in vec2 TextureCoord;
-in vec3 Normal;
-
 layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(EyePosition, 1.0f);
+    vec3 Result;
+    for (int i = 0; i < LightAmount; i++)
+    {
+        vec3 LightDir = normalize(LightPositions[i] - Position);
+        float Diffuse = max(dot(Normal, LightDir), 0.0);
+        vec3 ViewDir = normalize(EyePosition - Position);
+        vec3 ReflectDir = reflect(-LightDir, Normal);
+        float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
+        Result += (Diffuse + Specular) * LightColors[i] * Color;
+    }
+    FragColor = vec4(Result, 1.0f);
 }

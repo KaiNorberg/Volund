@@ -19,4 +19,20 @@ namespace Volund
 	const Vec3 Math::One = Vec3(1, 1, 1);
 
 	const Vec3 Math::Zero = Vec3(0, 0, 0);
+
+	int Math::RoundUp(int N, int M)
+	{
+		if (M == 0)
+		{
+			return N;
+		}
+
+		int R = N % M;
+		if (R == 0)
+		{
+			return N;
+		}
+
+		return N + M - R;
+	}
 }
