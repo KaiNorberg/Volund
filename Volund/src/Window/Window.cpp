@@ -178,9 +178,7 @@ namespace Volund
 		{
 			if (!Data->ShowMouse)
 			{
-				while (ShowCursor(false) >= -1)
-				{
-				}
+				while (ShowCursor(false) >= -1) {}
 			}
 		}
 		break;
@@ -188,9 +186,7 @@ namespace Volund
 		{
 			ClipCursor(nullptr);
 
-			while (ShowCursor(true) < 0)
-			{
-			}
+			while (ShowCursor(true) < 0) {}
 		}
 		break;
 		case WM_MOVE:
@@ -245,31 +241,43 @@ namespace Volund
 		SendMessage((HWND)this->_Handle, WM_SETFOCUS, 0, 0);
 	}
 
-	void Window::SetCursorMode(std::string_view NewMode)
+	void Window::SetCursorMode(CursorMode NewMode)
 	{
-		if (NewMode == "Normal")
+		switch (NewMode)
+		{
+		case CursorMode::NORMAL:
 		{
 			this->_Data.CaptureMouse = false;
 			this->_Data.ShowMouse = true;
 		}
-		else if (NewMode == "Hidden")
+		break;
+		case CursorMode::HIDDEN:
 		{
 			this->_Data.CaptureMouse = false;
 			this->_Data.ShowMouse = false;
 		}
-		else if (NewMode == "Disabled")
+		break;
+		case CursorMode::DISABLED:
 		{
 			this->_Data.CaptureMouse = true;
 			this->_Data.ShowMouse = false;
 		}
-		else if (NewMode == "Captured")
+		break;
+		case CursorMode::CAPTURED:
 		{
 			this->_Data.CaptureMouse = true;
 			this->_Data.ShowMouse = true;
+		}
+		break;
+		}			
+		
+		if (!this->_Data.ShowMouse)
+		{
+			while (ShowCursor(false) >= -1) {}
 		}
 		else
 		{
-			VOLUND_ERROR("Unrecognized Cursor Mode (%s)", NewMode.data());
+			while (ShowCursor(true) < 0) {}
 		}
 	}
 

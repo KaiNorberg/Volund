@@ -16,6 +16,10 @@ public:
 
 private:
 
+	void DrawSceneView(VL::TimeStep TS);
+
+	void DrawGameView(VL::TimeStep TS, VL::Ref<VL::Scene> GameScene);
+
 	void MoveEye(VL::TimeStep TS);
 
 	void DrawViewport(VL::TimeStep TS);
@@ -39,5 +43,7 @@ private:
 	VL::IVec2 _OldMousePosition = VL::IVec2(0);
 
 	VL::Ref<VL::Framebuffer> _Framebuffer;
+
+	VL::Ref<VL::Scene> _GameScene;
 };
 

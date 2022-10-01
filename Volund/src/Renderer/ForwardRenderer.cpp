@@ -36,6 +36,9 @@ namespace Volund
 			this->_LightsUniforms->Set("Color" + std::to_string(i), &LightColor);
 		} 
 
+		this->_CameraUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
+		this->_LightsUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS);
+
 		for (const auto& Command : this->_Data.CommandQueue)
 		{
 			Command.material->UpdateShader();
@@ -57,19 +60,18 @@ namespace Volund
 		this->_CameraUniforms = UniformBuffer::Create();		
 		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
 		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
-
-		this->_CameraUniforms->Allocate(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
+		this->_CameraUniforms->Allocate();
 
 		this->_LightsUniforms = UniformBuffer::Create();
 		this->_LightsUniforms->PushScalar<int>("LightAmount");			
-		for (uint64_t i = 0; i < 64; i++)
+		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
 		{
 			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
 		}
-		for (uint64_t i = 0; i < 64; i++)
+		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
 		{
 			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
 		}
-		this->_LightsUniforms->Allocate(VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS);
+		this->_LightsUniforms->Allocate();
 	}
 }

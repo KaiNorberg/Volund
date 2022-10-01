@@ -10,6 +10,8 @@ public:
 
 	void Load(const std::filesystem::path& Filepath);
 
+	bool SceneLoaded();
+
 	void LoadScene(const std::string& Filepath);
 
 	void SaveScene(const std::string& Filepath);

@@ -7,6 +7,9 @@
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
 
+#include "Scene/Component/MeshRenderer/MeshRenderer.h"
+#include "Scene/Component/PointLight/PointLight.h"
+
 const char* ViewportWidget::GetName()
 {
 	return "Viewport";
@@ -15,24 +18,23 @@ const char* ViewportWidget::GetName()
 void ViewportWidget::OnEvent(VL::Event* E)
 {
 	this->_Input.HandleEvent(E);
+	if (this->_GameScene != nullptr)
+	{
+		if (this->_Input.IsHeld(VOLUND_KEY_TAB))
+		{
+			this->_Editor->GetWindow()->SetCursorMode(VL::CursorMode::NORMAL);
+		}
+		else
+		{
+			this->_Editor->GetWindow()->SetCursorMode(VL::CursorMode::DISABLED);
+			this->_GameScene->OnEvent(E);
+		}
+	}
 }
 
 void ViewportWidget::Draw(VL::TimeStep TS)
-{
-	this->MoveEye(TS);
-	
+{	
 	this->DrawViewport(TS);
-}
-
-ViewportWidget::ViewportWidget(Editor* editor, bool Active)
-	: Widget(editor, Active)
-{
-	VL::FramebufferSpec Spec;
-	Spec.Height = 1080;
-	Spec.Width = 1980;
-	Spec.ColorAttachments = { VL::TextureFormat::RGBA8 };
-	Spec.DepthAttachment = VL::TextureFormat::DEPTH24STENCIL8;
-	this->_Framebuffer = VL::Framebuffer::Create(Spec);
 }
 
 void ViewportWidget::MoveEye(VL::TimeStep TS)
@@ -79,28 +81,40 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 {
 	ImGui::Begin("Viewport");
 
-	auto Scene = this->_Editor->GetProject()->GetScene();
-
-	if (Scene != nullptr)
+	if (this->_Editor->GetProject()->SceneLoaded())
 	{
-		auto FramebufferSpec = this->_Framebuffer->GetSpec();
-		auto ViewportSize = ImGui::GetContentRegionAvail();
+		if (this->_GameScene != nullptr)
+		{
+			Align(ImGui::CalcTextSize("Pause").x, 0.5f);
+			if (ImGui::Button("Pause"))
+			{
+				this->_GameScene = nullptr;
+			}
+		}
+		else
+		{
+			Align(ImGui::CalcTextSize("Play").x, 0.5f);
+			if (ImGui::Button("Play"))
+			{
+				this->_GameScene = VL::Scene::Copy(this->_Editor->GetProject()->GetScene());
+			}
+		}
 
 		this->_Framebuffer->Bind();
 		VL::RenderingAPI::Clear();
 		VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
-
-		VL::Quat EyeQuaternion = VL::Quat(VL::Math::ToRadians(this->_Eye.Rotation));
-		VL::Mat4x4 ViewMatrix = glm::lookAt(this->_Eye.Position, this->_Eye.Position + EyeQuaternion * VL::Math::Back, EyeQuaternion * VL::Math::Up);
-		VL::Mat4x4 ProjectionMatrix = glm::perspective(glm::radians(70.0f), (float)ViewportSize.x / (float)ViewportSize.y, 0.1f, 1000.0f);
-		VL::Renderer::Begin(ViewMatrix, ProjectionMatrix);
-
-		Scene->OnUpdate(0.0f);
-
-		VL::Renderer::End();
+		if (this->_GameScene != nullptr)
+		{
+			this->DrawGameView(TS, this->_GameScene);
+		}
+		else
+		{
+			this->MoveEye(TS);
+			this->DrawSceneView(TS);
+		}
 		this->_Framebuffer->Unbind();
 
-		ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
 	{
@@ -110,3 +124,79 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 	ImGui::End();
 }
 
+
+void ViewportWidget::DrawSceneView(VL::TimeStep TS)
+{
+	auto ViewportSize = ImGui::GetContentRegionAvail();
+
+	VL::Quat EyeQuaternion = VL::Quat(VL::Math::ToRadians(this->_Eye.Rotation));
+	VL::Mat4x4 ViewMatrix = glm::lookAt(this->_Eye.Position, this->_Eye.Position + EyeQuaternion * VL::Math::Back, EyeQuaternion * VL::Math::Up);
+	VL::Mat4x4 ProjectionMatrix = glm::perspective(glm::radians(70.0f), (float)ViewportSize.x / (float)ViewportSize.y, 0.1f, 1000.0f);
+	VL::Renderer::Begin(ViewMatrix, ProjectionMatrix);
+
+	auto Scene = this->_Editor->GetProject()->GetScene();
+
+	auto TransformView = Scene->View<VL::Transform>();
+	auto MeshRendererView = Scene->View<VL::MeshRenderer>();
+	auto PointLightView = Scene->View<VL::PointLight>();
+
+	for (auto& View : TransformView)
+	{
+		for (auto& Component : View)
+		{
+			Component->OnUpdate(0.0f);
+		}
+	}
+
+	for (auto& View : MeshRendererView)
+	{
+		for (auto& Component : View)
+		{
+			Component->OnUpdate(0.0f);
+		}
+	}
+
+	for (auto& View : PointLightView)
+	{
+		for (auto& Component : View)
+		{
+			Component->OnUpdate(0.0f);
+		}
+	}	
+	
+	VL::Renderer::End();
+}
+
+void ViewportWidget::DrawGameView(VL::TimeStep TS, VL::Ref<VL::Scene> GameScene)
+{
+	auto ViewportSize = ImGui::GetContentRegionAvail();
+
+	VL::RenderingAPI::Clear();
+	VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
+
+	VL::Camera* ActiveCamera = VL::Camera::GetActiveCamera(GameScene);
+
+	if (ActiveCamera != nullptr)
+	{
+		VL::Renderer::Begin(ActiveCamera->GetViewMatrix(), ActiveCamera->GetProjectionMatrix((float)ViewportSize.x / (float)ViewportSize.y));
+
+		GameScene->OnUpdate(TS);
+
+		VL::Renderer::End();
+	}
+	else
+	{
+		ImGui::Text("Scene does not contain an ActiveCamera!");
+	}
+}
+
+ViewportWidget::ViewportWidget(Editor* editor, bool Active)
+	: Widget(editor, Active)
+{
+	VL::FramebufferSpec Spec;
+	Spec.Height = 1080;
+	Spec.Width = 1980;
+	Spec.ColorAttachments = { VL::TextureFormat::RGBA8 };
+	Spec.DepthAttachment = VL::TextureFormat::DEPTH24STENCIL8;
+	this->_Framebuffer = VL::Framebuffer::Create(Spec);
+}

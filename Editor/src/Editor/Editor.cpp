@@ -39,7 +39,7 @@ void Editor::OnRun()
 	this->_Window = VL::Ref<VL::Window>(new VL::Window(this->GetEventDispatcher(), 1980, 1080, false));
 
 	this->_Window->SetTitle("Volund Editor");
-	this->_Window->SetCursorMode("Normal");
+	this->_Window->SetCursorMode(VL::CursorMode::NORMAL);
 	this->_Window->SetFocus();
 
 	this->_Context = VL::Context::Create(this->_Window);

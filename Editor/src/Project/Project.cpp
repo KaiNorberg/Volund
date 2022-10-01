@@ -27,6 +27,11 @@ void Project::Load(const std::filesystem::path& Filepath)
 	this->_Scene = VL::Scene::Deserialize(this->_SceneFilepath);
 }
 
+bool Project::SceneLoaded()
+{
+	return !this->_SceneFilepath.empty();
+}
+
 void Project::LoadScene(const std::string& Filepath)
 {
 	if (!Filepath.empty())

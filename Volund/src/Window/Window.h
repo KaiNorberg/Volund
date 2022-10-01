@@ -21,6 +21,14 @@ namespace Volund
 		Ref<EventDispatcher> Dispatcher = nullptr;
 	};
 
+	enum class CursorMode
+	{
+		NORMAL,
+		HIDDEN,
+		DISABLED,
+		CAPTURED
+	};
+
 	class Window
 	{
 	public:
@@ -30,7 +38,7 @@ namespace Volund
 
 		void SetFocus() const;
 
-		void SetCursorMode(std::string_view NewMode);
+		void SetCursorMode(CursorMode NewMode);
 
 		void SetTitle(std::string_view Title);
 
