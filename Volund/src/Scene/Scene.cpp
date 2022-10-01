@@ -78,10 +78,18 @@ namespace Volund
 		}
 	}
 
+	Ref<Scene> Scene::Copy(Ref<Scene> Other)
+	{
+		return Deserialize(Other->Serialize());
+	}
+
 	Ref<Scene> Scene::Deserialize(std::string_view Filepath)
 	{
-		VML SceneVML(Filepath);
+		return Deserialize(VML(Filepath));
+	}
 
+	Ref<Scene> Scene::Deserialize(VML SceneVML)
+	{
 		Ref<Scene> NewScene = std::make_shared<Scene>();
 
 		for (auto& [EntityName, EntityVML] : SceneVML)
@@ -111,7 +119,7 @@ namespace Volund
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
-					Ref<Mesh> MeshAsset = Mesh::Create(ComponentVML.Get("Mesh"));				
+					Ref<Mesh> MeshAsset = Mesh::Create(ComponentVML.Get("Mesh"));
 					Ref<Material> MaterialAsset = Material::Create(ComponentVML.Get("Material").String());
 
 					NewScene->CreateComponent<MeshRenderer>(NewEntity, MeshAsset, MaterialAsset);
@@ -157,6 +165,12 @@ namespace Volund
 
 	void Scene::Serialize(std::string_view Filepath)
 	{
+		VML SceneVML = this->Serialize();
+		SceneVML.Write(Filepath);
+	}
+
+	VML Scene::Serialize()
+	{
 		VOLUND_INFO("Serializing Scene...");
 
 		VML SceneVML;
@@ -176,9 +190,9 @@ namespace Volund
 			SceneVML.PushBack("Entity" + std::to_string(entity), EntityVML);
 		}
 
-		SceneVML.Write(Filepath);
-
 		VOLUND_INFO("Finished serializing Scene!");
+
+		return SceneVML;
 	}
 
 	Registry::iterator Scene::begin()

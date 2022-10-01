@@ -2,7 +2,7 @@ Entity1
 {
 	Component0
 	{
-		Position [ 0.000000 2.000000 25.000000 ]
+		Position [ 0.000000 2.000000 10.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
@@ -19,6 +19,12 @@ Entity1
 	{
 		String [ Camera ]
 		Type [ Tag ]
+	}
+	Component3
+	{
+		Sensitivity [ 1.000000 ]
+		Speed [ 8.000000 ]
+		Type [ CameraMovement ]
 	}
 }
 Entity2
@@ -67,14 +73,14 @@ Entity4
 {
 	Component0
 	{
-		Position [ -10.000000 5.000000 0.000000 ]
+		Position [ 0.000000 8.500000 0.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
 	}
 	Component1
 	{
-		String [ PointLight1 ]
+		String [ PointLight ]
 		Type [ Tag ]
 	}
 	Component2
@@ -88,29 +94,8 @@ Entity5
 {
 	Component0
 	{
-		Position [ 10.000000 5.900000 0.000000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
-	}
-	Component1
-	{
-		String [ PointLight2 ]
-		Type [ Tag ]
-	}
-	Component2
-	{
-		Brightness [ 1.000000 ]
-		Color [ 1.000000 1.000000 1.000000 ]
-		Type [ PointLight ]
-	}
-}
-Entity6
-{
-	Component0
-	{
 		Position [ 3.000000 0.000000 0.000000 ]
-		Rotation [ 0.000000 -0.000001 1.599833 ]
+		Rotation [ 0.000000 -0.000001 1.599832 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
 	}

@@ -38,13 +38,22 @@ namespace Volund
 		template <typename T>
 		const std::vector<Ref<Component>>& View(Entity entity) const;
 
+		template <typename T>
+		std::vector<std::vector<Ref<Component>>> View() const;
+
 		void OnEvent(Event* E);
 
 		void OnUpdate(TimeStep TS);
 
+		static Ref<Scene> Copy(Ref<Scene> Other);
+
 		static Ref<Scene> Deserialize(std::string_view Filepath);
 
+		static Ref<Scene> Deserialize(VML SceneVML);
+
 		void Serialize(std::string_view Filepath);
+
+		VML Serialize();
 
 		Registry::iterator begin();
 		Registry::iterator end();
@@ -147,5 +156,20 @@ namespace Volund
 			VOLUND_ERROR("Unable to find entity (%d)", entity);
 			return this->_Registry[Index].second.View<T>();
 		}
+	}
+	template<typename T>
+	inline std::vector<std::vector<Ref<Component>>> Scene::View() const
+	{
+		std::vector<std::vector<Ref<Component>>> Return;
+
+		for (auto& [Entity, View] : this->_Registry)
+		{
+			if (View.Contains<T>())
+			{
+				Return.push_back(View.View<T>());
+			}
+		}
+
+		return Return;
 	}
 }
