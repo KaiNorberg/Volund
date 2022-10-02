@@ -23,6 +23,8 @@ namespace Volund
 		WHITE
 	};
 
+	using LoggerCallback = void(*)(const std::string&);
+
 	class Logger
 	{
 	public:
@@ -36,6 +38,8 @@ namespace Volund
 
 		void Error(const char* Format, ...) const;
 
+		void SetCallback(LoggerCallback NewCallback);
+
 		Logger(std::string_view Name);
 
 	private:
@@ -45,6 +49,10 @@ namespace Volund
 		std::string FormatString(LoggerColor Color, const char* Format, std::va_list Args) const;
 
 		std::string FormatString(const char* Format, std::va_list Args) const;
+
+		static void DefaultCallback(const std::string& String);
+
+		LoggerCallback _Callback;
 
 		std::string _Name;
 	};

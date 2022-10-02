@@ -9,6 +9,7 @@
 #include "Widget/EntitiesWidget/EntitiesWidget.h"
 #include "Widget/ViewportWidget/ViewportWidget.h"
 #include "Widget/InspectorWidget/InspectorWidget.h"
+#include "Widget/OutputWidget/OutputWidget.h"
 
 #include <windows.h>
 
@@ -69,6 +70,7 @@ void Editor::OnRun()
 	this->_WidgetContainer.PushBack(new EntitiesWidget(this, true));
 	this->_WidgetContainer.PushBack(new ViewportWidget(this, true));
 	this->_WidgetContainer.PushBack(new InspectorWidget(this, true));
+	this->_WidgetContainer.PushBack(new OutputWidget(this, true));
 
 	this->_Window->Show();
 }
