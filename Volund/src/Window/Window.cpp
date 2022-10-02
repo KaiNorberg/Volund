@@ -219,11 +219,6 @@ namespace Volund
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	void Window::SwapBuffers() const
-	{
-		::SwapBuffers((HDC)this->_DeviceContext);
-	}
-
 	void Window::Update()
 	{
 		MSG Message;
@@ -235,10 +230,9 @@ namespace Volund
 		}
 	}
 
-	void Window::SetFocus() const
+	void Window::SetProcedureCatch(ProcCatch ProcedureCatch)
 	{
-		::SetFocus((HWND)this->_Handle);
-		SendMessage((HWND)this->_Handle, WM_SETFOCUS, 0, 0);
+		this->_Data.ProcedureCatch = ProcedureCatch;
 	}
 
 	void Window::SetCursorMode(CursorMode NewMode)
@@ -281,6 +275,12 @@ namespace Volund
 		}
 	}
 
+	void Window::SetFocus() const
+	{
+		::SetFocus((HWND)this->_Handle);
+		SendMessage((HWND)this->_Handle, WM_SETFOCUS, 0, 0);
+	}
+
 	void Window::SetTitle(std::string_view Title)
 	{
 		SetWindowText((HWND)this->_Handle, this->ConvertToWString(Title).c_str());
@@ -303,11 +303,6 @@ namespace Volund
 		}
 	}
 
-	void Window::SetProcedureCatch(ProcCatch ProcedureCatch)
-	{
-		this->_Data.ProcedureCatch = ProcedureCatch;
-	}
-
 	void* Window::GetHandle() const
 	{
 		return this->_Handle;
@@ -321,7 +316,12 @@ namespace Volund
 	void Window::Show()
 	{		
 		ShowWindow((HWND)this->_Handle, SW_SHOW);
-		UpdateWindow((HWND)this->_Handle);
+		this->Update();
+	}
+
+	void Window::SwapBuffers() const
+	{
+		::SwapBuffers((HDC)this->_DeviceContext);
 	}
 
 	std::wstring Window::ConvertToWString(std::string_view String)

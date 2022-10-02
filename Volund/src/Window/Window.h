@@ -32,27 +32,28 @@ namespace Volund
 	class Window
 	{
 	public:
-		void SwapBuffers() const;
 
 		void Update();
 
-		void SetFocus() const;
+		void SetProcedureCatch(ProcCatch ProcedureCatch);
 
 		void SetCursorMode(CursorMode NewMode);
 
 		void SetTitle(std::string_view Title);
 
+		void SetFocus() const;
+
 		Vec2 GetSize() const;
 
 		float GetAspectRatio() const;
-
-		void SetProcedureCatch(ProcCatch ProcedureCatch);
 
 		void* GetHandle() const;
 
 		void* GetDeviceContext() const;
 
 		void Show();
+
+		void SwapBuffers() const;
 
 		Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
 
@@ -69,4 +70,5 @@ namespace Volund
 
 		WindowData _Data;
 	};
+
 } //namespace Volund

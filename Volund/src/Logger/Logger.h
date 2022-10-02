@@ -1,7 +1,28 @@
 #pragma once
 
+#define VOLUND_LOGGERCOLOR_BLACK   "\033[30m"
+#define VOLUND_LOGGERCOLOR_RED     "\033[31m"
+#define VOLUND_LOGGERCOLOR_GREEN   "\033[32m"
+#define VOLUND_LOGGERCOLOR_YELLOW  "\033[33m"
+#define VOLUND_LOGGERCOLOR_BLUE    "\033[34m"
+#define VOLUND_LOGGERCOLOR_MAGENTA "\033[35m"
+#define VOLUND_LOGGERCOLOR_CYAN    "\033[36m"
+#define VOLUND_LOGGERCOLOR_WHITE   "\033[37m"
+
 namespace Volund
 {
+	enum class LoggerColor
+	{
+		BLACK,
+		RED,
+		GREEN,
+		YELLOW,
+		BLUE,
+		MAGENTA,
+		CYAN,
+		WHITE
+	};
+
 	class Logger
 	{
 	public:
@@ -21,7 +42,9 @@ namespace Volund
 		static Logger _CoreLogger;
 		static Logger _ClientLogger;
 
-		static std::string FormatString(const char* Format, ...);
+		std::string FormatString(LoggerColor Color, const char* Format, std::va_list Args) const;
+
+		std::string FormatString(const char* Format, std::va_list Args) const;
 
 		std::string _Name;
 	};

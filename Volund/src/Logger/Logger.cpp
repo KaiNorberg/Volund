@@ -27,10 +27,9 @@ namespace Volund
 		std::va_list Args;
 		va_start(Args, Format);
 
-		printf("\033[0;31m[%s]\033[0;32m %s: ", std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()).c_str(),
-		       this->_Name.c_str());
-		vprintf(Format, Args);
-		printf("\n");
+		std::string FormatedString = this->FormatString(LoggerColor::GREEN, Format, Args);
+
+		std::cout << FormatedString;
 
 		va_end(Args);
 	}
@@ -40,14 +39,12 @@ namespace Volund
 		std::va_list Args;
 		va_start(Args, Format);
 
-		printf("\033[0;31m[%s]\033[0;33m %s: ", std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()).c_str(),
-		       this->_Name.c_str());
-		vprintf(Format, Args);
-		printf("\n");
-
-		#ifdef VOLUND_DIST
-		std::string FormatedString = FormatString(Format, Args);
+		#ifdef VOLUND_DIST		
+		std::string FormatedString = this->FormatString(Format, Args);
 		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"WARNING!", MB_ICONWARNING | MB_OK);
+		#else		
+		std::string FormatedString = this->FormatString(LoggerColor::YELLOW, Format, Args);
+		std::cout << FormatedString;
 		#endif
 
 		va_end(Args);
@@ -58,17 +55,15 @@ namespace Volund
 		std::va_list Args;
 		va_start(Args, Format);
 
-		printf("\033[0;31m[%s] %s: ", std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()).c_str(),
-		       this->_Name.c_str());
-		vprintf(Format, Args);
-		printf("\n");
+		#ifdef VOLUND_DIST		
+		std::string FormatedString = this->FormatString(Format, Args);
+		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
+		#else		
+		std::string FormatedString = this->FormatString(LoggerColor::RED, Format, Args);
+		std::cout << FormatedString;
+		#endif
 
 		va_end(Args);
-
-		#ifdef VOLUND_DIST
-		std::string FormatedString = FormatString(Format, Args);
-		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
-		#endif
 
 		abort();
 	}
@@ -78,19 +73,63 @@ namespace Volund
 		this->_Name = Name;
 	}
 
-	std::string Logger::FormatString(const char* Format, ...)
+	std::string Logger::FormatString(LoggerColor Color, const char* Format, std::va_list Args) const
 	{
-		std::va_list Args;
-		va_start(Args, Format);
+		std::string Output = VOLUND_LOGGERCOLOR_BLUE;
+		Output += std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " + this->_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 
+		switch (Color)
+		{
+		case LoggerColor::BLACK:
+		{
+			Output += VOLUND_LOGGERCOLOR_BLACK;
+		}
+		break;
+		case LoggerColor::RED:
+		{
+			Output += VOLUND_LOGGERCOLOR_RED;
+		}
+		break;
+		case LoggerColor::GREEN:
+		{
+			Output += VOLUND_LOGGERCOLOR_GREEN;
+		}
+		break;
+		case LoggerColor::YELLOW:
+		{
+			Output += VOLUND_LOGGERCOLOR_YELLOW;
+		}
+		break;
+		case LoggerColor::BLUE:
+		{
+			Output += VOLUND_LOGGERCOLOR_BLUE;
+		}
+		break;
+		case LoggerColor::MAGENTA:
+		{
+			Output += VOLUND_LOGGERCOLOR_MAGENTA;
+		}
+		break;
+		case LoggerColor::WHITE:
+		{
+			Output += VOLUND_LOGGERCOLOR_WHITE;
+		}
+		break;
+		}
+
+		Output += FormatString(Format, Args) + '\n';
+
+		return Output;
+	}
+
+	std::string Logger::FormatString(const char* Format, std::va_list Args) const
+	{
 		size_t Size = std::vsnprintf(nullptr, 0, Format, Args) + 1;
-
 		std::string FormatedString;
 		FormatedString.resize(Size);
 		std::vsnprintf(FormatedString.data(), Size, Format, Args);
 
-		va_end(Args);
-
 		return FormatedString;
 	}
+
 } //namespace Volund

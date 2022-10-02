@@ -90,6 +90,8 @@ namespace Volund
 
 	Ref<Scene> Scene::Deserialize(VML SceneVML)
 	{
+		VOLUND_INFO("Deserializing Scene...");
+
 		Ref<Scene> NewScene = std::make_shared<Scene>();
 
 		for (auto& [EntityName, EntityVML] : SceneVML)

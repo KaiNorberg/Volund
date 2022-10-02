@@ -103,6 +103,7 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 		this->_Framebuffer->Bind();
 		VL::RenderingAPI::Clear();
 		VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
+
 		if (this->_GameScene != nullptr)
 		{
 			this->DrawGameView(TS, this->_GameScene);
@@ -112,8 +113,8 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 			this->MoveEye(TS);
 			this->DrawSceneView(TS);
 		}
-		this->_Framebuffer->Unbind();
 
+		this->_Framebuffer->Unbind();
 		ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
