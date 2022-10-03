@@ -16,8 +16,6 @@ public:
 
 private:
 
-	bool _AutoScrollEnabled = true;
-
 	static inline std::vector<std::string> _Output;
 };
 

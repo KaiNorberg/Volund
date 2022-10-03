@@ -28,6 +28,8 @@ protected:
 
 	static void Align(float Width, float Alignment);
 
+	static void DrawText(const std::string& String);
+
 	static std::string TextSelectorControl(const std::string& Name, const std::string& Default, const std::vector<std::string>& SelectableValues);
 
 	static std::string TextControl(const std::string& Name, const std::string& Default);

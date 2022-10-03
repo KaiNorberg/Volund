@@ -138,7 +138,7 @@ namespace Volund
 		break;
 		}
 
-		Output += FormatString(Format, Args) + '\n';
+		Output += FormatString(Format, Args);
 
 		return Output;
 	}
@@ -155,7 +155,7 @@ namespace Volund
 
 	void Logger::DefaultCallback(const std::string& String)
 	{
-		std::cout << String;
+		std::cout << String << '\n';
 	}
 
 } //namespace Volund
