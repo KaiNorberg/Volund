@@ -3,10 +3,9 @@
 
 #include "Shader.h"
 
-#include "ShaderFactory.h"
+#include "Factory/Factory.h"
 
 #include "OpenGLShader.h"
-
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
@@ -71,9 +70,9 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading Shader (%s)...", Filepath.c_str());
 
-		if (ShaderFactory::IsResource(Filepath))
+		if (Factory::IsResource(Filepath))
 		{
-			return Shader::CreateFromSource(ShaderFactory::GetResource(Filepath));
+			return Shader::CreateFromSource(Factory::GetResource(Filepath));
 		}
 		else
 		{
