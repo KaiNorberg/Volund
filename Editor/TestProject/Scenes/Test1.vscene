@@ -44,7 +44,7 @@ Entity2
 	Component2
 	{
 		Material [ Materials\Red.vmaterial ]
-		Mesh [ Standard\Models\Cube.obj ]
+		Mesh [ Models\Cube.obj ]
 		Type [ MeshRenderer ]
 	}
 }
@@ -65,7 +65,7 @@ Entity3
 	Component2
 	{
 		Material [ Materials\Green.vmaterial ]
-		Mesh [ Standard\Models\Cube.obj ]
+		Mesh [ Models\Cube.obj ]
 		Type [ MeshRenderer ]
 	}
 }
@@ -73,7 +73,7 @@ Entity4
 {
 	Component0
 	{
-		Position [ 0.000000 8.500000 0.000000 ]
+		Position [ 0.000000 7.064885 0.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
@@ -95,7 +95,7 @@ Entity5
 	Component0
 	{
 		Position [ 2.900000 0.000000 0.000000 ]
-		Rotation [ 0.000000 -0.000001 1.599831 ]
+		Rotation [ 0.000001 0.000001 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
 	}
@@ -107,7 +107,7 @@ Entity5
 	Component2
 	{
 		Material [ Materials\Blue.vmaterial ]
-		Mesh [ Standard\Models\Teapot.obj ]
+		Mesh [ Models\Teapot.obj ]
 		Type [ MeshRenderer ]
 	}
 }

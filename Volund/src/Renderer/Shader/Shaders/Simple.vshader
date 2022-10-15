@@ -1,3 +1,4 @@
+R"=====(
 #VOLUND_SHADER_TYPE VERTEX
 #version 460
 
@@ -64,3 +65,4 @@ void main()
     }
     FragColor = vec4(Result, 1.0f);
 }
+)====="

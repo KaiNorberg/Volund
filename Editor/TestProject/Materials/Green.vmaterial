@@ -1,4 +1,4 @@
-Shader [ Standard\Shaders\Test.vshader ]
+Shader [ :/Simple.vshader ]
 
 Values
 {

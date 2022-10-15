@@ -76,21 +76,24 @@ void ViewportWidget::HandleSceneViewInput(VL::TimeStep TS)
 	}
 	else
 	{
-		if (this->_Input.IsPressed('T'))
+		if (!this->_Input.IsHeld(VOLUND_KEY_CONTROL))
 		{
-			this->_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
-		}
-		else if (this->_Input.IsPressed('R'))
-		{
-			this->_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
-		}
-		else if (this->_Input.IsPressed('S'))
-		{
-			this->_GizmoOperation = ImGuizmo::OPERATION::SCALE;
-		}
-		else if (this->_Input.IsPressed(VOLUND_KEY_ESCAPE))
-		{
-			_SelectedEntity = NULL;
+			if (this->_Input.IsPressed('T'))
+			{
+				this->_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+			}
+			else if (this->_Input.IsPressed('R'))
+			{
+				this->_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
+			}
+			else if (this->_Input.IsPressed('S'))
+			{
+				this->_GizmoOperation = ImGuizmo::OPERATION::SCALE;
+			}
+			else if (this->_Input.IsPressed(VOLUND_KEY_ESCAPE))
+			{
+				_SelectedEntity = NULL;
+			}
 		}
 	}
 
@@ -125,6 +128,8 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 		VL::RenderingAPI::Clear();
 		VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
 
+		ImGui::BeginChild("ViewPort");
+
 		if (this->_GameScene != nullptr)
 		{
 			this->DrawGameView(TS, this->_GameScene);
@@ -134,6 +139,8 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 			this->HandleSceneViewInput(TS);
 			this->DrawSceneView(TS);
 		}
+
+		ImGui::EndChild();
 
 		this->_Framebuffer->Unbind();
 	}
@@ -189,12 +196,11 @@ void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 	ImVec2 ViewPos = ImVec2(ImGui::GetWindowPos().x + ImGui::GetCursorPos().x, ImGui::GetWindowPos().y + ImGui::GetCursorPos().y);
 	ImVec2 ViewSize = ImGui::GetContentRegionAvail();
 
-	ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewSize, ImVec2(0, 1), ImVec2(1, 0));
-
 	ImGuizmo::SetOrthographic(false);
-	
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ViewPos.x, ViewPos.y, ViewSize.x, ViewSize.y);
+
+	ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewSize, ImVec2(0, 1), ImVec2(1, 0));
 
 	for (auto& View : PointLightView)
 	{
@@ -208,12 +214,9 @@ void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 			ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
 			ImVec2 ImGuiPosition = ImVec2(ViewPos.x + ScreenPosition.x * ViewSize.x, ViewPos.y + (1.0f - ScreenPosition.y) * ViewSize.y);
 
-			if (0.01f < ScreenPosition.x && ScreenPosition.x < 0.9f && 0.01f < ScreenPosition.y && ScreenPosition.y < 0.99f)
-			{
-				VL::RGB Color = PointLight->Color;
-				ImU32 ImGuiColor = (int)(Color.r * 255) + ((int)(Color.g * 255) << 8) + ((int)(Color.b * 255) << 16) + (255 << 24);
-				ImGui::GetForegroundDrawList()->AddCircleFilled(ImGuiPosition, 10.0f, ImGuiColor);
-			}
+			VL::RGB Color = PointLight->Color;
+			ImU32 ImGuiColor = (int)(Color.r * 255) + ((int)(Color.g * 255) << 8) + ((int)(Color.b * 255) << 16) + (255 << 24);
+			ImGui::GetWindowDrawList()->AddCircleFilled(ImGuiPosition, 10.0f, ImGuiColor);
 		}
 	}
 
