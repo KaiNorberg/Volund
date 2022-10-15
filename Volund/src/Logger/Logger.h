@@ -50,8 +50,6 @@ namespace Volund
 
 		std::string FormatString(const char* Format, std::va_list Args) const;
 
-		static void DefaultCallback(const std::string& String);
-
 		LoggerCallback _Callback;
 
 		std::string _Name;

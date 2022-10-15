@@ -6,6 +6,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <ImGuizmo.h>
 
 #include "Scene/Component/MeshRenderer/MeshRenderer.h"
 #include "Scene/Component/PointLight/PointLight.h"
@@ -37,7 +38,7 @@ void ViewportWidget::Draw(VL::TimeStep TS)
 	this->DrawViewport(TS);
 }
 
-void ViewportWidget::MoveEye(VL::TimeStep TS)
+void ViewportWidget::HandleSceneViewInput(VL::TimeStep TS)
 {
 	if (this->_Input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
 	{
@@ -73,6 +74,25 @@ void ViewportWidget::MoveEye(VL::TimeStep TS)
 
 		this->_Eye.Position += EyeQuaternion * -VL::Math::Right * (float)Delta.x * this->_Eye.DragSpeed + EyeQuaternion * VL::Math::Up * (float)Delta.y * this->_Eye.DragSpeed;
 	}
+	else
+	{
+		if (this->_Input.IsPressed('T'))
+		{
+			this->_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
+		}
+		else if (this->_Input.IsPressed('R'))
+		{
+			this->_GizmoOperation = ImGuizmo::OPERATION::ROTATE;
+		}
+		else if (this->_Input.IsPressed('S'))
+		{
+			this->_GizmoOperation = ImGuizmo::OPERATION::SCALE;
+		}
+		else if (this->_Input.IsPressed(VOLUND_KEY_ESCAPE))
+		{
+			_SelectedEntity = NULL;
+		}
+	}
 
 	this->_OldMousePosition = _Input.GetMousePosition();
 }
@@ -101,6 +121,7 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 		}
 
 		this->_Framebuffer->Bind();
+		VL::RenderingAPI::SetClearColor(VL::RGBA(0.0f, 0.0f, 0.0f, 1.0f));
 		VL::RenderingAPI::Clear();
 		VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
 
@@ -110,12 +131,11 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 		}
 		else
 		{
-			this->MoveEye(TS);
+			this->HandleSceneViewInput(TS);
 			this->DrawSceneView(TS);
 		}
 
 		this->_Framebuffer->Unbind();
-		ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 	}
 	else
 	{
@@ -124,7 +144,6 @@ void ViewportWidget::DrawViewport(VL::TimeStep TS)
 
 	ImGui::End();
 }
-
 
 void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 {
@@ -166,6 +185,50 @@ void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 	}	
 	
 	VL::Renderer::End();
+
+	ImVec2 ViewPos = ImVec2(ImGui::GetWindowPos().x + ImGui::GetCursorPos().x, ImGui::GetWindowPos().y + ImGui::GetCursorPos().y);
+	ImVec2 ViewSize = ImGui::GetContentRegionAvail();
+
+	ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewSize, ImVec2(0, 1), ImVec2(1, 0));
+
+	ImGuizmo::SetOrthographic(false);
+	
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetRect(ViewPos.x, ViewPos.y, ViewSize.x, ViewSize.y);
+
+	for (auto& View : PointLightView)
+	{
+		for (auto& Component : View)
+		{
+			VL::Ref<VL::PointLight> PointLight = std::dynamic_pointer_cast<VL::PointLight>(Component);
+			VL::Ref<VL::Transform> Transform = Scene->GetComponent<VL::Transform>(PointLight->GetEntity());
+
+			VL::Mat4x4 ViewProjMatrix = ProjectionMatrix * ViewMatrix;
+			VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Transform->Position, 1.0f);
+			ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
+			ImVec2 ImGuiPosition = ImVec2(ViewPos.x + ScreenPosition.x * ViewSize.x, ViewPos.y + (1.0f - ScreenPosition.y) * ViewSize.y);
+
+			if (0.01f < ScreenPosition.x && ScreenPosition.x < 0.9f && 0.01f < ScreenPosition.y && ScreenPosition.y < 0.99f)
+			{
+				VL::RGB Color = PointLight->Color;
+				ImU32 ImGuiColor = (int)(Color.r * 255) + ((int)(Color.g * 255) << 8) + ((int)(Color.b * 255) << 16) + (255 << 24);
+				ImGui::GetForegroundDrawList()->AddCircleFilled(ImGuiPosition, 10.0f, ImGuiColor);
+			}
+		}
+	}
+
+	if (_SelectedEntity != NULL)
+	{
+		VL::Ref<VL::Transform> EntityTransform = Scene->GetComponent<VL::Transform>(_SelectedEntity);
+		VL::Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();
+		ImGuizmo::Manipulate(glm::value_ptr(ViewMatrix), glm::value_ptr(ProjectionMatrix), (ImGuizmo::OPERATION)_GizmoOperation, ImGuizmo::MODE::LOCAL, glm::value_ptr(ModelMatrix));
+
+		float MatrixPosititon[3], MatrixRotation[3], MatrixScale[3];
+		ImGuizmo::DecomposeMatrixToComponents(glm::value_ptr(ModelMatrix), MatrixPosititon, MatrixRotation, MatrixScale);
+		EntityTransform->SetRotation(VL::Vec3(MatrixRotation[0], MatrixRotation[1], MatrixRotation[2]));
+		EntityTransform->Position = VL::Vec3(MatrixPosititon[0], MatrixPosititon[1], MatrixPosititon[2]);
+		EntityTransform->Scale = VL::Vec3(MatrixScale[0], MatrixScale[1], MatrixScale[2]);
+	}
 }
 
 void ViewportWidget::DrawGameView(VL::TimeStep TS, VL::Ref<VL::Scene> GameScene)
@@ -189,6 +252,8 @@ void ViewportWidget::DrawGameView(VL::TimeStep TS, VL::Ref<VL::Scene> GameScene)
 	{
 		ImGui::Text("Scene does not contain an ActiveCamera!");
 	}
+
+	ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ImGui::GetContentRegionAvail(), ImVec2(0, 1), ImVec2(1, 0));
 }
 
 ViewportWidget::ViewportWidget(Editor* editor, bool Active)
@@ -200,4 +265,6 @@ ViewportWidget::ViewportWidget(Editor* editor, bool Active)
 	Spec.ColorAttachments = { VL::TextureFormat::RGBA8 };
 	Spec.DepthAttachment = VL::TextureFormat::DEPTH24STENCIL8;
 	this->_Framebuffer = VL::Framebuffer::Create(Spec);
+
+	this->_GizmoOperation = ImGuizmo::OPERATION::TRANSLATE;
 }

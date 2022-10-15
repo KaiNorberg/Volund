@@ -106,6 +106,8 @@ project "Editor"
 		"%{prj.name}/src",
 		"vendor",
 		"Editor/vendor/imgui",
+		"Editor/vendor/ImGuizmo",
+
 		"Volund/src"
 	}
 
@@ -118,6 +120,7 @@ project "Editor"
 	{
 		"Volund",
 		"ImGui",
+		"ImGuizmo",
 		"OpenGL32.lib",
 		"Glad.lib"
 	}
@@ -234,3 +237,47 @@ project "ImGui"
 		runtime "Release"
 		optimize "on"
         symbols "off"
+
+project "ImGuizmo"
+		kind "StaticLib"
+		language "C++"
+		staticruntime "on"
+		cppdialect "C++20"
+	
+		location "Editor/vendor/ImGuizmo"
+	
+		targetdir (TargetDir)
+		objdir (ObjDir)
+	
+		includedirs
+		{
+			"Editor/vendor/ImGuizmo",
+			"Editor/vendor/imgui"
+
+		}
+	
+		files
+		{
+			"Editor/vendor/ImGuizmo/*.h",
+			"Editor/vendor/ImGuizmo/*.cpp"
+		}
+	
+		filter "system:windows"
+			systemversion "latest"
+	
+		filter "system:linux"
+			pic "On"
+			systemversion "latest"
+	
+		filter "configurations:Debug"
+			runtime "Debug"
+			symbols "on"
+	
+		filter "configurations:Release"
+			runtime "Release"
+			optimize "on"
+	
+		filter "configurations:Dist"
+			runtime "Release"
+			optimize "on"
+			symbols "off"

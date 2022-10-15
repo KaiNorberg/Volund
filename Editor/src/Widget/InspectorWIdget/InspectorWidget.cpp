@@ -130,6 +130,8 @@ void InspectorWidget::DrawComponents()
 			auto PointLight = std::dynamic_pointer_cast<VL::PointLight>(Component);
 
 			ImGui::ColorPicker3("##Color", glm::value_ptr(PointLight->Color), ImGuiColorEditFlags_Float);
+
+			FloatControl("Brightness", &PointLight->Brightness);
 		});
 	}
 	if (Scene->HasComponent<VL::CameraMovement>(_SelectedEntity))

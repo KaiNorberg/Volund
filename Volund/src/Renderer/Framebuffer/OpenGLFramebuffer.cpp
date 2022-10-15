@@ -51,7 +51,7 @@ namespace Volund
 			{
 			case TextureFormat::RGBA8:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB8, this->_Spec.Width, this->_Spec.Height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->_Spec.Width, this->_Spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 			}
 			break;
 			case TextureFormat::RED_INTEGER:

@@ -32,6 +32,7 @@ namespace Volund
 		{
 			this->_Callback(FormatedString);
 		}
+		std::cout << FormatedString << '\n';
 
 		va_end(Args);
 	}
@@ -41,15 +42,16 @@ namespace Volund
 		std::va_list Args;
 		va_start(Args, Format);
 
-		#ifdef VOLUND_DIST		
-		std::string FormatedString = this->FormatString(Format, Args);
-		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"WARNING!", MB_ICONWARNING | MB_OK);
-		#else		
 		std::string FormatedString = this->FormatString(LoggerColor::YELLOW, Format, Args);
 		if (this->_Callback != nullptr)
 		{
 			this->_Callback(FormatedString);
 		}
+		#ifdef VOLUND_DIST		
+		std::string FormatedString = this->FormatString(Format, Args);
+		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"WARNING!", MB_ICONWARNING | MB_OK);
+		#else		
+		std::cout << FormatedString << '\n';
 		#endif
 
 		va_end(Args);
@@ -60,15 +62,16 @@ namespace Volund
 		std::va_list Args;
 		va_start(Args, Format);
 
-		#ifdef VOLUND_DIST		
-		std::string FormatedString = this->FormatString(Format, Args);
-		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
-		#else		
 		std::string FormatedString = this->FormatString(LoggerColor::RED, Format, Args);
 		if (this->_Callback != nullptr)
 		{
 			this->_Callback(FormatedString);
 		}
+		#ifdef VOLUND_DIST		
+		std::string FormatedString = this->FormatString(Format, Args);
+		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
+		#else		
+		std::cout << FormatedString << '\n';
 		#endif
 
 		va_end(Args);
@@ -78,20 +81,13 @@ namespace Volund
 
 	void Logger::SetCallback(LoggerCallback NewCallback)
 	{
-		if (NewCallback == nullptr)
-		{
-			this->_Callback = DefaultCallback;
-		}
-		else
-		{
-			this->_Callback = NewCallback;
-		}
+		this->_Callback = NewCallback;
 	}
 
 	Logger::Logger(std::string_view Name)
 	{
 		this->_Name = Name;
-		this->_Callback = DefaultCallback;
+		this->_Callback = nullptr;
 	}
 
 	std::string Logger::FormatString(LoggerColor Color, const char* Format, std::va_list Args) const
@@ -151,11 +147,6 @@ namespace Volund
 		std::vsnprintf(FormatedString.data(), Size, Format, Args);
 
 		return FormatedString;
-	}
-
-	void Logger::DefaultCallback(const std::string& String)
-	{
-		std::cout << String << '\n';
 	}
 
 } //namespace Volund

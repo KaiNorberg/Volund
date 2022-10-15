@@ -13,6 +13,7 @@
 #define VOLUND_KEY_ENTER 13
 #define VOLUND_KEY_SHIFT 16
 #define VOLUND_KEY_CONTROL 17
+#define VOLUND_KEY_ESCAPE 27
 
 namespace Volund
 {

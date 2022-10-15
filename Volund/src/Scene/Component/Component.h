@@ -16,6 +16,10 @@ namespace Volund
 	{
 	public:
 
+		Entity GetEntity() const;
+
+		Scene* GetScene() const;
+
 		virtual void OnCreate() {};
 
 		virtual void OnDelete() {};
@@ -30,12 +34,6 @@ namespace Volund
 
 		virtual ~Component() = default;
 	
-	protected:
-
-		Entity GetEntity() const;
-
-		Scene* GetScene() const;
-
 	private:
 		friend class Scene;
 

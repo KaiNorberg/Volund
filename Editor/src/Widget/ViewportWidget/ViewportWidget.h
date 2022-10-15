@@ -20,7 +20,7 @@ private:
 
 	void DrawGameView(VL::TimeStep TS, VL::Ref<VL::Scene> GameScene);
 
-	void MoveEye(VL::TimeStep TS);
+	void HandleSceneViewInput(VL::TimeStep TS);
 
 	void DrawViewport(VL::TimeStep TS);
 
@@ -45,5 +45,7 @@ private:
 	VL::Ref<VL::Framebuffer> _Framebuffer;
 
 	VL::Ref<VL::Scene> _GameScene;
+
+	int _GizmoOperation = 0;
 };
 
