@@ -92,7 +92,7 @@ namespace Volund
 
 	std::string Logger::FormatString(LoggerColor Color, const char* Format, std::va_list Args) const
 	{
-		std::string Output = VOLUND_LOGGERCOLOR_BLUE;
+		std::string Output = VOLUND_LOGGERCOLOR_RED;
 		Output += std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " + this->_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 
 		switch (Color)

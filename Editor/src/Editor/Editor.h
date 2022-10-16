@@ -26,7 +26,7 @@ private:
 
 	void HandleShortcuts();
 
-	void BeginDockSpace();
+	bool BeginDockSpace();
 
 	void DrawMenuBar();
 

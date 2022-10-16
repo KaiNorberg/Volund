@@ -10,7 +10,7 @@ namespace Volund
 
 		TagVML.PushBack("Type", VMLEntry("Tag"));
 
-		TagVML.PushBack("String", this->String);
+		TagVML.PushBack("String", VMLEntry(this->String));
 
 		return TagVML;
 	}

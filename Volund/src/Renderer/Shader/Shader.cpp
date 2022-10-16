@@ -3,7 +3,7 @@
 
 #include "Shader.h"
 
-#include "Factory/Factory.h"
+#include "Filesystem/Filesystem.h"
 
 #include "OpenGLShader.h"
 
@@ -11,8 +11,10 @@
 
 namespace Volund
 {
-	Ref<Shader> Shader::CreateFromSource(const std::string& Source)
+	Ref<Shader> Shader::Create(const std::string& Filepath)
 	{
+		VOLUND_INFO("Loading Shader (%s)...", Filepath.c_str());
+
 		enum class ShaderType
 		{
 			NONE = -1,
@@ -25,7 +27,7 @@ namespace Volund
 		std::stringstream SourceStrings[3];
 		ShaderType Type = ShaderType::NONE;
 
-		std::istringstream iss = std::istringstream(Source);
+		std::istringstream iss = std::istringstream(Filesystem::Load(Filepath));
 		while (std::getline(iss, Line))
 		{
 			//Split into words
@@ -66,32 +68,6 @@ namespace Volund
 			SourceStrings[(uint32_t)ShaderType::GEOMETRY].str());
 	}
 
-	Ref<Shader> Shader::Create(const std::string& Filepath)
-	{
-		VOLUND_INFO("Loading Shader (%s)...", Filepath.c_str());
-
-		if (Factory::IsResource(Filepath))
-		{
-			return Shader::CreateFromSource(Factory::GetResource(Filepath));
-		}
-		else
-		{
-			std::ifstream File(Filepath);
-
-			VOLUND_ASSERT(File, "Unable to load Shader (%s).", Filepath.c_str());
-
-			std::string Line;
-			std::string Output;
-
-			while (std::getline(File, Line))
-			{
-				Output += Line;
-			}
-
-			return Shader::CreateFromSource(Output);
-		}
-	}
-
 	Ref<Shader> Shader::Create(std::string_view VertexSource, std::string_view FragmentSource, std::string_view GeometrySource)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
@@ -109,4 +85,5 @@ namespace Volund
 		break;
 		}
 	}
+
 } //namespace Volund

@@ -48,8 +48,9 @@ void OutputWidget::Draw(VL::TimeStep TS)
 			ImGui::EndListBox();
 		}
 
-		ImGui::End();
 	}
+
+	ImGui::End();
 }
 
 void OutputWidget::LoggerCallback(const std::string& String)

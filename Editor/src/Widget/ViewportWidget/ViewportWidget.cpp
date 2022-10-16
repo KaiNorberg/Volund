@@ -35,7 +35,57 @@ void ViewportWidget::OnEvent(VL::Event* E)
 
 void ViewportWidget::Draw(VL::TimeStep TS)
 {	
-	this->DrawViewport(TS);
+	if (ImGui::Begin("Viewport"))
+	{
+		if (this->_Editor->GetProject()->SceneLoaded())
+		{
+			if (this->_GameScene != nullptr)
+			{
+				Align(ImGui::CalcTextSize("Pause").x, 0.5f);
+				if (ImGui::Button("Pause"))
+				{
+					this->_GameScene = nullptr;
+				}
+			}
+			else
+			{
+				Align(ImGui::CalcTextSize("Play").x, 0.5f);
+				if (ImGui::Button("Play"))
+				{
+					this->_GameScene = VL::Scene::Copy(this->_Editor->GetProject()->GetScene());
+				}
+			}
+
+			if (ImGui::BeginChild("ViewPort"))
+			{
+				this->_Framebuffer->Bind();
+				VL::RenderingAPI::SetClearColor(VL::RGBA(0.0f, 0.0f, 0.0f, 1.0f));
+				VL::RenderingAPI::Clear();
+				VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
+
+				if (this->_GameScene != nullptr)
+				{
+					this->DrawGameView(TS, this->_GameScene);
+				}
+				else
+				{
+					this->HandleSceneViewInput(TS);
+					this->DrawSceneView(TS);
+				}
+
+				ImGui::EndChild();
+
+				this->_Framebuffer->Unbind();
+			}
+		}
+		else
+		{
+			ImGui::Text("No Scene Loaded!");
+		}
+
+	}		
+	
+	ImGui::End();
 }
 
 void ViewportWidget::HandleSceneViewInput(VL::TimeStep TS)
@@ -100,58 +150,6 @@ void ViewportWidget::HandleSceneViewInput(VL::TimeStep TS)
 	this->_OldMousePosition = _Input.GetMousePosition();
 }
 
-void ViewportWidget::DrawViewport(VL::TimeStep TS)
-{
-	ImGui::Begin("Viewport");
-
-	if (this->_Editor->GetProject()->SceneLoaded())
-	{
-		if (this->_GameScene != nullptr)
-		{
-			Align(ImGui::CalcTextSize("Pause").x, 0.5f);
-			if (ImGui::Button("Pause"))
-			{
-				this->_GameScene = nullptr;
-			}
-		}
-		else
-		{
-			Align(ImGui::CalcTextSize("Play").x, 0.5f);
-			if (ImGui::Button("Play"))
-			{
-				this->_GameScene = VL::Scene::Copy(this->_Editor->GetProject()->GetScene());
-			}
-		}
-
-		this->_Framebuffer->Bind();
-		VL::RenderingAPI::SetClearColor(VL::RGBA(0.0f, 0.0f, 0.0f, 1.0f));
-		VL::RenderingAPI::Clear();
-		VL::RenderingAPI::SetViewPort(0, 0, this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
-
-		ImGui::BeginChild("ViewPort");
-
-		if (this->_GameScene != nullptr)
-		{
-			this->DrawGameView(TS, this->_GameScene);
-		}
-		else
-		{
-			this->HandleSceneViewInput(TS);
-			this->DrawSceneView(TS);
-		}
-
-		ImGui::EndChild();
-
-		this->_Framebuffer->Unbind();
-	}
-	else
-	{
-		ImGui::Text("No Scene Loaded!");
-	}
-
-	ImGui::End();
-}
-
 void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 {
 	auto ViewportSize = ImGui::GetContentRegionAvail();
@@ -196,29 +194,11 @@ void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 	ImVec2 ViewPos = ImVec2(ImGui::GetWindowPos().x + ImGui::GetCursorPos().x, ImGui::GetWindowPos().y + ImGui::GetCursorPos().y);
 	ImVec2 ViewSize = ImGui::GetContentRegionAvail();
 
+	ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewSize, ImVec2(0, 1), ImVec2(1, 0));
+
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ViewPos.x, ViewPos.y, ViewSize.x, ViewSize.y);
-
-	ImGui::Image(reinterpret_cast<void*>(this->_Framebuffer->GetAttachment(0)), ViewSize, ImVec2(0, 1), ImVec2(1, 0));
-
-	for (auto& View : PointLightView)
-	{
-		for (auto& Component : View)
-		{
-			VL::Ref<VL::PointLight> PointLight = std::dynamic_pointer_cast<VL::PointLight>(Component);
-			VL::Ref<VL::Transform> Transform = Scene->GetComponent<VL::Transform>(PointLight->GetEntity());
-
-			VL::Mat4x4 ViewProjMatrix = ProjectionMatrix * ViewMatrix;
-			VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Transform->Position, 1.0f);
-			ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
-			ImVec2 ImGuiPosition = ImVec2(ViewPos.x + ScreenPosition.x * ViewSize.x, ViewPos.y + (1.0f - ScreenPosition.y) * ViewSize.y);
-
-			VL::RGB Color = PointLight->Color;
-			ImU32 ImGuiColor = (int)(Color.r * 255) + ((int)(Color.g * 255) << 8) + ((int)(Color.b * 255) << 16) + (255 << 24);
-			ImGui::GetWindowDrawList()->AddCircleFilled(ImGuiPosition, 10.0f, ImGuiColor);
-		}
-	}
 
 	if (_SelectedEntity != NULL)
 	{

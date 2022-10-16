@@ -10,14 +10,21 @@ bool Project::Loaded()
 
 void Project::Save(const std::string& Filepath)
 {
-	if (!Filepath.empty())
+	if (Filepath.empty())
 	{
-		this->_VML->Write(Filepath);
+		return;
 	}
+
+	this->_VML->Write(Filepath);
 }
 
 void Project::Load(const std::filesystem::path& Filepath)
 {
+	if (Filepath.empty())
+	{
+		return;
+	}
+
 	this->_VMLFilepath = Filepath.string();
 	this->_VML = VL::Ref<VL::VML>(new VL::VML(this->_VMLFilepath));
 
@@ -34,51 +41,55 @@ bool Project::SceneLoaded()
 
 void Project::LoadScene(const std::string& Filepath)
 {
-	if (!Filepath.empty())
+	if (Filepath.empty())
 	{
-		if (this->_Scene != nullptr)
+		return;
+	}
+
+	if (this->_Scene != nullptr)
+	{
+		uint32_t Confirmation =
+			MessageBox(NULL, (LPCWSTR)L"Do you wish to save the current scene?\nAny unsaved changes will be lost!",
+				(LPCWSTR)L"Account Details", MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2);
+
+		switch (Confirmation)
 		{
-			uint32_t Confirmation =
-				MessageBox(NULL, (LPCWSTR)L"Do you wish to save the current scene?\nAny unsaved changes will be lost!",
-					(LPCWSTR)L"Account Details", MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2);
+		case IDYES:
+		{
+			this->_Scene->Serialize(this->_SceneFilepath);
+			this->_Scene = VL::Scene::Deserialize(Filepath);
+			this->_SceneFilepath = Filepath;
 
-			switch (Confirmation)
-			{
-			case IDYES:
-			{
-				this->_Scene->Serialize(this->_SceneFilepath);
-				this->_Scene = VL::Scene::Deserialize(Filepath);
-				this->_SceneFilepath = Filepath;
-
-			}
-			break;
-			case IDNO:
-			{
-				this->_Scene = VL::Scene::Deserialize(Filepath);
-				this->_SceneFilepath = Filepath;
-			}
-			break;
-			default:
-			{
-				
-			}
-			break;
-			}
 		}
-		else
+		break;
+		case IDNO:
 		{
 			this->_Scene = VL::Scene::Deserialize(Filepath);
 			this->_SceneFilepath = Filepath;
 		}
+		break;
+		default:
+		{
+				
+		}
+		break;
+		}
+	}
+	else
+	{
+		this->_Scene = VL::Scene::Deserialize(Filepath);
+		this->_SceneFilepath = Filepath;
 	}
 }
 
 void Project::SaveScene(const std::string& Filepath)
 {
-	if (!Filepath.empty())
+	if (Filepath.empty())
 	{
-		this->_Scene->Serialize(Filepath);
+		return;
 	}
+
+	this->_Scene->Serialize(Filepath);
 }
 
 std::string Project::GetVMLFilepath()

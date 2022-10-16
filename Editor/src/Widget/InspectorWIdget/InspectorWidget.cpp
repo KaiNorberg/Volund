@@ -17,19 +17,21 @@ void InspectorWidget::Draw(VL::TimeStep TS)
 {
 	auto Scene = this->_Editor->GetProject()->GetScene();
 
-	ImGui::Begin("Inspector", &this->_IsActive);
-
-	if (Scene != nullptr && Scene->HasEntity(_SelectedEntity))
+	if (ImGui::Begin("Inspector", &this->_IsActive))
 	{
-		this->DrawComponents();
+		if (Scene != nullptr && Scene->HasEntity(_SelectedEntity))
+		{
+			this->DrawComponents();
 
-		ImGui::Separator();
+			ImGui::Separator();
 
-		this->DrawAddComponents();
-	}
-	else
-	{
-		ImGui::Text("No Entity Selected!");
+			this->DrawAddComponents();
+		}
+		else
+		{
+			ImGui::Text("No Entity Selected!");
+		}
+
 	}
 
 	ImGui::End();

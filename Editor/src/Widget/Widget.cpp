@@ -303,3 +303,10 @@ void Widget::Vec3Control(std::string_view Name, VL::Vec3* Value, float Speed, fl
 
 	ImGui::PopID();
 }
+
+VL::Vec2 Widget::ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize)
+{
+	VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Position, 1.0f);
+	ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
+	return VL::Vec2(WindowPos.x + ScreenPosition.x * WindowSize.x, WindowPos.y + (1.0f - ScreenPosition.y) * WindowSize.y);
+}

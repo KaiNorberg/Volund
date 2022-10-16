@@ -55,7 +55,7 @@ namespace Volund
 			std::string Value;
 		};
 
-		static void Tokenize(std::vector<Token>* Out, FILE* File);
+		static void Tokenize(std::vector<Token>* Out, const std::string& File);
 
 		void Parse(const std::vector<Token>& Tokens, int& Index);
 

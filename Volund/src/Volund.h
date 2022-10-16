@@ -13,4 +13,7 @@
 #include "Scene/Scene.h"
 #include "Scene/Component/Components.h"
 
+#include "Math/Math.h"
+#include "Math/Frustum.h"
+
 #include "Input/Input.h"

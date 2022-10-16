@@ -42,6 +42,8 @@ protected:
 
 	static void Vec3Control(std::string_view Name, VL::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
 
+	static VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
+
 	Editor* _Editor = nullptr;
 
 	static inline VL::Entity _SelectedEntity = NULL;

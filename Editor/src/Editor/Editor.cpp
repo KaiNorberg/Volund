@@ -58,7 +58,7 @@ void Editor::OnRun()
 	ImGuiIO& io = ImGui::GetIO();
 
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.Fonts->AddFontFromFileTTF("Data/Fonts/OpenSans-Regular.ttf", 18.0f);
+	io.Fonts->AddFontFromFileTTF("data/Fonts/OpenSans-Regular.ttf", 18.0f);
 	io.IniFilename = IniFilename.c_str();
 
 	SetupImGuiStyle();
@@ -126,7 +126,7 @@ void Editor::Draw(VL::TimeStep TS)
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
 
-	this->BeginDockSpace();
+	if (this->BeginDockSpace())
 	{
 		this->DrawMenuBar();
 
@@ -140,7 +140,9 @@ void Editor::Draw(VL::TimeStep TS)
 				}
 			}
 		}
+
 	}
+
 	ImGui::End();
 
 	ImGui::Render();
@@ -203,7 +205,7 @@ void Editor::HandleShortcuts()
 	}
 }
 
-void Editor::BeginDockSpace()
+bool Editor::BeginDockSpace()
 {
 	static bool Open = true;
 
@@ -221,12 +223,21 @@ void Editor::BeginDockSpace()
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-	ImGui::Begin("DockSpace Demo", &Open, WindowFlags);
+	if (ImGui::Begin("DockSpace Demo", &Open, WindowFlags))
+	{
+		ImGui::PopStyleVar(3);
 
-	ImGui::PopStyleVar(3);
+		ImGuiID DockspaceID = ImGui::GetID("MyDockSpace");
+		ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
+	
+		return true;
+	}
+	else
+	{
+		ImGui::PopStyleVar(3);
 
-	ImGuiID DockspaceID = ImGui::GetID("MyDockSpace");
-	ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
+		return false;
+	}
 }
 
 void Editor::DrawMenuBar()

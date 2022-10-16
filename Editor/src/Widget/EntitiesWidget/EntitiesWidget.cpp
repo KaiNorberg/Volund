@@ -55,6 +55,7 @@ void EntitiesWidget::Draw(VL::TimeStep TS)
 		{
 			ImGui::Text("No Scene Loaded!");
 		}
+
 	}
 
 	ImGui::End();

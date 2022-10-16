@@ -22,8 +22,6 @@ private:
 
 	void HandleSceneViewInput(VL::TimeStep TS);
 
-	void DrawViewport(VL::TimeStep TS);
-
 	struct
 	{
 		float DragSpeed = 0.01f;

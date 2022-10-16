@@ -3,6 +3,8 @@
 
 #include "Time/Time.h"
 
+#include "Filesystem/Filesystem.h"
+
 namespace Volund
 {
 	bool VML::ContainsNode(std::string_view Name) const
@@ -115,23 +117,21 @@ namespace Volund
 		return this->_Nodes.end();
 	}
 
-	void VML::Tokenize(std::vector<Token>* Out, FILE* File)
+	void VML::Tokenize(std::vector<Token>* Out, const std::string& File)
 	{
-		while (true)
+		std::istringstream iss(File);
+
+		while (iss)
 		{
-			char TokenString[128];
-			int RET = fscanf(File, "%128s", TokenString);
-			if (RET == EOF || RET == NULL)
-			{
-				return;
-			}
+			std::string Word;
+			iss >> Word;
 
 			Token NewToken;
-			NewToken.Value = TokenString;
+			NewToken.Value = Word;
 
-			if (strlen(TokenString) == 1)
+			if (Word.size() == 1)
 			{
-				switch (TokenString[0])
+				switch (Word[0])
 				{
 				case '[':
 				{
@@ -277,16 +277,12 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading VML file (%s)...", Filepath.data());
 
-		FILE* File = fopen(Filepath.data(), "r");
-
-		VOLUND_ASSERT(File, "Unable to open VML file (%s)!", Filepath.data());
+		std::string File = Filesystem::Load(Filepath.data());
 
 		std::vector<Token> Tokens;
 		Tokenize(&Tokens, File);
 
 		int Index = 0;
 		this->Parse(Tokens, Index);
-
-		fclose(File);
 	}
 }
