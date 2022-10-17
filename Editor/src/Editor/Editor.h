@@ -8,6 +8,8 @@ class Editor : public VL::Application
 {
 public:
 
+	VL::Ref<VL::Scene> GetSelectedScene();
+
 	VL::Ref<Project> GetProject();
 
 	VL::Ref<VL::Window> GetWindow();
@@ -32,8 +34,6 @@ private:
 
 	void DrawProjectMenu();
 
-	void DrawSceneMenu();
-
 	VL::Ref<Project> _Project;
 
 	VL::Ref<VL::Window> _Window;
@@ -43,4 +43,6 @@ private:
 	VL::Container<Widget> _WidgetContainer;
 
 	VL::Input _Input;
+
+	std::string _SelectedScene = "";
 };

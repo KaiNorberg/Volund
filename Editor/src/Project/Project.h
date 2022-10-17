@@ -4,33 +4,23 @@ class Project
 {
 public:
 
-	bool Loaded();
+	void Save();
 
-	void Save(const std::string& Filepath);
+	std::string GetFilepath();
 
-	void Load(const std::filesystem::path& Filepath);
+	VL::Ref<VL::Scene> GetScene(const std::string& Filepath);
 
-	bool SceneLoaded();
+	std::unordered_map<std::string, VL::Ref<VL::Scene>>::iterator begin();
+	std::unordered_map<std::string, VL::Ref<VL::Scene>>::iterator end();
 
-	void LoadScene(const std::string& Filepath);
+	std::unordered_map<std::string, VL::Ref<VL::Scene>>::const_iterator begin() const;
+	std::unordered_map<std::string, VL::Ref<VL::Scene>>::const_iterator end() const;
 
-	void SaveScene(const std::string& Filepath);
-		
-	std::string GetVMLFilepath();
-
-	std::string GetSceneFilepath();
-
-	const VL::Ref<VL::VML> GetVML() const;
-
-	const VL::Ref<VL::Scene> GetScene() const;
+	Project(const std::string& Filepath);
 
 private:
+	
+	std::unordered_map<std::string, VL::Ref<VL::Scene>> _Scenes;
 
-	VL::Ref<VL::VML> _VML;
-
-	VL::Ref<VL::Scene> _Scene;
-
-	std::string _VMLFilepath;
-
-	std::string _SceneFilepath;
+	std::string _Filepath;
 };

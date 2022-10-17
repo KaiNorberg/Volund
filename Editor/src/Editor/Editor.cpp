@@ -22,6 +22,18 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+VL::Ref<VL::Scene> Editor::GetSelectedScene()
+{
+	if (this->_Project != nullptr)
+	{
+		return this->_Project->GetScene(this->_SelectedScene);
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+
 VL::Ref<Project> Editor::GetProject()
 {
 	return this->_Project;
@@ -50,8 +62,6 @@ void Editor::OnRun()
 
 	VL::RenderingAPI::Init();
 	VL::Renderer::Init(new VL::ForwardRenderer());
-
-	this->_Project = VL::Ref<Project>(new Project());
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -98,13 +108,16 @@ void Editor::OnEvent(VL::Event* E)
 
 	this->HandleShortcuts();
 
-	for (const auto& View : this->_WidgetContainer)
+	if (this->_Project != nullptr)
 	{
-		for (const auto& Widget : View)
+		for (const auto& View : this->_WidgetContainer)
 		{
-			if (Widget->_IsActive)
+			for (const auto& Widget : View)
 			{
-				Widget->OnEvent(E);
+				if (Widget->_IsActive)
+				{
+					Widget->OnEvent(E);
+				}
 			}
 		}
 	}
@@ -129,18 +142,19 @@ void Editor::Draw(VL::TimeStep TS)
 	if (this->BeginDockSpace())
 	{
 		this->DrawMenuBar();
-
-		for (const auto& View : this->_WidgetContainer)
+		if (this->_Project != nullptr)
 		{
-			for (const auto& Widget : View)
+			for (const auto& View : this->_WidgetContainer)
 			{
-				if (Widget->_IsActive)
+				for (const auto& Widget : View)
 				{
-					Widget->Draw(TS);
+					if (Widget->_IsActive)
+					{
+						Widget->Draw(TS);
+					}
 				}
 			}
 		}
-
 	}
 
 	ImGui::End();
@@ -151,55 +165,24 @@ void Editor::Draw(VL::TimeStep TS)
 
 void Editor::HandleShortcuts()
 {
-	if (this->_Input.IsHeld(VOLUND_KEY_CONTROL))
+	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
-		if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
+		if (this->_Input.IsPressed('N'))
 		{
-			if (this->_Input.IsPressed('N'))
-			{
-				//auto Editor = GetLayer<EditorLayer>();
-				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
-			}
-
-			if (this->_Input.IsPressed('O'))
-			{
-				this->_Project->Load(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
-			}
-
-			if (this->_Project->Loaded())
-			{
-				if (this->_Input.IsPressed('S'))
-				{
-					this->_Project->Save(this->_Project->GetVMLFilepath());
-				}
-
-				if (this->_Input.IsPressed('A'))
-				{
-					this->_Project->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
-				}
-			}
+			//auto Editor = GetLayer<EditorLayer>();
+			//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 		}
-		else if (this->_Project->Loaded())
+
+		if (this->_Input.IsPressed('O'))
 		{
-			if (this->_Input.IsPressed('N'))
-			{
-				//auto Editor = GetLayer<EditorLayer>();
-				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
-			}
+			this->_Project = VL::Ref<Project>(new Project(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window)));
+		}
 
-			if (this->_Input.IsPressed('O'))
-			{
-				this->_Project->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
-			}
-
+		if (this->_Project != nullptr)
+		{
 			if (this->_Input.IsPressed('S'))
 			{
-				this->_Project->SaveScene(this->_Project->GetSceneFilepath());
-			}
-
-			if (this->_Input.IsPressed('A'))
-			{
-				this->_Project->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
+				this->_Project->Save();
 			}
 		}
 	}
@@ -248,8 +231,6 @@ void Editor::DrawMenuBar()
 		{
 			this->DrawProjectMenu();
 
-			this->DrawSceneMenu();
-
 			ImGui::EndMenu();
 		}
 
@@ -269,14 +250,29 @@ void Editor::DrawMenuBar()
 			ImGui::EndMenu();
 		}
 
-		auto Project = this->_Project;
-
-		if (Project != nullptr)
+		if (this->_Project != nullptr)
 		{
-			std::string ProjectName = std::filesystem::path(Project->GetVMLFilepath()).filename().string();
+			if (ImGui::BeginMenu("Project"))
+			{
+				if (ImGui::BeginMenu("Select Scene"))
+				{
+					for (auto& [Filepath, Scene] : (*this->_Project))
+					{
+						if (ImGui::MenuItem(Filepath.c_str()))
+						{
+							this->_SelectedScene = Filepath;
+						}
+					}
+
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMenu();
+			}
+			/*std::string ProjectName = std::filesystem::path(Project->GetVMLFilepath()).filename().string();
 			std::string SceneName = std::filesystem::path(Project->GetSceneFilepath()).filename().string();
 			ImGui::SameLine(ImGui::GetWindowWidth() - ImGui::CalcTextSize(ProjectName.c_str()).x - ImGui::CalcTextSize(SceneName.c_str()).x - 50);
-			ImGui::Text("%s | %s", ProjectName.c_str(), SceneName.c_str());
+			ImGui::Text("%s | %s", ProjectName.c_str(), SceneName.c_str());*/
 		}
 
 		ImGui::EndMenuBar();
@@ -287,62 +283,25 @@ void Editor::DrawProjectMenu()
 {
 	if (ImGui::BeginMenu("Project"))
 	{
-		if (ImGui::MenuItem("New", "Ctrl+Shift+N"))
+		if (ImGui::MenuItem("New", "Shift+N"))
 		{
 			//auto Editor = GetLayer<EditorLayer>();
 			//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
 		}
 
-		if (ImGui::MenuItem("Open", "Ctrl+Shift+O"))
+		if (ImGui::MenuItem("Open", "Shift+O"))
 		{
-			this->_Project->Load(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
+			this->_Project = VL::Ref<Project>(new Project(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window)));
 		}
 
-		if (this->_Project->Loaded())
+		if (this->_Project != nullptr)
 		{
-			if (ImGui::MenuItem("Save", "Ctrl+Shift+S"))
+			if (ImGui::MenuItem("Save", "Shift+S"))
 			{
-				this->_Project->Save(this->_Project->GetVMLFilepath());
-			}
-
-			if (ImGui::MenuItem("Save As", "Ctrl+Shift+A"))
-			{
-				this->_Project->Save(FileDialog::SaveFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
+				this->_Project->Save();
 			}
 		}
 
 		ImGui::EndMenu();
-	}
-}
-
-void Editor::DrawSceneMenu()
-{
-	if (this->_Project->Loaded())
-	{
-		if (ImGui::BeginMenu("Scene"))
-		{
-			if (ImGui::MenuItem("New", "Ctrl+N"))
-			{
-				//auto Editor = GetLayer<EditorLayer>();
-				//Editor->LoadProject(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window));
-			}
-
-			if (ImGui::MenuItem("Open", "Ctrl+O"))
-			{
-				this->_Project->LoadScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
-			}
-
-			if (ImGui::MenuItem("Save", "Ctrl+S"))
-			{
-				this->_Project->SaveScene(this->_Project->GetSceneFilepath());
-			}
-
-			if (ImGui::MenuItem("Save As", "Ctrl+A"))
-			{
-				this->_Project->SaveScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
-			}
-
-			ImGui::EndMenu();
-		}
 	}
 }

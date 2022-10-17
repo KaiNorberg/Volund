@@ -14,7 +14,7 @@ const char* EntitiesWidget::GetName()
 
 void EntitiesWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_Editor->GetProject()->GetScene();
+	auto Scene = this->_Editor->GetSelectedScene();
 
 	if (ImGui::Begin("Entities", &this->_IsActive))
 	{
@@ -53,7 +53,7 @@ void EntitiesWidget::Draw(VL::TimeStep TS)
 		}
 		else
 		{
-			ImGui::Text("No Scene Loaded!");
+			ImGui::Text("No Scene Selected!");
 		}
 
 	}

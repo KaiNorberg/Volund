@@ -3,111 +3,71 @@
 
 #include <windows.h>
 
-bool Project::Loaded()
+void Project::Save()
 {
-	return !this->_VMLFilepath.empty();
-}
+	VL::VML VML;
 
-void Project::Save(const std::string& Filepath)
-{
-	if (Filepath.empty())
+	VL::VMLEntry Scenes;
+
+	for (auto& [Filepath, Scene] : this->_Scenes)
 	{
-		return;
+		Scenes.PushBack(Filepath);
 	}
+	VML.PushBack("Scenes", Scenes);
 
-	this->_VML->Write(Filepath);
-}
-
-void Project::Load(const std::filesystem::path& Filepath)
-{
-	if (Filepath.empty())
+	for (auto& [Filepath, Scene] : this->_Scenes)
 	{
-		return;
+		Scene->Serialize(Filepath);
 	}
-
-	this->_VMLFilepath = Filepath.string();
-	this->_VML = VL::Ref<VL::VML>(new VL::VML(this->_VMLFilepath));
-
-	std::filesystem::current_path(Filepath.parent_path());
-
-	this->_SceneFilepath = this->_VML->Get("MainScene").String();
-	this->_Scene = VL::Scene::Deserialize(this->_SceneFilepath);
 }
 
-bool Project::SceneLoaded()
+std::string Project::GetFilepath()
 {
-	return !this->_SceneFilepath.empty();
+	return this->_Filepath;
 }
 
-void Project::LoadScene(const std::string& Filepath)
+VL::Ref<VL::Scene> Project::GetScene(const std::string& Filepath)
 {
-	if (Filepath.empty())
+	if (this->_Scenes.contains(Filepath))
 	{
-		return;
-	}
-
-	if (this->_Scene != nullptr)
-	{
-		uint32_t Confirmation =
-			MessageBox(NULL, (LPCWSTR)L"Do you wish to save the current scene?\nAny unsaved changes will be lost!",
-				(LPCWSTR)L"Account Details", MB_ICONQUESTION | MB_YESNOCANCEL | MB_DEFBUTTON2);
-
-		switch (Confirmation)
-		{
-		case IDYES:
-		{
-			this->_Scene->Serialize(this->_SceneFilepath);
-			this->_Scene = VL::Scene::Deserialize(Filepath);
-			this->_SceneFilepath = Filepath;
-
-		}
-		break;
-		case IDNO:
-		{
-			this->_Scene = VL::Scene::Deserialize(Filepath);
-			this->_SceneFilepath = Filepath;
-		}
-		break;
-		default:
-		{
-				
-		}
-		break;
-		}
+		return this->_Scenes[Filepath];
 	}
 	else
 	{
-		this->_Scene = VL::Scene::Deserialize(Filepath);
-		this->_SceneFilepath = Filepath;
+		return nullptr;
 	}
 }
 
-void Project::SaveScene(const std::string& Filepath)
+std::unordered_map<std::string, VL::Ref<VL::Scene>>::iterator Project::begin()
 {
-	if (Filepath.empty())
+	return this->_Scenes.begin();
+}
+
+std::unordered_map<std::string, VL::Ref<VL::Scene>>::iterator Project::end()
+{
+	return this->_Scenes.end();
+}
+
+std::unordered_map<std::string, VL::Ref<VL::Scene>>::const_iterator Project::begin() const
+{
+	return this->_Scenes.begin();
+}
+
+std::unordered_map<std::string, VL::Ref<VL::Scene>>::const_iterator Project::end() const
+{
+	return this->_Scenes.end();
+}
+
+Project::Project(const std::string& Filepath)
+{
+	std::filesystem::current_path(((std::filesystem::path)Filepath).parent_path());
+
+	VL::VML VML = VL::VML(Filepath);
+
+	VL::VMLEntry& Scenes = VML.Get("Scenes");
+
+	for (int i = 0; i < Scenes.Size(); i++)
 	{
-		return;
+		this->_Scenes[Scenes[i]] = VL::Scene::Deserialize(Scenes[i]);
 	}
-
-	this->_Scene->Serialize(Filepath);
-}
-
-std::string Project::GetVMLFilepath()
-{
-	return this->_VMLFilepath;
-}
-
-std::string Project::GetSceneFilepath()
-{
-	return this->_SceneFilepath;
-}
-
-const VL::Ref<VL::VML> Project::GetVML() const
-{
-	return this->_VML;
-}
-
-const VL::Ref<VL::Scene> Project::GetScene() const
-{
-	return this->_Scene;
 }
