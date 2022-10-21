@@ -254,7 +254,12 @@ void Editor::DrawMenuBar()
 		{
 			if (ImGui::BeginMenu("Project"))
 			{
-				if (ImGui::BeginMenu("Select Scene"))
+				if (ImGui::MenuItem("Add"))
+				{
+					this->_Project->AddScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
+				}
+
+				if (ImGui::BeginMenu("Select"))
 				{
 					for (auto& [Filepath, Scene] : (*this->_Project))
 					{
@@ -267,12 +272,26 @@ void Editor::DrawMenuBar()
 					ImGui::EndMenu();
 				}
 
+				if (ImGui::BeginMenu("Remove"))
+				{
+					for (auto& [Filepath, Scene] : (*this->_Project))
+					{
+						if (ImGui::MenuItem(Filepath.c_str()))
+						{
+							this->_Project->RemoveScene(Filepath);
+						}
+					}
+
+					ImGui::EndMenu();
+				}
+
 				ImGui::EndMenu();
 			}
-			/*std::string ProjectName = std::filesystem::path(Project->GetVMLFilepath()).filename().string();
-			std::string SceneName = std::filesystem::path(Project->GetSceneFilepath()).filename().string();
+
+			std::string ProjectName = std::filesystem::path(this->_Project->GetFilepath()).filename().string();
+			std::string SceneName = std::filesystem::path(this->_SelectedScene).filename().string();
 			ImGui::SameLine(ImGui::GetWindowWidth() - ImGui::CalcTextSize(ProjectName.c_str()).x - ImGui::CalcTextSize(SceneName.c_str()).x - 50);
-			ImGui::Text("%s | %s", ProjectName.c_str(), SceneName.c_str());*/
+			ImGui::Text("%s | %s", ProjectName.c_str(), SceneName.c_str());
 		}
 
 		ImGui::EndMenuBar();

@@ -8,6 +8,10 @@ public:
 
 	std::string GetFilepath();
 
+	void AddScene(const std::string& Filepath);
+
+	void RemoveScene(const std::string& Filepath);
+
 	VL::Ref<VL::Scene> GetScene(const std::string& Filepath);
 
 	std::unordered_map<std::string, VL::Ref<VL::Scene>>::iterator begin();

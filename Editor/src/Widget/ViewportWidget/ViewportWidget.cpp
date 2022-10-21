@@ -200,7 +200,7 @@ void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetRect(ViewPos.x, ViewPos.y, ViewSize.x, ViewSize.y);
 
-	if (_SelectedEntity != NULL)
+	if (_SelectedEntity != NULL && Scene->HasComponent<VL::Transform>(_SelectedEntity))
 	{
 		VL::Ref<VL::Transform> EntityTransform = Scene->GetComponent<VL::Transform>(_SelectedEntity);
 		VL::Mat4x4 ModelMatrix = EntityTransform->GetModelMatrix();

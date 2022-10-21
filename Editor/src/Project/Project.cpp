@@ -15,6 +15,8 @@ void Project::Save()
 	}
 	VML.PushBack("Scenes", Scenes);
 
+	VML.Write(this->_Filepath);
+
 	for (auto& [Filepath, Scene] : this->_Scenes)
 	{
 		Scene->Serialize(Filepath);
@@ -24,6 +26,23 @@ void Project::Save()
 std::string Project::GetFilepath()
 {
 	return this->_Filepath;
+}
+
+void Project::AddScene(const std::string& Filepath)
+{
+	if (!Filepath.empty())
+	{
+		std::string Filename = std::filesystem::proximate(std::filesystem::path(Filepath)).string();
+		this->_Scenes[Filename] = VL::Scene::Deserialize(Filepath);
+	}
+}
+
+void Project::RemoveScene(const std::string& Filepath)
+{
+	if (this->_Scenes.contains(Filepath))
+	{
+		this->_Scenes.erase(Filepath);
+	}
 }
 
 VL::Ref<VL::Scene> Project::GetScene(const std::string& Filepath)
@@ -60,6 +79,8 @@ std::unordered_map<std::string, VL::Ref<VL::Scene>>::const_iterator Project::end
 
 Project::Project(const std::string& Filepath)
 {
+	this->_Filepath = Filepath;
+
 	std::filesystem::current_path(((std::filesystem::path)Filepath).parent_path());
 
 	VL::VML VML = VL::VML(Filepath);
