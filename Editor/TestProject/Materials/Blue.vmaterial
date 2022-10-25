@@ -1,4 +1,4 @@
-Shader [ :/Simple.vshader ]
+Shader [ :/Shaders/Simple.vshader ]
 
 Values
 {

@@ -23,6 +23,7 @@ void AssetWidget::Draw(VL::TimeStep TS)
 
 			if (ImGui::TreeNode(":/"))
 			{
+				this->DrawResource(VL::Filesystem::GetGrandFatherResource());
 
 				ImGui::TreePop();
 			}
@@ -41,9 +42,19 @@ void AssetWidget::Draw(VL::TimeStep TS)
 	ImGui::End();
 }
 
+void AssetWidget::DrawResource(const VL::Resource* Resource)
+{
+	for (auto& [ChildName, ChildResource] : (*Resource))
+	{
+		{
+			HandleResourceEntry(ChildName, &ChildResource);
+		}
+	}
+}
+
 void AssetWidget::DrawDirectory(const std::filesystem::path& Directory)
 {
-	for (auto Directory : std::filesystem::directory_iterator(Directory))
+	for (auto& Directory : std::filesystem::directory_iterator(Directory))
 	{
 		if (Directory.is_directory())
 		{
@@ -51,11 +62,43 @@ void AssetWidget::DrawDirectory(const std::filesystem::path& Directory)
 		}
 	}
 
-	for (auto File : std::filesystem::directory_iterator(Directory))
+	for (auto& File : std::filesystem::directory_iterator(Directory))
 	{
 		if (!File.is_directory())
 		{
 			HandleDirectoryEntry(File);
+		}
+	}
+}
+
+void AssetWidget::HandleResourceEntry(const std::string& Name, const VL::Resource* Resource)
+{
+	static std::filesystem::path SelectedName;
+
+	if (Resource->IsDirectory())
+	{
+		if (ImGui::TreeNode(Name.c_str()))
+		{
+			this->DrawResource(Resource);
+
+			ImGui::TreePop();
+		}
+	}
+	else
+	{
+		bool Selected = SelectedName == Name;
+
+		if (ImGui::Selectable(Name.c_str(), Selected))
+		{
+			SelectedName = Name;
+		}
+
+		if (Selected)
+		{
+			if (ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+			{
+
+			}
 		}
 	}
 }

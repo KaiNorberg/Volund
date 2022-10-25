@@ -13,6 +13,8 @@
 #include "Scene/Scene.h"
 #include "Scene/Component/Components.h"
 
+#include "Filesystem/Filesystem.h"
+
 #include "Math/Math.h"
 #include "Math/Frustum.h"
 
