@@ -37,7 +37,7 @@ void ViewportWidget::Draw(VL::TimeStep TS)
 {	
 	if (ImGui::Begin("Viewport"))
 	{
-		if (this->_Editor->GetSelectedScene() != nullptr)
+		if (this->_Editor->GetScene() != nullptr)
 		{
 			if (this->_GameScene != nullptr)
 			{
@@ -52,7 +52,7 @@ void ViewportWidget::Draw(VL::TimeStep TS)
 				Align(ImGui::CalcTextSize("Play").x, 0.5f);
 				if (ImGui::Button("Play"))
 				{
-					this->_GameScene = VL::Scene::Copy(this->_Editor->GetSelectedScene());
+					this->_GameScene = VL::Scene::Copy(this->_Editor->GetScene());
 				}
 			}
 
@@ -159,7 +159,7 @@ void ViewportWidget::DrawSceneView(VL::TimeStep TS)
 	VL::Mat4x4 ProjectionMatrix = glm::perspective(glm::radians(70.0f), (float)ViewportSize.x / (float)ViewportSize.y, 0.1f, 1000.0f);
 	VL::Renderer::Begin(ViewMatrix, ProjectionMatrix);
 
-	auto Scene = this->_Editor->GetSelectedScene();
+	auto Scene = this->_Editor->GetScene();
 
 	auto TransformView = Scene->View<VL::Transform>();
 	auto MeshRendererView = Scene->View<VL::MeshRenderer>();

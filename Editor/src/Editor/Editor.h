@@ -8,11 +8,13 @@ class Editor : public VL::Application
 {
 public:
 
-	VL::Ref<VL::Scene> GetSelectedScene();
+	VL::Ref<VL::Scene> GetScene();
 
 	VL::Ref<Project> GetProject();
 
 	VL::Ref<VL::Window> GetWindow();
+
+	void LoadScene(const std::string& Filepath);
 
 	void OnRun() override;
 
@@ -36,6 +38,8 @@ private:
 
 	VL::Ref<Project> _Project;
 
+	VL::Ref<VL::Scene> _Scene;
+
 	VL::Ref<VL::Window> _Window;
 
 	VL::Ref<VL::Context> _Context;
@@ -44,5 +48,5 @@ private:
 
 	VL::Input _Input;
 
-	std::string _SelectedScene = "";
+	std::string _ScenePath = "";
 };

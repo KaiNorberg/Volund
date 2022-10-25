@@ -15,7 +15,7 @@ const char* InspectorWidget::GetName()
 
 void InspectorWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_Editor->GetSelectedScene();
+	auto Scene = this->_Editor->GetScene();
 
 	if (ImGui::Begin("Inspector", &this->_IsActive))
 	{
@@ -39,7 +39,7 @@ void InspectorWidget::Draw(VL::TimeStep TS)
 
 void InspectorWidget::DrawComponents()
 {
-	auto Scene = this->_Editor->GetSelectedScene();
+	auto Scene = this->_Editor->GetScene();
 
 	if (Scene->HasComponent<VL::Tag>(_SelectedEntity))
 	{
@@ -151,7 +151,7 @@ void InspectorWidget::DrawComponents()
 
 void InspectorWidget::DrawAddComponents()
 {
-	auto Scene = this->_Editor->GetSelectedScene();
+	auto Scene = this->_Editor->GetScene();
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 
@@ -200,7 +200,7 @@ void InspectorWidget::DrawAddComponents()
 
 void InspectorWidget::DrawComponentView(const std::vector<VL::Ref<VL::Component>>& ComponentView, std::string_view Name, std::function<void(VL::Ref<VL::Component>)> DrawFunction)
 {
-	auto Scene = this->_Editor->GetSelectedScene();
+	auto Scene = this->_Editor->GetScene();
 
 	for (auto& Component : ComponentView)
 	{

@@ -14,7 +14,7 @@ const char* EntitiesWidget::GetName()
 
 void EntitiesWidget::Draw(VL::TimeStep TS)
 {
-	auto Scene = this->_Editor->GetSelectedScene();
+	auto Scene = this->_Editor->GetScene();
 
 	if (ImGui::Begin("Entities", &this->_IsActive))
 	{

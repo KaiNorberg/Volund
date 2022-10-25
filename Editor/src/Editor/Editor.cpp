@@ -10,6 +10,7 @@
 #include "Widget/ViewportWidget/ViewportWidget.h"
 #include "Widget/InspectorWidget/InspectorWidget.h"
 #include "Widget/OutputWidget/OutputWidget.h"
+#include "Widget/AssetWidget/AssetWidget.h"
 
 #include <windows.h>
 
@@ -22,16 +23,9 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-VL::Ref<VL::Scene> Editor::GetSelectedScene()
+VL::Ref<VL::Scene> Editor::GetScene()
 {
-	if (this->_Project != nullptr)
-	{
-		return this->_Project->GetScene(this->_SelectedScene);
-	}
-	else
-	{
-		return nullptr;
-	}
+	return this->_Scene;
 }
 
 VL::Ref<Project> Editor::GetProject()
@@ -42,6 +36,12 @@ VL::Ref<Project> Editor::GetProject()
 VL::Ref<VL::Window> Editor::GetWindow()
 {
 	return this->_Window;
+}
+
+void Editor::LoadScene(const std::string& Filepath)
+{
+	this->_ScenePath = Filepath;
+	this->_Scene = VL::Scene::Deserialize(Filepath);
 }
 
 void Editor::OnRun()
@@ -65,8 +65,8 @@ void Editor::OnRun()
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
-	ImGuiIO& io = ImGui::GetIO();
 
+	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.Fonts->AddFontFromFileTTF("data/Fonts/OpenSans-Regular.ttf", 18.0f);
 	io.IniFilename = IniFilename.c_str();
@@ -82,6 +82,7 @@ void Editor::OnRun()
 	this->_WidgetContainer.PushBack(new ViewportWidget(this, true));
 	this->_WidgetContainer.PushBack(new InspectorWidget(this, true));
 	this->_WidgetContainer.PushBack(new OutputWidget(this, true));
+	this->_WidgetContainer.PushBack(new AssetWidget(this, true));
 
 	this->_Window->Show();
 }
@@ -252,44 +253,8 @@ void Editor::DrawMenuBar()
 
 		if (this->_Project != nullptr)
 		{
-			if (ImGui::BeginMenu("Project"))
-			{
-				if (ImGui::MenuItem("Add"))
-				{
-					this->_Project->AddScene(FileDialog::OpenFile("Volund Scene (*.vscene)\0*.vscene\0", this->_Window));
-				}
-
-				if (ImGui::BeginMenu("Select"))
-				{
-					for (auto& [Filepath, Scene] : (*this->_Project))
-					{
-						if (ImGui::MenuItem(Filepath.c_str()))
-						{
-							this->_SelectedScene = Filepath;
-						}
-					}
-
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Remove"))
-				{
-					for (auto& [Filepath, Scene] : (*this->_Project))
-					{
-						if (ImGui::MenuItem(Filepath.c_str()))
-						{
-							this->_Project->RemoveScene(Filepath);
-						}
-					}
-
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndMenu();
-			}
-
 			std::string ProjectName = std::filesystem::path(this->_Project->GetFilepath()).filename().string();
-			std::string SceneName = std::filesystem::path(this->_SelectedScene).filename().string();
+			std::string SceneName = std::filesystem::path(this->_ScenePath).filename().string();
 			ImGui::SameLine(ImGui::GetWindowWidth() - ImGui::CalcTextSize(ProjectName.c_str()).x - ImGui::CalcTextSize(SceneName.c_str()).x - 50);
 			ImGui::Text("%s | %s", ProjectName.c_str(), SceneName.c_str());
 		}
