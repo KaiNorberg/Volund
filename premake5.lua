@@ -74,10 +74,6 @@ project "Volund"
 		optimize "On"
 		runtime "Release"	
 		targetdir (TargetDir .. "/Volund")
-		postbuildcommands {			
-			"xcopy ..\\vendor\\glm\\** ..\\" .. TargetDir .. "\\Volund\\vendor\\glm /Q /E /Y /I /S",
-			"xcopy src\\**.h ..\\" .. TargetDir .. "\\Volund\\include /Q /E /Y /I /S"
-		}
 		
 project "Editor"
 	location "Editor"
@@ -147,8 +143,7 @@ project "Editor"
 		kind "WindowedApp"
 		targetdir (TargetDir .. "/Editor")
 		postbuildcommands {
-			"xcopy Standard\\* ..\\" .. TargetDir .. "\\Editor\\Standard /Q /E /Y /I /S",
-			"xcopy Data\\* ..\\" .. TargetDir .. "\\Editor\\Data /Q /E /Y /I /S"
+			"xcopy data\\fonts\\* ..\\" .. TargetDir .. "\\Editor\\data\\fonts /Q /E /Y /I /S"
 		}
 		
 project "Glad"

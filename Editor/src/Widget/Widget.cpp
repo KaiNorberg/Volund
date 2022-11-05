@@ -171,7 +171,7 @@ std::string Widget::FileSelectorControl(const std::string& Name, const std::stri
 	if (ImGui::Button(Default.c_str(), ButtonSize))
 	{
 		EndCombo();
-		return std::filesystem::relative(FileDialog::OpenFile(Filter, Owner), std::filesystem::current_path()).string();
+		return std::filesystem::relative(FileDialog::OpenFile(), std::filesystem::current_path()).string();
 	}
 
 	EndCombo();

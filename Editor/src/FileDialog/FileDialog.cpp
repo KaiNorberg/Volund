@@ -2,51 +2,57 @@
 #include "FileDialog.h"
 
 #include <windows.h>
-#include <commdlg.h>
+#include <shobjidl_core.h>
 
-std::string FileDialog::OpenFile(const char* Filter, VL::Ref<VL::Window> Owner)
+std::string FileDialog::OpenFolder()
 {
-	OPENFILENAMEA ofn;
-	CHAR szFile[260] = { 0 };
-	CHAR currentDir[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = (HWND)Owner->GetHandle();
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	if (GetCurrentDirectoryA(256, currentDir))
-		ofn.lpstrInitialDir = currentDir;
-	ofn.lpstrFilter = Filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST | OFN_NOCHANGEDIR;
-
-	if (GetOpenFileNameA(&ofn) == TRUE)
-		return ofn.lpstrFile;
-
-	return std::string();
+    return OpenDialog(FOS_PICKFOLDERS);
 }
 
-std::string FileDialog::SaveFile(const char* Filter, VL::Ref<VL::Window> Owner)
+std::string FileDialog::OpenFile()
 {
-	OPENFILENAMEA ofn;
-	CHAR szFile[260] = { 0 };
-	CHAR currentDir[256] = { 0 };
-	ZeroMemory(&ofn, sizeof(OPENFILENAME));
-	ofn.lStructSize = sizeof(OPENFILENAME);
-	ofn.hwndOwner = (HWND)Owner->GetHandle();
-	ofn.lpstrFile = szFile;
-	ofn.nMaxFile = sizeof(szFile);
-	if (GetCurrentDirectoryA(256, currentDir))
-		ofn.lpstrInitialDir = currentDir;
-	ofn.lpstrFilter = Filter;
-	ofn.nFilterIndex = 1;
-	ofn.Flags = OFN_PATHMUSTEXIST | OFN_OVERWRITEPROMPT | OFN_NOCHANGEDIR;
+	return OpenDialog();
+}
 
-	// Sets the default extension by extracting it from the filter
-	ofn.lpstrDefExt = strchr(Filter, '\0') + 1;
+std::string FileDialog::OpenDialog(FILEOPENDIALOGOPTIONS Options)
+{
+    std::string Output;
 
-	if (GetSaveFileNameA(&ofn) == TRUE)
-		return ofn.lpstrFile;
+    IFileOpenDialog* pFileOpen;
 
-	return std::string();
+    // Create the FileOpenDialog object.
+    HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
+        IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
+    if (SUCCEEDED(hr))
+    {
+        // Show the Open dialog box.
+        pFileOpen->SetOptions(Options);
+        hr = pFileOpen->Show(NULL);
+
+        // Get the file name from the dialog box.
+        if (SUCCEEDED(hr))
+        {
+            IShellItem* pItem;
+            hr = pFileOpen->GetResult(&pItem);
+            if (SUCCEEDED(hr))
+            {
+                PWSTR pszFilePath;
+                hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
+
+                // Display the file name to the user.
+                if (SUCCEEDED(hr))
+                {
+                    std::wstring Temp = pszFilePath;
+                    Output = std::string(Temp.begin(), Temp.end());
+                    CoTaskMemFree(pszFilePath);
+                }
+                pItem->Release();
+            }
+        }
+        pFileOpen->Release();
+    }
+    CoUninitialize();
+
+    return Output;
 }

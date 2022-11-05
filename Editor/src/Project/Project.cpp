@@ -5,9 +5,7 @@
 
 void Project::Save()
 {
-	VL::VML VML;
-
-	VML.Write(this->_Filepath);
+	this->VML.Write(this->_Filepath);
 }
 
 std::string Project::GetFilepath()
@@ -15,11 +13,27 @@ std::string Project::GetFilepath()
 	return this->_Filepath;
 }
 
-Project::Project(const std::string& Filepath)
+VL::Ref<Project> Project::Load(const std::string& Filepath)
 {
-	this->_Filepath = Filepath;
+	VL::Ref<Project> NewProject = VL::Ref<Project>(new Project());
 
-	std::filesystem::current_path(((std::filesystem::path)Filepath).parent_path());
+	NewProject->_Filepath = Filepath;
+	NewProject->VML = VL::VML(Filepath);
 
-	VL::VML VML = VL::VML(Filepath);
+	return NewProject;
+}
+
+VL::Ref<Project> Project::Create(const std::string& Filepath, const std::string& Name)
+{
+	VL::Ref<Project> NewProject = VL::Ref<Project>(new Project());
+
+	NewProject->_Filepath = Filepath + "/" + Name;
+
+	std::filesystem::create_directory(NewProject->_Filepath);
+
+	
+
+	NewProject->VML.Write(NewProject->_Filepath + "/" + Name + ".vproj");
+
+	return NewProject;
 }

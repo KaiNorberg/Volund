@@ -8,13 +8,7 @@ class Editor : public VL::Application
 {
 public:
 
-	VL::Ref<VL::Scene> GetScene();
-
-	VL::Ref<Project> GetProject();
-
 	VL::Ref<VL::Window> GetWindow();
-
-	void LoadScene(const std::string& Filepath);
 
 	void OnRun() override;
 
@@ -26,19 +20,21 @@ public:
 
 private:	
 
-	void Draw(VL::TimeStep TS);
-
-	void HandleShortcuts();
-
 	bool BeginDockSpace();
+
+	void Draw(VL::TimeStep TS);
 
 	void DrawMenuBar();
 
 	void DrawProjectMenu();
 
-	VL::Ref<Project> _Project;
+	void HandleShortcuts();
 
-	VL::Ref<VL::Scene> _Scene;
+	bool SetupNeeded();
+
+	void RunSetup();
+
+	VL::Ref<Project> _Project;
 
 	VL::Ref<VL::Window> _Window;
 
@@ -47,6 +43,4 @@ private:
 	VL::Container<Widget> _WidgetContainer;
 
 	VL::Input _Input;
-
-	std::string _ScenePath = "";
 };

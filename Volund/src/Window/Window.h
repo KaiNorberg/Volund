@@ -47,6 +47,8 @@ namespace Volund
 
 		float GetAspectRatio() const;
 
+		void* GetInstance() const;
+
 		void* GetHandle() const;
 
 		void* GetDeviceContext() const;
