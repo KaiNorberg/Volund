@@ -28,7 +28,7 @@ bool ProgressDialog::Update()
 
 		ImVec2 ScreenSize = ImGui::GetWindowSize();
 
-		if (ImGui::Begin("ProgressDialog"))
+		if (ImGui::Begin("Please wait...", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 		{
 			ImVec2 WindowSize = ImVec2(250, 100);
 			float SpinnerRadius = WindowSize.y / 4;
@@ -40,7 +40,7 @@ bool ProgressDialog::Update()
 
 			ImGui::SameLine();
 
-			ImGui::SetCursorPosY(WindowSize.y / 2 - ImGui::GetTextLineHeight() / 2);
+			ImGui::SetCursorPosY(WindowSize.y / 2 - ImGui::GetTextLineHeight() / 2 + 4);
 
 			ImGui::Text(_CatchMessage.c_str());		
 		}

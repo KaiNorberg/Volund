@@ -6,6 +6,7 @@
 
 #include "FileDialog/FileDialog.h"
 #include "ProgressDialog/ProgressDialog.h"
+#include "TextInputDialog/TextInputDialog.h"
 
 #include <windows.h>
 
@@ -58,8 +59,6 @@ void Editor::OnRun()
 	ImGui_ImplOpenGL3_Init();
 
 	this->_Window->Show();
-
-	this->OnUpdate(0.0f);
 
 	if (this->SetupNeeded())
 	{
@@ -155,20 +154,20 @@ void Editor::Draw(VL::TimeStep TS)
 	if (this->BeginDockSpace())
 	{
 		this->DrawMenuBar();
-
-		if (!ProgressDialog::Update())
+		
+		for (const auto& View : this->_WidgetContainer)
 		{
-			for (const auto& View : this->_WidgetContainer)
+			for (const auto& Widget : View)
 			{
-				for (const auto& Widget : View)
+				if (Widget->_IsActive)
 				{
-					if (Widget->_IsActive)
-					{
-						Widget->Draw(TS);
-					}
+					Widget->Draw(TS);
 				}
 			}
 		}
+
+		ProgressDialog::Update();
+		TextInputDialog::Update();
 	}
 
 	ImGui::End();
@@ -223,16 +222,23 @@ void Editor::DrawProjectMenu()
 	{
 		if (ImGui::MenuItem("New", "Shift+N"))
 		{
-			std::string NewPath = FileDialog::OpenFolder();
-			if (NewPath != "")
+			TextInputDialog::Start([this](const std::string& Message)
 			{
-				this->_Project = Project::Create(NewPath, "TestName");
-			}
+				std::string NewPath = FileDialog::OpenFolder();
+				if (NewPath != "")
+				{
+					this->_Project = Project::Create(NewPath, Message);
+				}
+			}, "Enter Project Name");
 		}
 
 		if (ImGui::MenuItem("Open", "Shift+O"))
 		{
-			//this->_Project = VL::Ref<Project>(new Project(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window)));
+			std::string NewPath = FileDialog::OpenFolder();
+			if (NewPath != "")
+			{
+				this->_Project = Project::Load(NewPath);
+			}
 		}
 
 		if (this->_Project != nullptr)
@@ -253,16 +259,23 @@ void Editor::HandleShortcuts()
 	{
 		if (this->_Input.IsPressed('N'))
 		{
-			std::string NewPath = FileDialog::OpenFolder();
-			if (NewPath != "")
+			TextInputDialog::Start([this](const std::string& Message)
 			{
-				this->_Project = Project::Create(NewPath, "TestName");
-			}
+				std::string NewPath = FileDialog::OpenFolder();
+				if (NewPath != "")
+				{
+					this->_Project = Project::Create(NewPath, Message);
+				}
+			}, "Enter Project Name");
 		}
 
 		if (this->_Input.IsPressed('O'))
 		{
-			//this->_Project = VL::Ref<Project>(new Project(FileDialog::OpenFile("Volund Project (*.vproj)\0*.vproj\0", this->_Window)));
+			std::string NewPath = FileDialog::OpenFolder();
+			if (NewPath != "")
+			{
+				this->_Project = Project::Load(NewPath);
+			}
 		}
 
 		if (this->_Project != nullptr)
