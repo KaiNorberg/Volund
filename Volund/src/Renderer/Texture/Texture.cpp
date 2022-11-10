@@ -12,6 +12,11 @@ namespace Volund
 		return this->_Filepath;
 	}
 
+	uint32_t Texture::GetID() const
+	{
+		return this->_ID;
+	}
+
 	uint32_t Texture::GetWidth() const
 	{
 		return this->_Width;

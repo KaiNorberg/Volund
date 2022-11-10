@@ -45,6 +45,4 @@ protected:
 	static VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
 
 	Editor* _Editor = nullptr;
-
-	static inline VL::Entity _SelectedEntity = NULL;
 };

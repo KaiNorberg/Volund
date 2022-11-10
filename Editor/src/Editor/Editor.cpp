@@ -18,8 +18,14 @@
 #include "ImGuiStyle.h"
 
 #include "Widget/OutputWidget/OutputWidget.h"
+#include "Widget/ExplorerWidget/ExplorerWidget.h"
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
+VL::Ref<Project> Editor::GetProject()
+{
+	return this->_Project;
+}
 
 VL::Ref<VL::Window> Editor::GetWindow()
 {
@@ -61,6 +67,7 @@ void Editor::OnRun()
 	ImGui_ImplOpenGL3_Init();
 
 	this->_WidgetContainer.PushBack(new OutputWidget(this, true));
+	this->_WidgetContainer.PushBack(new ExplorerWidget(this, true));
 
 	this->_Window->Show();
 }

@@ -15,6 +15,5 @@ namespace Volund
 		~OpenGLTexture() override;
 
 	private:
-		uint32_t _ID = 0;
 	};
 }

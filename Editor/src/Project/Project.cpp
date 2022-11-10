@@ -17,6 +17,11 @@ std::string Project::GetFilepath()
 
 VL::Ref<Project> Project::Load(const std::string& Filepath)
 {
+	if (Filepath.contains('.'))
+	{
+		return nullptr;
+	}
+
 	VL::Ref<Project> NewProject = VL::Ref<Project>(new Project());
 
 	NewProject->_Filepath = Filepath;
@@ -38,20 +43,27 @@ VL::Ref<Project> Project::Create(const std::string& Filepath, const std::string&
 		ProgressDialog::SetMessage("Creating directories...");
 
 		std::string VendorPath = NewProject->_Filepath + "\\vendor";
+		std::string ContentPath = NewProject->_Filepath + "\\content";
 		std::string PremakePath = VendorPath + "\\premake";
 		std::string TempPath = NewProject->_Filepath + "\\temp";
 
 		std::filesystem::create_directory(VendorPath);
+		std::filesystem::create_directory(ContentPath);
 		std::filesystem::create_directory(PremakePath);
 		std::filesystem::create_directory(TempPath);
 
+		std::string PremakeZipPath = TempPath + "\\premake5.zip";
+
 		ProgressDialog::SetMessage("Downloading premake...");
 
-		std::string PremakeZipPath = TempPath + "\\premake5.zip";
 		std::string CurlCommand = "curl -s -L https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-windows.zip --output " + PremakeZipPath;
-		std::string TarCommand = "tar.exe -xf " + PremakeZipPath + " -C " + TempPath;
 
 		system(CurlCommand.c_str());
+
+		ProgressDialog::SetMessage("Installing premake...");
+
+		std::string TarCommand = "tar.exe -xf " + PremakeZipPath + " -C " + TempPath;
+
 		system(TarCommand.c_str());
 
 		std::filesystem::copy(PremakeZipPath, PremakePath + "\\premake5.exe");

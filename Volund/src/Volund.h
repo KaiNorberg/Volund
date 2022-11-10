@@ -9,6 +9,7 @@
 #include "Renderer/ForwardRenderer.h"
 #include "Renderer/Framebuffer/Framebuffer.h"
 #include "Renderer/Context/Context.h"
+#include "Renderer/Texture/Texture.h"
 
 #include "Scene/Scene.h"
 #include "Scene/Component/Components.h"

@@ -143,7 +143,7 @@ project "Editor"
 		kind "WindowedApp"
 		targetdir (TargetDir .. "/Editor")
 		postbuildcommands {
-			"xcopy data\\fonts\\* ..\\" .. TargetDir .. "\\Editor\\data\\fonts /Q /E /Y /I /S"
+			"xcopy data\\* ..\\" .. TargetDir .. "\\Editor\\data /Q /E /Y /I /S"
 		}
 		
 project "Glad"

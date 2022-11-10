@@ -8,6 +8,8 @@ class Editor : public VL::Application
 {
 public:
 
+	VL::Ref<Project> GetProject();
+
 	VL::Ref<VL::Window> GetWindow();
 
 	void OnRun() override;
