@@ -9,7 +9,7 @@ void ProgressDialog::SetMessage(const std::string& Text)
 	_CatchMessage = Text;
 }
 
-void ProgressDialog::Start(void(*Catch)(), const std::string& Text)
+void ProgressDialog::Start(std::function<void(void)> Catch, const std::string& Text)
 {
 	_CatchMessage = Text;
 	_CatchFuture = std::async(std::launch::async, Catch);

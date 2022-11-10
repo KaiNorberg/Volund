@@ -6,7 +6,7 @@ public:
 
 	static void SetMessage(const std::string& Text);
 
-	static void Start(void(*Catch)(), const std::string& Text);
+	static void Start(std::function<void(void)> Catch, const std::string& Text);
 
 	static bool Update();
 

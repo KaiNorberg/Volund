@@ -3,12 +3,19 @@
 
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <misc/cpp/imgui_stdlib.h>
 
-void TextInputDialog::Start(std::function<void(const std::string&)> Catch, const std::string& Message)
+void TextInputDialog::Start(std::function<void(void)> Catch, const std::string& Message)
 {
 	_Catch = Catch;
 	_Message = Message;
 	_ShouldDraw = true;
+	_Text = "";
+}
+
+std::string TextInputDialog::GetText()
+{
+	return _Text;
 }
 
 bool TextInputDialog::Update()
@@ -34,12 +41,14 @@ bool TextInputDialog::Update()
 			ImGui::Text(_Message.c_str());
 
 			ImGui::PushItemWidth(WindowSize.x);
-			static char Text[124];
-			if (ImGui::InputText("###", Text, 124, ImGuiInputTextFlags_EnterReturnsTrue))
+			if (ImGui::InputText("###TextInput", &_Text, ImGuiInputTextFlags_EnterReturnsTrue))
 			{
-				_Catch(Text);
-				_ShouldDraw = false;
-				_Catch = nullptr;
+				if (!_Text.empty())
+				{
+					_Catch();
+					_ShouldDraw = false;
+					_Catch = nullptr;
+				}
 			}
 			ImGui::PopItemWidth();
 
@@ -48,9 +57,12 @@ bool TextInputDialog::Update()
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + WindowSize.x / 2 - ButtonSize.x - 8);
 			if (ImGui::Button("Ok", ButtonSize))
 			{
-				_Catch(Text);
-				_ShouldDraw = false;
-				_Catch = nullptr;
+				if (!_Text.empty())
+				{
+					_Catch();
+					_ShouldDraw = false;
+					_Catch = nullptr;
+				}
 			}
 			ImGui::SameLine();
 			if (ImGui::Button("Cancel", ButtonSize))

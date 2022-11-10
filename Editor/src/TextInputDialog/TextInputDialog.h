@@ -1,10 +1,14 @@
 #pragma once
 
+#define TEXTINPUTDIALOG_LENGTH 124
+
 class TextInputDialog
 {
 public:
 
-	static void Start(std::function<void(const std::string&)> Catch, const std::string& Message);
+	static void Start(std::function<void(void)> Catch, const std::string& Message);
+
+	static std::string GetText();
 
 	static bool Update();
 
@@ -12,8 +16,10 @@ private:
 
 	static inline bool _ShouldDraw = false;
 
+	static inline std::string _Text;
+
 	static inline std::string _Message;
 
-	static inline std::function<void(const std::string&)> _Catch;
+	static inline std::function<void(void)> _Catch;
 };
 

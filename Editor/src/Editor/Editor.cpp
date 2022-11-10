@@ -59,11 +59,6 @@ void Editor::OnRun()
 	ImGui_ImplOpenGL3_Init();
 
 	this->_Window->Show();
-
-	if (this->SetupNeeded())
-	{
-		this->RunSetup();
-	}
 }
 
 void Editor::OnTerminate()
@@ -135,7 +130,7 @@ bool Editor::BeginDockSpace()
 		ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
 
 		return true;
-	}
+	} 
 	else
 	{
 		ImGui::PopStyleVar(3);
@@ -222,12 +217,12 @@ void Editor::DrawProjectMenu()
 	{
 		if (ImGui::MenuItem("New", "Shift+N"))
 		{
-			TextInputDialog::Start([this](const std::string& Message)
+			TextInputDialog::Start([this]()
 			{
 				std::string NewPath = FileDialog::OpenFolder();
 				if (NewPath != "")
 				{
-					this->_Project = Project::Create(NewPath, Message);
+					this->_Project = Project::Create(NewPath, TextInputDialog::GetText());
 				}
 			}, "Enter Project Name");
 		}
@@ -259,12 +254,12 @@ void Editor::HandleShortcuts()
 	{
 		if (this->_Input.IsPressed('N'))
 		{
-			TextInputDialog::Start([this](const std::string& Message)
+			TextInputDialog::Start([this]()
 			{
 				std::string NewPath = FileDialog::OpenFolder();
 				if (NewPath != "")
 				{
-					this->_Project = Project::Create(NewPath, Message);
+					this->_Project = Project::Create(NewPath, TextInputDialog::GetText());
 				}
 			}, "Enter Project Name");
 		}
@@ -286,43 +281,4 @@ void Editor::HandleShortcuts()
 			}
 		}
 	}
-}
-
-bool Editor::SetupNeeded()
-{
-	if (!std::filesystem::exists("data/vendor/premake/premake5.exe"))
-	{
-		return true;
-	}
-
-	return false;
-}
-
-void Editor::RunSetup()
-{
-	ProgressDialog::Start([]()
-	{
-		ProgressDialog::SetMessage("Cleaning up...");
-
-		if (std::filesystem::exists("data/vendor"))
-		{
-			std::filesystem::remove_all("data/vendor");
-		}
-
-		ProgressDialog::SetMessage("Creating directories...");
-
-		std::filesystem::create_directory("data/vendor");
-		std::filesystem::create_directory("data/vendor/premake");
-		std::filesystem::create_directory("data/vendor/premake/temp");
-
-		ProgressDialog::SetMessage("Downloading premake...");
-
-		system("curl -s -L https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-windows.zip --output data/vendor/premake/temp/premake5.zip");
-		system("tar.exe -xf data/vendor/premake/temp/premake5.zip -C data/vendor/premake/temp");
-		std::filesystem::copy("data/vendor/premake/temp/premake5.exe", "data/vendor/premake/premake5.exe");
-		std::filesystem::remove_all("data/vendor/premake/temp");
-
-		ProgressDialog::SetMessage("Done!");
-
-	}, "Running Setup...");
 }

@@ -30,10 +30,6 @@ private:
 
 	void HandleShortcuts();
 
-	bool SetupNeeded();
-
-	void RunSetup();
-
 	VL::Ref<Project> _Project;
 
 	VL::Ref<VL::Window> _Window;
