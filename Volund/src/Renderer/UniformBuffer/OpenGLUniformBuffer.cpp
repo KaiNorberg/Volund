@@ -24,7 +24,7 @@ namespace Volund
 	{
 		glGenBuffers(1, &this->_ID);
 		glBindBuffer(GL_UNIFORM_BUFFER, this->_ID);
-		glBufferData(GL_UNIFORM_BUFFER, this->_Size, nullptr, GL_DYNAMIC_DRAW); // allocate 152 bytes of memory		
+		glBufferData(GL_UNIFORM_BUFFER, this->_Size, nullptr, GL_DYNAMIC_DRAW);
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 

@@ -17,9 +17,6 @@
 
 #include "ImGuiStyle.h"
 
-#include "Widget/OutputWidget/OutputWidget.h"
-#include "Widget/ExplorerWidget/ExplorerWidget.h"
-
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 VL::Ref<Project> Editor::GetProject()
@@ -27,29 +24,11 @@ VL::Ref<Project> Editor::GetProject()
 	return this->_Project;
 }
 
-VL::Ref<VL::Window> Editor::GetWindow()
-{
-	return this->_Window;
-}
-
 void Editor::OnRun()
 {
+	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OPENGL, new VL::ForwardRenderer()));
+
 	static std::string IniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
-
-	VL::RenderingAPI::Select(VL::GraphicsAPI::OPENGL);
-
-	this->_Window = VL::Ref<VL::Window>(new VL::Window(this->GetEventDispatcher(), 1980, 1080, false));
-
-	this->_Window->SetTitle("Volund Editor");
-	this->_Window->SetCursorMode(VL::CursorMode::NORMAL);
-	this->_Window->SetFocus();
-
-	this->_Context = VL::Context::Create(this->_Window);
-	this->_Context->SetVSync(true);
-	this->_Context->MakeCurrent();
-
-	VL::RenderingAPI::Init();
-	VL::Renderer::Init(new VL::ForwardRenderer());
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -61,15 +40,11 @@ void Editor::OnRun()
 
 	SetupImGuiStyle();
 
-	this->_Window->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
-
-	ImGui_ImplWin32_Init(this->_Window->GetHandle());
+	ImGui_ImplWin32_Init(this->GetModule<VL::WindowModule>()->Window->GetHandle());
 	ImGui_ImplOpenGL3_Init();
 
-	this->_WidgetContainer.PushBack(new OutputWidget(this, true));
-	this->_WidgetContainer.PushBack(new ExplorerWidget(this, true));
-
-	this->_Window->Show();
+	this->GetModule<VL::WindowModule>()->Window->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+	this->GetModule<VL::WindowModule>()->Window->Show();
 }
 
 void Editor::OnTerminate()
@@ -79,13 +54,15 @@ void Editor::OnTerminate()
 
 void Editor::OnUpdate(VL::TimeStep TS)
 {
-	this->_Context->MakeCurrent();
+	auto WindowModule = this->GetModule<VL::WindowModule>();
+
+	WindowModule->Context->MakeCurrent();
 
 	this->Draw(TS);
 
-	this->_Context->Flush();
+	WindowModule->Context->Flush();
+
 	VL::RenderingAPI::Clear();
-	this->_Window->Update();
 }
 
 void Editor::OnEvent(VL::Event* E)

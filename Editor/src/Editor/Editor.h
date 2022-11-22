@@ -10,8 +10,6 @@ public:
 
 	VL::Ref<Project> GetProject();
 
-	VL::Ref<VL::Window> GetWindow();
-
 	void OnRun() override;
 
 	void OnTerminate() override;
@@ -20,7 +18,7 @@ public:
 
 	void OnEvent(VL::Event* E) override;
 
-private:	
+private:
 
 	bool BeginDockSpace();
 
@@ -33,10 +31,6 @@ private:
 	void HandleShortcuts();
 
 	VL::Ref<Project> _Project;
-
-	VL::Ref<VL::Window> _Window;
-
-	VL::Ref<VL::Context> _Context;
 	
 	VL::Container<Widget> _WidgetContainer;
 

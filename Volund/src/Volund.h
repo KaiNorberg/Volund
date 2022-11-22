@@ -3,6 +3,7 @@
 #include "PCH/PCH.h"
 
 #include "Application/Application.h"
+#include "Application/Module/Modules.h"
 #include "Window/Window.h"
 
 #include "Renderer/Renderer.h"

@@ -4,17 +4,15 @@
 
 #include "Time/Time.h"
 
+#include "Renderer/Renderer.h"
+#include "Renderer/RenderingAPI/RenderingAPI.h"
+
 namespace Volund
 {
 	void Application::Run()
 	{
 		this->OnRun();
 		this->Loop();
-	}
-
-	Ref<EventDispatcher> Application::GetEventDispatcher()
-	{
-		return this->_EventDispatcher;
 	}
 
 	void Application::Terminate()
@@ -26,6 +24,36 @@ namespace Volund
 	bool Application::ShouldRun() const
 	{
 		return this->_ShouldRun;
+	}
+
+	Ref<EventDispatcher> Application::GetEventDispatcher()
+	{
+		return this->_EventDispatcher;
+	}
+
+	void Application::AttachModule(Module* NewModule)
+	{
+		this->_Modules.PushBack(NewModule);
+		NewModule->OnAttach(this);
+	}
+
+	void Application::AttachModule(Ref<Module> NewModule)
+	{
+		this->_Modules.PushBack(NewModule);
+		NewModule->OnAttach(this);
+	}
+
+	void Application::EventCallback(Event* E)
+	{
+		this->OnEvent(E);
+
+		for (const auto& View : this->_Modules)
+		{
+			for (const auto& Module : View)
+			{
+				Module->OnEvent(E);
+			}
+		}
 	}
 
 	void Application::OnEvent(Event* E)
@@ -59,6 +87,14 @@ namespace Volund
 			TimeStep TS = TimeStep(Duration.count());
 
 			this->OnUpdate(TS);
+
+			for (const auto& View : this->_Modules)
+			{
+				for (const auto& Module : View)
+				{
+					Module->OnUpdate(TS);
+				}
+			}
 		}
 	}
 

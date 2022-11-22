@@ -19,6 +19,6 @@ namespace Volund
 
 	void EventDispatcher::SendEventToApp(Event* E) const
 	{
-		this->_Application->OnEvent(E);
+		this->_Application->EventCallback(E);
 	}
 }
