@@ -14,9 +14,7 @@ namespace Volund
 	{
 	public:
 
-		virtual void Clear() = 0;
-
-		virtual void SetClearColor(const RGBA& Color) = 0;
+		virtual void Clear(const RGBA Color) = 0;
 
 		virtual void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) = 0;
 
@@ -29,9 +27,7 @@ namespace Volund
 	{
 	public:
 
-		static void Clear();
-
-		static void SetClearColor(const RGBA& Color);
+		static void Clear(const RGBA Color = RGBA(0.0f, 0.0f, 0.0f, 1.0f));
 
 		static void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height);
 

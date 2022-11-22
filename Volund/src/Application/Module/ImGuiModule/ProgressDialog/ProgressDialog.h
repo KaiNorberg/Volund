@@ -8,7 +8,7 @@ public:
 
 	static void Start(std::function<void(void)> Catch, const std::string& Text);
 
-	static bool Update();
+	static bool Draw();
 
 private:
 

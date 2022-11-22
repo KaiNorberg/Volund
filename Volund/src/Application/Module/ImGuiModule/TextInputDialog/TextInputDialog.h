@@ -10,7 +10,7 @@ public:
 
 	static std::string GetText();
 
-	static bool Update();
+	static bool Draw();
 
 private:
 

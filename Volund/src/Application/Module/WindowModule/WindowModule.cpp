@@ -17,8 +17,6 @@ namespace Volund
 
 	void WindowModule::OnAttach(Application* App)
 	{
-		VL::RenderingAPI::Select(this->_SelectedAPI);
-
 		this->Window = VL::Ref<VL::Window>(new VL::Window(App->GetEventDispatcher(), 1980, 1080, false));
 
 		this->Window->SetTitle("Volund Editor");
@@ -28,9 +26,6 @@ namespace Volund
 		this->Context = VL::Context::Create(this->Window);
 		this->Context->SetVSync(true);
 		this->Context->MakeCurrent();
-
-		VL::RenderingAPI::Init();
-		VL::Renderer::Init(this->_NewRenderer);
 	}
 
 	void WindowModule::OnDestroy()
@@ -38,9 +33,8 @@ namespace Volund
 
 	}
 	
-	WindowModule::WindowModule(GraphicsAPI SelectedAPI, RendererInstance* NewRenderer)
+	WindowModule::WindowModule()
 	{
-		this->_SelectedAPI = SelectedAPI;
-		this->_NewRenderer = NewRenderer;
+
 	}
 }

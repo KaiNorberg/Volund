@@ -25,7 +25,7 @@ project "Volund"
 		"Glad"
 	}
 
-	targetdir (TargetDir)
+	targetdir ("Editor\\data\\vendor\\Volund\\lib")
 	objdir (ObjDir)
 
 	files
@@ -76,7 +76,6 @@ project "Volund"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"	
-		targetdir (TargetDir .. "/Volund")
 		
 project "Editor"
 	location "Editor"
@@ -123,8 +122,8 @@ project "Editor"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
 
 	prebuildcommands {
-		"rd /s /q data\\vendor\\Volund",
-		"xcopy ..\\Volund\\src\\*.h data\\vendor\\Volund /Q /E /Y /I /S"
+		"rd /s /q data\\vendor\\Volund\\include",
+		"xcopy ..\\Volund\\src\\*.h data\\vendor\\Volund\\include /Q /E /Y /I /S"
 	}
 
 	filter "configurations:Debug"
@@ -144,7 +143,7 @@ project "Editor"
 		optimize "On"
 		runtime "Release"	
 		kind "WindowedApp"		
-		targetdir (TargetDir .. "/Editor")
+		targetdir (TargetDir .. "\\Editor")
 		postbuildcommands {
 			"xcopy data\\* ..\\" .. TargetDir .. "\\Editor\\data /Q /E /Y /I /S"
 		}

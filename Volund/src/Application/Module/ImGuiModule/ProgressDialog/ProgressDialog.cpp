@@ -17,7 +17,7 @@ void ProgressDialog::Start(std::function<void(void)> Catch, const std::string& T
 	_ShouldDraw = true;
 }
 
-bool ProgressDialog::Update()
+bool ProgressDialog::Draw()
 {
 	if (_ShouldDraw)
 	{
@@ -26,7 +26,7 @@ bool ProgressDialog::Update()
 			_ShouldDraw = false;
 		}
 
-		ImVec2 ScreenSize = ImGui::GetWindowSize();
+		ImVec2 ScreenSize = ImGui::GetMainViewport()->Size;
 
 		if (ImGui::Begin("Please wait...", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 		{

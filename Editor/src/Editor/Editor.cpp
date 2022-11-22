@@ -2,47 +2,25 @@
 
 #include "Editor.h"
 
-#include "VML/VML.h"
-
-#include "FileDialog/FileDialog.h"
-#include "ProgressDialog/ProgressDialog.h"
-#include "TextInputDialog/TextInputDialog.h"
-
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_win32.h>
 
 #include <windows.h>
 
-#include "ImGuiStyle.h"
-
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
-VL::Ref<Project> Editor::GetProject()
-{
-	return this->_Project;
-}
-
 void Editor::OnRun()
 {
-	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OPENGL, new VL::ForwardRenderer()));
+	VL::RenderingAPI::Select(VL::GraphicsAPI::OPENGL);
 
-	static std::string IniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
+	this->AttachModule(new VL::WindowModule());
+	this->AttachModule(new VL::ImGuiModule());
 
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
+	VL::RenderingAPI::Init();
+	VL::Renderer::Init(new VL::ForwardRenderer());
 
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
-	io.IniFilename = IniFilename.c_str();
+	//ImGuiIO& io = ImGui::GetIO();
+	//io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
-	SetupImGuiStyle();
-
-	ImGui_ImplWin32_Init(this->GetModule<VL::WindowModule>()->Window->GetHandle());
-	ImGui_ImplOpenGL3_Init();
-
-	this->GetModule<VL::WindowModule>()->Window->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 	this->GetModule<VL::WindowModule>()->Window->Show();
 }
 
@@ -69,168 +47,104 @@ void Editor::OnEvent(VL::Event* E)
 	this->_Input.HandleEvent(E);
 
 	this->HandleShortcuts();
-
-	for (const auto& View : this->_WidgetContainer)
-	{
-		for (const auto& Widget : View)
-		{
-			if (Widget->_IsActive)
-			{
-				Widget->OnEvent(E);
-			}
-		}
-	}
-
-	switch (E->GetType())
-	{
-	case VL::EventType::WINDOW_CLOSE:
-	{
-		this->Terminate();
-	}
-	break;
-	}
 }
 
-bool Editor::BeginDockSpace()
+void Editor::CreateProject(const std::string& Filepath, const std::string& Name)
 {
-	static bool Open = true;
-
-	static ImGuiDockNodeFlags DockspaceFlags;
-	static ImGuiWindowFlags WindowFlags =
-		ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground |
-		ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
-		ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
-
-	const ImGuiViewport* ViewPort = ImGui::GetMainViewport();
-	ImGui::SetNextWindowPos(ViewPort->WorkPos);
-	ImGui::SetNextWindowSize(ViewPort->WorkSize);
-	ImGui::SetNextWindowViewport(ViewPort->ID);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
-
-	if (ImGui::Begin("DockSpace Demo", &Open, WindowFlags))
+	if (Filepath.empty() || Name.empty())
 	{
-		ImGui::PopStyleVar(3);
-
-		ImGuiID DockspaceID = ImGui::GetID("MyDockSpace");
-		ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
-
-		return true;
-	} 
-	else
-	{
-		ImGui::PopStyleVar(3);
-
-		return false;
+		return;
 	}
+
+	ProgressDialog::Start([Filepath, Name]()
+	{
+		ProgressDialog::SetMessage("Creating directories...");
+
+		std::string FinalPath = Filepath + "\\" + Name;
+
+		std::filesystem::create_directory(FinalPath);
+
+		std::string VendorPath = FinalPath + "\\vendor";
+		std::string SourcePath = FinalPath + "\\src";
+		std::string PremakePath = VendorPath + "\\premake";
+		std::string TempPath = FinalPath + "\\temp";
+
+		std::filesystem::create_directory(VendorPath);
+		std::filesystem::create_directory(SourcePath);
+		std::filesystem::create_directory(PremakePath);
+		std::filesystem::create_directory(TempPath);
+
+		std::string PremakeZipPath = TempPath + "\\premake5.zip";
+
+		ProgressDialog::SetMessage("Downloading premake...");
+
+		std::string CurlCommand = "curl -s -L https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-windows.zip --output " + PremakeZipPath;
+		system(CurlCommand.c_str());
+
+		ProgressDialog::SetMessage("Installing premake...");
+
+		std::string TarCommand = "tar.exe -xf " + PremakeZipPath + " -C " + TempPath;
+		system(TarCommand.c_str());
+		std::filesystem::copy(TempPath + "\\premake5.exe", PremakePath + "\\premake5.exe");
+
+		ProgressDialog::SetMessage("Copying files...");
+
+		std::filesystem::copy("data\\templates\\premake5.lua", FinalPath + "\\premake5.lua");
+
+		ProgressDialog::SetMessage("Running Premake...");
+
+		std::filesystem::path CurrentPath = std::filesystem::current_path();
+
+		std::filesystem::current_path(FinalPath);
+
+		std::string PremakeCommand = "vendor\\premake\\premake5.exe vs2022";
+		system(PremakeCommand.c_str());
+
+		std::filesystem::current_path(CurrentPath);
+
+		ProgressDialog::SetMessage("Clean up...");
+
+		std::filesystem::remove_all(TempPath);
+
+		ProgressDialog::SetMessage("Done!");
+
+	}, "Creating Project...");
 }
 
 void Editor::Draw(VL::TimeStep TS)
 {
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
+	VL::ImGuiModule::StartFrame();
 
-	if (this->BeginDockSpace())
+	VL::RenderingAPI::Clear(VL::RGBA(0.2f, 0.2f, 0.2f, 1.0f));
+
+	if (VL::ImGuiModule::BeginDockSpace())
 	{
 		this->DrawMenuBar();
-		
-		for (const auto& View : this->_WidgetContainer)
-		{
-			for (const auto& Widget : View)
-			{
-				if (Widget->_IsActive)
-				{
-					Widget->Draw(TS);
-				}
-			}
-		}
-
-		ProgressDialog::Update();
-		TextInputDialog::Update();
 	}
 
 	ImGui::End();
 
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+	VL::ImGuiModule::EndFrame();
 }
 
 void Editor::DrawMenuBar()
 {
 	if (ImGui::BeginMenuBar())
 	{
-		if (ImGui::BeginMenu("File"))
+		if (ImGui::BeginMenu("Project"))
 		{
-			this->DrawProjectMenu();
-
-			ImGui::EndMenu();
-		}
-
-		if (ImGui::BeginMenu("Widgets"))
-		{
-			for (const auto& View : this->_WidgetContainer)
+			if (ImGui::MenuItem("New"))
 			{
-				for (const auto& Widget : View)
+				TextInputDialog::Start([this]()
 				{
-					if (ImGui::MenuItem(Widget->GetName()))
-					{
-						Widget->_IsActive = true;
-					}
-				}
+					this->CreateProject(FileDialog::OpenFolder(), TextInputDialog::GetText());
+				}, "Enter Project Name:");
 			}
 
 			ImGui::EndMenu();
-		}
-
-		if (this->_Project != nullptr)
-		{
-			std::string ProjectName = std::filesystem::path(this->_Project->GetFilepath()).filename().string();
-			ImGui::SameLine(ImGui::GetWindowWidth() - ImGui::CalcTextSize(ProjectName.c_str()).x - 50);
-			ImGui::Text("%s", ProjectName.c_str());
 		}
 
 		ImGui::EndMenuBar();
-	}
-
-	static float Speed = 0;
-}
-
-void Editor::DrawProjectMenu()
-{
-	if (ImGui::BeginMenu("Project"))
-	{
-		if (ImGui::MenuItem("New", "Shift+N"))
-		{
-			TextInputDialog::Start([this]()
-			{
-				std::string NewPath = FileDialog::OpenFolder();
-				if (NewPath != "")
-				{
-					this->_Project = Project::Create(NewPath, TextInputDialog::GetText());
-				}
-			}, "Enter Project Name");
-		}
-
-		if (ImGui::MenuItem("Open", "Shift+O"))
-		{
-			std::string NewPath = FileDialog::OpenFolder();
-			if (NewPath != "")
-			{
-				this->_Project = Project::Load(NewPath);
-			}
-		}
-
-		if (this->_Project != nullptr)
-		{
-			if (ImGui::MenuItem("Save", "Shift+S"))
-			{
-				//this->_Project->Save();
-			}
-		}
-
-		ImGui::EndMenu();
 	}
 }
 
@@ -238,33 +152,6 @@ void Editor::HandleShortcuts()
 {
 	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
-		if (this->_Input.IsPressed('N'))
-		{
-			TextInputDialog::Start([this]()
-			{
-				std::string NewPath = FileDialog::OpenFolder();
-				if (NewPath != "")
-				{
-					this->_Project = Project::Create(NewPath, TextInputDialog::GetText());
-				}
-			}, "Enter Project Name");
-		}
 
-		if (this->_Input.IsPressed('O'))
-		{
-			std::string NewPath = FileDialog::OpenFolder();
-			if (NewPath != "")
-			{
-				this->_Project = Project::Load(NewPath);
-			}
-		}
-
-		if (this->_Project != nullptr)
-		{
-			if (this->_Input.IsPressed('S'))
-			{
-				this->_Project->Save();
-			}
-		}
 	}
 }

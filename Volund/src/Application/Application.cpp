@@ -31,18 +31,6 @@ namespace Volund
 		return this->_EventDispatcher;
 	}
 
-	void Application::AttachModule(Module* NewModule)
-	{
-		this->_Modules.PushBack(NewModule);
-		NewModule->OnAttach(this);
-	}
-
-	void Application::AttachModule(Ref<Module> NewModule)
-	{
-		this->_Modules.PushBack(NewModule);
-		NewModule->OnAttach(this);
-	}
-
 	void Application::EventCallback(Event* E)
 	{
 		this->OnEvent(E);
@@ -53,6 +41,15 @@ namespace Volund
 			{
 				Module->OnEvent(E);
 			}
+		}	
+		
+		switch (E->GetType())
+		{
+		case VL::EventType::WINDOW_CLOSE:
+		{
+			this->Terminate();
+		}
+		break;
 		}
 	}
 

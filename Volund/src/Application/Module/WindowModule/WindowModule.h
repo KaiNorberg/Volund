@@ -26,12 +26,8 @@ namespace Volund
 
 		Ref<Context> Context;
 
-		WindowModule(GraphicsAPI SelectedAPI, RendererInstance* NewRenderer);
+		WindowModule();
 
 	private:	
-		
-		GraphicsAPI _SelectedAPI;
-
-		RendererInstance* _NewRenderer;
 	};
 }

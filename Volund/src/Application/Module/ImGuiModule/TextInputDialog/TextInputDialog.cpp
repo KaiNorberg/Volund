@@ -18,7 +18,7 @@ std::string TextInputDialog::GetText()
 	return _Text;
 }
 
-bool TextInputDialog::Update()
+bool TextInputDialog::Draw()
 {
 	if (_ShouldDraw)
 	{
@@ -28,11 +28,11 @@ bool TextInputDialog::Update()
 			return false;
 		}
 
-		ImVec2 ScreenSize = ImGui::GetWindowSize();
+		ImVec2 ScreenSize = ImGui::GetMainViewport()->Size;
 
 		if (ImGui::Begin("###TextInputDialog", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove))
 		{
-			ImVec2 WindowSize = ImVec2(250, 125);
+			ImVec2 WindowSize = ImVec2(250, 100);
 
 			ImGui::SetWindowSize(WindowSize);
 			ImGui::SetWindowPos(ImVec2((ScreenSize.x - WindowSize.x) / 2, (ScreenSize.y - WindowSize.y) / 2));

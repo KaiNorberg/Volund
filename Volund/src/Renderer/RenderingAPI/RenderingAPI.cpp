@@ -7,14 +7,9 @@
 
 namespace Volund
 {
-	void RenderingAPI::Clear()
+	void RenderingAPI::Clear(const RGBA Color)
 	{
-		_Instance->Clear();
-	}
-
-	void RenderingAPI::SetClearColor(const RGBA& Color)
-	{
-		_Instance->SetClearColor(Color);
+		_Instance->Clear(Color);
 	}
 	
 	void RenderingAPI::SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height)
