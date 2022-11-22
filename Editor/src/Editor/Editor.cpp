@@ -8,12 +8,11 @@
 #include "ProgressDialog/ProgressDialog.h"
 #include "TextInputDialog/TextInputDialog.h"
 
-#include <windows.h>
-
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_win32.h>
-#include <ImGuizmo.h>
+
+#include <windows.h>
 
 #include "ImGuiStyle.h"
 
@@ -132,7 +131,6 @@ void Editor::Draw(VL::TimeStep TS)
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplWin32_NewFrame();
 	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
 
 	if (this->BeginDockSpace())
 	{
