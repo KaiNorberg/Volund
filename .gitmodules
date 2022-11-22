@@ -4,10 +4,4 @@
 [submodule "vendor/stb"]
 	path = vendor/stb
 	url = https://github.com/nothings/stb
-[submodule "Editor/vendor/imgui"]
-	path = Editor/vendor/imgui
-	url = https://github.com/ocornut/imgui
-	branch = docking
-[submodule "Editor/vendor/ImGuizmo"]
-	path = Editor/vendor/ImGuizmo
-	url = https://github.com/CedricGuillemet/ImGuizmo
+
