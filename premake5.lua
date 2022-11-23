@@ -21,10 +21,11 @@ project "Volund"
 
 	dependson 
 	{
+		"ImGui",
 		"Glad"
 	}
 
-	targetdir (TargetDir)
+	targetdir ("Editor\\data\\vendor\\Volund\\lib")
 	objdir (ObjDir)
 
 	files
@@ -37,7 +38,8 @@ project "Volund"
 	{
 		"%{prj.name}/src",
 		"vendor",
-		"vendor/GLAD/include"
+		"vendor/GLAD/include",
+		"vendor/imgui"
 	}
 
 	libdirs
@@ -48,7 +50,8 @@ project "Volund"
 	links
 	{
 		"OpenGL32.lib",
-		"Glad.lib"
+		"Glad.lib",
+		"ImGui"
 	}
 	
 	defines
@@ -73,11 +76,6 @@ project "Volund"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"	
-		targetdir (TargetDir .. "/Volund")
-		postbuildcommands {			
-			"xcopy ..\\vendor\\glm\\** ..\\" .. TargetDir .. "\\Volund\\vendor\\glm /Q /E /Y /I /S",
-			"xcopy src\\**.h ..\\" .. TargetDir .. "\\Volund\\include /Q /E /Y /I /S"
-		}
 		
 project "Editor"
 	location "Editor"
@@ -88,8 +86,7 @@ project "Editor"
 
 	dependson 
 	{
-		"Volund",
-		"ImGui"
+		"Volund"
 	}
 
 	targetdir (TargetDir)
@@ -105,9 +102,7 @@ project "Editor"
 	{
 		"%{prj.name}/src",
 		"vendor",
-		"Editor/vendor/imgui",
-		"Editor/vendor/ImGuizmo",
-
+		"vendor/imgui",
 		"Volund/src"
 	}
 
@@ -119,14 +114,17 @@ project "Editor"
 	links
 	{
 		"Volund",
-		"ImGui",
-		"ImGuizmo",
 		"OpenGL32.lib",
 		"Glad.lib"
 	}
 		
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
+
+	prebuildcommands {
+		"rd /s /q data\\vendor\\Volund\\include",
+		"xcopy ..\\Volund\\src\\*.h data\\vendor\\Volund\\include /Q /E /Y /I /S"
+	}
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
@@ -144,11 +142,10 @@ project "Editor"
 		defines "VOLUND_DIST"
 		optimize "On"
 		runtime "Release"	
-		kind "WindowedApp"
-		targetdir (TargetDir .. "/Editor")
+		kind "WindowedApp"		
+		targetdir (TargetDir .. "\\Editor")
 		postbuildcommands {
-			"xcopy Standard\\* ..\\" .. TargetDir .. "\\Editor\\Standard /Q /E /Y /I /S",
-			"xcopy Data\\* ..\\" .. TargetDir .. "\\Editor\\Data /Q /E /Y /I /S"
+			"xcopy data\\* ..\\" .. TargetDir .. "\\Editor\\data /Q /E /Y /I /S"
 		}
 		
 project "Glad"
@@ -189,33 +186,33 @@ project "ImGui"
 	staticruntime "on"
 	cppdialect "C++20"
 
-	location "Editor/vendor/imgui"
+	location "vendor/imgui"
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
 
 	includedirs
 	{
-		"Editor/vendor/imgui"
+		"vendor/imgui"
 	}
 
 	files
 	{
-		"Editor/vendor/imgui/imconfig.h",
-		"Editor/vendor/imgui/imgui.h",
-		"Editor/vendor/imgui/imgui.cpp",
-		"Editor/vendor/imgui/imgui_draw.cpp",
-		"Editor/vendor/imgui/imgui_internal.h",
-		"Editor/vendor/imgui/imgui_tables.cpp",
-		"Editor/vendor/imgui/imgui_widgets.cpp",
-		"Editor/vendor/imgui/imstb_rectpack.h",
-		"Editor/vendor/imgui/imstb_textedit.h",
-		"Editor/vendor/imgui/backends/imgui_impl_opengl3.cpp",
-		"Editor/vendor/imgui/backends/imgui_impl_opengl3.h",
-		"Editor/vendor/imgui/backends/imgui_impl_win32.cpp",
-		"Editor/vendor/imgui/backends/imgui_impl_win32.h",
-		"Editor/vendor/imgui/misc/cpp/imgui_stdlib.cpp",
-		"Editor/vendor/imgui/misc/cpp/imgui_stdlib.h"
+		"vendor/imgui/imconfig.h",
+		"vendor/imgui/imgui.h",
+		"vendor/imgui/imgui.cpp",
+		"vendor/imgui/imgui_draw.cpp",
+		"vendor/imgui/imgui_internal.h",
+		"vendor/imgui/imgui_tables.cpp",
+		"vendor/imgui/imgui_widgets.cpp",
+		"vendor/imgui/imstb_rectpack.h",
+		"vendor/imgui/imstb_textedit.h",
+		"vendor/imgui/backends/imgui_impl_opengl3.cpp",
+		"vendor/imgui/backends/imgui_impl_opengl3.h",
+		"vendor/imgui/backends/imgui_impl_win32.cpp",
+		"vendor/imgui/backends/imgui_impl_win32.h",
+		"vendor/imgui/misc/cpp/imgui_stdlib.cpp",
+		"vendor/imgui/misc/cpp/imgui_stdlib.h"
 	}
 
 	filter "system:windows"
@@ -237,47 +234,3 @@ project "ImGui"
 		runtime "Release"
 		optimize "on"
         symbols "off"
-
-project "ImGuizmo"
-		kind "StaticLib"
-		language "C++"
-		staticruntime "on"
-		cppdialect "C++20"
-	
-		location "Editor/vendor/ImGuizmo"
-	
-		targetdir (TargetDir)
-		objdir (ObjDir)
-	
-		includedirs
-		{
-			"Editor/vendor/ImGuizmo",
-			"Editor/vendor/imgui"
-
-		}
-	
-		files
-		{
-			"Editor/vendor/ImGuizmo/*.h",
-			"Editor/vendor/ImGuizmo/*.cpp"
-		}
-	
-		filter "system:windows"
-			systemversion "latest"
-	
-		filter "system:linux"
-			pic "On"
-			systemversion "latest"
-	
-		filter "configurations:Debug"
-			runtime "Debug"
-			symbols "on"
-	
-		filter "configurations:Release"
-			runtime "Release"
-			optimize "on"
-	
-		filter "configurations:Dist"
-			runtime "Release"
-			optimize "on"
-			symbols "off"

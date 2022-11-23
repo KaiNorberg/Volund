@@ -48,7 +48,7 @@ namespace Volund
 			this->_Callback(FormatedString);
 		}
 		#ifdef VOLUND_DIST		
-		std::string FormatedString = this->FormatString(Format, Args);
+		std::string MessageString = this->FormatString(Format, Args);
 		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"WARNING!", MB_ICONWARNING | MB_OK);
 		#else		
 		std::cout << FormatedString << '\n';
@@ -68,7 +68,7 @@ namespace Volund
 			this->_Callback(FormatedString);
 		}
 		#ifdef VOLUND_DIST		
-		std::string FormatedString = this->FormatString(Format, Args);
+		std::string MessageString = this->FormatString(Format, Args);
 		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
 		#else		
 		std::cout << FormatedString << '\n';

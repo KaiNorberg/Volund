@@ -101,13 +101,10 @@ namespace Volund
 		glViewport(X, Y, Width, Height);
 	}
 
-	void OpenGLRenderingAPI::SetClearColor(const RGBA& Color)
+	void OpenGLRenderingAPI::Clear(const RGBA Color)
 	{
 		glClearColor(Color.r, Color.g, Color.b, Color.a);
-	}
 
-	void OpenGLRenderingAPI::Clear()
-	{
 		glClear(GL_DEPTH_BUFFER_BIT);
 		glClear(GL_COLOR_BUFFER_BIT);
 	}

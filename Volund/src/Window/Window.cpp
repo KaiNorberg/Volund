@@ -303,6 +303,11 @@ namespace Volund
 		}
 	}
 
+	void* Window::GetInstance() const
+	{
+		return this->_Instance;
+	}
+
 	void* Window::GetHandle() const
 	{
 		return this->_Handle;

@@ -8,6 +8,8 @@ namespace Volund
 
 		std::string GetFilepath();
 
+		uint32_t GetID() const;
+
 		uint32_t GetWidth() const;
 
 		uint32_t GetHeight() const;
@@ -25,5 +27,7 @@ namespace Volund
 		uint32_t _Width = 0;
 
 		std::string _Filepath;
+
+		uint32_t _ID = 0;
 	};
 }
