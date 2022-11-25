@@ -21,7 +21,7 @@ namespace Volund
 
         static bool BeginDockSpace();
 
-        static void StartFrame();
+        static void BeginFrame();
 
         static void EndFrame();
 

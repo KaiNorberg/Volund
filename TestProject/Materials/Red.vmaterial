@@ -1,0 +1,10 @@
+Shader [ Simple.vshader ]
+
+Values
+{
+	Color
+	{
+		Type [ RGB ]
+		Value [ 1.0 0.0 0.0 ]
+	}
+}

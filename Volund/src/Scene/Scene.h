@@ -45,12 +45,6 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS);
 
-		static Ref<Scene> Copy(Ref<Scene> Other);
-
-		static Ref<Scene> Deserialize(std::string_view Filepath);
-
-		static Ref<Scene> Deserialize(VML SceneVML);
-
 		void Serialize(std::string_view Filepath);
 
 		VML Serialize();
@@ -61,7 +55,9 @@ namespace Volund
 		Registry::const_iterator begin() const;
 		Registry::const_iterator end() const;
 
-		Scene();
+		Scene(std::string_view Filepath);
+
+		~Scene();
 
 	private:
 
@@ -70,6 +66,8 @@ namespace Volund
 		uint64_t _NewEntity = 1;
 
 		Registry _Registry;
+	
+		std::string Filepath;
 	};
 
 	template<typename T>

@@ -130,6 +130,7 @@ namespace Volund
 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 
+		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, nullptr);
 

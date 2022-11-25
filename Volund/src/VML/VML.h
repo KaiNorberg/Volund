@@ -25,9 +25,9 @@ namespace Volund
 
 		std::string ToString(uint32_t Indentation = 0);
 
-		void PushBack(std::string_view Name, const VML& Node);
+		void PushBack(const std::string& Name, const VML& Node);
 
-		void PushBack(std::string_view Name, const VMLEntry& Entry);
+		void PushBack(const std::string& Name, const VMLEntry& Entry);
 
 		std::map<std::string, VML>::const_iterator begin() const;
 		std::map<std::string, VML>::const_iterator end() const;

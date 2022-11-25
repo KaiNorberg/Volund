@@ -1,25 +1,27 @@
 #pragma once
 
-class ProgressDialog
+namespace Volund
 {
-public:
+	class ProgressDialog
+	{
+	public:
 
-	static void SetMessage(const std::string& Text);
+		static void SetMessage(const std::string& Text);
 
-	static void Start(std::function<void(void)> Catch, const std::string& Text);
+		static void Start(std::function<void(void)> Catch, const std::string& Text);
 
-	static bool Draw();
+		static bool Draw();
 
-private:
+	private:
 
-	static bool IsReady();
+		static bool IsReady();
 
-	static bool Spinner(const char* label, float radius, int thickness, const uint32_t& color);
+		static bool Spinner(const char* label, float radius, int thickness, const uint32_t& color);
 
-	static inline bool _ShouldDraw = false;
+		static inline bool _ShouldDraw = false;
 
-	static inline std::future<void> _CatchFuture;
+		static inline std::future<void> _CatchFuture;
 
-	static inline std::string _CatchMessage;
-};
-
+		static inline std::string _CatchMessage;
+	};
+}

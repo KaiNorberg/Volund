@@ -6,6 +6,8 @@
 
 #include "VML/VML.h"
 
+#include "Filesystem/Filesystem.h"
+
 namespace Volund
 {
 	Entity Scene::CreateEntity()
@@ -78,93 +80,6 @@ namespace Volund
 		}
 	}
 
-	Ref<Scene> Scene::Copy(Ref<Scene> Other)
-	{
-		return Deserialize(Other->Serialize());
-	}
-
-	Ref<Scene> Scene::Deserialize(std::string_view Filepath)
-	{
-		return Deserialize(VML(Filepath));
-	}
-
-	Ref<Scene> Scene::Deserialize(VML SceneVML)
-	{
-		VOLUND_INFO("Deserializing Scene...");
-
-		Ref<Scene> NewScene = std::make_shared<Scene>();
-
-		for (auto& [EntityName, EntityVML] : SceneVML)
-		{
-			Entity NewEntity = NewScene->CreateEntity();
-
-			for (auto& [ComponentName, ComponentVML] : EntityVML)
-			{
-				std::string_view ComponentType = (ComponentVML.Get("Type")).String();
-
-				if (ComponentType == "Camera")
-				{
-					Ref<Camera> NewCamera = NewScene->CreateComponent<Camera>(NewEntity);
-
-					if (ComponentVML.Get("IsActive"))
-					{
-						NewCamera->SetActive();
-					}
-
-					NewCamera->FOV = ComponentVML.Get("FOV");
-					NewCamera->NearPlane = ComponentVML.Get("NearPlane");
-					NewCamera->FarPlane = ComponentVML.Get("FarPlane");
-				}
-				else if (ComponentType == "CameraMovement")
-				{
-					NewScene->CreateComponent<CameraMovement>(NewEntity, ComponentVML.Get("Speed"), ComponentVML.Get("Sensitivity"));
-				}
-				else if (ComponentType == "MeshRenderer")
-				{
-					Ref<Mesh> MeshAsset = Mesh::Create(ComponentVML.Get("Mesh"));
-					Ref<Material> MaterialAsset = Material::Create(ComponentVML.Get("Material").String());
-
-					NewScene->CreateComponent<MeshRenderer>(NewEntity, MeshAsset, MaterialAsset);
-				}
-				else if (ComponentType == "PointLight")
-				{
-					VMLEntry ColorVML = ComponentVML.Get("Color");
-					VMLEntry BrightnessVML = ComponentVML.Get("Brightness");
-
-					RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
-
-					NewScene->CreateComponent<PointLight>(NewEntity, Color, BrightnessVML);
-				}
-				else if (ComponentType == "Transform")
-				{
-					VMLEntry PositionVML = ComponentVML.Get("Position");
-					VMLEntry RotationVML = ComponentVML.Get("Rotation");
-					VMLEntry ScaleVML = ComponentVML.Get("Scale");
-
-					Vec3 Position = Vec3(PositionVML[0], PositionVML[1], PositionVML[2].GetAs<float>());
-					Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2].GetAs<float>());
-					Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
-
-					NewScene->CreateComponent<Transform>(NewEntity, Position, Rotation, Scale);
-				}
-				else if (ComponentType == "Tag")
-				{
-					std::string String = ComponentVML.Get("String");
-
-					NewScene->CreateComponent<Tag>(NewEntity, String);
-				}
-				else
-				{
-					VOLUND_ERROR("Unknown Component type (%s)!", ComponentType.data());
-				}
-			}
-		}
-
-		VOLUND_INFO("Finished deserializing Scene!");
-
-		return NewScene;
-	}
-
 	void Scene::Serialize(std::string_view Filepath)
 	{
 		VML SceneVML = this->Serialize();
@@ -230,8 +145,89 @@ namespace Volund
 		return -1;
 	}
 
-	Scene::Scene()
+	Scene::Scene(std::string_view Filepath)
 	{
-		VOLUND_INFO("Initializing Scene...");
+		VOLUND_INFO("Deserializing Scene...");
+
+		this->Filepath = Filepath;
+
+		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
+		VL::Filesystem::AddRelativeFilepath(ParentPath);
+
+		VML SceneVML = VML(Filepath);
+
+		for (auto& [EntityName, EntityVML] : SceneVML)
+		{
+			Entity NewEntity = this->CreateEntity();
+
+			for (auto& [ComponentName, ComponentVML] : EntityVML)
+			{
+				std::string_view ComponentType = (ComponentVML.Get("Type")).String();
+
+				if (ComponentType == "Camera")
+				{
+					Ref<Camera> NewCamera = this->CreateComponent<Camera>(NewEntity);
+
+					if (ComponentVML.Get("IsActive"))
+					{
+						NewCamera->SetActive();
+					}
+
+					NewCamera->FOV = ComponentVML.Get("FOV");
+					NewCamera->NearPlane = ComponentVML.Get("NearPlane");
+					NewCamera->FarPlane = ComponentVML.Get("FarPlane");
+				}
+				else if (ComponentType == "CameraMovement")
+				{
+					this->CreateComponent<CameraMovement>(NewEntity, ComponentVML.Get("Speed"), ComponentVML.Get("Sensitivity"));
+				}
+				else if (ComponentType == "MeshRenderer")
+				{
+					Ref<Mesh> MeshAsset = Mesh::Create(ComponentVML.Get("Mesh"));
+					Ref<Material> MaterialAsset = Material::Create(ComponentVML.Get("Material").String());
+
+					this->CreateComponent<MeshRenderer>(NewEntity, MeshAsset, MaterialAsset);
+				}
+				else if (ComponentType == "PointLight")
+				{
+					VMLEntry ColorVML = ComponentVML.Get("Color");
+					VMLEntry BrightnessVML = ComponentVML.Get("Brightness");
+
+					RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
+
+					this->CreateComponent<PointLight>(NewEntity, Color, BrightnessVML);
+				}
+				else if (ComponentType == "Transform")
+				{
+					VMLEntry PositionVML = ComponentVML.Get("Position");
+					VMLEntry RotationVML = ComponentVML.Get("Rotation");
+					VMLEntry ScaleVML = ComponentVML.Get("Scale");
+
+					Vec3 Position = Vec3(PositionVML[0], PositionVML[1], PositionVML[2].GetAs<float>());
+					Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2].GetAs<float>());
+					Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
+
+					this->CreateComponent<Transform>(NewEntity, Position, Rotation, Scale);
+				}
+				else if (ComponentType == "Tag")
+				{
+					std::string String = ComponentVML.Get("String");
+
+					this->CreateComponent<Tag>(NewEntity, String);
+				}
+				else
+				{
+					VOLUND_ERROR("Unknown Component type (%s)!", ComponentType.data());
+				}
+			}
+		}
+
+		VOLUND_INFO("Finished deserializing Scene!");
+	}
+
+	Scene::~Scene()
+	{
+		std::string ParentPath = std::filesystem::path(this->Filepath).parent_path().string();
+		VL::Filesystem::RemoveRelativeFilepath(ParentPath);
 	}
 }

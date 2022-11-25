@@ -97,14 +97,28 @@ namespace Volund
 		return Result;
 	}
 
-	void VML::PushBack(std::string_view Name, const VML& Node)
+	void VML::PushBack(const std::string& Name, const VML& Node)
 	{
-		this->_Nodes[Name.data()] = Node;
+		if (Name.empty())
+		{
+			this->_Nodes[std::to_string(rand())] = Node;
+		}
+		else
+		{
+			this->_Nodes[Name] = Node;
+		}
 	}
 
-	void VML::PushBack(std::string_view Name, const VMLEntry& Entry)
+	void VML::PushBack(const std::string& Name, const VMLEntry& Entry)
 	{
-		this->_Entries[Name.data()] = Entry;
+		if (Name.empty())
+		{
+			this->_Entries[std::to_string(rand())] = Entry;
+		}
+		else
+		{
+			this->_Entries[Name] = Entry;
+		}
 	}
 
 	std::map<std::string, VML>::const_iterator VML::begin() const
@@ -277,7 +291,7 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading VML file (%s)...", Filepath.data());
 
-		std::string File = Filesystem::Load(Filepath.data());
+		std::string File = Filesystem::LoadFile(Filepath.data());
 
 		std::vector<Token> Tokens;
 		Tokenize(&Tokens, File);

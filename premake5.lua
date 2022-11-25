@@ -121,11 +121,6 @@ project "Editor"
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
 
-	prebuildcommands {
-		"rd /s /q data\\vendor\\Volund\\include",
-		"xcopy ..\\Volund\\src\\*.h data\\vendor\\Volund\\include /Q /E /Y /I /S"
-	}
-
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
 		symbols "On"

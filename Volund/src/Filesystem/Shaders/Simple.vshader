@@ -53,7 +53,7 @@ layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-    vec3 Result;
+    vec3 Result = vec3(0.0f);
     for (int i = 0; i < LightAmount; i++)
     {
         vec3 LightDir = normalize(LightPositions[i] - Position);

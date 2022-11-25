@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Widget/Widget.h"
+
 class Editor : public VL::Application
 {
 public:
@@ -13,14 +15,8 @@ public:
 	void OnEvent(VL::Event* E) override;
 
 private:
-
-	void CreateProject(const std::string& Filepath, const std::string& Name);
-
-	void Draw(VL::TimeStep TS);
-
-	void DrawMenuBar();
-
-	void HandleShortcuts();
 	
+	std::vector<VL::Ref<Widget>> _Widgets;
+
 	VL::Input _Input;
 };

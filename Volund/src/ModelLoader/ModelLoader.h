@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Filesystem/Filesystem.h"
+
 namespace Volund
 {
 	template <typename V, typename I>
@@ -54,7 +56,7 @@ namespace Volund
 
 		std::unordered_map<std::array<V, 8>, I, ArrayHasher> VertexToIndexMap;
 
-		FILE* File = fopen(Filepath.data(), "r");
+		FILE* File = fopen(VL::Filesystem::GetFinalPath(std::string(Filepath)).data(), "r");
 
 		if (File == nullptr)
 		{

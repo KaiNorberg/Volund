@@ -2,50 +2,32 @@
 
 namespace Volund
 {
-	class Resource
-	{
-	public:
-
-		void CreateSubDir(const std::string& SubDir);
-
-		void CreateFile(const std::string& FileName, const std::string& FileData);
-
-		const std::string& GetData() const;
-
-		bool Contains(const std::string& Name) const;
-
-		std::string Extension() const;
-
-		bool IsDirectory() const;
-
-		Resource() = default;
-
-		Resource(const std::string& Name, const std::string& Data = "");
-
-		Resource& operator [](const std::string& Name);
-
-		const std::unordered_map<std::string, Resource>::const_iterator begin() const;
-		const std::unordered_map<std::string, Resource>::const_iterator end() const;
-
-	private:
-
-		std::unordered_map<std::string, Resource> _Children;
-		std::string _Name;
-		std::string _Data;
-	};
-
 	class Filesystem
 	{
 	public:
 
-		static std::string Load(const std::string& Filepath);
+		static void WriteFile(const std::string& Filepath, const std::string& File);
 
-		static Resource* GetGrandFatherResource();
+		static std::string LoadFile(const std::string& Filepath);
+
+		static std::string LoadResource(const std::string& Filepath);
+
+		static bool IsResource(const std::string& Filepath);
+
+		static void CreateResource(const std::string& Filepath, const char* Content);
+
+		static void AddRelativeFilepath(const std::string& Filepath);
+
+		static void RemoveRelativeFilepath(const std::string& Filepath);
+
+		static std::string GetFinalPath(const std::string& Filepath);
 
 	private:
 
 		Filesystem();
 
-		static inline Resource _GrandfatherResource = Resource(":/");
+		static inline std::vector<std::string> _RelativeFilepaths;
+
+		static inline std::unordered_map<std::string, const char*> _Resources;
 	};
 }

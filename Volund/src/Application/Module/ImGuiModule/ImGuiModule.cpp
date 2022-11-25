@@ -59,7 +59,7 @@ namespace Volund
 	{
 		static bool Open = true;
 
-		static ImGuiDockNodeFlags DockspaceFlags = ImGuiDockNodeFlags_PassthruCentralNode;
+		static ImGuiDockNodeFlags DockspaceFlags;
 		static ImGuiWindowFlags WindowFlags =
 			ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground |
 			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
@@ -90,7 +90,7 @@ namespace Volund
 		}
 	}
 
-	void ImGuiModule::StartFrame()
+	void ImGuiModule::BeginFrame()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
 		ImGui_ImplWin32_NewFrame();

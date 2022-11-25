@@ -13,6 +13,7 @@ namespace Volund
 	void WindowModule::OnUpdate(TimeStep TS)
 	{
 		this->Window->Update();
+		this->Context->Flush();
 	}
 
 	void WindowModule::OnAttach(Application* App)

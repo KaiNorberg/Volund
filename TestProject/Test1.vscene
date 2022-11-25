@@ -1,0 +1,92 @@
+{
+	{
+		Position [ 0.000000 2.000000 10.000000 ]
+		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	{
+		FOV [ 90.000000 ]
+		FarPlane [ 100.000000 ]
+		IsActive [ 1 ]
+		NearPlane [ 0.100000 ]
+		Type [ Camera ]
+	}
+	{
+		String [ Camera ]
+		Type [ Tag ]
+	}
+	{
+		Sensitivity [ 1.000000 ]
+		Speed [ 8.000000 ]
+		Type [ CameraMovement ]
+	}
+}
+{
+	{
+		Position [ -3.000000 0.000000 0.000000 ]
+		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	{
+		String [ RedCube ]
+		Type [ Tag ]
+	}
+	{
+		Material [ Materials\Red.vmaterial ]
+		Mesh [ Models\Cube.obj ]
+		Type [ MeshRenderer ]
+	}
+}
+{
+	{
+		Position [ -6.800000 4.500000 -7.600000 ]
+		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	{
+		String [ GreenCube ]
+		Type [ Tag ]
+	}
+	{
+		Material [ Materials\Green.vmaterial ]
+		Mesh [ Models\Cube.obj ]
+		Type [ MeshRenderer ]
+	}
+}
+{
+	{
+		Position [ 0.000000 7.064885 0.000000 ]
+		Rotation [ 0.000000 -0.000000 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	{
+		String [ PointLight ]
+		Type [ Tag ]
+	}
+	{
+		Brightness [ 1.000000 ]
+		Color [ 1.000000 1.000000 1.000000 ]
+		Type [ PointLight ]
+	}
+}
+{
+	{
+		Position [ 2.900000 0.000000 0.000000 ]
+		Rotation [ 0.000001 0.000001 0.000000 ]
+		Scale [ 1.000000 1.000000 1.000000 ]
+		Type [ Transform ]
+	}
+	{
+		String [ Teapot ]
+		Type [ Tag ]
+	}
+	{
+		Material [ Materials\Blue.vmaterial ]
+		Mesh [ Models\Teapot.obj ]
+		Type [ MeshRenderer ]
+	}
+}

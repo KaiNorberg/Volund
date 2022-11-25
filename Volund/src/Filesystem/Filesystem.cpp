@@ -3,125 +3,97 @@
 
 namespace Volund
 {
-	void Resource::CreateSubDir(const std::string& SubDir)
+	std::string Filesystem::LoadFile(const std::string& Filepath)
 	{
-		this->_Children[SubDir] = Resource(SubDir);
-	}
-
-	void Resource::CreateFile(const std::string& FileName, const std::string& FileData)
-	{
-		this->_Children[FileName] = Resource(FileName, FileData);
-	}
-
-	const std::string& Resource::GetData() const
-	{
-		return this->_Data;
-	}
-
-	bool Resource::Contains(const std::string& Name) const
-	{
-		return this->_Children.contains(Name);
-	}
-
-	std::string Resource::Extension() const
-	{
-		if (this->_Name.contains('.'))
+		if (IsResource(Filepath))
 		{
-			return this->_Name.substr(this->_Name.find('.'));
+			return LoadResource(Filepath);
 		}
-		else
+
+		std::ifstream File(GetFinalPath(Filepath));
+		VOLUND_ASSERT(File, "Unable to load file (%s).", Filepath.c_str());
+		std::string Line;
+		std::string Output;
+		while (std::getline(File, Line))
 		{
-			return "";
+			Output += Line + '\n';
 		}
-	}
+		return Output;
 
-	bool Resource::IsDirectory() const
-	{
-		return this->Extension() == "";
-	}
-
-	Resource& Resource::operator[](const std::string& Name)
-	{
-		static Resource NULL_RESOURCE = Resource("");
-
-		if (this->_Children.contains(Name))
-		{
-			return this->_Children[Name];
-		}
-		else
-		{
-			return NULL_RESOURCE;
-		}
-	}
-
-	const std::unordered_map<std::string, Resource>::const_iterator Resource::begin() const
-	{
-		return this->_Children.begin();
-	}
-
-	const std::unordered_map<std::string, Resource>::const_iterator Resource::end() const
-	{
-		return this->_Children.end();
-	}
-
-	Resource::Resource(const std::string& Name, const std::string& Data)
-	{
-		this->_Name = Name;
-		this->_Data = Data;
-	}
-
-	std::string Filesystem::Load(const std::string& Filepath)
-	{
-		static Filesystem SingleTon;
-
-		if (Filepath.starts_with(":/"))
-		{
-			std::string ResourcePath = Filepath.substr(2);
-
-			std::stringstream Stream(ResourcePath);
-			std::string Word;
-			Resource* PrevResource = &_GrandfatherResource;
-			while (std::getline(Stream, Word, '/'))
-			{
-				if (PrevResource->Contains(Word))
-				{
-					PrevResource = &((*PrevResource)[Word]);
-				}
-				else
-				{
-					VOLUND_ERROR("Invalid Resource (%s)", Word.c_str());
-				}
-			}
-
-			return PrevResource->GetData();
-		}
-		else
-		{
-			std::ifstream File(Filepath);
-			VOLUND_ASSERT(File, "Unable to load file (%s).", Filepath.c_str());
-			std::string Line;
-			std::string Output;
-			while (std::getline(File, Line))
-			{
-				Output += Line + '\n';
-			}
-			return Output;
-		}
-		
 		return "";
 	}
 
-	Resource* Filesystem::GetGrandFatherResource()
+	void Filesystem::WriteFile(const std::string& Filepath, const std::string& File)
 	{
-		return &_GrandfatherResource;
+		std::ofstream Stream(GetFinalPath(Filepath));
+
+		Stream << File;
+	}
+
+	std::string Filesystem::LoadResource(const std::string& Filepath)
+	{
+		if (IsResource(Filepath))
+		{
+			return _Resources[Filepath];
+		}
+		else
+		{
+			return std::string();
+		}
+	}
+
+	bool Filesystem::IsResource(const std::string& Filepath)
+	{
+		static Filesystem SingleTon;
+
+		return _Resources.contains(Filepath);
+	}
+
+	void Filesystem::CreateResource(const std::string& Filepath, const char* Content)
+	{
+		_Resources[Filepath] = Content;
+	}
+
+	void Filesystem::AddRelativeFilepath(const std::string& Filepath)
+	{
+		_RelativeFilepaths.push_back(Filepath);
+	}
+
+	void Filesystem::RemoveRelativeFilepath(const std::string& Filepath)
+	{
+		auto it = std::find(_RelativeFilepaths.begin(), _RelativeFilepaths.end(), Filepath);
+
+		if (it != _RelativeFilepaths.end())
+		{
+			_RelativeFilepaths.erase(it);
+		}
+	}
+
+	std::string Filesystem::GetFinalPath(const std::string& Filepath)
+	{
+		if (std::filesystem::exists(Filepath))
+		{
+			return Filepath;
+		}
+
+		for (auto& RelativePath : _RelativeFilepaths)
+		{
+			std::string NewPath = RelativePath + "\\" + Filepath;
+			VOLUND_INFO(NewPath.c_str());
+
+			if (std::filesystem::exists(NewPath))
+			{
+				return NewPath;
+			}
+		}
+
+		return Filepath;
 	}
 
 	Filesystem::Filesystem()
 	{
-		_GrandfatherResource.CreateSubDir("Shaders");
-		_GrandfatherResource["Shaders"].CreateFile(
-			"Simple.vshader",
+		CreateResource("Simple.vshader",
 			#include "Shaders/Simple.vshader"
 		);
-	}		
+	}
 }
