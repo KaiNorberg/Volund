@@ -22,7 +22,7 @@ namespace Volund
 		const Ref<Vertexbuffer> GetVertexbuffer() const;
 		const Ref<Indexbuffer> GetIndexbuffer() const;
 
-		static Ref<Mesh> Create(std::string_view Filepath);
+		static Ref<Mesh> Create(const std::string& Filepath);
 
 		static Ref<Mesh> Create(Ref<Vertexbuffer>& VBuffer, Ref<Indexbuffer>& IBuffer);
 

@@ -68,11 +68,8 @@ namespace Volund
 		return TransformVML;
 	}
 
-	Transform::Transform(const Vec3& Position, const Vec3& Rotation, const Vec3& Scale)
+	Transform::Transform()
 	{
-		this->Position = Position;
-		this->Scale = Scale;
-		this->SetRotation(Rotation);
 		this->OnUpdate(0.0f);
 	}
 }

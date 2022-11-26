@@ -19,11 +19,11 @@ namespace Volund
 		ActiveCameras[this->GetScene()] = this;
 	}
 
-	Camera* Camera::GetActiveCamera(Ref<Scene> ParentScene)
+	Camera* Camera::GetActiveCamera(Scene* ParentScene)
 	{
-		if (ActiveCameras.contains(ParentScene.get()))
+		if (ActiveCameras.contains(ParentScene))
 		{
-			return ActiveCameras[ParentScene.get()];
+			return ActiveCameras[ParentScene];
 		}
 		return nullptr;
 	}

@@ -34,7 +34,7 @@ namespace Volund
 		return this->_Indexbuffer;
 	}
 
-	Ref<Mesh> Mesh::Create(std::string_view Filepath)
+	Ref<Mesh> Mesh::Create(const std::string& Filepath)
 	{
 		ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(Filepath);
 

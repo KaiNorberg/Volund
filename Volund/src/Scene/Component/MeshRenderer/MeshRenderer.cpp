@@ -10,14 +10,20 @@ namespace Volund
 {
 	void MeshRenderer::OnUpdate(TimeStep TS)
 	{
-		if (this->_Mesh != nullptr && this->_Material != nullptr && this->GetScene()->HasComponent<Transform>(this->GetEntity()))
+		if (this->_Mesh != nullptr && this->_Material != nullptr)
 		{
-			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
-
 			RendererCommand Command;
-			Command.ModelMatrix = EntityTransform->GetModelMatrix();
 			Command.mesh = this->_Mesh;
 			Command.material = this->_Material;
+
+			if (this->GetScene()->HasComponent<Transform>(this->GetEntity()))
+			{
+				Command.ModelMatrix = this->GetScene()->GetComponent<Transform>(this->GetEntity())->GetModelMatrix();
+			}
+			else
+			{
+				Command.ModelMatrix = Mat4x4(1.0f);
+			}
 
 			Renderer::Submit(Command);
 		}

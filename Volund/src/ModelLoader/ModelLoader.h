@@ -11,10 +11,10 @@ namespace Volund
 		std::vector<V> Vertices;
 		std::vector<I> Indices;
 
-		ModelLoader(std::string_view Filepath);
+		ModelLoader(const std::string& Filepath);
 
 	private:
-		void LoadOBJ(std::string_view Filepath);
+		void LoadOBJ(const std::string& Filepath);
 
 		struct ArrayHasher
 		{
@@ -33,7 +33,7 @@ namespace Volund
 	};
 
 	template <typename V, typename I>
-	ModelLoader<V, I>::ModelLoader(std::string_view Filepath)
+	ModelLoader<V, I>::ModelLoader(const std::string& Filepath)
 	{
 		VOLUND_INFO("Loading OBJ file (%s)...", Filepath.data());
 
@@ -48,7 +48,7 @@ namespace Volund
 	}
 
 	template <typename V, typename I>
-	void ModelLoader<V, I>::LoadOBJ(std::string_view Filepath)
+	void ModelLoader<V, I>::LoadOBJ(const std::string& Filepath)
 	{
 		std::vector<V> Geometry;
 		std::vector<V> TextureCoords;
@@ -56,28 +56,20 @@ namespace Volund
 
 		std::unordered_map<std::array<V, 8>, I, ArrayHasher> VertexToIndexMap;
 
-		FILE* File = fopen(VL::Filesystem::GetFinalPath(std::string(Filepath)).data(), "r");
+		std::stringstream Buffer = std::stringstream(VL::Filesystem::LoadFile(Filepath));
 
-		if (File == nullptr)
-		{
-			VOLUND_ERROR("Unable to open OBJ file (%s)!", Filepath.data());
-		}
-
-		while (true)
+		std::string Line;
+		while (std::getline(Buffer, Line))
 		{
 			char LineHeader[16] = {};
 			LineHeader[15] = 0;
 
-			int32_t RET = fscanf(File, "%15s", LineHeader);
-			if (RET == EOF || RET == NULL)
-			{
-				break;
-			}
+			sscanf(Line.c_str(), "%15s", LineHeader);
 
 			if (strcmp(LineHeader, "v") == 0)
 			{
 				float X, Y, Z = 0.0f;
-				VOLUND_ASSERT(fscanf(File, "%f %f %f\n", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
+				VOLUND_ASSERT(sscanf(Line.c_str(), "v %f %f %f", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
 
 				Geometry.push_back(X);
 				Geometry.push_back(Y);
@@ -86,7 +78,7 @@ namespace Volund
 			else if (strcmp(LineHeader, "vt") == 0)
 			{
 				float X, Y = 0.0f;
-				VOLUND_ASSERT(fscanf(File, "%f %f\n", &X, &Y) == 2, "Unable to parse OBJ file (%s)!", Filepath.data());
+				VOLUND_ASSERT(sscanf(Line.c_str(), "vt %f %f", &X, &Y) == 2, "Unable to parse OBJ file (%s)!", Filepath.data());
 
 				TextureCoords.push_back(X);
 				TextureCoords.push_back(Y);
@@ -94,7 +86,7 @@ namespace Volund
 			else if (strcmp(LineHeader, "vn") == 0)
 			{
 				float X, Y, Z = 0.0f;
-				VOLUND_ASSERT(fscanf(File, "%f %f %f\n", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
+				VOLUND_ASSERT(sscanf(Line.c_str(), "vn %f %f %f", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
 
 				Normals.push_back(X);
 				Normals.push_back(Y);
@@ -102,17 +94,24 @@ namespace Volund
 			}
 			else if (strcmp(LineHeader, "f") == 0)
 			{
+				uint32_t GeometryIndices[3];
+				uint32_t TextureCoordsIndices[3];
+				uint32_t NormalsIndices[3];
+
+				VOLUND_ASSERT(sscanf(Line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", 
+					&GeometryIndices[0], &TextureCoordsIndices[0], &NormalsIndices[0],
+					&GeometryIndices[1], &TextureCoordsIndices[1], &NormalsIndices[1],
+					&GeometryIndices[2], &TextureCoordsIndices[2], &NormalsIndices[2]) == 9, "Unable to parse OBJ file (%s)!", Filepath.data());
+
 				for (uint64_t i = 0; i < 3; i++)
 				{
 					std::array<V, 8> Vertex;
 
 					if (!Geometry.empty() && !TextureCoords.empty() && !Normals.empty())
 					{
-						uint32_t GeometryIndex, TextureCoordsIndex, NormalsIndex;
-						VOLUND_ASSERT(fscanf(File, "%d/%d/%d", &GeometryIndex, &TextureCoordsIndex, &NormalsIndex) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
-						GeometryIndex = (GeometryIndex - 1) * 3;
-						TextureCoordsIndex = (TextureCoordsIndex - 1) * 2;
-						NormalsIndex = (NormalsIndex - 1) * 3;
+						uint32_t GeometryIndex = (GeometryIndices[i] - 1) * 3;
+						uint32_t TextureCoordsIndex = (TextureCoordsIndices[i] - 1) * 2;
+						uint32_t NormalsIndex = (NormalsIndices[i] - 1) * 3;
 
 						Vertex =
 						{
@@ -126,10 +125,10 @@ namespace Volund
 							Normals[NormalsIndex + 2]
 						};
 					}
-					else if (!Geometry.empty() && TextureCoords.empty() && Normals.empty())
+					/*else if (!Geometry.empty() && TextureCoords.empty() && Normals.empty())
 					{
 						uint32_t GeometryIndex;
-						VOLUND_ASSERT(fscanf(File, "%d", &GeometryIndex) == 1, "Unable to parse OBJ file (%s)!", Filepath.data());
+						VOLUND_ASSERT(sscanf(Line.c_str(), "f %d", &GeometryIndex) == 1, "Unable to parse OBJ file (%s)!", Filepath.data());
 						GeometryIndex = (GeometryIndex - 1) * 3;
 
 						Vertex =
@@ -143,7 +142,7 @@ namespace Volund
 							0,
 							0
 						};
-					}
+					}*/
 					else
 					{
 						VOLUND_ERROR("Unable to parse OBJ file (%s)!", Filepath.data());
@@ -169,7 +168,5 @@ namespace Volund
 				//Not implemented
 			}
 		}
-
-		fclose(File);
 	}
 }

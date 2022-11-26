@@ -1,0 +1,20 @@
+{
+    {
+        Type [ Transform ]
+
+        Position [ 0 0 1.5 ]
+    }
+    {
+        Type [ Camera ] 
+
+        IsActive [ 1 ]
+    }
+}
+{
+    {
+        Type [ MeshRenderer ]
+
+        Mesh [ Quad.obj ]
+        Material [ Mandelbrot.vmaterial ]
+    }
+}

@@ -31,7 +31,7 @@ namespace Volund
 
 		VML Serialize() override;
 
-		Transform(const Vec3& Position = Vec3(0.0f), const Vec3& Rotation = Vec3(0.0f), const Vec3& Scale = Vec3(1.0f));
+		Transform();
 
 	private:
 		Mat4x4 _ModelMatrix = Mat4x4(1.0f);

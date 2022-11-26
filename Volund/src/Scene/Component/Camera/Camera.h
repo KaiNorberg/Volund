@@ -19,7 +19,7 @@ namespace Volund
 
 		void SetActive();
 
-		static Camera* GetActiveCamera(Ref<Scene> ParentScene);
+		static Camera* GetActiveCamera(Scene* ParentScene);
 
 		Mat4x4 GetViewMatrix() const;
 

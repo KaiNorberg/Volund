@@ -11,6 +11,8 @@ namespace Volund
 	{
 	public:
 
+		IVec2 GetViewSize() override;
+
 		void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) override;
 
 		void Clear(const RGBA Color) override;

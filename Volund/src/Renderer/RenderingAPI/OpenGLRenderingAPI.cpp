@@ -96,6 +96,15 @@ namespace Volund
 		}
 	}
 
+	IVec2 OpenGLRenderingAPI::GetViewSize()
+	{
+		GLint Viewport[4];
+
+		glGetIntegerv(GL_VIEWPORT, Viewport);
+
+		return IVec2(Viewport[2], Viewport[3]);
+	}
+
 	void OpenGLRenderingAPI::SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height)
 	{
 		glViewport(X, Y, Width, Height);

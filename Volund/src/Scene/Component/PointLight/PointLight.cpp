@@ -34,9 +34,8 @@ namespace Volund
 		return PointLightVML;
 	}
 
-	PointLight::PointLight(RGB Color, float Brightness)
+	PointLight::PointLight()
 	{
-		this->Color = Color;
-		this->Brightness = Brightness;
+
 	}
 }

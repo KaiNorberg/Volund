@@ -54,14 +54,14 @@ void Editor::OnEvent(VL::Event* E)
 {
 	this->_Input.HandleEvent(E);
 
-	if (this->_Input.IsHeld(VOLUND_KEY_TAB))
+	/*if (this->_Input.IsHeld(VOLUND_KEY_TAB))
 	{
 		this->GetModule<VL::WindowModule>()->Window->SetCursorMode(VL::CursorMode::NORMAL);
 	}
 	else
 	{
 		this->GetModule<VL::WindowModule>()->Window->SetCursorMode(VL::CursorMode::DISABLED);
-	}
+	}*/
 
 	for (auto Widget : this->_Widgets)
 	{

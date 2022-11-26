@@ -58,12 +58,8 @@ namespace Volund
 		this->_OldMousePosition = _Input.GetMousePosition();
 	}
 
-	CameraMovement::CameraMovement(float Speed, float Sensitivity)
+	CameraMovement::CameraMovement()
 	{
 		this->_OldMousePosition = _Input.GetMousePosition();
-
-		this->Speed = Speed;
-
-		this->Sensitivity = Sensitivity;
 	}
 }

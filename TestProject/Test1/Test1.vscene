@@ -1,92 +1,109 @@
 {
-	{
+	{		
+		Type [ Tag ]
+
+		String [ Camera ]
+	}
+	{			
+		Type [ Transform ]
+
 		Position [ 0.000000 2.000000 10.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
 	}
-	{
+	{		
+		Type [ Camera ]
+
 		FOV [ 90.000000 ]
 		FarPlane [ 100.000000 ]
 		IsActive [ 1 ]
 		NearPlane [ 0.100000 ]
-		Type [ Camera ]
 	}
 	{
-		String [ Camera ]
-		Type [ Tag ]
-	}
-	{
-		Sensitivity [ 1.000000 ]
-		Speed [ 8.000000 ]
 		Type [ CameraMovement ]
+
+		Sensitivity [ 0.000000 ]
+		Speed [ 8.000000 ]
 	}
 }
 {
-	{
+	{		
+		Type [ Tag ]
+
+		String [ RedCube ]
+	}
+	{		
+		Type [ Transform ]
+
 		Position [ -3.000000 0.000000 0.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
 		Type [ Transform ]
 	}
 	{
-		String [ RedCube ]
-		Type [ Tag ]
-	}
-	{
-		Material [ Materials\Red.vmaterial ]
-		Mesh [ Models\Cube.obj ]
 		Type [ MeshRenderer ]
+
+		Material [ Materials\Red.vmaterial ]
+		Mesh [ Cube.obj ]
 	}
 }
 {
-	{
+	{		
+		Type [ Tag ]
+
+		String [ GreenCube ]
+	}
+	{		
+		Type [ Transform ]
+
 		Position [ -6.800000 4.500000 -7.600000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
 	}
 	{
-		String [ GreenCube ]
-		Type [ Tag ]
-	}
-	{
-		Material [ Materials\Green.vmaterial ]
-		Mesh [ Models\Cube.obj ]
 		Type [ MeshRenderer ]
+
+		Material [ Materials\Green.vmaterial ]
+		Mesh [ Cube.obj ]
 	}
 }
 {
 	{
+		Type [ Tag ]
+
+		String [ PointLight ]
+	}
+	{		
+		Type [ Transform ]
+
 		Position [ 0.000000 7.064885 0.000000 ]
 		Rotation [ 0.000000 -0.000000 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
 	}
 	{
-		String [ PointLight ]
-		Type [ Tag ]
-	}
-	{
+		Type [ PointLight ]
+
 		Brightness [ 1.000000 ]
 		Color [ 1.000000 1.000000 1.000000 ]
-		Type [ PointLight ]
 	}
 }
 {
 	{
+		Type [ Tag ]
+
+		String [ Teapot ]
+	}
+	{
+		Type [ Transform ]
+
 		Position [ 2.900000 0.000000 0.000000 ]
 		Rotation [ 0.000001 0.000001 0.000000 ]
 		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
 	}
 	{
-		String [ Teapot ]
-		Type [ Tag ]
-	}
-	{
+		Type [ MeshRenderer ]
+
 		Material [ Materials\Blue.vmaterial ]
 		Mesh [ Models\Teapot.obj ]
-		Type [ MeshRenderer ]
 	}
 }

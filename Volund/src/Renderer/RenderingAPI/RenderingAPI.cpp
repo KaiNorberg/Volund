@@ -7,6 +7,11 @@
 
 namespace Volund
 {
+	IVec2 RenderingAPI::GetViewSize()
+	{
+		return _Instance->GetViewSize();
+	}
+
 	void RenderingAPI::Clear(const RGBA Color)
 	{
 		_Instance->Clear(Color);

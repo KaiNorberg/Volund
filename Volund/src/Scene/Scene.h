@@ -15,6 +15,8 @@ namespace Volund
 	{
 	public:
 
+		std::string GetFilepath();
+
 		Entity CreateEntity();
 
 		void DestroyEntity(Entity entity);
@@ -67,7 +69,7 @@ namespace Volund
 
 		Registry _Registry;
 	
-		std::string Filepath;
+		std::string _Filepath;
 	};
 
 	template<typename T>

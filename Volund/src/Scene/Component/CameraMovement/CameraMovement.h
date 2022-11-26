@@ -19,7 +19,7 @@ namespace Volund
 
 		VML Serialize() override;
 
-		CameraMovement(float Speed = 1.0f, float Sensitivity = 1.0f);
+		CameraMovement();
 
 	private:
 		Input _Input;

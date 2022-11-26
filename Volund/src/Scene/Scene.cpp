@@ -8,8 +8,15 @@
 
 #include "Filesystem/Filesystem.h"
 
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
+	std::string Scene::GetFilepath()
+	{
+		return this->_Filepath;
+	}
+
 	Entity Scene::CreateEntity()
 	{
 		Entity NewEntity = this->_NewEntity;
@@ -54,8 +61,22 @@ namespace Volund
 
 	void Scene::OnUpdate(TimeStep TS)
 	{
-		for (const auto& [entity, Container] : this->_Registry)
+		VL::Camera* ActiveCamera = VL::Camera::GetActiveCamera(this);
+
+		if (ActiveCamera != nullptr)
 		{
+			IVec2 ViewSize = RenderingAPI::GetViewSize();
+
+			Renderer::Begin(ActiveCamera->GetViewMatrix(), ActiveCamera->GetProjectionMatrix((float)ViewSize.x / (float)ViewSize.y));
+
+		}
+		else
+		{
+			Renderer::Begin(Mat4x4(1.0f), Mat4x4(1.0f));
+		}
+
+		for (const auto& [entity, Container] : this->_Registry)
+		{	
 			for (const auto& View : Container)
 			{
 				for (const auto& component : View)
@@ -64,6 +85,8 @@ namespace Volund
 				}
 			}
 		}
+
+		Renderer::End();
 	}
 
 	void Scene::OnEvent(Event* E)
@@ -149,7 +172,7 @@ namespace Volund
 	{
 		VOLUND_INFO("Deserializing Scene...");
 
-		this->Filepath = Filepath;
+		this->_Filepath = Filepath;
 
 		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
 		VL::Filesystem::AddRelativeFilepath(ParentPath);
@@ -166,20 +189,37 @@ namespace Volund
 
 				if (ComponentType == "Camera")
 				{
-					Ref<Camera> NewCamera = this->CreateComponent<Camera>(NewEntity);
+					auto NewComponent = this->CreateComponent<Camera>(NewEntity);
 
-					if (ComponentVML.Get("IsActive"))
+					if (ComponentVML.ContainsEntry("IsActive") && ComponentVML.Get("IsActive"))
 					{
-						NewCamera->SetActive();
+						NewComponent->SetActive();
 					}
-
-					NewCamera->FOV = ComponentVML.Get("FOV");
-					NewCamera->NearPlane = ComponentVML.Get("NearPlane");
-					NewCamera->FarPlane = ComponentVML.Get("FarPlane");
+					if (ComponentVML.ContainsEntry("FOV"))
+					{
+						NewComponent->FOV = ComponentVML.Get("FOV");
+					}
+					if (ComponentVML.ContainsEntry("NearPlane"))
+					{
+						NewComponent->NearPlane = ComponentVML.Get("NearPlane");
+					}
+					if (ComponentVML.ContainsEntry("FarPlane"))
+					{
+						NewComponent->FarPlane = ComponentVML.Get("FarPlane");
+					}
 				}
 				else if (ComponentType == "CameraMovement")
 				{
-					this->CreateComponent<CameraMovement>(NewEntity, ComponentVML.Get("Speed"), ComponentVML.Get("Sensitivity"));
+					auto NewComponent = this->CreateComponent<CameraMovement>(NewEntity);
+
+					if (ComponentVML.ContainsEntry("Speed"))
+					{
+						NewComponent->Speed = ComponentVML.Get("Speed");
+					}
+					if (ComponentVML.ContainsEntry("Sensitivity"))
+					{
+						NewComponent->Sensitivity = ComponentVML.Get("Sensitivity");
+					}
 				}
 				else if (ComponentType == "MeshRenderer")
 				{
@@ -190,24 +230,46 @@ namespace Volund
 				}
 				else if (ComponentType == "PointLight")
 				{
-					VMLEntry ColorVML = ComponentVML.Get("Color");
-					VMLEntry BrightnessVML = ComponentVML.Get("Brightness");
+					auto NewComponent = this->CreateComponent<PointLight>(NewEntity);
 
-					RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
+					if (ComponentVML.ContainsEntry("Color"))
+					{
+						VMLEntry ColorVML = ComponentVML.Get("Color");
 
-					this->CreateComponent<PointLight>(NewEntity, Color, BrightnessVML);
+						RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
+
+						NewComponent->Color = Color;
+					}					
+					if (ComponentVML.ContainsEntry("Brightness"))
+					{
+						NewComponent->Brightness = ComponentVML.Get("Brightness");
+					}
 				}
 				else if (ComponentType == "Transform")
 				{
-					VMLEntry PositionVML = ComponentVML.Get("Position");
-					VMLEntry RotationVML = ComponentVML.Get("Rotation");
-					VMLEntry ScaleVML = ComponentVML.Get("Scale");
+					auto NewComponent = this->CreateComponent<Transform>(NewEntity);
 
-					Vec3 Position = Vec3(PositionVML[0], PositionVML[1], PositionVML[2].GetAs<float>());
-					Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2].GetAs<float>());
-					Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
+					if (ComponentVML.ContainsEntry("Position"))
+					{
+						VMLEntry PositionVML = ComponentVML.Get("Position");
+						Vec3 Position = Vec3(PositionVML[0], PositionVML[1], PositionVML[2]);
 
-					this->CreateComponent<Transform>(NewEntity, Position, Rotation, Scale);
+						NewComponent->Position = Position;
+					}
+					if (ComponentVML.ContainsEntry("Rotation"))
+					{
+						VMLEntry RotationVML = ComponentVML.Get("Rotation");
+						Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2]);
+
+						NewComponent->SetRotation(Rotation);
+					}
+					if (ComponentVML.ContainsEntry("Scale"))
+					{
+						VMLEntry ScaleVML = ComponentVML.Get("Scale");
+						Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
+
+						NewComponent->Scale = Scale;
+					}
 				}
 				else if (ComponentType == "Tag")
 				{
@@ -227,7 +289,7 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		std::string ParentPath = std::filesystem::path(this->Filepath).parent_path().string();
+		std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
 		VL::Filesystem::RemoveRelativeFilepath(ParentPath);
 	}
 }

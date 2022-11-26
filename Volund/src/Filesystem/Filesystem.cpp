@@ -79,7 +79,6 @@ namespace Volund
 		for (auto& RelativePath : _RelativeFilepaths)
 		{
 			std::string NewPath = RelativePath + "\\" + Filepath;
-			VOLUND_INFO(NewPath.c_str());
 
 			if (std::filesystem::exists(NewPath))
 			{
@@ -94,6 +93,12 @@ namespace Volund
 	{
 		CreateResource("Simple.vshader",
 			#include "Shaders/Simple.vshader"
+		);
+		CreateResource("Cube.obj",
+			#include "Meshes/Cube.obj"
+		);
+		CreateResource("Quad.obj",
+			#include "Meshes/Quad.obj"
 		);
 	}
 }
