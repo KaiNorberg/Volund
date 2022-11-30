@@ -39,19 +39,22 @@ project "Volund"
 		"%{prj.name}/src",
 		"vendor",
 		"vendor/GLAD/include",
-		"vendor/imgui"
+		"vendor/imgui",
+		"vendor/lua"
 	}
 
 	libdirs
 	{
-		TargetDir
+		TargetDir,
+		"vendor/lua"
 	}
 	
 	links
 	{
 		"OpenGL32.lib",
 		"Glad.lib",
-		"ImGui"
+		"ImGui",
+		"lua54"
 	}
 	
 	defines

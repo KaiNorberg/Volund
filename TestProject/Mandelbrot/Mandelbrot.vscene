@@ -1,20 +1,8 @@
-{
-    {
-        Type [ Transform ]
+Camera = CreateEntity()
 
-        Position [ 0 0 1.5 ]
-    }
-    {
-        Type [ Camera ] 
+AddComponent{Camera, "Transform", Position = {0.0, 0.0, 1.5}}
+AddComponent{Camera, "Camera", IsActive = 1}
 
-        IsActive [ 1 ]
-    }
-}
-{
-    {
-        Type [ MeshRenderer ]
+Mandelbrot = CreateEntity()
 
-        Mesh [ Quad.obj ]
-        Material [ Mandelbrot.vmaterial ]
-    }
-}
+AddComponent{Mandelbrot, "MeshRenderer", Mesh = "Quad.obj", Material = "Mandelbrot.vmaterial"}
