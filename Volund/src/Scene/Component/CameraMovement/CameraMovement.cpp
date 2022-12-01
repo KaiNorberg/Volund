@@ -27,7 +27,7 @@ namespace Volund
 
 	void CameraMovement::OnUpdate(TimeStep TS)
 	{
-		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
 
 		if (_Input.IsHeld('W'))
 		{

@@ -20,24 +20,22 @@ extern "C"
 
 namespace Volund
 {
-	static Scene* LuaActiveScene = nullptr;
-
-	int LuaCreateEntity(lua_State* L)
+	int Scene::LuaCreateEntity(lua_State* L)
 	{
-		Entity NewEntity = LuaActiveScene->CreateEntity();
+		Entity NewEntity = VL::Scene::CreateEntity();
 
-		lua_pushnumber(L, NewEntity);
+		lua_pushnumber(L, (lua_Number)NewEntity);
 
 		return 1;
 	}
 
-	int LuaAddComponent(lua_State* L)
+	int Scene::LuaAddComponent(lua_State* L)
 	{
 		LuaValue Table = LuaValue(-1, L);
 
-		int EntityID = Table.Number(1);
+		Entity EntityID = Table.Number(1);
 
-		if (!LuaActiveScene->HasEntity(EntityID))
+		if (!VL::Scene::HasEntity(EntityID))
 		{
 			VOLUND_WARNING("Invalid EntityID %d!", EntityID);
 
@@ -48,9 +46,9 @@ namespace Volund
 
 		if (Component == "Camera")
 		{
-			auto NewComponent = LuaActiveScene->CreateComponent<Camera>(EntityID);
+			auto NewComponent = VL::Scene::CreateComponent<Camera>(EntityID);
 
-			int IsActive = Table.Int("IsActive");
+			uint64_t IsActive = Table.Int("IsActive");
 			if (IsActive)
 			{
 				NewComponent->SetActive();
@@ -76,7 +74,7 @@ namespace Volund
 		}
 		else if (Component == "CameraMovement")
 		{
-			auto NewComponent = LuaActiveScene->CreateComponent<CameraMovement>(EntityID);
+			auto NewComponent = VL::Scene::CreateComponent<CameraMovement>(EntityID);
 
 			float Speed = Table.Number("Speed");
 			if (Speed != NULL_LUA)
@@ -95,11 +93,11 @@ namespace Volund
 			Ref<Mesh> MeshAsset = Mesh::Create(Table.String("Mesh"));
 			Ref<Material> MaterialAsset = Material::Create(Table.String("Material"));
 
-			LuaActiveScene->CreateComponent<MeshRenderer>(EntityID, MeshAsset, MaterialAsset);
+			VL::Scene::CreateComponent<MeshRenderer>(EntityID, MeshAsset, MaterialAsset);
 		}
 		else if (Component == "PointLight")
 		{
-			auto NewComponent = LuaActiveScene->CreateComponent<PointLight>(EntityID);
+			auto NewComponent = VL::Scene::CreateComponent<PointLight>(EntityID);
 
 			Vec3 Color = Table.Vector<3>("Color");
 			if (Color.x != NULL_LUA)
@@ -115,7 +113,7 @@ namespace Volund
 		}
 		else if (Component == "Transform")
 		{
-			auto NewComponent = LuaActiveScene->CreateComponent<Transform>(EntityID);
+			auto NewComponent = VL::Scene::CreateComponent<Transform>(EntityID);
 
 			Vec3 Position = Table.Vector<3>("Position");
 			if (Position.x != NULL_LUA)
@@ -137,7 +135,7 @@ namespace Volund
 		{
 			std::string String = Table.String("String");
 
-			auto NewComponent = LuaActiveScene->CreateComponent<Tag>(EntityID, String);
+			auto NewComponent = VL::Scene::CreateComponent<Tag>(EntityID, String);
 		}
 		else
 		{
@@ -147,34 +145,28 @@ namespace Volund
 		return 0;
 	}
 
-	static LuaLibrary SceneCreationLib =
-	{
-		{"CreateEntity", LuaCreateEntity},
-		{"AddComponent", LuaAddComponent}
-	};
-
 	std::string Scene::GetFilepath()
 	{
-		return this->_Filepath;
+		return _Data.Filepath;
 	}
 
 	Entity Scene::CreateEntity()
 	{
-		Entity NewEntity = this->_NewEntity;
+		Entity NewEntity = _Data.NewEntity;
 
-		this->_Registry.push_back(std::pair<Entity, Container<Component>>(NewEntity, Container<Component>()));
+		_Data.Registry.push_back(std::pair<Entity, Container<Component>>(NewEntity, Container<Component>()));
 
-		this->_NewEntity++;
+		_Data.NewEntity++;
 		return NewEntity;
 	}
 
 	void Scene::DestroyEntity(Entity entity)
 	{
-		uint64_t Index = this->FindEntity(entity);
+		uint64_t Index = FindEntity(entity);
 
 		if (Index != -1)
 		{
-			this->_Registry.erase(this->_Registry.begin() + Index);
+			_Data.Registry.erase(_Data.Registry.begin() + Index);
 		}
 		else
 		{
@@ -182,14 +174,14 @@ namespace Volund
 		}
 	}
 
-	bool Scene::HasEntity(Entity entity) const
+	bool Scene::HasEntity(Entity entity)
 	{
-		return this->FindEntity(entity) != -1;
+		return FindEntity(entity) != -1;
 	}
 
 	void Scene::DeleteComponent(Component* component)
 	{
-		for (auto& [entity, Container] : this->_Registry)
+		for (auto& [entity, Container] : _Data.Registry)
 		{
 			if (Container.Erase(component))
 			{
@@ -202,7 +194,7 @@ namespace Volund
 
 	void Scene::OnUpdate(TimeStep TS)
 	{
-		VL::Camera* ActiveCamera = VL::Camera::GetActiveCamera(this);
+		VL::Camera* ActiveCamera = VL::Camera::GetActiveCamera();
 
 		if (ActiveCamera != nullptr)
 		{
@@ -216,7 +208,7 @@ namespace Volund
 			Renderer::Begin(Mat4x4(1.0f), Mat4x4(1.0f));
 		}
 
-		for (const auto& [entity, Container] : this->_Registry)
+		for (const auto& [entity, Container] : _Data.Registry)
 		{	
 			for (const auto& View : Container)
 			{
@@ -232,7 +224,7 @@ namespace Volund
 
 	void Scene::OnEvent(Event* E)
 	{
-		for (const auto& [entity, Container] : this->_Registry)
+		for (const auto& [entity, Container] : _Data.Registry)
 		{
 			for (const auto& View : Container)
 			{
@@ -244,201 +236,49 @@ namespace Volund
 		}
 	}
 
-	void Scene::Serialize(std::string_view Filepath)
-	{
-		VML SceneVML = this->Serialize();
-		SceneVML.Write(Filepath);
-	}
-
-	VML Scene::Serialize()
-	{
-		VOLUND_INFO("Serializing Scene...");
-
-		VML SceneVML;
-
-		for (const auto& [entity, Container] : this->_Registry)
-		{
-			VML EntityVML;
-			uint32_t i = 0;
-			for (const auto& ComponentView : Container)
-			{
-				for (const auto& Component : ComponentView)
-				{
-					EntityVML.PushBack("Component" + std::to_string(i), Component->Serialize());
-					i++;
-				}
-			}
-			SceneVML.PushBack("Entity" + std::to_string(entity), EntityVML);
-		}
-
-		VOLUND_INFO("Finished serializing Scene!");
-
-		return SceneVML;
-	}
-
 	Registry::iterator Scene::begin()
 	{
-		return this->_Registry.begin();
+		return _Data.Registry.begin();
 	}
 
 	Registry::iterator Scene::end()
 	{
-		return this->_Registry.end();
+		return _Data.Registry.end();
 	}
 
-	Registry::const_iterator Scene::begin() const
+	void Scene::Load(const std::string& Filepath)
 	{
-		return this->_Registry.begin();
-	}
-
-	Registry::const_iterator Scene::end() const
-	{
-		return this->_Registry.end();
-	}
-
-	uint64_t Scene::FindEntity(Entity entity) const
-	{
-		for (int i = 0; i < this->_Registry.size(); i++)
+		if (!_Data.Filepath.empty())
 		{
-			if (_Registry[i].first == entity)
+			std::string ParentPath = std::filesystem::path(_Data.Filepath).parent_path().string();
+			VL::Filesystem::RemoveRelativeFilepath(ParentPath);
+		}
+
+		VOLUND_INFO("Deserializing Scene...");
+		
+		_Data = SceneData();
+		_Data.Filepath = Filepath;
+
+		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
+		VL::Filesystem::AddRelativeFilepath(ParentPath);
+
+		LuaContext Lua;
+		Lua.AddLibrary(_LuaLib);
+		Lua.DoFile(_Data.Filepath);
+
+		VOLUND_INFO("Finished deserializing Scene!");
+	}
+
+	uint64_t Scene::FindEntity(Entity entity)
+	{
+		for (int i = 0; i < _Data.Registry.size(); i++)
+		{
+			if (_Data.Registry[i].first == entity)
 			{
 				return i;
 			}
 		}
 
 		return -1;
-	}
-
-	Scene::Scene(std::string_view Filepath)
-	{
-		VOLUND_INFO("Deserializing Scene...");
-
-		this->_Filepath = Filepath;
-
-		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
-		VL::Filesystem::AddRelativeFilepath(ParentPath);
-
-		LuaActiveScene = this;
-
-		LuaContext Lua;
-		Lua.AddLibrary(SceneCreationLib);
-		Lua.DoFile(this->_Filepath);
-
-		LuaActiveScene = nullptr;
-
-		/*VML SceneVML = VML(Filepath);
-
-		for (auto& [EntityName, EntityVML] : SceneVML)
-		{
-			Entity NewEntity = this->CreateEntity();
-
-			for (auto& [ComponentName, ComponentVML] : EntityVML)
-			{
-				std::string_view ComponentType = (ComponentVML.Get("Type")).String();
-
-				if (ComponentType == "Camera")
-				{
-					auto NewComponent = this->CreateComponent<Camera>(NewEntity);
-
-					if (ComponentVML.ContainsEntry("IsActive") && ComponentVML.Get("IsActive"))
-					{
-						NewComponent->SetActive();
-					}
-					if (ComponentVML.ContainsEntry("FOV"))
-					{
-						NewComponent->FOV = ComponentVML.Get("FOV");
-					}
-					if (ComponentVML.ContainsEntry("NearPlane"))
-					{
-						NewComponent->NearPlane = ComponentVML.Get("NearPlane");
-					}
-					if (ComponentVML.ContainsEntry("FarPlane"))
-					{
-						NewComponent->FarPlane = ComponentVML.Get("FarPlane");
-					}
-				}
-				else if (ComponentType == "CameraMovement")
-				{
-					auto NewComponent = this->CreateComponent<CameraMovement>(NewEntity);
-
-					if (ComponentVML.ContainsEntry("Speed"))
-					{
-						NewComponent->Speed = ComponentVML.Get("Speed");
-					}
-					if (ComponentVML.ContainsEntry("Sensitivity"))
-					{
-						NewComponent->Sensitivity = ComponentVML.Get("Sensitivity");
-					}
-				}
-				else if (ComponentType == "MeshRenderer")
-				{
-					Ref<Mesh> MeshAsset = Mesh::Create(ComponentVML.Get("Mesh"));
-					Ref<Material> MaterialAsset = Material::Create(ComponentVML.Get("Material").String());
-
-					this->CreateComponent<MeshRenderer>(NewEntity, MeshAsset, MaterialAsset);
-				}
-				else if (ComponentType == "PointLight")
-				{
-					auto NewComponent = this->CreateComponent<PointLight>(NewEntity);
-
-					if (ComponentVML.ContainsEntry("Color"))
-					{
-						VMLEntry ColorVML = ComponentVML.Get("Color");
-
-						RGB Color = RGB(ColorVML[0], ColorVML[1], ColorVML[2]);
-
-						NewComponent->Color = Color;
-					}					
-					if (ComponentVML.ContainsEntry("Brightness"))
-					{
-						NewComponent->Brightness = ComponentVML.Get("Brightness");
-					}
-				}
-				else if (ComponentType == "Transform")
-				{
-					auto NewComponent = this->CreateComponent<Transform>(NewEntity);
-
-					if (ComponentVML.ContainsEntry("Position"))
-					{
-						VMLEntry PositionVML = ComponentVML.Get("Position");
-						Vec3 Position = Vec3(PositionVML[0], PositionVML[1], PositionVML[2]);
-
-						NewComponent->Position = Position;
-					}
-					if (ComponentVML.ContainsEntry("Rotation"))
-					{
-						VMLEntry RotationVML = ComponentVML.Get("Rotation");
-						Vec3 Rotation = Vec3(RotationVML[0], RotationVML[1], RotationVML[2]);
-
-						NewComponent->SetRotation(Rotation);
-					}
-					if (ComponentVML.ContainsEntry("Scale"))
-					{
-						VMLEntry ScaleVML = ComponentVML.Get("Scale");
-						Vec3 Scale = Vec3(ScaleVML[0], ScaleVML[1], ScaleVML[2]);
-
-						NewComponent->Scale = Scale;
-					}
-				}
-				else if (ComponentType == "Tag")
-				{
-					std::string String = ComponentVML.Get("String");
-
-					this->CreateComponent<Tag>(NewEntity, String);
-				}
-				else
-				{
-					VOLUND_ERROR("Unknown Component type (%s)!", ComponentType.data());
-				}
-			}
-		}*/
-
-		VOLUND_INFO("Finished deserializing Scene!");
-	}
-
-	Scene::~Scene()
-	{
-		std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
-		VL::Filesystem::RemoveRelativeFilepath(ParentPath);
 	}
 }

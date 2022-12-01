@@ -9,14 +9,8 @@ namespace Volund
 		return this->_Entity;
 	}
 
-	Scene* Component::GetScene() const
+	void Component::Init(Entity entity)
 	{
-		return this->_Scene;
-	}
-
-	void Component::Init(Scene* scene, Entity entity)
-	{
-		this->_Scene = scene;
 		this->_Entity = entity;
 	}
 }

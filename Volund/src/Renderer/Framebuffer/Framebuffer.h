@@ -11,7 +11,7 @@ namespace Volund
 		uint32_t Samples = 1;
 
 		std::vector<TextureSpec> ColorAttachments;
-		TextureSpec DepthAttachment;
+		TextureSpec DepthAttachment = {};
 
 		bool SwapChainTarget = false;
 	};
@@ -44,6 +44,6 @@ namespace Volund
 		
 		std::vector<uint32_t> _ColorAttachments;
 
-		uint32_t _DepthAttachment;
+		uint32_t _DepthAttachment = NULL;
 	};
 }

@@ -16,9 +16,9 @@ namespace Volund
 			Command.mesh = this->_Mesh;
 			Command.material = this->_Material;
 
-			if (this->GetScene()->HasComponent<Transform>(this->GetEntity()))
+			if (VL::Scene::HasComponent<Transform>(this->GetEntity()))
 			{
-				Command.ModelMatrix = this->GetScene()->GetComponent<Transform>(this->GetEntity())->GetModelMatrix();
+				Command.ModelMatrix = VL::Scene::GetComponent<Transform>(this->GetEntity())->GetModelMatrix();
 			}
 			else
 			{

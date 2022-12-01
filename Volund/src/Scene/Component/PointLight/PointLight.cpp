@@ -11,7 +11,7 @@ namespace Volund
 {
 	void PointLight::OnUpdate(TimeStep TS)
 	{
-		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
 
 		RendererLight Light;
 		Light.Position = EntityTransform->Position;

@@ -87,7 +87,7 @@ namespace Volund
 		window->DrawList->PathClear();
 
 		int num_segments = 30;
-		int start = abs(ImSin(g.Time * 1.8f) * (num_segments - 5));
+		int start = (int)abs(ImSin(g.Time * 1.8f) * (num_segments - 5));
 
 		const float a_min = IM_PI * 2.0f * ((float)start) / (float)num_segments;
 		const float a_max = IM_PI * 2.0f * ((float)num_segments - 3) / (float)num_segments;
@@ -101,6 +101,8 @@ namespace Volund
 		}
 
 		window->DrawList->PathStroke(color, false, thickness);
+
+		return true;
 	}
 
 }

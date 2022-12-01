@@ -16,7 +16,7 @@ void OutputWidget::OnUpdate(VL::TimeStep TS)
 {
 	static float TotalTime = 0.0f;
 
-	TotalTime += TS;
+	TotalTime += (float)TS;
 
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{

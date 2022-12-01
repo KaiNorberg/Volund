@@ -11,16 +11,16 @@ void ViewportWidget::OnEvent(VL::Event* E)
 {
 	this->_Input.HandleEvent(E);
 
-	if (this->_SelectedScene != nullptr)
+	if (!VL::Scene::GetFilepath().empty())
 	{
-		this->_SelectedScene->OnEvent(E);
+		VL::Scene::OnEvent(E);
 	}
 
 	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
 		if (this->_Input.IsPressed('R'))
 		{
-			this->_SelectedScene = VL::Ref<VL::Scene>(new VL::Scene(this->_SelectedScene->GetFilepath()));
+			VL::Scene::Load(VL::Scene::GetFilepath());
 		}
 	}
 }
@@ -34,22 +34,19 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 			std::string Filepath = VL::FileDialog::OpenFile();
 			if (!Filepath.empty())
 			{
-				this->_SelectedScene = VL::Ref<VL::Scene>(new VL::Scene(Filepath));
+				VL::Scene::Load(Filepath);
 			}
 		}
 
-		if (this->_SelectedScene != nullptr)
+		if (!VL::Scene::GetFilepath().empty())
 		{
 			ImGui::SameLine();
 
 			if (ImGui::Button("Reload (Shift + R)"))
 			{
-				this->_SelectedScene = VL::Ref<VL::Scene>(new VL::Scene(this->_SelectedScene->GetFilepath()));
+				VL::Scene::Load(VL::Scene::GetFilepath());
 			}
-		}
 
-		if (this->_SelectedScene != nullptr)
-		{
 			if (ImGui::BeginChild("ViewPort"))
 			{
 				this->_Framebuffer->Bind();
@@ -57,9 +54,9 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 				auto ViewportSize = ImGui::GetContentRegionAvail();
 
 				VL::RenderingAPI::Clear();
-				VL::RenderingAPI::SetViewPort(0, 0, ViewportSize.x, ViewportSize.y);
+				VL::RenderingAPI::SetViewPort(0, 0, (int32_t)ViewportSize.x, (int32_t)ViewportSize.y);
 
-				this->_SelectedScene->OnUpdate(TS);
+				VL::Scene::OnUpdate(TS);
 
 				float XRatio = ViewportSize.x / this->_Framebuffer->GetSpec().Width;
 				float YRatio = ViewportSize.y / this->_Framebuffer->GetSpec().Height;

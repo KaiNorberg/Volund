@@ -9,30 +9,24 @@ namespace Volund
 {
 	bool Camera::IsActive() const
 	{
-		Scene* ParentScene = this->GetScene();
-
-		return ActiveCameras.contains(ParentScene) && ActiveCameras[ParentScene] == this;
+		return _ActiveCamera == this;
 	}
 
 	void Camera::SetActive()
 	{
-		ActiveCameras[this->GetScene()] = this;
+		_ActiveCamera = this;
 	}
 
-	Camera* Camera::GetActiveCamera(Scene* ParentScene)
+	Camera* Camera::GetActiveCamera()
 	{
-		if (ActiveCameras.contains(ParentScene))
-		{
-			return ActiveCameras[ParentScene];
-		}
-		return nullptr;
+		return _ActiveCamera;
 	}
 
 	Mat4x4 Camera::GetViewMatrix() const
 	{
-		VOLUND_ASSERT(this->GetScene()->HasComponent<Transform>(this->GetEntity()), "Camera unable to find a Transform component!");
+		VOLUND_ASSERT(VL::Scene::HasComponent<Transform>(this->GetEntity()), "Camera unable to find a Transform component!");
 
-		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
 
 		return lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(),
 		              EntityTransform->GetUp());
@@ -40,9 +34,9 @@ namespace Volund
 
 	Mat4x4 Camera::GetOriginViewMatrix() const
 	{
-		VOLUND_ASSERT(this->GetScene()->HasComponent<Transform>(this->GetEntity()), "Camera unable to find a Transform component!");
+		VOLUND_ASSERT(VL::Scene::HasComponent<Transform>(this->GetEntity()), "Camera unable to find a Transform component!");
 
-		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
 
 		return lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());
 	}
@@ -54,21 +48,17 @@ namespace Volund
 
 	void Camera::OnCreate()
 	{
-		Scene* ParentScene = this->GetScene();
-
-		if (!ActiveCameras.contains(ParentScene))
+		if (_ActiveCamera == nullptr)
 		{
-			ActiveCameras[ParentScene] = this;
+			_ActiveCamera = this;
 		}
 	}
 
 	void Camera::OnDelete()
 	{
-		Scene* ParentScene = this->GetScene();
-
 		if (this->IsActive())
 		{
-			this->ActiveCameras.erase(ParentScene);
+			_ActiveCamera = nullptr;
 		}
 	}
 

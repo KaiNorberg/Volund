@@ -19,7 +19,7 @@ namespace Volund
 
 		void SetActive();
 
-		static Camera* GetActiveCamera(Scene* ParentScene);
+		static Camera* GetActiveCamera();
 
 		Mat4x4 GetViewMatrix() const;
 
@@ -36,6 +36,7 @@ namespace Volund
 		Camera() = default;
 
 	private:
-		static inline std::unordered_map<Scene*, Camera*> ActiveCameras = {};
+
+		static inline Camera* _ActiveCamera = nullptr;
 	};
 }

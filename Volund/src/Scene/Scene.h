@@ -1,10 +1,11 @@
 #pragma once
 
 #include "EventDispatcher/Event.h"
-
 #include "Component/Component.h"
-
 #include "Container/Container.h"
+#include "Lua/LuaLibrary/LuaLibrary.h"
+
+struct lua_State;
 
 namespace Volund
 {
@@ -15,72 +16,70 @@ namespace Volund
 	{
 	public:
 
-		std::string GetFilepath();
+		static int LuaCreateEntity(lua_State* L);
+		static int LuaAddComponent(lua_State* L);
 
-		Entity CreateEntity();
+		static std::string GetFilepath();
 
-		void DestroyEntity(Entity entity);
+		static Entity CreateEntity();
+		static void DestroyEntity(Entity entity);
+		static bool HasEntity(Entity entity);
 
-		bool HasEntity(Entity entity) const;
-
-		void DeleteComponent(Component* component);
-
+		static void DeleteComponent(Component* component);
 		template <typename T>
-		void DeleteComponent(Entity entity, uint64_t Index = 0);
-
+		static void DeleteComponent(Entity entity, uint64_t Index = 0);
 		template <typename T, class... ARGS>
-		Ref<T> CreateComponent(Entity entity, ARGS&&... Args);
+		static Ref<T> CreateComponent(Entity entity, ARGS&&... Args);
+		template <typename T>
+		static bool HasComponent(Entity entity, uint64_t Index = 0);
+		template <typename T>
+		static Ref<T> GetComponent(Entity entity, uint64_t Index = 0);
 
 		template <typename T>
-		bool HasComponent(Entity entity, uint64_t Index = 0);
-
+		static const std::vector<Ref<Component>>& View(Entity entity);
 		template <typename T>
-		Ref<T> GetComponent(Entity entity, uint64_t Index = 0);
+		static std::vector<std::vector<Ref<Component>>> View();
 
-		template <typename T>
-		const std::vector<Ref<Component>>& View(Entity entity) const;
+		static void OnEvent(Event* E);
+		static void OnUpdate(TimeStep TS);
 
-		template <typename T>
-		std::vector<std::vector<Ref<Component>>> View() const;
+		static Registry::iterator begin();
+		static Registry::iterator end();
 
-		void OnEvent(Event* E);
-
-		void OnUpdate(TimeStep TS);
-
-		void Serialize(std::string_view Filepath);
-
-		VML Serialize();
-
-		Registry::iterator begin();
-		Registry::iterator end();
-
-		Registry::const_iterator begin() const;
-		Registry::const_iterator end() const;
-
-		Scene(std::string_view Filepath);
-
-		~Scene();
+		static void Load(const std::string& Filepath);
 
 	private:
 
-		uint64_t FindEntity(Entity entity) const;
+		Scene() = default;
 
-		uint64_t _NewEntity = 1;
+		static uint64_t FindEntity(Entity entity);
 
-		Registry _Registry;
-	
-		std::string _Filepath;
+		static inline struct SceneData
+		{
+			Registry Registry;
+
+			std::string Filepath;
+
+			uint64_t NewEntity = 1;
+
+		} _Data;
+
+		static inline LuaLibrary _LuaLib =
+		{
+			{"CreateEntity", LuaCreateEntity},
+			{"AddComponent", LuaAddComponent}
+		};
 	};
 
 	template<typename T>
 	inline void Scene::DeleteComponent(Entity entity, uint64_t Index)
 	{
-		uint64_t Index = this->FindEntity(entity);
+		uint64_t Index = FindEntity(entity);
 
 		if (Index != -1)
 		{
-			this->_Registry[Index].second.Get<T>(Index)->OnDelete();
-			this->_Registry[Index].second.Erase<T>(Index);
+			_Data.Registry[Index].second.Get<T>(Index)->OnDelete();
+			_Data.Registry[Index].second.Erase<T>(Index);
 		}
 		else
 		{
@@ -91,14 +90,14 @@ namespace Volund
 	template<typename T, class ...ARGS>
 	inline Ref<T> Scene::CreateComponent(Entity entity, ARGS && ...Args)
 	{
-		uint64_t Index = this->FindEntity(entity);
+		uint64_t Index = FindEntity(entity);
 
 		if (Index != -1)
 		{
 			Ref<T> NewComponent = std::make_shared<T>(Args...);
-			NewComponent->Init(this, entity);
+			NewComponent->Init(entity);
 			NewComponent->OnCreate();
-			this->_Registry[Index].second.PushBack(NewComponent);
+			_Data.Registry[Index].second.PushBack(NewComponent);
 
 			return NewComponent;
 		}
@@ -112,11 +111,11 @@ namespace Volund
 	template<typename T>
 	inline bool Scene::HasComponent(Entity entity, uint64_t Index)
 	{
-		uint64_t RegistryIndex = this->FindEntity(entity);
+		uint64_t RegistryIndex = FindEntity(entity);
 
 		if (RegistryIndex != -1)
 		{
-			return this->_Registry[RegistryIndex].second.Contains<T>(Index);
+			return _Data.Registry[RegistryIndex].second.Contains<T>(Index);
 
 		}
 		else
@@ -128,11 +127,11 @@ namespace Volund
 	template<typename T>
 	inline Ref<T> Scene::GetComponent(Entity entity, uint64_t Index)
 	{
-		uint64_t RegistryIndex = this->FindEntity(entity);
+		uint64_t RegistryIndex = FindEntity(entity);
 
 		if (RegistryIndex != -1)
 		{
-			return this->_Registry[RegistryIndex].second.Get<T>(Index);
+			return _Data.Registry[RegistryIndex].second.Get<T>(Index);
 
 		}
 		else
@@ -143,26 +142,27 @@ namespace Volund
 	}
 
 	template<typename T>
-	inline const std::vector<Ref<Component>>& Scene::View(Entity entity) const
+	inline const std::vector<Ref<Component>>& Scene::View(Entity entity)
 	{
-		uint64_t Index = this->FindEntity(entity);
+		uint64_t Index = FindEntity(entity);
 
 		if (Index != -1)
 		{
-			return this->_Registry[Index].second.View<T>();
+			return _Data.Registry[Index].second.View<T>();
 		}
 		else
 		{
 			VOLUND_ERROR("Unable to find entity (%d)", entity);
-			return this->_Registry[Index].second.View<T>();
+			return _Data.Registry[Index].second.View<T>();
 		}
 	}
+
 	template<typename T>
-	inline std::vector<std::vector<Ref<Component>>> Scene::View() const
+	inline std::vector<std::vector<Ref<Component>>> Scene::View()
 	{
 		std::vector<std::vector<Ref<Component>>> Return;
 
-		for (auto& [Entity, View] : this->_Registry)
+		for (auto& [Entity, View] : _Data.Registry)
 		{
 			if (View.Contains<T>())
 			{

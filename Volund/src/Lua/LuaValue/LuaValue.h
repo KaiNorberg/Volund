@@ -27,10 +27,10 @@ namespace Volund
 		template<int S>
 		glm::vec<S, float> Vector(const std::string& Key);
 
-		int64_t Int(const uint64_t Index);
-		std::string String(const uint64_t Index);
-		float Number(const uint64_t Index);
-		LuaValue* Table(const uint64_t Index);
+		int64_t Int(const int32_t Index);
+		std::string String(const int32_t Index);
+		float Number(const int32_t Index);
+		LuaValue* Table(const int32_t Index);
 
 		operator int64_t();
 		operator std::string();
@@ -38,13 +38,13 @@ namespace Volund
 
 		uint32_t Size();
 
-		LuaValue(const int64_t Index, lua_State* State, bool ShouldPop = false);
+		LuaValue(const int32_t Index, lua_State* State, bool ShouldPop = false);
 
 		~LuaValue();
 
 	private:
 
-		int64_t _Index = 0;
+		int32_t _Index = 0;
 		
 		lua_State* _State = nullptr;
 

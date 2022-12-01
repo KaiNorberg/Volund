@@ -18,8 +18,6 @@ namespace Volund
 
 		Entity GetEntity() const;
 
-		Scene* GetScene() const;
-
 		virtual void OnCreate() {};
 
 		virtual void OnDelete() {};
@@ -37,9 +35,8 @@ namespace Volund
 	private:
 		friend class Scene;
 
-		void Init(Scene* scene, Entity entity);
+		void Init(Entity entity);
 
-		Scene* _Scene = nullptr;
 		Entity _Entity = NULL;
 	};
 }
