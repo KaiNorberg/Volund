@@ -101,7 +101,7 @@ namespace Volund
 		{
 			auto NewComponent = LuaActiveScene->CreateComponent<PointLight>(EntityID);
 
-			Vec3 Color = Table.Vector3("Color");
+			Vec3 Color = Table.Vector<3>("Color");
 			if (Color.x != NULL_LUA)
 			{
 				NewComponent->Color = Color;
@@ -117,17 +117,17 @@ namespace Volund
 		{
 			auto NewComponent = LuaActiveScene->CreateComponent<Transform>(EntityID);
 
-			Vec3 Position = Table.Vector3("Position");
+			Vec3 Position = Table.Vector<3>("Position");
 			if (Position.x != NULL_LUA)
 			{
 				NewComponent->Position = Position;
 			}
-			Vec3 Rotation = Table.Vector3("Rotation");
+			Vec3 Rotation = Table.Vector<3>("Rotation");
 			if (Rotation.x != NULL_LUA)
 			{
 				NewComponent->SetRotation(Rotation);
 			}
-			Vec3 Scale = Table.Vector3("Scale");
+			Vec3 Scale = Table.Vector<3>("Scale");
 			if (Scale.x != NULL_LUA)
 			{
 				NewComponent->Scale = Scale;

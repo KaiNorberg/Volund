@@ -12,41 +12,43 @@ namespace Volund
 {
 	bool LuaValue::IsInt()
 	{
-		return lua_isinteger(this->_State, this->GetIndex());
+		return lua_isinteger(this->_State, this->_Index);
 	}
 
 	bool LuaValue::IsString()
 	{
-		return lua_isstring(this->_State, this->GetIndex());
+		return lua_isstring(this->_State, this->_Index);
 	}
 
 	bool LuaValue::IsNumber()
 	{
-		return lua_isnumber(this->_State, this->GetIndex());
+		return lua_isnumber(this->_State, this->_Index);
 	}
 
 	bool LuaValue::IsTable()
 	{
-		return lua_istable(this->_State, this->GetIndex());
+		return lua_istable(this->_State, this->_Index);
 	}
 
 	int64_t LuaValue::Int()
 	{
-		return lua_tointeger(this->_State, this->GetIndex());
+		return lua_tointeger(this->_State, this->_Index);
 	}
 
 	std::string LuaValue::String()
 	{
-		return lua_tostring(this->_State, this->GetIndex());
+		return lua_tostring(this->_State, this->_Index);
 	}
 
 	float LuaValue::Number()
 	{
-		return lua_tonumber(this->_State, this->GetIndex());
+		return lua_tonumber(this->_State, this->_Index);
 	}
 
 	int64_t LuaValue::Int(const std::string& Key)
 	{
+		int R = NULL_LUA;
+
 		if (IsTable())
 		{
 			lua_pushstring(this->_State, Key.c_str());
@@ -54,17 +56,18 @@ namespace Volund
 
 			if (lua_isinteger(this->_State, -1))
 			{
-				auto R = lua_tointeger(this->_State, -1);
-				lua_pop(this->_State, 1);
-				return R;
+				R = lua_tointeger(this->_State, -1);
 			}
+			lua_pop(this->_State, 1);
 		}
 
-		return NULL_LUA;
+		return R;
 	}
 
 	std::string LuaValue::String(const std::string& Key)
 	{
+		std::string R = "";
+
 		if (IsTable())
 		{
 			lua_pushstring(this->_State, Key.c_str());
@@ -72,17 +75,18 @@ namespace Volund
 
 			if (lua_isstring(this->_State, -1))
 			{
-				auto R = lua_tostring(this->_State, -1);
-				lua_pop(this->_State, 1);
-				return R;
+				R = lua_tostring(this->_State, -1);
 			}
+			lua_pop(this->_State, 1);
 		}
 
-		return "";
+		return R;
 	}
 
 	float LuaValue::Number(const std::string& Key)
 	{
+		float R = NULL_LUA;
+
 		if (IsTable())
 		{
 			lua_pushstring(this->_State, Key.c_str());
@@ -90,62 +94,31 @@ namespace Volund
 
 			if (lua_isnumber(this->_State, -1))
 			{
-				auto R = lua_tonumber(this->_State, -1);
-				lua_pop(this->_State, 1);
-				return R;		
+				R = lua_tonumber(this->_State, -1);
 			}
+			lua_pop(this->_State, 1);
 		}
 
-		return NULL_LUA;
+		return R;
 	}
 
-	Vec3 LuaValue::Vector3(const std::string& Key)
+	LuaValue* LuaValue::Table(const std::string& Key)
 	{
 		if (IsTable())
 		{
 			lua_pushstring(this->_State, Key.c_str());
 			lua_gettable(this->_State, -2);
 
-			if (lua_istable(this->_State, -1))
-			{
-				lua_pushinteger(this->_State, 1);
-				lua_gettable(this->_State, -2);
-				float X = NULL_LUA;
-				if (lua_isnumber(this->_State, -1))
-				{
-					X = lua_tonumber(this->_State, -1);
-				}
-				lua_pop(this->_State, 1);
-
-				lua_pushinteger(this->_State, 2);
-				lua_gettable(this->_State, -2);
-				float Y = NULL_LUA;
-				if (lua_isnumber(this->_State, -1))
-				{
-					Y = lua_tonumber(this->_State, -1);
-				}
-				lua_pop(this->_State, 1);
-
-				lua_pushinteger(this->_State, 3);
-				lua_gettable(this->_State, -2);
-				float Z = NULL_LUA;
-				if (lua_isnumber(this->_State, -1))
-				{
-					Z = lua_tonumber(this->_State, -1);
-				}
-				lua_pop(this->_State, 1);
-
-				lua_pop(this->_State, 1);
-
-				return Vec3(X, Y, Z);
-			}
+			return new LuaValue(-1, this->_State, true);
 		}
 
-		return Vec3(NULL_LUA, NULL_LUA, NULL_LUA);
+		return new LuaValue(0, nullptr);
 	}
 
 	int64_t LuaValue::Int(const uint64_t Index)
 	{
+		int R = NULL_LUA;
+
 		if (IsTable())
 		{
 			lua_pushinteger(this->_State, Index);
@@ -153,17 +126,18 @@ namespace Volund
 			
 			if (lua_isinteger(this->_State, -1))
 			{
-				auto R = lua_tointeger(this->_State, -1);
-				lua_pop(this->_State, 1);
-				return R;
+				R = lua_tointeger(this->_State, -1);
 			}
+			lua_pop(this->_State, 1);
 		}
 
-		return NULL_LUA;
+		return R;
 	}
 
 	std::string LuaValue::String(const uint64_t Index)
 	{
+		std::string R = "";
+
 		if (IsTable())
 		{
 			lua_pushinteger(this->_State, Index);
@@ -171,17 +145,18 @@ namespace Volund
 
 			if (lua_isstring(this->_State, -1))
 			{
-				auto R = lua_tostring(this->_State, -1);
-				lua_pop(this->_State, 1);
-				return R;
+				R = lua_tostring(this->_State, -1);
 			}
+			lua_pop(this->_State, 1);
 		}
 
-		return "";
+		return R;
 	}
 
 	float LuaValue::Number(const uint64_t Index)
 	{
+		float R = NULL_LUA;
+
 		if (IsTable())
 		{
 			lua_pushinteger(this->_State, Index);
@@ -189,13 +164,25 @@ namespace Volund
 
 			if (lua_isnumber(this->_State, -1))
 			{
-				auto R = lua_tonumber(this->_State, -1);
-				lua_pop(this->_State, 1);
-				return R;
+				R = lua_tonumber(this->_State, -1);
 			}
+			lua_pop(this->_State, 1);
 		}
 
-		return NULL_LUA;
+		return R;
+	}
+
+	LuaValue* LuaValue::Table(const uint64_t Index)
+	{
+		if (IsTable())
+		{
+			lua_pushinteger(this->_State, Index);
+			lua_gettable(this->_State, -2);
+
+			return new LuaValue(-1, this->_State, true);
+		}
+
+		return new LuaValue(0, nullptr);
 	}
 
 	LuaValue::operator int64_t()
@@ -213,28 +200,30 @@ namespace Volund
 		return this->Number();
 	}
 
-	LuaValue::LuaValue(const uint64_t Index, lua_State* State)
+	uint32_t LuaValue::Size()
 	{
-		this->_Index = Index;
-		this->_State = State;
-	}
-
-	LuaValue::LuaValue(const std::string& Name, lua_State* State)
-	{
-		this->_Name = Name;
-		this->_State = State;
-	}
-
-	uint64_t LuaValue::GetIndex()
-	{
-		if (this->_Index == 0)
+		if (this->IsTable())
 		{
-			lua_getglobal(this->_State, this->_Name.c_str());
-			return -1;
+			return lua_rawlen(this->_State, this->_Index);
 		}
 		else
 		{
-			return this->_Index;
+			return 1;
+		}
+	}
+
+	LuaValue::LuaValue(const int64_t Index, lua_State* State, bool ShouldPop)
+	{
+		this->_Index = Index;
+		this->_State = State;
+		this->_ShouldPop = ShouldPop;
+	}
+
+	LuaValue::~LuaValue()
+	{
+		if (this->_ShouldPop)
+		{
+			lua_pop(this->_State, 1);
 		}
 	}
 }

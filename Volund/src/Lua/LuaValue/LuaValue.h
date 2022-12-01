@@ -11,51 +11,67 @@ namespace Volund
 	public:
 
 		bool IsInt();
-
 		bool IsString();
-
 		bool IsNumber();
-
 		bool IsTable();
 
 		int64_t Int();
-
 		std::string String();
-
 		float Number();
 
 		int64_t Int(const std::string& Key);
-
 		std::string String(const std::string& Key);
-
 		float Number(const std::string& Key);
+		LuaValue* Table(const std::string& Key);
 
-		Vec3 Vector3(const std::string& Key);
+		template<int S>
+		glm::vec<S, float> Vector(const std::string& Key);
 
 		int64_t Int(const uint64_t Index);
-
 		std::string String(const uint64_t Index);
-
 		float Number(const uint64_t Index);
+		LuaValue* Table(const uint64_t Index);
 
 		operator int64_t();
-
 		operator std::string();
-
 		operator float();
 
-		LuaValue(const uint64_t Index, lua_State* State);
+		uint32_t Size();
 
-		LuaValue(const std::string& Name, lua_State* State);
+		LuaValue(const int64_t Index, lua_State* State, bool ShouldPop = false);
+
+		~LuaValue();
 
 	private:
 
-		uint64_t GetIndex();
-
-		uint64_t _Index = 0;
-
-		std::string _Name;
+		int64_t _Index = 0;
 		
 		lua_State* _State = nullptr;
+
+		bool _ShouldPop;
 	};
+
+	template<int S>
+	inline glm::vec<S, float> LuaValue::Vector(const std::string& Key)
+	{
+		LuaValue* Vector = this->Table(Key);
+
+		int VectorSize = Vector->Size();
+
+		glm::vec<S, float> R;
+
+		for (int i = 0; i < S; i++)
+		{
+			R[i] = 1.0f;
+		}
+
+		for (int i = 0; i < S && i < VectorSize; i++)
+		{
+			R[i] = Vector->Number(i + 1);
+		}
+
+		delete Vector;
+
+		return R;
+	}
 }

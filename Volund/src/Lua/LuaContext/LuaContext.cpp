@@ -51,7 +51,8 @@ namespace Volund
 
 	LuaValue LuaContext::GetGlobal(const std::string& Name)
 	{
-		return LuaValue(Name, this->_State);
+		lua_getglobal(this->_State, Name.c_str());
+		return LuaValue(-1, this->_State);
 	}
 
 	void LuaContext::AddLibrary(const LuaLibrary& Lib)
