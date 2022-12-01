@@ -1,109 +1,25 @@
-{
-	{		
-		Type [ Tag ]
+Camera = CreateEntity()
 
-		String [ Camera ]
-	}
-	{			
-		Type [ Transform ]
+AddComponent{Camera, "Transform", Position = {0.0, 2.0, 10.0}}
+AddComponent{Camera, "Camera", IsActive = 1}
+AddComponent{Camera, "CameraMovement", Sensitivity = 0, Speed = 8}
 
-		Position [ 0.000000 2.000000 10.000000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-	}
-	{		
-		Type [ Camera ]
+RedCube = CreateEntity()
 
-		FOV [ 90.000000 ]
-		FarPlane [ 100.000000 ]
-		IsActive [ 1 ]
-		NearPlane [ 0.100000 ]
-	}
-	{
-		Type [ CameraMovement ]
+AddComponent{RedCube, "Transform", Position = {-3.0, 0.0, 0.0}}
+AddComponent{RedCube, "MeshRenderer", Mesh = "Cube.obj", Material = "Materials/Red.vmaterial"}
 
-		Sensitivity [ 0.000000 ]
-		Speed [ 8.000000 ]
-	}
-}
-{
-	{		
-		Type [ Tag ]
+GreenCube = CreateEntity()
 
-		String [ RedCube ]
-	}
-	{		
-		Type [ Transform ]
+AddComponent{GreenCube, "Transform", Position = {-6.8, 4.5, -7.6}}
+AddComponent{GreenCube, "MeshRenderer", Mesh = "Cube.obj", Material = "Materials/Green.vmaterial"}
 
-		Position [ -3.000000 0.000000 0.000000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-		Type [ Transform ]
-	}
-	{
-		Type [ MeshRenderer ]
+PointLight = CreateEntity()
 
-		Material [ Materials\Red.vmaterial ]
-		Mesh [ Cube.obj ]
-	}
-}
-{
-	{		
-		Type [ Tag ]
+AddComponent{PointLight, "Transform", Position = {0.0, 7.5, 0.0}}
+AddComponent{PointLight, "PointLight", Brightness = 1.0, Color = {1.0, 1.0, 1.0}}
 
-		String [ GreenCube ]
-	}
-	{		
-		Type [ Transform ]
+Teapot = CreateEntity()
 
-		Position [ -6.800000 4.500000 -7.600000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-	}
-	{
-		Type [ MeshRenderer ]
-
-		Material [ Materials\Green.vmaterial ]
-		Mesh [ Cube.obj ]
-	}
-}
-{
-	{
-		Type [ Tag ]
-
-		String [ PointLight ]
-	}
-	{		
-		Type [ Transform ]
-
-		Position [ 0.000000 7.064885 0.000000 ]
-		Rotation [ 0.000000 -0.000000 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-	}
-	{
-		Type [ PointLight ]
-
-		Brightness [ 1.000000 ]
-		Color [ 1.000000 1.000000 1.000000 ]
-	}
-}
-{
-	{
-		Type [ Tag ]
-
-		String [ Teapot ]
-	}
-	{
-		Type [ Transform ]
-
-		Position [ 2.900000 0.000000 0.000000 ]
-		Rotation [ 0.000001 0.000001 0.000000 ]
-		Scale [ 1.000000 1.000000 1.000000 ]
-	}
-	{
-		Type [ MeshRenderer ]
-
-		Material [ Materials\Blue.vmaterial ]
-		Mesh [ Models\Teapot.obj ]
-	}
-}
+AddComponent{Teapot, "Transform", Position = {2.9, 0.0, 0.0}}
+AddComponent{Teapot, "MeshRenderer", Mesh = "Models/Teapot.obj", Material = "Materials/Blue.vmaterial"}
