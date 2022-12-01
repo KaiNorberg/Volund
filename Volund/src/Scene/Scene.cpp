@@ -46,8 +46,6 @@ namespace Volund
 
 		std::string Component = Table.String(2);
 
-		VOLUND_INFO("%s %d", Component.c_str(), EntityID);
-
 		if (Component == "Camera")
 		{
 			auto NewComponent = LuaActiveScene->CreateComponent<Camera>(EntityID);
