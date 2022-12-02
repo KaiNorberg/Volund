@@ -43,7 +43,7 @@ namespace Volund
 		return this->_Shader;
 	}
 
-	Ref<Material> Material::Create(std::string_view Filepath)
+	/*Ref<Material> Material::Create(std::string_view Filepath)
 	{
 		VML MaterialVML(Filepath);
 
@@ -90,11 +90,11 @@ namespace Volund
 		}
 
 		return NewMaterial;
-	}
+	}*/
 
 	Ref<Material> Material::Create(Ref<Shader> ObjectShader)
 	{
-		return Ref<Material>(new Material(ObjectShader));
+		return std::make_shared<Material>(ObjectShader);
 	}
 
 	Material::Material(Ref<Shader> DrawShader)

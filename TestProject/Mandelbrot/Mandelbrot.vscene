@@ -1,8 +1,11 @@
-Camera = CreateEntity()
+MandelbrotMaterial = Material:new("Mandelbrot.vshader")
+MandelbrotMaterial:Set("Color", Vec3:new(1.0, 0.0, 0.0))
 
-AddComponent{Camera, "Transform", Position = {0.0, 0.0, 1.5}}
-AddComponent{Camera, "Camera", IsActive = 1}
+QuadMesh = Mesh:new("Quad.obj")
 
-Mandelbrot = CreateEntity()
+Camera = Entity:new()
+Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 1.5)})
+Camera:AddComponent(Component.CAMERA, {IsActive = true})
 
-AddComponent{Mandelbrot, "MeshRenderer", Mesh = "Quad.obj", Material = "Mandelbrot.vmaterial"}
+Mandelbrot = Entity:new()
+Mandelbrot:AddComponent(Component.MESH_RENDERER, {Mesh = QuadMesh, Material = MandelbrotMaterial})

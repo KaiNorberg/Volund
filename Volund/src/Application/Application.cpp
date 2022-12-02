@@ -7,16 +7,6 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
-#include "Lua/Lua.h"
-
-extern "C"
-{
-#include "lua/include/lua.h"
-#include "lua/include/lauxlib.h"
-#include "lua/include/lualib.h"
-}
-
-
 namespace Volund
 {
 	void Application::Run()

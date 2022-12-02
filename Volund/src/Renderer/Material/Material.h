@@ -30,13 +30,11 @@ namespace Volund
 
 		Ref<Shader> GetShader();
 
-		static Ref<Material> Create(std::string_view Filepath);
-
 		static Ref<Material> Create(Ref<Shader> ObjectShader);
 
-	private:
-
 		Material(Ref<Shader> ObjectShader);
+
+	private:
 
 		Container<BaseMaterialValue> _Container;
 

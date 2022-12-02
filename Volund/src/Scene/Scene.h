@@ -3,9 +3,6 @@
 #include "EventDispatcher/Event.h"
 #include "Component/Component.h"
 #include "Container/Container.h"
-#include "Lua/LuaLibrary/LuaLibrary.h"
-
-struct lua_State;
 
 namespace Volund
 {
@@ -15,9 +12,6 @@ namespace Volund
 	class Scene
 	{
 	public:
-
-		static int LuaCreateEntity(lua_State* L);
-		static int LuaAddComponent(lua_State* L);
 
 		static std::string GetFilepath();
 
@@ -63,23 +57,17 @@ namespace Volund
 			uint64_t NewEntity = 1;
 
 		} _Data;
-
-		static inline LuaLibrary _LuaLib =
-		{
-			{"CreateEntity", LuaCreateEntity},
-			{"AddComponent", LuaAddComponent}
-		};
 	};
 
 	template<typename T>
 	inline void Scene::DeleteComponent(Entity entity, uint64_t Index)
 	{
-		uint64_t Index = FindEntity(entity);
+		uint64_t EntityIndex = FindEntity(entity);
 
-		if (Index != -1)
+		if (EntityIndex != -1)
 		{
-			_Data.Registry[Index].second.Get<T>(Index)->OnDelete();
-			_Data.Registry[Index].second.Erase<T>(Index);
+			_Data.Registry[EntityIndex].second.Get<T>(Index)->OnDelete();
+			_Data.Registry[EntityIndex].second.Erase<T>(Index);
 		}
 		else
 		{

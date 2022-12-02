@@ -20,6 +20,11 @@
 #include <memory>
 #include <string_view>
 
+#define SOL_NO_EXCEPTIONS 0
+#define SOL_PRINT_ERRORS 1
+
+#include <sol/sol.hpp>
+
 #include "Math/Math.h"
 
 #include "Core/Core.h"
