@@ -90,10 +90,17 @@ namespace Volund
 		break;
 		case LuaComponent::MESH_RENDERER:
 		{
-			LuaMesh MeshAsset = Table["Mesh"];
-			LuaMaterial MaterialAsset = Table["Material"];
+			if (Table["Mesh"] != sol::lua_nil && Table["Material"] != sol::lua_nil)
+			{
+				LuaMesh MeshAsset = Table["Mesh"];
+				LuaMaterial MaterialAsset = Table["Material"];
 
-			VL::Scene::CreateComponent<MeshRenderer>(this->_Entity, MeshAsset.Get(), MaterialAsset.Get());
+				VL::Scene::CreateComponent<MeshRenderer>(this->_Entity, MeshAsset.Get(), MaterialAsset.Get());
+			}
+			else
+			{
+				VOLUND_WARNING("Unable to read mesh or material from MeshRenderer table!");
+			}
 		}
 		break;
 		case LuaComponent::POINT_LIGHT:
