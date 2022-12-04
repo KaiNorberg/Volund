@@ -17,6 +17,11 @@ namespace Volund
 		return _Data.Filepath;
 	}
 
+	Input& Scene::GetInput()
+	{
+		return _Data.MainInput;
+	}
+
 	Entity Scene::CreateEntity()
 	{
 		Entity NewEntity = _Data.NewEntity;
@@ -91,6 +96,8 @@ namespace Volund
 
 	void Scene::OnEvent(Event* E)
 	{
+		_Data.MainInput.HandleEvent(E);
+
 		for (const auto& [entity, Container] : _Data.Registry)
 		{
 			for (const auto& View : Container)
@@ -129,14 +136,20 @@ namespace Volund
 		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
 		VL::Filesystem::AddRelativeFilepath(ParentPath);
 
-		sol::state State;
-		Lua::Connect(State);
-		State.script_file(_Data.Filepath);
+		try
+		{
+			Lua::Connect(_Data.LuaState);
+			_Data.LuaState.script_file(_Data.Filepath);
+		}
+		catch (sol::error E)
+		{
+			VOLUND_WARNING(E.what());
+		}
 
 		VOLUND_INFO("Finished deserializing Scene!");
 	}
 
-	uint64_t Scene::FindEntity(Entity entity)
+	uint64_t Scene::FindEntity(Entity entity) 
 	{
 		for (int i = 0; i < _Data.Registry.size(); i++)
 		{

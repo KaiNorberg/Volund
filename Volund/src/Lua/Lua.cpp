@@ -3,8 +3,40 @@
 
 #include "Scene/Component/Components.h"
 
+#include "Filesystem/Filesystem.h"
+
 namespace Volund
 {
+	bool Lua::LuaInput::IsHeld(char KeyCode) const
+	{
+		return Scene::GetInput().IsHeld(KeyCode);
+	}
+
+	bool Lua::LuaInput::IsPressed(char KeyCode)
+	{
+		return Scene::GetInput().IsPressed(KeyCode);
+	}
+
+	bool Lua::LuaInput::IsMouseButtonHeld(char Button) const
+	{
+		return Scene::GetInput().IsMouseButtonHeld(Button);
+	}
+
+	bool Lua::LuaInput::IsMouseButtonPressed(char Button)
+	{
+		return Scene::GetInput().IsMouseButtonPressed(Button);
+	}
+
+	uint32_t Lua::LuaInput::GetScrollPosition() const
+	{
+		return Scene::GetInput().GetScrollPosition();
+	}
+
+	Vec2 Lua::LuaInput::GetMousePosition() const
+	{
+		return Scene::GetInput().GetMousePosition();
+	}
+
 	void Lua::LuaEntity::AddComponent(LuaComponent Component, const sol::table& Table)
 	{
 		if (!VL::Scene::HasEntity(this->_Entity))
@@ -81,10 +113,12 @@ namespace Volund
 		}
 		break;
 		case LuaComponent::SCRIPT:
-		{
-			std::string Filepath = Table["Script"];
+		{			
+			sol::function OnCreate = Table["OnCreate"];
+			sol::function OnUpdate = Table["OnUpdate"];
+			sol::function OnDelete = Table["OnDelete"];
 
-			auto NewComponent = VL::Scene::CreateComponent<Script>(this->_Entity, Filepath);
+			auto NewComponent = VL::Scene::CreateComponent<Script>(this->_Entity, OnCreate, OnUpdate, OnDelete);
 		}
 		break;
 		case LuaComponent::TAG:
@@ -250,7 +284,12 @@ namespace Volund
 		return this->_Material;
 	}
 
-	void Lua::LuaMaterial::SetInt(const std::string& Name, int32_t Value)
+	void Lua::LuaMaterial::SetInt(const std::string& Name, lua_Integer Value)
+	{
+		this->_Material->Set(Name, (int)Value);
+	}
+
+	void Lua::LuaMaterial::SetFloat(const std::string& Name, float Value)
 	{
 		this->_Material->Set(Name, Value);
 	}
@@ -284,17 +323,31 @@ namespace Volund
 
 	void Lua::Connect(sol::state& Lua)
 	{
-		Lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::io);
+		Lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::io, sol::lib::package);
+
+		Lua["VolundRequire"] = LuaRequire;
+		Lua["VolundPrint"] = LuaPrint;
 
 		Lua.new_usertype<Vec4>("Vec4", sol::constructors<void(), void(float), void(float, float, float, float)>(), "x", &Vec4::x, "y", &Vec4::y, "z", &Vec4::z, "w", &Vec4::w);
 		Lua.new_usertype<Vec3>("Vec3", sol::constructors<void(), void(float), void(float, float, float)>(), "x", &Vec3::x, "y", &Vec3::y, "z", &Vec3::z);
 		Lua.new_usertype<Vec2>("Vec2", sol::constructors<void(), void(float), void(float, float)>(), "x", &Vec2::x, "y", &Vec2::y);
+		
+		Lua.new_usertype<LuaInput>("VolundInput",
+			"IsHeld", &LuaInput::IsHeld,
+			"IsPressed", &LuaInput::IsPressed,
+			"IsMouseButtonHeld", &LuaInput::IsMouseButtonHeld,
+			"IsMouseButtonPressed", &LuaInput::IsMouseButtonPressed,
+			"GetScrollPosition", &LuaInput::GetScrollPosition,
+			"GetMousePosition", &LuaInput::GetMousePosition);
+
+		Lua["Input"] = LuaInput();
 
 		Lua.new_usertype<LuaMaterial>("Material", sol::constructors<void(const std::string&)>(),
-			"Set", &LuaMaterial::SetInt, 
-			"Set", &LuaMaterial::SetDouble,
-			"Set", &LuaMaterial::SetVec2,
-			"Set", &LuaMaterial::SetVec3);
+			"SetInt", &LuaMaterial::SetInt, 
+			"SetFloat", &LuaMaterial::SetFloat, 
+			"SetDouble", &LuaMaterial::SetDouble,
+			"SetVec2", &LuaMaterial::SetVec2,
+			"SetVec3", &LuaMaterial::SetVec3);
 
 		Lua.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>());
 
@@ -360,6 +413,19 @@ namespace Volund
 			"TAG", LuaComponent::TAG,
 			"TRANSFORM", LuaComponent::TRANSFORM
 		);
+	}
+
+	sol::object Lua::LuaRequire(sol::this_state S, std::string Filepath)
+	{
+		std::string Source = Filesystem::LoadFile(Filepath);
+
+		sol::state_view State = S;
+		return State.require_script(Filepath, Source);
+	}
+
+	void Lua::LuaPrint(std::string String)
+	{
+		VOLUND_INFO(String.c_str());		
 	}
 
 	Ref<Mesh> Lua::LuaMesh::Get()

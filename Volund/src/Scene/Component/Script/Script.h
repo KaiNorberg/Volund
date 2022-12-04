@@ -8,14 +8,18 @@ namespace Volund
 	{
 	public:
 
-		void OnUpdate(TimeStep TS);
+		void OnCreate() override;
 
-		Script() = default;
+		void OnUpdate(TimeStep TS) override;
 
-		Script(std::string Filepath);
+		void OnDelete() override;
+
+		Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDelete);
 
 	private:
 
-		Ref<sol::state> _Lua;
+		sol::function _LuaOnCreate;
+		sol::function _LuaOnUpdate;
+		sol::function _LuaOnDelete;
 	};
 }

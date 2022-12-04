@@ -21,7 +21,7 @@
 #include <string_view>
 
 #define SOL_NO_EXCEPTIONS 0
-#define SOL_PRINT_ERRORS 1
+#define SOL_PRINT_ERRORS 0
 
 #include <sol/sol.hpp>
 

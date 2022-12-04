@@ -25,6 +25,26 @@ namespace Volund
 			TRANSFORM = 7,
 		};
 
+		static sol::object LuaRequire(sol::this_state S, std::string Filepath);
+
+		static void LuaPrint(std::string String);
+
+		struct LuaInput
+		{
+		public:
+
+			bool IsHeld(char KeyCode) const;
+			bool IsPressed(char KeyCode);
+
+			bool IsMouseButtonHeld(char Button) const;
+			bool IsMouseButtonPressed(char Button);
+
+			uint32_t GetScrollPosition() const;
+
+			Vec2 GetMousePosition() const;
+
+		};
+
 		struct LuaEntity
 		{
 		public:
@@ -50,7 +70,9 @@ namespace Volund
 
 			Ref<Material> Get();
 
-			void SetInt(const std::string& Name, int32_t Value);
+			void SetInt(const std::string& Name, lua_Integer Value);
+
+			void SetFloat(const std::string& Name, float Value);
 
 			void SetDouble(const std::string& Name, double Value);
 

@@ -1,11 +1,13 @@
+Rotate = VolundRequire("Scripts/Rotate.lua")
+
 RedMaterial = Material:new("Simple.vshader")
-RedMaterial:Set("Color", Vec3:new(1.0, 0.0, 0.0))
+RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
 
 GreenMaterial = Material:new("Simple.vshader")
-GreenMaterial:Set("Color", Vec3:new(0.0, 1.0, 0.0))
+GreenMaterial:SetVec3("Color", Vec3:new(0.0, 1.0, 0.0))
 
 BlueMaterial = Material:new("Simple.vshader")
-BlueMaterial:Set("Color", Vec3:new(0.0, 0.0, 1.0))
+BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
 
 CubeMesh = Mesh:new("Cube.obj")
 TeapotMesh = Mesh:new("Models/Teapot.obj")
@@ -25,7 +27,7 @@ GreenCube = Entity:new()
 
 GreenCube:AddComponent(Component.TRANSFORM, {Position = Vec3:new(-6.8, 4.5, -7.6)})
 GreenCube:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = GreenMaterial})
-GreenCube:AddComponent(Component.SCRIPT, {Script = "Scripts/Rotate.lua"})
+GreenCube:AddComponent(Component.SCRIPT, {OnUpdate = Rotate.OnUpdate})
 
 PointLight = Entity:new()
 

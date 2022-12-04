@@ -11,7 +11,14 @@ namespace Volund
 		}
 
 		std::ifstream File(GetFinalPath(Filepath));
-		VOLUND_ASSERT(File, "Unable to load file (%s).", Filepath.c_str());
+		
+		if (!File)
+		{
+			VOLUND_WARNING("Unable to load file (%s).", Filepath.c_str());
+
+			return "";
+		}
+		
 		std::string Line;
 		std::string Output;
 		while (std::getline(File, Line))
@@ -19,8 +26,6 @@ namespace Volund
 			Output += Line + '\n';
 		}
 		return Output;
-
-		return "";
 	}
 
 	void Filesystem::WriteFile(const std::string& Filepath, const std::string& File)

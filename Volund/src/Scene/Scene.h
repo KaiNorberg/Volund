@@ -4,6 +4,8 @@
 #include "Component/Component.h"
 #include "Container/Container.h"
 
+#include "Input/Input.h"
+
 namespace Volund
 {
 	using Entity = uint64_t;
@@ -14,6 +16,7 @@ namespace Volund
 	public:
 
 		static std::string GetFilepath();
+		static Input& GetInput();
 
 		static Entity CreateEntity();
 		static void DestroyEntity(Entity entity);
@@ -50,11 +53,15 @@ namespace Volund
 
 		static inline struct SceneData
 		{
+			sol::state LuaState;
+
 			Registry Registry;
 
 			std::string Filepath;
 
 			uint64_t NewEntity = 1;
+
+			Input MainInput;
 
 		} _Data;
 	};

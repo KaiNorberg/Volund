@@ -7,18 +7,55 @@
 
 namespace Volund
 {
-	void Script::OnUpdate(TimeStep TS)
-	{	
-		std::string Script = "Update(" + std::to_string(this->GetEntity()) + ", " + std::to_string(TS) + ")";
-
-		sol::function Function = (*this->_Lua)["Update"];
-		Function.call<void>(Lua::LuaEntity(this->GetEntity()), TS.GetSeconds());
+	void Script::OnCreate()
+	{
+		if (this->_LuaOnCreate != sol::lua_nil)
+		{
+			try
+			{
+				this->_LuaOnCreate.call<void>(Lua::LuaEntity(this->GetEntity()));
+			}
+			catch (sol::error E)
+			{
+				VOLUND_WARNING(E.what());
+			}
+		}
 	}
 
-	Script::Script(std::string Filepath)
+	void Script::OnUpdate(TimeStep TS)
+	{	
+		if (this->_LuaOnUpdate != sol::lua_nil)
+		{
+			try
+			{
+				this->_LuaOnUpdate.call<void>(Lua::LuaEntity(this->GetEntity()), TS.GetSeconds());
+			}
+			catch (sol::error E)
+			{
+				VOLUND_WARNING(E.what());
+			}
+		}
+	}
+
+	void Script::OnDelete()
 	{
-		this->_Lua = Ref<sol::state>(new sol::state());
-		Lua::Connect(*this->_Lua.get());
-		this->_Lua->script(Filesystem::LoadFile(Filepath));
+		if (this->_LuaOnDelete != sol::lua_nil)
+		{
+			try
+			{
+				this->_LuaOnDelete.call<void>(Lua::LuaEntity(this->GetEntity()));
+			}
+			catch (sol::error E)
+			{
+				VOLUND_WARNING(E.what());
+			}
+		}
+	}
+
+	Script::Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDelete)
+	{
+		this->_LuaOnCreate = LuaOnCreate;
+		this->_LuaOnUpdate = LuaOnUpdate;
+		this->_LuaOnDelete = LuaOnDelete;
 	}
 }
