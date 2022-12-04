@@ -6,3 +6,4 @@
 #include "PointLight/PointLight.h"
 #include "Transform/Transform.h"
 #include "Tag/Tag.h"
+#include "Script/Script.h"

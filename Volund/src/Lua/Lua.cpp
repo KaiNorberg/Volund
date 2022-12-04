@@ -80,6 +80,13 @@ namespace Volund
 			}
 		}
 		break;
+		case LuaComponent::SCRIPT:
+		{
+			std::string Filepath = Table["Script"];
+
+			auto NewComponent = VL::Scene::CreateComponent<Script>(this->_Entity, Filepath);
+		}
+		break;
 		case LuaComponent::TAG:
 		{
 			std::string String = Table["String"];
@@ -149,6 +156,11 @@ namespace Volund
 			VL::Scene::DeleteComponent<PointLight>(this->_Entity, I);
 		}
 		break;
+		case LuaComponent::SCRIPT:
+		{
+			VL::Scene::DeleteComponent<Script>(this->_Entity, I);
+		}
+		break;
 		case LuaComponent::TAG:
 		{
 			VL::Scene::DeleteComponent<Tag>(this->_Entity, I);
@@ -165,6 +177,67 @@ namespace Volund
 		}
 		break;
 		}
+	}
+
+	sol::object Lua::LuaEntity::GetComponent(sol::this_state S, LuaComponent Component, uint64_t I)
+	{
+		if (!VL::Scene::HasEntity(this->_Entity))
+		{
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+
+			return sol::make_object(S, VL::Component());
+		}
+
+		switch (Component)
+		{
+		case LuaComponent::CAMERA:
+		{
+			return sol::make_object(S, *(VL::Scene::GetComponent<Camera>(this->_Entity, I).get()));
+		}
+		break;
+		case LuaComponent::CAMERA_MOVEMENT:
+		{
+			return sol::make_object(S, *(VL::Scene::GetComponent<CameraMovement>(this->_Entity, I).get()));
+		}
+		break;
+		case LuaComponent::MESH_RENDERER:
+		{
+			return sol::make_object(S, LuaMeshRenderer(VL::Scene::GetComponent<MeshRenderer>(this->_Entity, I)));
+		}
+		break;
+		case LuaComponent::POINT_LIGHT:
+		{
+			return sol::make_object(S, *(VL::Scene::GetComponent<PointLight>(this->_Entity, I).get()));
+		}
+		break;
+		case LuaComponent::SCRIPT:
+		{
+			return sol::make_object(S, *(VL::Scene::GetComponent<Script>(this->_Entity, I).get()));
+		}
+		break;
+		case LuaComponent::TAG:
+		{
+			return sol::make_object(S, *(VL::Scene::GetComponent<Tag>(this->_Entity, I).get()));
+		}
+		break;
+		case LuaComponent::TRANSFORM:
+		{
+			return sol::make_object(S, LuaTransform(VL::Scene::GetComponent<Transform>(this->_Entity, I)));
+		}
+		break;
+		default:
+		{
+			VOLUND_ERROR("Unknown Component type (%d)!", Component);
+		}
+		break;
+		}			
+		
+		return sol::make_object(S, VL::Component());
+	}
+
+	Lua::LuaEntity::LuaEntity(Entity Entity)
+	{
+		this->_Entity = Entity;
 	}
 
 	Lua::LuaEntity::LuaEntity()
@@ -197,6 +270,11 @@ namespace Volund
 		this->_Material->Set(Name, Value);
 	}
 
+	Lua::LuaMaterial::LuaMaterial(Ref<Material> Material)
+	{
+		this->_Material = Material;
+	}
+
 	Lua::LuaMaterial::LuaMaterial(const std::string& ShaderPath)
 	{
 		auto NewShader = Shader::Create(ShaderPath);
@@ -212,18 +290,73 @@ namespace Volund
 		Lua.new_usertype<Vec3>("Vec3", sol::constructors<void(), void(float), void(float, float, float)>(), "x", &Vec3::x, "y", &Vec3::y, "z", &Vec3::z);
 		Lua.new_usertype<Vec2>("Vec2", sol::constructors<void(), void(float), void(float, float)>(), "x", &Vec2::x, "y", &Vec2::y);
 
-		Lua.new_usertype<LuaEntity>("Entity", sol::constructors<void()>(), "AddComponent", &LuaEntity::AddComponent, "DeleteComponent", &LuaEntity::DeleteComponent);
-
-		Lua.new_usertype<LuaMaterial>("Material", sol::constructors<void(const std::string&)>(), "Set", &LuaMaterial::SetInt, "Set", &LuaMaterial::SetDouble,
-			"Set", &LuaMaterial::SetVec2, "Set", &LuaMaterial::SetVec3);
+		Lua.new_usertype<LuaMaterial>("Material", sol::constructors<void(const std::string&)>(),
+			"Set", &LuaMaterial::SetInt, 
+			"Set", &LuaMaterial::SetDouble,
+			"Set", &LuaMaterial::SetVec2,
+			"Set", &LuaMaterial::SetVec3);
 
 		Lua.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>());
+
+		Lua.new_usertype<LuaEntity>("Entity", sol::constructors<void()>(),
+			"AddComponent", &LuaEntity::AddComponent,
+			"DeleteComponent", &LuaEntity::DeleteComponent,
+			"GetComponent", &LuaEntity::GetComponent);
+
+		Lua.new_usertype<LuaCamera>("Camera",
+			"GetFOV", &LuaCamera::GetFOV,
+			"SetFOV", &LuaCamera::SetFOV,
+			"GetNearPlane", &LuaCamera::GetNearPlane,
+			"SetNearPlane", &LuaCamera::SetNearPlane,
+			"GetFarPlane", &LuaCamera::GetFarPlane,
+			"SetFarPlane", &LuaCamera::SetFarPlane,
+			"IsActive", &LuaCamera::IsActive,
+			"SetActive", &LuaCamera::SetActive);
+
+		Lua.new_usertype<LuaCameraMovement>("CameraMovement",
+			"GetSpeed", &LuaCameraMovement::GetSpeed,
+			"SetSpeed", &LuaCameraMovement::SetSpeed,
+			"SetSensitivity", &LuaCameraMovement::SetSensitivity,
+			"GetSensitivity", &LuaCameraMovement::GetSensitivity);
+
+		Lua.new_usertype<LuaMeshRenderer>("MeshRenderer",
+			"SetMesh", &LuaMeshRenderer::SetMesh,
+			"SetMaterial", &LuaMeshRenderer::SetMaterial,
+			"GetMesh", &LuaMeshRenderer::GetMesh,
+			"GetMaterial", &LuaMeshRenderer::GetMaterial);
+
+		Lua.new_usertype<LuaPointLight>("PointLight",
+			"SetColor", &LuaPointLight::SetColor,
+			"GetColor", &LuaPointLight::GetColor,
+			"SetBrightness", &LuaPointLight::SetBrightness,
+			"GetBrightness", &LuaPointLight::GetBrightness);
+
+		Lua.new_usertype<LuaScript>("Script");
+
+		Lua.new_usertype<LuaTag>("Tag",
+			"Get", &LuaTag::Get,
+			"Set", &LuaTag::Set);
+
+		Lua.new_usertype<LuaTransform>("Transform",
+			"SetPosition", &LuaTransform::SetPosition,
+			"GetPosition", &LuaTransform::GetPosition,
+			"AddPosition", &LuaTransform::AddPosition,
+			"SetRotation", &LuaTransform::SetRotation,
+			"GetRotation", &LuaTransform::GetRotation,
+			"AddRotation", &LuaTransform::AddRotation,
+			"SetScale", &LuaTransform::SetScale,
+			"GetScale", &LuaTransform::GetScale,
+			"AddScale", &LuaTransform::AddScale,
+			"GetFront", &LuaTransform::GetFront,
+			"GetRight", &LuaTransform::GetRight,
+			"GetUp", &LuaTransform::GetUp);
 
 		Lua["Component"] = Lua.create_table_with(
 			"CAMERA", LuaComponent::CAMERA,
 			"CAMERA_MOVEMENT", LuaComponent::CAMERA_MOVEMENT,
 			"MESH_RENDERER", LuaComponent::MESH_RENDERER,
 			"POINT_LIGHT", LuaComponent::POINT_LIGHT,
+			"SCRIPT", LuaComponent::SCRIPT,
 			"TAG", LuaComponent::TAG,
 			"TRANSFORM", LuaComponent::TRANSFORM
 		);
@@ -234,8 +367,218 @@ namespace Volund
 		return this->_Mesh;
 	}
 
+	Lua::LuaMesh::LuaMesh(Ref<Mesh> Mesh)
+	{
+		this->_Mesh = Mesh;
+	}
+
 	Lua::LuaMesh::LuaMesh(const std::string& MeshPath)
 	{
 		this->_Mesh = Mesh::Create(MeshPath);
+	}
+
+	float Lua::LuaCamera::GetFOV()
+	{
+		return this->_Camera->FOV;
+	}
+
+	void Lua::LuaCamera::SetFOV(float FOV)
+	{
+		this->_Camera->FOV = FOV;
+	}
+
+	float Lua::LuaCamera::GetNearPlane()
+	{
+		return this->_Camera->NearPlane;
+	}
+
+	void Lua::LuaCamera::SetNearPlane(float NearPlane)
+	{
+		this->_Camera->NearPlane = NearPlane;
+	}
+
+	float Lua::LuaCamera::GetFarPlane()
+	{
+		return this->_Camera->FarPlane;
+	}
+
+	void Lua::LuaCamera::SetFarPlane(float FarPlane)
+	{
+		this->_Camera->FarPlane = FarPlane;
+	}
+
+	bool Lua::LuaCamera::IsActive()
+	{
+		return this->_Camera->IsActive();
+	}
+
+	void Lua::LuaCamera::SetActive()
+	{
+		this->_Camera->SetActive();
+	}
+
+	Lua::LuaCamera::LuaCamera(Ref<Camera> Camera)
+	{
+		this->_Camera = Camera;
+	}
+
+	float Lua::LuaCameraMovement::GetSpeed()
+	{
+		return this->_CameraMovement->Speed;
+	}
+
+	void Lua::LuaCameraMovement::SetSpeed(float Speed)
+	{
+		this->_CameraMovement->Speed = Speed;
+	}
+	
+	float Lua::LuaCameraMovement::GetSensitivity()
+	{
+		return this->_CameraMovement->Sensitivity;
+	}
+
+	void Lua::LuaCameraMovement::SetSensitivity(float Sensitivity)
+	{
+		this->_CameraMovement->Sensitivity = Sensitivity;
+	}
+
+	Lua::LuaCameraMovement::LuaCameraMovement(Ref<CameraMovement> CameraMovement)
+	{
+		this->_CameraMovement = CameraMovement;
+	}
+
+	void Lua::LuaMeshRenderer::SetMesh(LuaMesh NewMesh)
+	{
+		this->_MeshRenderer->SetMesh(NewMesh.Get());
+	}
+
+	void Lua::LuaMeshRenderer::SetMaterial(LuaMaterial NewMaterial)
+	{
+		this->_MeshRenderer->SetMaterial(NewMaterial.Get());
+	}
+
+	Lua::LuaMesh Lua::LuaMeshRenderer::GetMesh()
+	{
+		return LuaMesh(this->_MeshRenderer->GetMesh());
+	}
+
+	Lua::LuaMaterial Lua::LuaMeshRenderer::GetMaterial()
+	{
+		return LuaMaterial(this->_MeshRenderer->GetMaterial());
+	}
+
+	Lua::LuaMeshRenderer::LuaMeshRenderer(Ref<MeshRenderer> MeshRenderer)
+	{
+		this->_MeshRenderer = MeshRenderer;
+	}
+
+	Vec3 Lua::LuaPointLight::GetColor()
+	{
+		return this->_PointLight->Color;
+	}
+
+	void Lua::LuaPointLight::SetColor(Vec3 Color)
+	{
+		this->_PointLight->Color = Color;
+	}
+	
+	void Lua::LuaPointLight::SetBrightness(float Brightness)
+	{
+		this->_PointLight->Brightness = Brightness;
+	}
+
+	float Lua::LuaPointLight::GetBrightness()
+	{
+		return this->_PointLight->Brightness;
+	}
+
+	Lua::LuaPointLight::LuaPointLight(Ref<PointLight> PointLight)
+	{
+		this->_PointLight = PointLight;
+	}
+
+	Lua::LuaScript::LuaScript(Ref<Script> Script)
+	{
+		this->_Script = Script;
+	}
+
+	std::string Lua::LuaTag::Get()
+	{
+		return this->_Tag->String;
+	}
+
+	void Lua::LuaTag::Set(std::string String)
+	{
+		this->_Tag->String = String;
+	}
+	
+	Lua::LuaTag::LuaTag(Ref<Tag> Tag)
+	{
+		this->_Tag = Tag;
+	}
+
+	void Lua::LuaTransform::SetPosition(const Vec3& Position)
+	{
+		this->_Transform->Position = Position;
+	}
+
+	Vec3 Lua::LuaTransform::GetPosition() const
+	{
+		return this->_Transform->Position;
+	}
+
+	void Lua::LuaTransform::AddPosition(const Vec3& Position)
+	{
+		this->_Transform->Position += Position;
+	}
+
+	void Lua::LuaTransform::SetRotation(const Vec3& Rotation)
+	{
+		this->_Transform->SetRotation(Rotation);
+	}
+
+	Vec3 Lua::LuaTransform::GetRotation() const
+	{
+		return this->_Transform->GetRotation();
+	}
+
+	void Lua::LuaTransform::AddRotation(const Vec3& Rotation)
+	{
+		this->_Transform->AddRotation(Rotation);
+	}
+
+	void Lua::LuaTransform::SetScale(const Vec3& Scale)
+	{
+		this->_Transform->Scale = Scale;
+	}
+
+	Vec3 Lua::LuaTransform::GetScale() const
+	{
+		return this->_Transform->Scale;
+	}
+
+	void Lua::LuaTransform::AddScale(const Vec3& Scale)
+	{
+		this->_Transform->Scale += Scale;
+	}
+
+	Vec3 Lua::LuaTransform::GetFront() const
+	{
+		return this->_Transform->GetFront();
+	}
+
+	Vec3 Lua::LuaTransform::GetRight() const
+	{
+		return this->_Transform->GetRight();
+	}
+
+	Vec3 Lua::LuaTransform::GetUp() const
+	{
+		return this->_Transform->GetUp();
+	}
+
+	Lua::LuaTransform::LuaTransform(Ref<Transform> Transform)
+	{
+		this->_Transform = Transform;
 	}
 }

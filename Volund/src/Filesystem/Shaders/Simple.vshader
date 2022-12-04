@@ -22,7 +22,7 @@ void main()
 {
     Position = vec3(_ModelMatrix * vec4(Vertex_Position, 1.0));
     TextureCoord = Vertex_TextureCoord;
-    Normal = Vertex_Normal;
+    Normal = normalize(mat3(_ModelMatrix) * Vertex_Normal);
     gl_Position = ViewProjMatrix * _ModelMatrix * vec4(Vertex_Position, 1.0f);
 };
 

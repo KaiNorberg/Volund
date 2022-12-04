@@ -61,18 +61,4 @@ namespace Volund
 			_ActiveCamera = nullptr;
 		}
 	}
-
-	VML Camera::Serialize()
-	{
-		VML CameraVML;
-
-		CameraVML.PushBack("Type", VMLEntry("Camera"));
-
-		CameraVML.PushBack("IsActive", VMLEntry(this->IsActive()));
-		CameraVML.PushBack("FOV", VMLEntry(this->FOV));
-		CameraVML.PushBack("NearPlane", VMLEntry(this->NearPlane));
-		CameraVML.PushBack("FarPlane", VMLEntry(this->FarPlane));
-
-		return CameraVML;
-	}
 }

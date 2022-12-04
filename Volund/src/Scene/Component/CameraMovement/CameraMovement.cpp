@@ -8,18 +8,6 @@
 
 namespace Volund
 {
-	VML CameraMovement::Serialize()
-	{
-		VML CameraMovementVML;
-
-		CameraMovementVML.PushBack("Type", VMLEntry("CameraMovement"));
-
-		CameraMovementVML.PushBack("Speed", VMLEntry(this->Speed));
-		CameraMovementVML.PushBack("Sensitivity", VMLEntry(this->Sensitivity));
-
-		return CameraMovementVML;
-	}
-
 	void CameraMovement::OnEvent(Event* E)
 	{
 		this->_Input.HandleEvent(E);

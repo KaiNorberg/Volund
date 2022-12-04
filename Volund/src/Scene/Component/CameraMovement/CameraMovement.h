@@ -9,6 +9,7 @@ namespace Volund
 	class CameraMovement : public Component
 	{
 	public:
+
 		float Speed = 1.0f;
 
 		float Sensitivity = 1.0f;
@@ -17,11 +18,10 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		VML Serialize() override;
-
 		CameraMovement();
 
 	private:
+
 		Input _Input;
 
 		Vec3 _Rotation = Vec3(0.0f);

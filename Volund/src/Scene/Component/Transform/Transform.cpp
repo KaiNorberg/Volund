@@ -52,22 +52,6 @@ namespace Volund
 		this->_ModelMatrix = scale(this->_ModelMatrix, this->Scale);
 	}
 
-	VML Transform::Serialize()
-	{
-		VML TransformVML;
-
-		TransformVML.PushBack("Type", VMLEntry("Transform"));
-
-		TransformVML.PushBack("Position", VMLEntry({Position.x, Position.y, Position.z}));
-
-		Vec3 Rotation = this->GetRotation();
-		TransformVML.PushBack("Rotation", VMLEntry({ Rotation.x, Rotation.y, Rotation.z }));
-
-		TransformVML.PushBack("Scale", VMLEntry({ Scale.x, Scale.y, Scale.z }));
-
-		return TransformVML;
-	}
-
 	Transform::Transform()
 	{
 		this->OnUpdate(0.0f);

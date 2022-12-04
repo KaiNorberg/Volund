@@ -7,16 +7,13 @@ namespace Volund
 	class Transform : public Component
 	{
 	public:
+
 		void SetRotation(const Vec3& Rotation);
-
 		Vec3 GetRotation() const;
-
 		void AddRotation(const Vec3& Rotation);
 
 		Vec3 GetFront() const;
-
 		Vec3 GetRight() const;
-
 		Vec3 GetUp() const;
 
 		Mat4x4 GetModelMatrix() const;
@@ -28,8 +25,6 @@ namespace Volund
 		Quat Quaternion = Quat(Vec3(0.0f));
 
 		void OnUpdate(TimeStep TS) override;
-
-		VML Serialize() override;
 
 		Transform();
 

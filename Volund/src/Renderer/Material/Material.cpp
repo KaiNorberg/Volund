@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "Material.h"
 
-#include "VML/VML.h"
-
 namespace Volund
 {
 	std::string Material::GetFilepath()

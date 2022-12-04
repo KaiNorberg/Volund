@@ -25,6 +25,7 @@ GreenCube = Entity:new()
 
 GreenCube:AddComponent(Component.TRANSFORM, {Position = Vec3:new(-6.8, 4.5, -7.6)})
 GreenCube:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = GreenMaterial})
+GreenCube:AddComponent(Component.SCRIPT, {Script = "Scripts/Rotate.lua"})
 
 PointLight = Entity:new()
 

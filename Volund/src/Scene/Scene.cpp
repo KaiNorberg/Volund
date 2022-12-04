@@ -4,8 +4,6 @@
 
 #include "Scene/Component/Components.h"
 
-#include "VML/VML.h"
-
 #include "Filesystem/Filesystem.h"
 
 #include "Renderer/Renderer.h"

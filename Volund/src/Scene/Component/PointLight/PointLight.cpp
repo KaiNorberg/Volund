@@ -21,19 +21,6 @@ namespace Volund
 		Renderer::Submit(Light);
 	}
 
-	VML PointLight::Serialize()
-	{
-		VML PointLightVML;
-
-		PointLightVML.PushBack("Type", VMLEntry("PointLight"));
-
-		PointLightVML.PushBack("Color", VMLEntry({ this->Color.r, this->Color.g, this->Color.b }));
-
-		PointLightVML.PushBack("Brightness", VMLEntry(this->Brightness));
-
-		return PointLightVML;
-	}
-
 	PointLight::PointLight()
 	{
 

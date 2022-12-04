@@ -3,8 +3,6 @@
 
 #include "OpenGLRenderingAPI.h"
 
-#include "VML/VML.h"
-
 namespace Volund
 {
 	IVec2 RenderingAPI::GetViewSize()

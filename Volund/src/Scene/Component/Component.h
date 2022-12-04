@@ -4,8 +4,6 @@
 
 #include "EventDispatcher/Event.h"
 
-#include "VML/VML.h"
-
 namespace Volund
 {
 	class Scene;
@@ -25,8 +23,6 @@ namespace Volund
 		virtual void OnUpdate(TimeStep) {};
 
 		virtual void OnEvent(Event*) {};
-
-		virtual VML Serialize() = 0;
 
 		Component() = default;
 

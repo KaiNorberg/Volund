@@ -9,6 +9,7 @@ namespace Volund
 	class Camera : public Component
 	{
 	public:
+
 		float FOV = 70.0f;
 
 		float NearPlane = 0.1f;
@@ -30,8 +31,6 @@ namespace Volund
 		void OnCreate() override;
 
 		void OnDelete() override;
-
-		VML Serialize() override;
 
 		Camera() = default;
 

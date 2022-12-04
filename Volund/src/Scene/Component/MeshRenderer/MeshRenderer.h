@@ -13,15 +13,13 @@ namespace Volund
 
 		void OnUpdate(TimeStep TS) override;
 
-		VML Serialize() override;
-
 		void SetMesh(Ref<Mesh> NewMesh);
 
 		void SetMaterial(Ref<Material> NewMaterial);
 
-		const Ref<Mesh>& GetMesh();
+		Ref<Mesh> GetMesh();
 
-		const Ref<Material>& GetMaterial();
+		Ref<Material> GetMaterial();
 
 		MeshRenderer() = default;
 

@@ -29,18 +29,6 @@ namespace Volund
 		}
 	}
 
-	VML MeshRenderer::Serialize()
-	{
-		VML MeshRendererVML;
-
-		MeshRendererVML.PushBack("Type", VMLEntry("MeshRenderer"));
-
-		MeshRendererVML.PushBack("Mesh", VMLEntry(this->_Mesh->GetFilepath()));
-		MeshRendererVML.PushBack("Material", VMLEntry(this->_Material->GetFilepath()));
-
-		return MeshRendererVML;
-	}
-
 	void MeshRenderer::SetMesh(Ref<Mesh> NewMesh)
 	{
 		this->_Mesh = NewMesh;
@@ -51,12 +39,12 @@ namespace Volund
 		this->_Material = NewMaterial;
 	}
 
-	const Ref<Mesh>& MeshRenderer::GetMesh()
+	Ref<Mesh> MeshRenderer::GetMesh()
 	{
 		return this->_Mesh;
 	}
 
-	const Ref<Material>& MeshRenderer::GetMaterial()
+	Ref<Material> MeshRenderer::GetMaterial()
 	{
 		return this->_Material;
 	}

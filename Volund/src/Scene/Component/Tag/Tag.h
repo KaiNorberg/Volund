@@ -10,8 +10,6 @@ namespace Volund
 
 		std::string String = "";
 
-		VML Serialize() override;
-
 		Tag() = default;
 
 		Tag(std::string String);
