@@ -12,15 +12,28 @@ local JuliaCStepsize = 0.25
 local Julia = false
 local JuliaC = 0.0
 
-Movement.MandelbrotMaterial = Material:new("Mandelbrot.vshader")
+function Control(Value, Upkey, DownKey, StepSize, TimeStep)
+    if Input:IsHeld(Upkey) then
+        return Value + StepSize * TimeStep 
+    elseif Input:IsHeld(DownKey) then
+        return Value - StepSize * TimeStep 
+    else
+        return Value
+    end 
 
-function Movement.OnUpdate(Entity, Timestep)
-    Movement.MandelbrotMaterial:SetInt("Julia", Julia)   
-    Movement.MandelbrotMaterial:SetDouble("JuliaC", JuliaC)
+    
+end
 
-    Movement.MandelbrotMaterial:SetInt("MaxIterations", Iter)
-    Movement.MandelbrotMaterial:SetVec2("Position", Position)
-    Movement.MandelbrotMaterial:SetDouble("Scale", Scale)
+function Movement.OnUpdate(Entity, TimeStep)
+
+    EntityMat = Entity:GetComponent(Component.MESH_RENDERER):GetMaterial()
+
+    EntityMat:SetInt("Julia", Julia)   
+    EntityMat:SetDouble("JuliaC", JuliaC)
+
+    EntityMat:SetInt("MaxIterations", Iter)
+    EntityMat:SetVec2("Position", Position)
+    EntityMat:SetDouble("Scale", Scale)
 
     if Input:IsPressed('J') then
         if Julia == 1 then
@@ -30,35 +43,11 @@ function Movement.OnUpdate(Entity, Timestep)
         end
     end
 
-    if Input:IsHeld('E') then
-        Iter = Iter + IterStepsize * Timestep 
-    elseif Input:IsHeld('Q') then
-        Iter = Iter - IterStepsize * Timestep 
-    end
-
-    if Input:IsHeld('T') then
-        JuliaC = JuliaC + JuliaCStepsize * Timestep 
-    elseif Input:IsHeld('G') then
-        JuliaC = JuliaC - JuliaCStepsize * Timestep 
-    end
-
-    if Input:IsHeld('W') then
-        Position.y = Position.y - PositionStepsize * Timestep * Scale
-    elseif Input:IsHeld('S') then
-        Position.y = Position.y + PositionStepsize * Timestep * Scale
-    end
-
-    if Input:IsHeld('A') then
-        Position.x = Position.x + PositionStepsize * Timestep * Scale
-    elseif Input:IsHeld('D') then
-        Position.x = Position.x - PositionStepsize * Timestep * Scale
-    end
-
-    if Input:IsHeld('R') then
-        Scale = Scale + ScaleStepsize * Timestep * Scale
-    elseif Input:IsHeld('F') then
-        Scale = Scale - ScaleStepsize * Timestep * Scale
-    end
+    Iter = Control(Iter, 'E', 'Q', IterStepsize, TimeStep)
+    JuliaC = Control(JuliaC, 'T', 'G', JuliaCStepsize, TimeStep)
+    Position.y = Control(Position.y, 'S', 'W', PositionStepsize * Scale, TimeStep)
+    Position.x = Control(Position.x, 'A', 'D', PositionStepsize * Scale, TimeStep)
+    Scale = Control(Scale, 'R', 'F', ScaleStepsize * Scale, TimeStep)
 end
 
 return Movement
