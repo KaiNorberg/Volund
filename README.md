@@ -1,7 +1,7 @@
 # Volund [![License](https://img.shields.io/badge/licence-MIT-green)](https://github.com/Kaj9296/Volund/blob/main/LICENSE)
 
 
-Volund is an OpenGL game engine designed for Windows 10/11.
+Volund is a game engine written in C++ with Lua scripting for the Windows 10/11 operating system.
 
 ***
 
@@ -24,7 +24,6 @@ After that, you can simply compile the generated project with your chosen tool s
 - PBR 3D rendering
 - 3rd party 3D physics engine
 - Audio system
-- C++ and C# scripting
-- A feature-complete designer/editor
+- Lua scripting
 - A feature-complete Entity Component system
 - Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan
