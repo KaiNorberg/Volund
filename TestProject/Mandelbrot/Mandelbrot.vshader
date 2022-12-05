@@ -31,6 +31,8 @@ in vec2 Coord;
 uniform int MaxIterations;
 uniform vec2 Position;
 uniform double Scale;
+uniform int Julia;
+uniform double JuliaC;
 
 layout(location = 0) out vec4 FragColor;
 
@@ -75,13 +77,44 @@ int ComputeMandelbrot(dvec2 C, int Iterations, float Threshold)
     return Iterations;
 }
 
+int ComputeJulia(dvec2 C, int Iterations, float Threshold)
+{
+    dvec2 Z = C;
+
+    C = dvec2(JuliaC);
+
+    for (int i = 0; i < Iterations; i++)
+    {
+        dvec2 SquareZ;
+        SquareZ.x = Z.x * Z.x - Z.y * Z.y;
+        SquareZ.y = 2 * Z.x * Z.y;
+        Z = SquareZ + C;
+
+        if (length(SquareZ) > Threshold)
+        {
+            return i;
+        }
+    }
+
+    return Iterations;
+}
+
 void main()
 {
     dvec2 NewCoord = (Coord * 2.0 - 1.0) * 20.0;
     NewCoord -= Position / Scale;
     NewCoord *= Scale;
 
-    float Iter = ComputeMandelbrot(NewCoord, MaxIterations, 4);
+    float Iter = 0;
+
+    if (Julia == 1)
+    {
+        Iter = ComputeJulia(NewCoord, MaxIterations, 4);
+    }
+    else
+    {
+        Iter = ComputeMandelbrot(NewCoord, MaxIterations, 4);
+    }
 
     float Q = float(Iter) / float(MaxIterations);
     Q = pow(Q, 0.2);
