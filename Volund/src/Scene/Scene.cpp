@@ -124,19 +124,7 @@ namespace Volund
 	{
 		if (!_Data.Filepath.empty())
 		{
-			for (const auto& [entity, Container] : _Data.Registry)
-			{
-				for (const auto& View : Container)
-				{
-					for (const auto& component : View)
-					{
-						component->OnDelete();
-					}
-				}
-			}
-
-			std::string ParentPath = std::filesystem::path(_Data.Filepath).parent_path().string();
-			VL::Filesystem::RemoveRelativeFilepath(ParentPath);
+			Scene::Destroy();
 		}
 
 		VOLUND_INFO("Deserializing Scene...");
@@ -160,7 +148,29 @@ namespace Volund
 		VOLUND_INFO("Finished deserializing Scene!");
 	}
 
-	uint64_t Scene::FindEntity(Entity entity) 
+	void Scene::Destroy()
+	{
+		for (const auto& [entity, Container] : _Data.Registry)
+		{
+			for (const auto& View : Container)
+			{
+				for (const auto& component : View)
+				{
+					component->OnDelete();
+				}
+			}
+		}
+
+		std::string ParentPath = std::filesystem::path(_Data.Filepath).parent_path().string();
+		VL::Filesystem::RemoveRelativeFilepath(ParentPath);
+	}
+
+	Scene::~Scene()
+	{
+		Scene::Destroy();
+	}
+
+	uint64_t Scene::FindEntity(Entity entity)
 	{
 		for (int i = 0; i < _Data.Registry.size(); i++)
 		{

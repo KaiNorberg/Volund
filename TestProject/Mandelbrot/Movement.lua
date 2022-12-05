@@ -19,9 +19,7 @@ function Control(Value, Upkey, DownKey, StepSize, TimeStep)
         return Value - StepSize * TimeStep 
     else
         return Value
-    end 
-
-    
+    end    
 end
 
 function Movement.OnUpdate(Entity, TimeStep)

@@ -16,6 +16,10 @@ namespace Volund
 		bool CaptureMouse = false;
 		bool ShowMouse = true;
 
+		void* _Handle = nullptr;
+		void* _Instance = nullptr;
+		void* _DeviceContext = nullptr;
+
 		ProcCatch ProcedureCatch = nullptr;
 
 		Ref<EventDispatcher> Dispatcher = nullptr;
@@ -33,44 +37,43 @@ namespace Volund
 	{
 	public:
 
-		void Update();
+		static void Update();
 
-		void SetProcedureCatch(ProcCatch ProcedureCatch);
+		static void SetProcedureCatch(ProcCatch ProcedureCatch);
 
-		void SetCursorMode(CursorMode NewMode);
+		static void SetCursorMode(CursorMode NewMode);
 
-		void SetTitle(std::string_view Title);
+		static void SetTitle(std::string_view Title);
 
-		void SetFocus() const;
+		static void SetFocus();
 
-		Vec2 GetSize() const;
+		static Vec2 GetSize();
 
-		float GetAspectRatio() const;
+		static float GetAspectRatio();
 
-		void* GetInstance() const;
+		static void* GetInstance();
 
-		void* GetHandle() const;
+		static void* GetHandle();
 
-		void* GetDeviceContext() const;
+		static void* GetDeviceContext();
 
-		void Show();
+		static void Show();
 
-		void SwapBuffers() const;
+		static void SwapBuffers();
 
-		Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
+		static void Create(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
+
+		static void Destroy();
+
+	private:
+
+		Window() = default;
 
 		~Window();
 
-	private:
-		std::wstring ConvertToWString(std::string_view String);
+		static std::wstring ConvertToWString(std::string_view String);
 
-		void* _Handle = nullptr;
-
-		void* _Instance = nullptr;
-
-		void* _DeviceContext = nullptr;
-
-		WindowData _Data;
+		static inline WindowData _Data;
 	};
 
 } //namespace Volund

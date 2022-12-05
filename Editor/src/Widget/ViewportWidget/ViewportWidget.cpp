@@ -21,6 +21,14 @@ void ViewportWidget::OnEvent(VL::Event* E)
 		if (this->_Input.IsPressed('R'))
 		{
 			VL::Scene::Load(VL::Scene::GetFilepath());
+		}		
+		else if (this->_Input.IsPressed('E'))
+		{
+			std::string Filepath = VL::FileDialog::OpenFile();
+			if (!Filepath.empty())
+			{
+				VL::Scene::Load(Filepath);
+			}
 		}
 	}
 }
@@ -29,7 +37,7 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 {
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
-		if (ImGui::Button("Load Scene"))
+		if (ImGui::Button("Load Scene (Shift + E)"))
 		{
 			std::string Filepath = VL::FileDialog::OpenFile();
 			if (!Filepath.empty())

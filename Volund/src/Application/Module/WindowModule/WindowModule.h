@@ -22,8 +22,6 @@ namespace Volund
 
 		void OnDestroy() override;
 
-		Ref<Window> Window;
-
 		Ref<Context> Context;
 
 		WindowModule();

@@ -5,11 +5,9 @@
 #define WIN32_LEAN_AND_MEAN
 
 #include <windows.h>
-
 #include <windowsx.h>
 
 #include <glad/include/glad/glad.h>
-
 #include <wglext/wglext.h>
 
 namespace Volund
@@ -18,8 +16,7 @@ namespace Volund
 	{
 		if (wglGetCurrentContext() != this->_RenderingContext)
 		{
-			VOLUND_ASSERT(wglMakeCurrent((HDC)this->GetWindow()->GetDeviceContext(), (HGLRC)this->_RenderingContext),
-			              "Failed to active OpenGL Context");
+			VOLUND_ASSERT(wglMakeCurrent((HDC)this->_DeviceContext, (HGLRC)this->_RenderingContext), "Failed to active OpenGL Context");
 		}
 	}
 
@@ -39,24 +36,23 @@ namespace Volund
 
 	void OpenGLContext::Flush()
 	{
-		GetWindow()->SwapBuffers();
+
 	}
 
 	bool OpenGLContext::WGLExtensionSupported(std::string_view Name) const
 	{
-		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress(
-			"wglGetExtensionsStringEXT");
+		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");
 
 		return strstr(_wglGetExtensionsStringEXT(), Name.data()) != nullptr;
 	}
 
-	OpenGLContext::OpenGLContext(const Ref<Window>& TargetWindow)
+	OpenGLContext::OpenGLContext(void* DeviceContext)
 	{
-		this->_Window = TargetWindow;
+		this->_DeviceContext = DeviceContext;
 
 		VOLUND_INFO("Creating OpenGL context...");
 
-		this->_RenderingContext = wglCreateContext((HDC)this->GetWindow()->GetDeviceContext());
+		this->_RenderingContext = wglCreateContext((HDC)DeviceContext);
 		VOLUND_ASSERT(this->_RenderingContext, "Failed to create OpenGL context");
 
 		this->MakeCurrent();

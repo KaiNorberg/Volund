@@ -7,18 +7,13 @@
 
 namespace Volund
 {
-	Ref<Window> Context::GetWindow()
-	{
-		return this->_Window;
-	}
-
-	Ref<Context> Context::Create(const Ref<Window>& TargetWindow)
+	Ref<Context> Context::Create(void* DeviceContext)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case GraphicsAPI::OPENGL:
 		{
-			return std::make_shared<OpenGLContext>(TargetWindow);
+			return std::make_shared<OpenGLContext>(DeviceContext);
 		}
 		break;
 		default:

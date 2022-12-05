@@ -13,13 +13,10 @@ namespace Volund
 
 		virtual void Flush() = 0;
 
-		Ref<Window> GetWindow();
-
-		static Ref<Context> Create(const Ref<Window>& TargetWindow);
+		static Ref<Context> Create(void* DeviceContext);
 
 		virtual ~Context() = default;
 
 	protected:
-		Ref<Window> _Window;
 	};
 }

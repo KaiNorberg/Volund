@@ -21,7 +21,6 @@ void Editor::OnRun()
 	this->_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget()));
 	this->_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget()));
 
-	this->GetModule<VL::WindowModule>()->Window->Show();
 	this->GetModule<VL::WindowModule>()->Context->MakeCurrent();
 }
 

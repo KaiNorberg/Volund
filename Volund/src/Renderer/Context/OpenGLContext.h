@@ -15,13 +15,15 @@ namespace Volund
 
 		void Flush() override;
 
-		OpenGLContext(const Ref<Window>& TargetWindow);
+		OpenGLContext(void* DeviceContext);
 		
 		~OpenGLContext();
 
 	private:
 
 		bool WGLExtensionSupported(std::string_view Name) const;
+
+		void* _DeviceContext = nullptr;
 
 		void* _RenderingContext = nullptr;
 	};

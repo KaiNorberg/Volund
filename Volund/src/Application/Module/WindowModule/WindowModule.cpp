@@ -12,21 +12,24 @@ namespace Volund
 
 	void WindowModule::OnUpdate(TimeStep TS)
 	{
-		this->Window->Update();
+		Window::Update();
 		this->Context->Flush();
+		Window::SwapBuffers();
 	}
 
 	void WindowModule::OnAttach(Application* App)
 	{
-		this->Window = VL::Ref<VL::Window>(new VL::Window(App->GetEventDispatcher(), 1980, 1080, false));
+		Window::Create(App->GetEventDispatcher(), 1980, 1080, false);
 
-		this->Window->SetTitle("Volund Editor");
-		this->Window->SetCursorMode(VL::CursorMode::NORMAL);
-		this->Window->SetFocus();
+		Window::SetTitle("Volund Editor");
+		Window::SetCursorMode(VL::CursorMode::NORMAL);
+		Window::SetFocus();
 
-		this->Context = VL::Context::Create(this->Window);
+		this->Context = VL::Context::Create(Window::GetDeviceContext());
 		this->Context->SetVSync(true);
 		this->Context->MakeCurrent();
+
+		Window::Show();
 	}
 
 	void WindowModule::OnDestroy()

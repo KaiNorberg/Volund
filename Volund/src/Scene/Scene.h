@@ -47,7 +47,11 @@ namespace Volund
 
 	private:
 
+		static void Destroy();
+
 		Scene() = default;
+
+		~Scene();
 
 		static uint64_t FindEntity(Entity entity);
 

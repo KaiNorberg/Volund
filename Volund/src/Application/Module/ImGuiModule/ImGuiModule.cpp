@@ -44,10 +44,10 @@ namespace Volund
 
 		SetupImGuiStyle();
 
-		ImGui_ImplWin32_Init(App->GetModule<VL::WindowModule>()->Window->GetHandle());
+		ImGui_ImplWin32_Init(Window::GetHandle());
 		ImGui_ImplOpenGL3_Init();
 
-		App->GetModule<VL::WindowModule>()->Window->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+		Window::SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 	}
 
 	void ImGuiModule::OnDestroy()
