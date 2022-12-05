@@ -1,7 +1,7 @@
 local Movement = {}
 
 local Iter = 1000
-local Position = Vec2:new(0.0, 0.0)
+local Position = Vec2:new(0.5, 0.0)
 local Scale = 1.0
 
 local IterStepsize = 1000

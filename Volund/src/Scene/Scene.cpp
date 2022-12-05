@@ -124,6 +124,17 @@ namespace Volund
 	{
 		if (!_Data.Filepath.empty())
 		{
+			for (const auto& [entity, Container] : _Data.Registry)
+			{
+				for (const auto& View : Container)
+				{
+					for (const auto& component : View)
+					{
+						component->OnDelete();
+					}
+				}
+			}
+
 			std::string ParentPath = std::filesystem::path(_Data.Filepath).parent_path().string();
 			VL::Filesystem::RemoveRelativeFilepath(ParentPath);
 		}

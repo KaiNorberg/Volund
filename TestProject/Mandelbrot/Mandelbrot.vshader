@@ -19,6 +19,7 @@ void main()
 {
     Coord = Vertex_TextureCoord;
     gl_Position = ViewProjMatrix * vec4(Vertex_Position, 1.0f);
+    gl_Position.w = 0.1f;
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT
@@ -77,7 +78,6 @@ int ComputeMandelbrot(dvec2 C, int Iterations, float Threshold)
 void main()
 {
     dvec2 NewCoord = (Coord * 2.0 - 1.0) * 20.0;
-    NewCoord.x -= 0.5;
     NewCoord -= Position / Scale;
     NewCoord *= Scale;
 

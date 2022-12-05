@@ -2,6 +2,7 @@
 #include "Script.h"
 
 #include "Lua/Lua.h"
+#include "Lua/LuaEntity/LuaEntity.h"
 
 #include "Filesystem/Filesystem.h"
 
@@ -13,7 +14,7 @@ namespace Volund
 		{
 			try
 			{
-				this->_LuaOnCreate.call<void>(Lua::LuaEntity(this->GetEntity()));
+				this->_LuaOnCreate.call<void>(LuaEntity(this->GetEntity()));
 			}
 			catch (sol::error E)
 			{
@@ -28,7 +29,7 @@ namespace Volund
 		{
 			try
 			{
-				this->_LuaOnUpdate.call<void>(Lua::LuaEntity(this->GetEntity()), TS.GetSeconds());
+				this->_LuaOnUpdate.call<void>(LuaEntity(this->GetEntity()), TS.GetSeconds());
 			}
 			catch (sol::error E)
 			{
@@ -43,7 +44,7 @@ namespace Volund
 		{
 			try
 			{
-				this->_LuaOnDelete.call<void>(Lua::LuaEntity(this->GetEntity()));
+				this->_LuaOnDelete.call<void>(LuaEntity(this->GetEntity()));
 			}
 			catch (sol::error E)
 			{
