@@ -13,7 +13,7 @@ void ViewportWidget::OnEvent(VL::Event* E)
 
 	if (!VL::Scene::GetFilepath().empty())
 	{
-		VL::Scene::OnEvent(E);
+		VL::Scene::EventCallback(E);
 	}
 
 	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
@@ -64,7 +64,7 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 				VL::RenderingAPI::Clear();
 				VL::RenderingAPI::SetViewPort(0, 0, (int32_t)ViewportSize.x, (int32_t)ViewportSize.y);
 
-				VL::Scene::OnUpdate(TS);
+				VL::Scene::UpdateCallback(TS);
 
 				float XRatio = ViewportSize.x / this->_Framebuffer->GetSpec().Width;
 				float YRatio = ViewportSize.y / this->_Framebuffer->GetSpec().Height;
@@ -94,3 +94,4 @@ ViewportWidget::ViewportWidget()
 	Spec.DepthAttachment = VL::TextureFormat::DEPTH24STENCIL8;
 	this->_Framebuffer = VL::Framebuffer::Create(Spec);
 }
+	

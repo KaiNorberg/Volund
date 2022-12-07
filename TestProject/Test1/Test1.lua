@@ -16,7 +16,7 @@ Camera = Entity:new()
 
 Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
 Camera:AddComponent(Component.CAMERA, {IsActive = true})
-Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0, Speed = 8})
+Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
 
 RedCube = Entity:new()
 
@@ -38,3 +38,5 @@ Teapot = Entity:new()
 
 Teapot:AddComponent(Component.TRANSFORM, {Position = Vec3:new(2.9, 0.0, 0.0)})
 Teapot:AddComponent(Component.MESH_RENDERER, {Mesh = TeapotMesh, Material = BlueMaterial})
+
+Window:SetCursorMode(CursorMode.DISABLED)

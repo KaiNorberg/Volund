@@ -2,7 +2,7 @@
 
 #include "../Module.h"
 
-#include "Window/Window.h"
+#include "Core/Window/Window.h"
 #include "Renderer/Context/Context.h"
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"
@@ -21,8 +21,6 @@ namespace Volund
 		void OnAttach(Application* App) override;
 
 		void OnDestroy() override;
-
-		Ref<Context> Context;
 
 		WindowModule();
 

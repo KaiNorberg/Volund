@@ -20,8 +20,6 @@ void Editor::OnRun()
 
 	this->_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget()));
 	this->_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget()));
-
-	this->GetModule<VL::WindowModule>()->Context->MakeCurrent();
 }
 
 void Editor::OnTerminate()
@@ -35,6 +33,24 @@ void Editor::OnUpdate(VL::TimeStep TS)
 
 	if (VL::ImGuiModule::BeginDockSpace())
 	{
+		if (ImGui::BeginMenuBar())
+		{
+			if (ImGui::BeginMenu("Widget"))
+			{
+				for (auto Widget : this->_Widgets)
+				{
+					if (ImGui::MenuItem(Widget->GetName()))
+					{
+						Widget->IsActive = true;
+					}
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenuBar();
+		}
+
 		for (auto Widget : this->_Widgets)
 		{
 			if (Widget->IsActive)
@@ -52,15 +68,6 @@ void Editor::OnUpdate(VL::TimeStep TS)
 void Editor::OnEvent(VL::Event* E)
 {
 	this->_Input.HandleEvent(E);
-
-	/*if (this->_Input.IsHeld(VOLUND_KEY_TAB))
-	{
-		this->GetModule<VL::WindowModule>()->Window->SetCursorMode(VL::CursorMode::NORMAL);
-	}
-	else
-	{
-		this->GetModule<VL::WindowModule>()->Window->SetCursorMode(VL::CursorMode::DISABLED);
-	}*/
 
 	for (auto Widget : this->_Widgets)
 	{

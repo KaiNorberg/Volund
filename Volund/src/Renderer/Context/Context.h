@@ -7,6 +7,7 @@ namespace Volund
 	class Context
 	{
 	public:
+
 		virtual void MakeCurrent() = 0;
 
 		virtual void SetVSync(bool Enabled) = 0;

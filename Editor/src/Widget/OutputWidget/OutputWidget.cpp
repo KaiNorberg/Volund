@@ -55,6 +55,11 @@ void OutputWidget::OnUpdate(VL::TimeStep TS)
 
 void OutputWidget::LoggerCallback(const std::string& String)
 {
+	if (_Output.size() > 100)
+	{
+		_Output.erase(_Output.begin());
+	}
+
 	_Output.push_back(String);
 }
 

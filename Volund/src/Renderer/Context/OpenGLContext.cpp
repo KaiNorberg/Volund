@@ -16,7 +16,7 @@ namespace Volund
 	{
 		if (wglGetCurrentContext() != this->_RenderingContext)
 		{
-			VOLUND_ASSERT(wglMakeCurrent((HDC)this->_DeviceContext, (HGLRC)this->_RenderingContext), "Failed to active OpenGL Context");
+			VOLUND_ASSERT(wglMakeCurrent((HDC)this->_DeviceContext, (HGLRC)this->_RenderingContext), "Failed to make OpenGL Context current");
 		}
 	}
 

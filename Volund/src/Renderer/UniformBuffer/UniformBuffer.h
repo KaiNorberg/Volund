@@ -45,7 +45,7 @@ namespace Volund
 	inline void UniformBuffer::PushScalar(const std::string& Name)
 	{
 		uint32_t BaseAlignment = sizeof(float);
-		uint32_t AlignedOffset = Math::RoundUp(this->_Size, BaseAlignment);
+		uint32_t AlignedOffset = Utils::RoundUp(this->_Size, BaseAlignment);
 		_Uniforms[Name] = { sizeof(T), AlignedOffset };
 		this->_Size = AlignedOffset + BaseAlignment;
 	}
@@ -54,7 +54,7 @@ namespace Volund
 	inline void UniformBuffer::PushVector(const std::string& Name)
 	{
 		uint32_t BaseAlignment = 4 * sizeof(float);
-		uint32_t AlignedOffset = Math::RoundUp(this->_Size, BaseAlignment);
+		uint32_t AlignedOffset = Utils::RoundUp(this->_Size, BaseAlignment);
 		_Uniforms[Name] = { sizeof(T), AlignedOffset };
 		this->_Size = AlignedOffset + BaseAlignment;
 	}
@@ -63,7 +63,7 @@ namespace Volund
 	inline void UniformBuffer::PushMatrix(const std::string& Name)
 	{
 		uint32_t BaseAlignment = 4 * sizeof(float);
-		uint32_t AlignedOffset = Math::RoundUp(this->_Size, BaseAlignment);
+		uint32_t AlignedOffset = Utils::RoundUp(this->_Size, BaseAlignment);
 		_Uniforms[Name] = {sizeof(T), AlignedOffset};
 		this->_Size = AlignedOffset + 4 * BaseAlignment;
 	}

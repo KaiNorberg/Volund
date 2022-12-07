@@ -25,7 +25,12 @@
 
 #include <sol/sol.hpp>
 
-#include "Math/Math.h"
+#include <glm/glm/glm.hpp>
+#include <glm/glm/vec2.hpp>
+#include <glm/glm/gtc/matrix_transform.hpp>
+#include <glm/glm/gtc/quaternion.hpp>
+#include <glm/glm/gtc/type_ptr.hpp>
 
 #include "Core/Core.h"
+#include "Utils/Utils.h"
 #include "Logger/Logger.h"

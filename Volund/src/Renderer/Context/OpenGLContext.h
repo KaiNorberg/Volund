@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Context.h"
-#include "Window/Window.h"
+#include "Core/Window/Window.h"
 
 namespace Volund
 {

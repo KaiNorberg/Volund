@@ -2,7 +2,7 @@
 
 #include "Utils.h"
 
-namespace Volund
+namespace Volund::Utils
 {
     std::string ReplaceAll(std::string Str, const std::string& From, const std::string& To) 
     {
@@ -16,4 +16,25 @@ namespace Volund
 
         return Str;
     }
+
+    std::wstring ConvertToWString(std::string_view String)
+    {
+        return std::wstring(String.begin(), String.end());
+    }	
+
+	int RoundUp(int N, int M)
+	{
+		if (M == 0)
+		{
+			return N;
+		}
+
+		int R = N % M;
+		if (R == 0)
+		{
+			return N;
+		}
+
+		return N + M - R;
+	}
 }

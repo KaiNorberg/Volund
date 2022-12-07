@@ -20,41 +20,42 @@ namespace Volund
     {
         std::string Output;
 
-        IFileOpenDialog* pFileOpen;
-
-        // Create the FileOpenDialog object.
-        HRESULT hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL,
-            IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+        HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
         if (SUCCEEDED(hr))
         {
-            // Show the Open dialog box.
-            pFileOpen->SetOptions(Options);
-            hr = pFileOpen->Show(NULL);
+            IFileOpenDialog* pFileOpen = NULL;
 
-            // Get the file name from the dialog box.
+            // Create the FileOpenDialog object.
+            hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
+
             if (SUCCEEDED(hr))
             {
-                IShellItem* pItem;
-                hr = pFileOpen->GetResult(&pItem);
+                // Show the Open dialog box.
+                pFileOpen->SetOptions(Options);
+                //pFileOpen->SetFileTypes(numTypes, cdfs);   //  choose file types to be displayed
+                pFileOpen->SetTitle(L"Open File");         //  heading of dialog box
+                hr = pFileOpen->Show(NULL);
+
+                // Get the file name from the dialog box.
                 if (SUCCEEDED(hr))
                 {
-                    PWSTR pszFilePath;
-                    hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pszFilePath);
-
-                    // Display the file name to the user.
+                    IShellItem* pItem;
+                    hr = pFileOpen->GetResult(&pItem);
                     if (SUCCEEDED(hr))
                     {
-                        std::wstring Temp = pszFilePath;
+                        LPWSTR pTemp;                        
+                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pTemp);
+                        std::wstring Temp = pTemp;
                         Output = std::string(Temp.begin(), Temp.end());
-                        CoTaskMemFree(pszFilePath);
+                        if (SUCCEEDED(hr))  CoTaskMemFree(pTemp);
+                        pItem->Release();
                     }
-                    pItem->Release();
                 }
+                pFileOpen->Release();
             }
-            pFileOpen->Release();
+            CoUninitialize();
         }
-        CoUninitialize();
 
         return Output;
     }
