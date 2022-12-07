@@ -25,6 +25,8 @@ After that, you can simply compile the generated project with your chosen tool s
 
 In Volund a scene is simply any .lua file. Currently the only way to run a scene is to open the Editor and click the ```Load Scene``` button within the ```Viewport``` Widget, after that simply select the .lua file you wish to run.
 
+Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for documentation on the lua API.
+
 ## Goals:
 
 - PBR 3D rendering
