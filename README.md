@@ -25,7 +25,31 @@ After that, you can simply compile the generated project with your chosen tool s
 
 In Volund a scene is simply any .lua file. Currently the only way to run a scene is to open the Editor and click the ```Load Scene``` button within the ```Viewport``` Widget, after that simply select the .lua file you wish to run.
 
-Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for documentation on the lua API.
+## Example Scene
+
+```java
+RedMaterial = Material:new("Simple.vshader")
+RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
+
+CubeMesh = Mesh:new("Cube.obj")
+
+Camera = Entity:new()
+
+Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
+Camera:AddComponent(Component.CAMERA, {IsActive = true})
+
+RedCube = Entity:new()
+
+RedCube:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 0.0)})
+RedCube:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = RedMaterial})
+
+PointLight = Entity:new()
+
+PointLight:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 5.0, 5.0)})
+PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:new(1.0, 1.0, 1.0)})
+```
+
+Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation on the lua API.
 
 ## Goals:
 
