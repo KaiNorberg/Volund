@@ -28,7 +28,10 @@ In Volund a scene is simply any .lua file. Currently the only way to run a scene
 ## Example Scene
 
 ```java
-RedMaterial = Material:new("Simple.vshader")
+
+SimpleShader = Shader:new("Simple.vshader")
+
+RedMaterial = Material:new(SimpleShader)
 RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
 
 CubeMesh = Mesh:new("Cube.obj")
