@@ -28,7 +28,6 @@ namespace Volund
 	using I64Mat4x4 = glm::mat<4, 4, int64_t>;
 	using Quat = glm::qua<float>;
 	using DQuat = glm::qua<double>;
-
 }
 
 namespace Volund::Utils

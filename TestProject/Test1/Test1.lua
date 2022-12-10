@@ -1,12 +1,14 @@
 Rotate = VolundRequire("Scripts/Rotate.lua")
 
-RedMaterial = Material:new("Simple.vshader")
+SimpleShader = Shader:new("Simple.vshader")
+
+RedMaterial = Material:new(SimpleShader)
 RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
 
-GreenMaterial = Material:new("Simple.vshader")
+GreenMaterial = Material:new(SimpleShader)
 GreenMaterial:SetVec3("Color", Vec3:new(0.0, 1.0, 0.0))
 
-BlueMaterial = Material:new("Simple.vshader")
+BlueMaterial = Material:new(SimpleShader)
 BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
 
 CubeMesh = Mesh:new("Cube.obj")

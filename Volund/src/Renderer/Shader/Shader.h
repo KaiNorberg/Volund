@@ -2,9 +2,6 @@
 
 namespace Volund
 {
-	/// <summary>
-	/// A shader object that Contains code that describes how to render a mesh to the screen.
-	/// </summary>
 	class Shader
 	{
 	public:

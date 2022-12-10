@@ -1,7 +1,7 @@
 Movement = VolundRequire("Movement.lua")
 
-MandelbrotMaterial = Material:new("Mandelbrot.vshader")
-
+MandelbrotShader = Shader:new("Mandelbrot.vshader")
+MandelbrotMaterial = Material:new(MandelbrotShader)
 QuadMesh = Mesh:new("Quad.obj")
 
 Camera = Entity:new()

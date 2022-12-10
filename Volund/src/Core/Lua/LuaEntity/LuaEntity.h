@@ -17,6 +17,8 @@ namespace Volund
 
 		sol::object GetComponent(sol::this_state S, LuaComponent Component, uint64_t I = 0);
 
+		void Destroy();
+
 		LuaEntity(Entity Entity);
 
 		LuaEntity();

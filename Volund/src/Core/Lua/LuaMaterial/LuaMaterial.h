@@ -2,6 +2,8 @@
 
 #include "Renderer/Material/Material.h"
 
+#include "Core/Lua/LuaShader/LuaShader.h"
+
 namespace Volund
 {
 	struct LuaMaterial
@@ -22,7 +24,7 @@ namespace Volund
 
 		LuaMaterial(Ref<Material> Material);
 
-		LuaMaterial(const std::string& ShaderPath);
+		LuaMaterial(LuaShader MaterialShader);
 
 	private:
 

@@ -40,7 +40,7 @@ namespace Volund
 
 		Lua["Window"] = LuaWindow();
 
-		Lua.new_usertype<LuaMaterial>("Material", sol::constructors<void(const std::string&)>(),
+		Lua.new_usertype<LuaMaterial>("Material", sol::constructors<void(LuaShader)>(),
 			"SetInt", &LuaMaterial::SetInt, 
 			"SetFloat", &LuaMaterial::SetFloat, 
 			"SetDouble", &LuaMaterial::SetDouble,
@@ -49,10 +49,13 @@ namespace Volund
 
 		Lua.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>());
 
+		Lua.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>());
+
 		Lua.new_usertype<LuaEntity>("Entity", sol::constructors<void()>(),
 			"AddComponent", &LuaEntity::AddComponent,
 			"DeleteComponent", &LuaEntity::DeleteComponent,
-			"GetComponent", &LuaEntity::GetComponent);
+			"GetComponent", &LuaEntity::GetComponent,
+			"Destroy", &LuaEntity::Destroy);
 
 		Lua.new_usertype<LuaCamera>("Camera",
 			"GetFOV", &LuaCamera::GetFOV,

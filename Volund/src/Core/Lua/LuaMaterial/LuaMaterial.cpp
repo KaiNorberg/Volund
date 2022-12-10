@@ -38,10 +38,8 @@ namespace Volund
 		this->_Material = Material;
 	}
 
-	LuaMaterial::LuaMaterial(const std::string& ShaderPath)
+	LuaMaterial::LuaMaterial(LuaShader MaterialShader)
 	{
-		auto NewShader = Shader::Create(ShaderPath);
-
-		this->_Material = Material::Create(NewShader);
+		this->_Material = Material::Create(MaterialShader.Get());
 	}
 }

@@ -247,6 +247,11 @@ namespace Volund
 		return sol::make_object(S, VL::Component());
 	}
 
+	void LuaEntity::Destroy()
+	{
+		Scene::DestroyEntity(this->_Entity);
+	}
+
 	LuaEntity::LuaEntity(Entity Entity)
 	{
 		this->_Entity = Entity;
