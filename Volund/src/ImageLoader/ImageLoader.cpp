@@ -3,6 +3,8 @@
 
 #include "stb/stb_image.h"
 
+#include "Filesystem/Filesystem.h"
+
 namespace Volund
 {
 	int32_t ImageLoader::GetWidth() const
@@ -25,12 +27,14 @@ namespace Volund
 		return this->_Data;
 	}
 
-	ImageLoader::ImageLoader(std::string_view Filepath, int32_t DesiredChannels)
+	ImageLoader::ImageLoader(const std::string& Filepath, int32_t DesiredChannels)
 	{
-		stbi_set_flip_vertically_on_load(true);
-		this->_Data = stbi_load(Filepath.data(), &this->_Width, &this->_Height, &this->_Channels, DesiredChannels);
+		std::string FinalPath = VL::Filesystem::GetFinalPath(Filepath);
 
-		VOLUND_ASSERT(this->_Data, "Failed to load image (%s)!", Filepath.data());
+		stbi_set_flip_vertically_on_load(true);
+		this->_Data = stbi_load(FinalPath.c_str(), &this->_Width, &this->_Height, &this->_Channels, DesiredChannels);
+
+		VOLUND_ASSERT(this->_Data, "Failed to load image (%s)!", FinalPath.c_str());
 	}
 
 	ImageLoader::~ImageLoader()

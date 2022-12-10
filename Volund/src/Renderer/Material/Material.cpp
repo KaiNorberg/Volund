@@ -8,6 +8,28 @@ namespace Volund
 		return this->_Filepath;
 	}
 
+	Ref<Texture> Material::GetTexture(const std::string& Name)
+	{
+		if (this->HasTexture(Name))
+		{
+			return this->_Textures[Name];
+		}
+		else
+		{
+			return nullptr;
+		}
+	}
+
+	void Material::SetTexture(const std::string& Name, Ref<Texture> Value)
+	{
+		this->_Textures[Name] = Value;
+	}
+
+	bool Material::HasTexture(const std::string& Name)
+	{
+		return this->_Textures.contains(Name);
+	}
+
 	void Material::UpdateShader()
 	{
 		for (auto& Value : this->View<int>())
@@ -34,61 +56,19 @@ namespace Volund
 		{
 			this->_Shader->SetVec3(Value->GetName(), Value->GetValue());
 		}
+
+		int TextureUnit = 0;
+		for (auto& [Name, Value] : this->_Textures)
+		{
+			this->_Shader->SetTexture(Name, Value, TextureUnit);
+			TextureUnit++;
+		}
 	}
 
 	Ref<Shader> Material::GetShader()
 	{
 		return this->_Shader;
 	}
-
-	/*Ref<Material> Material::Create(std::string_view Filepath)
-	{
-		VML MaterialVML(Filepath);
-
-		Ref<Shader> ObjectShader = Shader::Create((std::string)MaterialVML.Get("Shader").String());
-
-		Ref<Material> NewMaterial = Material::Create(ObjectShader);
-		NewMaterial->_Filepath = Filepath;
-
-		for (auto& [ValueName, Value] : MaterialVML["Values"])
-		{
-			std::string ValueType = Value.Get("Type");
-
-			if (ValueType == "int")
-			{
-				NewMaterial->Set(ValueName, (int)Value.Get("Value"));
-			}
-			else if (ValueType == "float")
-			{
-				NewMaterial->Set(ValueName, (float)Value.Get("Value"));
-			}
-			else if (ValueType == "double")
-			{
-				NewMaterial->Set(ValueName, (double)Value.Get("Value"));
-			}
-			else if (ValueType == "Vec2")
-			{
-				VMLEntry Vec2Value = Value.Get("Value");
-				NewMaterial->Set(ValueName, Vec2(Vec2Value[0], Vec2Value[1]));
-			}
-			else if (ValueType == "Vec3" || ValueType == "RGB")
-			{
-				VMLEntry Vec3Value = Value.Get("Value");
-				NewMaterial->Set(ValueName, Vec3(Vec3Value[0], Vec3Value[1], Vec3Value[2]));
-			}
-			else if (ValueType == "Vec4" || ValueType == "RGBA")
-			{
-				VMLEntry Vec4Value = Value.Get("Value");
-				NewMaterial->Set(ValueName, Vec4(Vec4Value[0], Vec4Value[1], Vec4Value[2], Vec4Value[3]));
-			}
-			else
-			{
-				VOLUND_ERROR("Invalid type found in Material Asset (%s)!", Filepath.data());
-			}
-		}
-
-		return NewMaterial;
-	}*/
 
 	Ref<Material> Material::Create(Ref<Shader> ObjectShader)
 	{

@@ -65,6 +65,13 @@ namespace Volund
 		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
+	void OpenGLShader::SetTexture(std::string_view Name, const Ref<Texture>& Value, uint32_t TextureUnit)
+	{
+		glActiveTexture(GL_TEXTURE0 + TextureUnit);
+		glBindTexture(GL_TEXTURE_2D, Value->GetID());
+		this->SetInt(Name, TextureUnit);
+	}
+
 	uint32_t OpenGLShader::CompileShader(uint32_t type, std::string_view source)
 	{
 		uint32_t id = glCreateShader(type);

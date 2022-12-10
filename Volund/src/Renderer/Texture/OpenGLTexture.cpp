@@ -15,7 +15,7 @@ namespace Volund
 		glBindTexture(GL_TEXTURE_2D, this->_ID);
 	}
 
-	OpenGLTexture::OpenGLTexture(std::string_view Filepath)
+	OpenGLTexture::OpenGLTexture(const std::string& Filepath)
 	{
 		ImageLoader Loader = ImageLoader(Filepath, 4);
 

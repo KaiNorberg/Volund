@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Shader/Shader.h"
+#include "Renderer/Texture/Texture.h"
 
 #include "Container/Container.h"
 
@@ -24,10 +25,13 @@ namespace Volund
 		void Set(std::string_view Name, T Value);
 
 		template <typename T>
-		void Has(std::string_view Name);
+		bool Has(std::string_view Name);
+
+		Ref<Texture> GetTexture(const std::string& Name);
+		void SetTexture(const std::string& Name, Ref<Texture> Value);
+		bool HasTexture(const std::string& Name);
 
 		void UpdateShader();
-
 		Ref<Shader> GetShader();
 
 		static Ref<Material> Create(Ref<Shader> ObjectShader);
@@ -37,6 +41,8 @@ namespace Volund
 	private:
 
 		Container<BaseMaterialValue> _Container;
+
+		std::unordered_map<std::string, Ref<Texture>> _Textures;
 
 		Ref<Shader> _Shader;
 
@@ -85,7 +91,7 @@ namespace Volund
 	}
 
 	template<typename T>
-	inline void Material::Has(std::string_view Name)
+	inline bool Material::Has(std::string_view Name)
 	{
 		for (const auto& Value : this->_Container.View<MaterialValue<T>>())
 		{

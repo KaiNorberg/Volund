@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Renderer/Texture/Texture.h"
+
 namespace Volund
 {
 	class Shader
@@ -25,6 +27,8 @@ namespace Volund
 		virtual void SetMat3x3(std::string_view Name, const Mat3x3& Value, bool Transpose = false) = 0;
 
 		virtual void SetMat4x4(std::string_view Name, const Mat4x4& Value, bool Transpose = false) = 0;
+
+		virtual void SetTexture(std::string_view Name, const Ref<Texture>& Value, uint32_t TextureUnit) = 0;
 
 		static Ref<Shader> Create(const std::string& Filepath);
 

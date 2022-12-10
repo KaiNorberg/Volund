@@ -22,7 +22,13 @@ namespace Volund
 		Lua.new_usertype<Vec4>("Vec4", sol::constructors<void(), void(float), void(float, float, float, float)>(), "x", &Vec4::x, "y", &Vec4::y, "z", &Vec4::z, "w", &Vec4::w);
 		Lua.new_usertype<Vec3>("Vec3", sol::constructors<void(), void(float), void(float, float, float)>(), "x", &Vec3::x, "y", &Vec3::y, "z", &Vec3::z);
 		Lua.new_usertype<Vec2>("Vec2", sol::constructors<void(), void(float), void(float, float)>(), "x", &Vec2::x, "y", &Vec2::y);
-		
+
+		Lua.new_usertype<LuaTexture>("Texture", sol::constructors<void(const std::string&)>());
+
+		Lua.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>());
+
+		Lua.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>());
+
 		Lua.new_usertype<LuaInput>("VolundInput",
 			"IsHeld", &LuaInput::IsHeld,
 			"IsPressed", &LuaInput::IsPressed,
@@ -45,11 +51,8 @@ namespace Volund
 			"SetFloat", &LuaMaterial::SetFloat, 
 			"SetDouble", &LuaMaterial::SetDouble,
 			"SetVec2", &LuaMaterial::SetVec2,
-			"SetVec3", &LuaMaterial::SetVec3);
-
-		Lua.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>());
-
-		Lua.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>());
+			"SetVec3", &LuaMaterial::SetVec3,
+			"SetTexture", &LuaMaterial::SetTexture);
 
 		Lua.new_usertype<LuaEntity>("Entity", sol::constructors<void()>(),
 			"AddComponent", &LuaEntity::AddComponent,

@@ -33,6 +33,11 @@ namespace Volund
 		this->_Material->Set(Name, Value);
 	}
 
+	void LuaMaterial::SetTexture(const std::string& Name, LuaTexture& Value)
+	{
+		this->_Material->SetTexture(Name, Value.Get());
+	}
+
 	LuaMaterial::LuaMaterial(Ref<Material> Material)
 	{
 		this->_Material = Material;

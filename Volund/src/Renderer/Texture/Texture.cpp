@@ -27,7 +27,7 @@ namespace Volund
 		return this->_Height;
 	}
 
-	Ref<Texture> Texture::Create(std::string_view Filepath)
+	Ref<Texture> Texture::Create(const std::string& Filepath)
 	{
 		VOLUND_INFO("Loading Texture2D (%s)...", Filepath.data());
 

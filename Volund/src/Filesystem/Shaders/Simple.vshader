@@ -48,11 +48,16 @@ layout(std140, binding = 1) uniform LightsUniform
 
 //Material Uniforms
 uniform vec3 Color;
+uniform float ColorTextureMix;
+uniform sampler2D ColorTexture;
 
 layout(location = 0) out vec4 FragColor;
 
 void main()
 {
+    vec3 TextureColor = texture(ColorTexture, TextureCoord).rgb;
+    vec3 FinalColor = mix(Color, TextureColor, ColorTextureMix).rgb;
+
     vec3 Result = vec3(0.0f);
     for (int i = 0; i < LightAmount; i++)
     {
@@ -61,7 +66,7 @@ void main()
         vec3 ViewDir = normalize(EyePosition - Position);
         vec3 ReflectDir = reflect(-LightDir, Normal);
         float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
-        Result += (Diffuse + Specular) * LightColors[i] * Color;
+        Result += (Diffuse + Specular) * LightColors[i] * FinalColor;
     }
     FragColor = vec4(Result, 1.0f);
 }

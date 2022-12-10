@@ -3,6 +3,7 @@
 #include "Renderer/Material/Material.h"
 
 #include "Core/Lua/LuaShader/LuaShader.h"
+#include "Core/Lua/LuaTexture/LuaTexture.h"
 
 namespace Volund
 {
@@ -21,6 +22,8 @@ namespace Volund
 		void SetVec2(const std::string& Name, Vec2 Value);
 
 		void SetVec3(const std::string& Name, Vec3 Value);
+
+		void SetTexture(const std::string& Name, LuaTexture& Value);
 
 		LuaMaterial(Ref<Material> Material);
 

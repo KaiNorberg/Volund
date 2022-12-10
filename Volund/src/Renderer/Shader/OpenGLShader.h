@@ -54,6 +54,8 @@ namespace Volund
 		/// </summary>
 		void SetMat4x4(std::string_view Name, const Mat4x4& Value, bool Transpose = false) override;
 
+		void SetTexture(std::string_view Name, const Ref<Texture>& Value, uint32_t TextureUnit) override;
+
 		OpenGLShader() = default;
 
 		OpenGLShader(std::string_view VertexSource, std::string_view FragmentSource, std::string_view GeometrySource);

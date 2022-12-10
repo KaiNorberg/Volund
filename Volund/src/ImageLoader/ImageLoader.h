@@ -13,7 +13,7 @@ namespace Volund
 
 		unsigned char* GetData() const;
 
-		ImageLoader(std::string_view Filepath, int32_t DesiredChannels);
+		ImageLoader(const std::string& Filepath, int32_t DesiredChannels);
 
 		~ImageLoader();
 
