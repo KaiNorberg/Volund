@@ -5,12 +5,12 @@
 
 namespace Volund
 {
-	Vec3 LuaPointLight::GetColor()
+	LuaVec3 LuaPointLight::GetColor()
 	{
 		return this->_PointLight->Color;
 	}
 
-	void LuaPointLight::SetColor(Vec3 Color)
+	void LuaPointLight::SetColor(LuaVec3 Color)
 	{
 		this->_PointLight->Color = Color;
 	}

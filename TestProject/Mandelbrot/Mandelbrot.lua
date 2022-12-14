@@ -1,4 +1,4 @@
-Movement = VolundRequire("Movement.lua")
+Movement = require("Movement.lua")
 
 MandelbrotShader = Shader:new("Mandelbrot.vshader")
 MandelbrotMaterial = Material:new(MandelbrotShader)

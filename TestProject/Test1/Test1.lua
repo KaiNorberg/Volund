@@ -1,4 +1,4 @@
-Rotate = VolundRequire("Scripts/Rotate.lua")
+Rotate = require("Scripts/Rotate.lua")
 
 SimpleShader = Shader:new("Simple.vshader")
 

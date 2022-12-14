@@ -2,6 +2,7 @@
 
 #include "Core/Lua/LuaComponent/LuaComponent.h"
 #include "Core/Lua/LuaComponent/LuaComponents.h"
+#include "Core/Lua/LuaVec/LuaVec.h"
 
 #include "Core/Scene/Component/Transform/Transform.h"
 
@@ -11,21 +12,21 @@ namespace Volund
 	{
 	public:
 
-		void SetPosition(const Vec3& Position);
-		Vec3 GetPosition() const;
-		void AddPosition(const Vec3& Position);
+		void SetPosition(const LuaVec3& Position);
+		LuaVec3 GetPosition() const;
+		void AddPosition(const LuaVec3& Position);
 
-		void SetRotation(const Vec3& Rotation);
-		Vec3 GetRotation() const;
-		void AddRotation(const Vec3& Rotation);
+		void SetRotation(const LuaVec3& Rotation);
+		LuaVec3 GetRotation() const;
+		void AddRotation(const LuaVec3& Rotation);
 
-		void SetScale(const Vec3& Scale);
-		Vec3 GetScale() const;
-		void AddScale(const Vec3& Scale);
+		void SetScale(const LuaVec3& Scale);
+		LuaVec3 GetScale() const;
+		void AddScale(const LuaVec3& Scale);
 
-		Vec3 GetFront() const;
-		Vec3 GetRight() const;
-		Vec3 GetUp() const;
+		LuaVec3 GetFront() const;
+		LuaVec3 GetRight() const;
+		LuaVec3 GetUp() const;
 
 		LuaTransform(Ref<Transform> Transform);
 
