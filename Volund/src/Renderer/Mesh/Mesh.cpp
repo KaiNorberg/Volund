@@ -9,6 +9,13 @@
 
 namespace Volund
 {
+	AABB Mesh::GetAABB(const Mat4x4& ModelMatrix)
+	{
+		glm::vec3 Position(ModelMatrix[3]);
+
+		return AABB(this->_AABB.Min + Position, this->_AABB.Max + Position);
+	}
+
 	std::string Mesh::GetFilepath()
 	{
 		return this->_Filepath;
@@ -45,6 +52,7 @@ namespace Volund
 
 		Ref<Mesh> NewMesh = Mesh::Create(VBuffer, IBuffer);
 		NewMesh->_Filepath = Filepath;
+		NewMesh->_AABB = Loader.aabb;
 
 		return NewMesh;
 	}

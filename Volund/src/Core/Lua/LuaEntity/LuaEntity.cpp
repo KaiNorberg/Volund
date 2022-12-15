@@ -131,7 +131,7 @@ namespace Volund
 		break;
 		default:
 		{
-			VOLUND_ERROR("Unknown Component type (%d)!", Component);
+			VOLUND_WARNING("Unknown Component type (%d)!", Component);
 		}
 		break;
 		}

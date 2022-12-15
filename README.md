@@ -34,7 +34,7 @@ SimpleShader = Shader:new("Simple.vshader")
 RedMaterial = Material:new(SimpleShader)
 RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
 
-CubeMesh = Mesh:new("Cube.obj")
+CubeMesh = Mesh:new("Cube.vobj")
 
 Camera = Entity:new()
 

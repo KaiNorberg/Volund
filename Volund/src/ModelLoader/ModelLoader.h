@@ -2,19 +2,27 @@
 
 #include "Filesystem/Filesystem.h"
 
+#include "AABB/AABB.h"
+
 namespace Volund
 {
 	template <typename V, typename I>
 	class ModelLoader
 	{
 	public:
+		
+		AABB aabb;
+
 		std::vector<V> Vertices;
 		std::vector<I> Indices;
 
 		ModelLoader(const std::string& Filepath);
 
 	private:
+		
 		void LoadOBJ(const std::string& Filepath);
+
+		void CreateAABB();
 
 		struct ArrayHasher
 		{
@@ -37,7 +45,7 @@ namespace Volund
 	{
 		VOLUND_INFO("Loading OBJ file (%s)...", Filepath.data());
 
-		if (Filepath.ends_with(".obj"))
+		if (Filepath.ends_with(".obj") || Filepath.ends_with(".vobj"))
 		{
 			this->LoadOBJ(Filepath);
 		}
@@ -45,6 +53,8 @@ namespace Volund
 		{
 			VOLUND_WARNING("Unable to read unknown model file type (%s)!", Filepath.data());
 		}
+
+		this->CreateAABB();
 	}
 
 	template <typename V, typename I>
@@ -167,6 +177,22 @@ namespace Volund
 			{
 				//Not implemented
 			}
+		}
+	}
+
+	template<typename V, typename I>
+	inline void ModelLoader<V, I>::CreateAABB()
+	{
+		for (uint64_t i = 0; i < this->Vertices.size(); i += 3)
+		{
+			this->aabb.Min.x = Utils::Min(this->aabb.Min.x, this->Vertices[i]);
+			this->aabb.Max.x = Utils::Max(this->aabb.Max.x, this->Vertices[i]);
+
+			this->aabb.Min.y = Utils::Min(this->aabb.Min.y, this->Vertices[i + 1]);
+			this->aabb.Max.y = Utils::Max(this->aabb.Max.y, this->Vertices[i + 1]);
+
+			this->aabb.Min.z = Utils::Min(this->aabb.Min.z, this->Vertices[i + 2]);
+			this->aabb.Max.z = Utils::Max(this->aabb.Max.z, this->Vertices[i + 2]);
 		}
 	}
 }

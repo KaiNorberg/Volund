@@ -48,6 +48,8 @@ namespace Volund
 		{
 			void Sort();
 
+			void Discriminate();
+
 			Mat4x4 ViewMatrix;
 			Mat4x4 ProjectionMatrix;
 			std::vector<RendererCommand> CommandQueue;

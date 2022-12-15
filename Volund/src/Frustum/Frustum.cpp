@@ -3,76 +3,82 @@
 
 namespace Volund
 {
-	Vec4& Frustum::operator[](int i)
+	bool Frustum::ContainsAABB(const AABB& aabb) const
 	{
-		return this->_Planes[i];
-	}
+		Vec4 axisVert(1.0f);
 
-	bool Frustum::IsAABBInside(const Vec3 minp, const Vec3 maxp) const
-	{
-		// check box outside/inside of frustum
-		for (int i = 0; i < (int)Plane::Count; i++)
+		for (int32_t y = 0; y < 6; y++)
 		{
-			if ((glm::dot(_Planes[i], glm::vec4(minp.x, minp.y, minp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(maxp.x, minp.y, minp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(minp.x, maxp.y, minp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(maxp.x, maxp.y, minp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(minp.x, minp.y, maxp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(maxp.x, minp.y, maxp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(minp.x, maxp.y, maxp.z, 1.0f)) < 0.0) &&
-				(glm::dot(_Planes[i], glm::vec4(maxp.x, maxp.y, maxp.z, 1.0f)) < 0.0))
+			// x-axis
+			if (_FrustumPlanes[y].x < 0.0f)
+			{
+				axisVert.x = aabb.Min.x;
+			}
+			else
+			{
+				axisVert.x = aabb.Max.x;
+			}
+
+			// y-axis
+			if (_FrustumPlanes[y].y < 0.0f)
+			{
+				axisVert.y = aabb.Min.y;
+			}
+			else
+			{
+				axisVert.y = aabb.Max.y;
+			}
+
+			// z-axis
+			if (_FrustumPlanes[y].z < 0.0f)
+			{
+				axisVert.z = aabb.Min.z;
+			}
+			else
+			{
+				axisVert.z = aabb.Max.z;
+			}
+
+			if (glm::dot(_FrustumPlanes[y], axisVert) < 0.0f)
 			{
 				return false;
 			}
 		}
-
-		// check frustum outside/inside box
-		int out;
-		out = 0; for (int i = 0; i < 8; i++) out += ((_Points[i].x > maxp.x) ? 1 : 0); if (out == 8) return false;
-		out = 0; for (int i = 0; i < 8; i++) out += ((_Points[i].x < minp.x) ? 1 : 0); if (out == 8) return false;
-		out = 0; for (int i = 0; i < 8; i++) out += ((_Points[i].y > maxp.y) ? 1 : 0); if (out == 8) return false;
-		out = 0; for (int i = 0; i < 8; i++) out += ((_Points[i].y < minp.y) ? 1 : 0); if (out == 8) return false;
-		out = 0; for (int i = 0; i < 8; i++) out += ((_Points[i].z > maxp.z) ? 1 : 0); if (out == 8) return false;
-		out = 0; for (int i = 0; i < 8; i++) out += ((_Points[i].z < minp.z) ? 1 : 0); if (out == 8) return false;
 
 		return true;
 	}
 
 	Frustum::Frustum(Mat4x4 ViewProjMatrix)
 	{
-		ViewProjMatrix = glm::transpose(ViewProjMatrix);
-		_Planes[(int)Plane::Left] = ViewProjMatrix[3] + ViewProjMatrix[0];
-		_Planes[(int)Plane::Right] = ViewProjMatrix[3] - ViewProjMatrix[0];
-		_Planes[(int)Plane::Bottom] = ViewProjMatrix[3] + ViewProjMatrix[1];
-		_Planes[(int)Plane::Top] = ViewProjMatrix[3] - ViewProjMatrix[1];
-		_Planes[(int)Plane::Near] = ViewProjMatrix[3] + ViewProjMatrix[2];
-		_Planes[(int)Plane::Far] = ViewProjMatrix[3] - ViewProjMatrix[2];
-
-		glm::vec3 Crosses[(int)Plane::Combinations] = {
-			glm::cross(glm::vec3(_Planes[(int)Plane::Left]),   glm::vec3(_Planes[(int)Plane::Right])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Left]),   glm::vec3(_Planes[(int)Plane::Bottom])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Left]),   glm::vec3(_Planes[(int)Plane::Top])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Left]),   glm::vec3(_Planes[(int)Plane::Near])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Left]),   glm::vec3(_Planes[(int)Plane::Far])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Right]),  glm::vec3(_Planes[(int)Plane::Bottom])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Right]),  glm::vec3(_Planes[(int)Plane::Top])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Right]),  glm::vec3(_Planes[(int)Plane::Near])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Right]),  glm::vec3(_Planes[(int)Plane::Far])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Bottom]), glm::vec3(_Planes[(int)Plane::Top])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Bottom]), glm::vec3(_Planes[(int)Plane::Near])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Bottom]), glm::vec3(_Planes[(int)Plane::Far])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Top]),    glm::vec3(_Planes[(int)Plane::Near])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Top]),    glm::vec3(_Planes[(int)Plane::Far])),
-			glm::cross(glm::vec3(_Planes[(int)Plane::Near]),   glm::vec3(_Planes[(int)Plane::Far]))
-		};
-
-		_Points[0] = Intersection<Plane::Left, Plane::Bottom, Plane::Near>(Crosses);
-		_Points[1] = Intersection<Plane::Left, Plane::Top, Plane::Near>(Crosses);
-		_Points[2] = Intersection<Plane::Right, Plane::Bottom, Plane::Near>(Crosses);
-		_Points[3] = Intersection<Plane::Right, Plane::Top, Plane::Near>(Crosses);
-		_Points[4] = Intersection<Plane::Left, Plane::Bottom, Plane::Far>(Crosses);
-		_Points[5] = Intersection<Plane::Left, Plane::Top, Plane::Far>(Crosses);
-		_Points[6] = Intersection<Plane::Right, Plane::Bottom, Plane::Far>(Crosses);
-		_Points[7] = Intersection<Plane::Right, Plane::Top, Plane::Far>(Crosses);
+		// Left clipping plane
+		_FrustumPlanes[0].x = ViewProjMatrix[0][3] + ViewProjMatrix[0][0];
+		_FrustumPlanes[0].y = ViewProjMatrix[1][3] + ViewProjMatrix[1][0];
+		_FrustumPlanes[0].z = ViewProjMatrix[2][3] + ViewProjMatrix[2][0];
+		_FrustumPlanes[0].w = ViewProjMatrix[3][3] + ViewProjMatrix[3][0];
+		// Right clipping plane
+		_FrustumPlanes[1].x = ViewProjMatrix[0][3] - ViewProjMatrix[0][0];
+		_FrustumPlanes[1].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][0];
+		_FrustumPlanes[1].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][0];
+		_FrustumPlanes[1].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][0];
+		// Top clipping plane
+		_FrustumPlanes[2].x = ViewProjMatrix[0][3] - ViewProjMatrix[0][1];
+		_FrustumPlanes[2].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][1];
+		_FrustumPlanes[2].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][1];
+		_FrustumPlanes[2].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][1];
+		// Bottom clipping plane
+		_FrustumPlanes[3].x = ViewProjMatrix[0][3] + ViewProjMatrix[0][1];
+		_FrustumPlanes[3].y = ViewProjMatrix[1][3] + ViewProjMatrix[1][1];
+		_FrustumPlanes[3].z = ViewProjMatrix[2][3] + ViewProjMatrix[2][1];
+		_FrustumPlanes[3].w = ViewProjMatrix[3][3] + ViewProjMatrix[3][1];
+		// Near clipping plane
+		_FrustumPlanes[4].x = ViewProjMatrix[0][2];
+		_FrustumPlanes[4].y = ViewProjMatrix[1][2];
+		_FrustumPlanes[4].z = ViewProjMatrix[2][2];
+		_FrustumPlanes[4].w = ViewProjMatrix[3][2];
+		// Far clipping plane
+		_FrustumPlanes[5].x = ViewProjMatrix[0][3] - ViewProjMatrix[0][2];
+		_FrustumPlanes[5].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][2];
+		_FrustumPlanes[5].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][2];
+		_FrustumPlanes[5].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][2];
 	}
 }

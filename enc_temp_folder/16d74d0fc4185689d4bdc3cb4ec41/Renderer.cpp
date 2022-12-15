@@ -47,4 +47,17 @@ namespace Volund
 			return A.material < B.material;
 		});
 	}
+
+	void RendererInstance::Data::Discriminate()
+	{
+		Frustum CameraFrustum(this->ProjectionMatrix * this->ViewMatrix);
+
+		for (int i = 0; i < this->CommandQueue.size(); i++)
+		{
+			if (!CameraFrustum.ContainsAABB(this->CommandQueue[i].mesh->GetAABB(this->CommandQueue[i].ModelMatrix)))
+			{
+				this->CommandQueue.erase(this->CommandQueue.begin() + i);
+			}
+		}
+	}
 }

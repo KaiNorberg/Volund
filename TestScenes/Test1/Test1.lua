@@ -4,7 +4,7 @@ SimpleShader = Shader:new("Simple.vshader")
 
 TestTexture = Texture:new("Textures/Test.jpg")
 
-CubeMesh = Mesh:new("Cube.obj")
+CubeMesh = Mesh:new("Cube.vobj")
 TeapotMesh = Mesh:new("Models/Teapot.obj")
 
 TextureMaterial = Material:new(SimpleShader)

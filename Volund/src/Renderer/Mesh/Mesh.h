@@ -3,11 +3,15 @@
 #include "Renderer/Indexbuffer/Indexbuffer.h"
 #include "Renderer/Vertexbuffer/Vertexbuffer.h"
 
+#include "AABB/AABB.h"
+
 namespace Volund
 {
 	class Mesh
 	{
 	public:
+
+		AABB GetAABB(const Mat4x4& ModelMatrix);
 
 		std::string GetFilepath();
 
@@ -29,6 +33,8 @@ namespace Volund
 		virtual ~Mesh() = default;
 
 	protected:
+
+		AABB _AABB;
 
 		std::string _Filepath;
 

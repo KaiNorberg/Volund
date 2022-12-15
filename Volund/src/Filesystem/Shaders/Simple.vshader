@@ -47,6 +47,7 @@ layout(std140, binding = 1) uniform LightsUniform
 };
 
 //Material Uniforms
+uniform float AmbientLighting;
 uniform vec3 Color;
 uniform float ColorTextureMix;
 uniform sampler2D ColorTexture;
@@ -58,7 +59,7 @@ void main()
     vec3 TextureColor = texture(ColorTexture, TextureCoord).rgb;
     vec3 FinalColor = mix(Color, TextureColor, ColorTextureMix).rgb;
 
-    vec3 Result = vec3(0.0f);
+    vec3 Result = FinalColor * AmbientLighting;
     for (int i = 0; i < LightAmount; i++)
     {
         vec3 LightDir = normalize(LightPositions[i] - Position);

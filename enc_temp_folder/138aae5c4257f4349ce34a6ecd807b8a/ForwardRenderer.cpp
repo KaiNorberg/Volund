@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "ForwardRenderer.h"
 
-#include "Frustum/Frustum.h"
-
 namespace Volund
 {
 	void ForwardRenderer::Begin(const Mat4x4& ViewMatrix, const Mat4x4& ProjectionMatrix)
@@ -41,30 +39,27 @@ namespace Volund
 		this->_CameraUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
 		this->_LightsUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS);
 
+		this->_Data.Discriminate();
 		this->_Data.Sort();
 
 		Ref<Material> PrevMaterial = nullptr;
-		Frustum CameraFrustum(ViewProjMatrix);
 		for (const auto& Command : this->_Data.CommandQueue)
 		{
-			if (CameraFrustum.ContainsAABB(Command.mesh->GetAABB(Command.ModelMatrix)))
+			if (Command.material != PrevMaterial)
 			{
-				if (Command.material != PrevMaterial)
-				{
-					Command.material->UpdateShader();
-					PrevMaterial = Command.material;
-				}
-
-				Ref<Shader> MaterialShader = Command.material->GetShader();
-
-				if (MaterialShader->HasUniform("_ModelMatrix"))
-				{
-					MaterialShader->SetMat4x4("_ModelMatrix", Command.ModelMatrix);
-				}
-
-				Command.mesh->Bind();
-				this->_API->DrawIndexed(Command.mesh);
+				Command.material->UpdateShader();
+				PrevMaterial = Command.material;
 			}
+
+			Ref<Shader> MaterialShader = Command.material->GetShader();
+
+			if (MaterialShader->HasUniform("_ModelMatrix"))
+			{
+				MaterialShader->SetMat4x4("_ModelMatrix", Command.ModelMatrix);
+			}
+
+			Command.mesh->Bind();
+			this->_API->DrawIndexed(Command.mesh);
 		}
 	}
 

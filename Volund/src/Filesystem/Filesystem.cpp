@@ -99,11 +99,11 @@ namespace Volund
 		CreateResource("Simple.vshader",
 			#include "Shaders/Simple.vshader"
 		);
-		CreateResource("Cube.obj",
-			#include "Meshes/Cube.obj"
+		CreateResource("Cube.vobj",
+			#include "Meshes/Cube.vobj"
 		);
-		CreateResource("Quad.obj",
-			#include "Meshes/Quad.obj"
+		CreateResource("Quad.vobj",
+			#include "Meshes/Quad.vobj"
 		);
 	}
 }
