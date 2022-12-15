@@ -5,14 +5,12 @@ namespace Volund
 {
 	void ThreadPool::Init()
 	{
-		static bool Initialized = false;
-
-		if (Initialized)
+		if (ThreadPool::_IsInitialized)
 		{
 			return;
 		}
-
-		Initialized = true;
+		ThreadPool::_IsInitialized = true;
+		ThreadPool::_ShouldTerminate = false;
 
 		uint64_t ThreadCount = std::thread::hardware_concurrency();
 
@@ -33,19 +31,30 @@ namespace Volund
 		_MutexCondition.notify_one();
 	}
 
-	void ThreadPool::Wait()
+	void ThreadPool::Terminate()
 	{
-		for (auto& Thread : ThreadPool::_Threads)
+		ThreadPool::_IsInitialized = false;
 		{
-			Thread.join();
-		} 
-		
+			std::unique_lock<std::mutex> lock(ThreadPool::_Mutex);
+			ThreadPool::_ShouldTerminate = true;
+		}
+		_MutexCondition.notify_all();
+
+		for (std::thread& active_thread : ThreadPool::_Threads) 
+		{
+			active_thread.join();
+		}
 		ThreadPool::_Threads.clear();
 	}
 
-	bool ThreadPool::ShouldTerminate()
+	bool ThreadPool::Busy()
 	{
-		return ThreadPool::_ActiveJobCount == 0 && ThreadPool::_Jobs.empty();
+		bool Busy;
+		{
+			std::unique_lock<std::mutex> lock(ThreadPool::_Mutex);
+			Busy = !ThreadPool::_Jobs.empty();
+		}
+		return Busy;
 	}
 
 	void ThreadPool::Loop()
@@ -58,10 +67,10 @@ namespace Volund
 
 				_MutexCondition.wait(lock, [] 
 				{
-					return !ThreadPool::_Jobs.empty() || ThreadPool::ShouldTerminate();
+					return !ThreadPool::_Jobs.empty() || ThreadPool::_ShouldTerminate;
 				});
 
-				if (ThreadPool::ShouldTerminate())
+				if (ThreadPool::_ShouldTerminate)
 				{
 					_MutexCondition.notify_all();
 					return;
@@ -70,10 +79,7 @@ namespace Volund
 				Job = ThreadPool::_Jobs.front();
 				ThreadPool::_Jobs.pop();
 			}
-
-			ThreadPool::_ActiveJobCount++;
 			Job();
-			ThreadPool::_ActiveJobCount--;
 		}
 	}
 }

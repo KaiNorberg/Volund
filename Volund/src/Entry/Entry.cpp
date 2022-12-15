@@ -6,9 +6,9 @@ int Main()
 {
 	VL::ThreadPool::Init();
 
-	VL::ThreadPool::QueueJob(VL::Entry);
+	VL::Entry();
 
-	VL::ThreadPool::Wait();
+	VL::ThreadPool::Terminate();
 
 	return EXIT_SUCCESS;
 }
