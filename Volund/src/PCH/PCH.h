@@ -28,6 +28,7 @@
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/vec2.hpp>
+#include <glm/glm/gtx/norm.hpp>
 #include <glm/glm/gtc/matrix_transform.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
 #include <glm/glm/gtc/type_ptr.hpp>

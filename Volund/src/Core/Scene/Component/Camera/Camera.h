@@ -30,6 +30,8 @@ namespace Volund
 
 		void OnCreate() override;
 
+		void OnUpdate(TimeStep TS) override;
+
 		void OnDelete() override;
 
 		Camera() = default;

@@ -5,6 +5,8 @@
 #include "Core/Scene/Scene.h"
 #include "Core/Scene/Component/Transform/Transform.h"
 
+#include "Renderer/Renderer.h"
+
 namespace Volund
 {
 	bool Camera::IsActive() const
@@ -59,6 +61,17 @@ namespace Volund
 		{
 			_ActiveCamera = this;
 		}
+	}
+
+	void Camera::OnUpdate(TimeStep TS)
+	{
+		IVec2 ViewSize = RenderingAPI::GetViewSize();
+
+		RendererEye Eye;
+		Eye.ProjectionMatrix = this->GetProjectionMatrix((float)ViewSize.x / (float)ViewSize.y);
+		Eye.ViewMatrix = this->GetViewMatrix();
+
+		Renderer::Submit(Eye);
 	}
 
 	void Camera::OnDelete()

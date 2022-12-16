@@ -5,11 +5,9 @@
 
 namespace Volund
 {
-	void ForwardRenderer::Begin(const Mat4x4& ViewMatrix, const Mat4x4& ProjectionMatrix)
+	void ForwardRenderer::Begin()
 	{
 		this->_Data = Data();
-		this->_Data.ViewMatrix = ViewMatrix;
-		this->_Data.ProjectionMatrix = ProjectionMatrix;
 	}
 
 	void ForwardRenderer::Submit(const RendererCommand& Command)
@@ -22,13 +20,13 @@ namespace Volund
 		this->_Data.Lights.push_back(Light);
 	}
 
+	void ForwardRenderer::Submit(const RendererEye& Eye)
+	{
+		this->_Data.Eyes.push_back(Eye);
+	}
+
 	void ForwardRenderer::End()
 	{
-		Mat4x4 ViewProjMatrix = this->_Data.ProjectionMatrix * this->_Data.ViewMatrix;
-		Vec3 EyePosition = Vec3(this->_Data.ViewMatrix[0][3], this->_Data.ViewMatrix[1][3], this->_Data.ViewMatrix[2][3]);
-		this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
-		this->_CameraUniforms->Set("EyePosition", &EyePosition);
-
 		uint32_t LightAmount = (uint32_t)this->_Data.Lights.size();
 		this->_LightsUniforms->Set("LightAmount", &LightAmount);
 		for (uint64_t i = 0; i < LightAmount; i++)
@@ -43,27 +41,36 @@ namespace Volund
 
 		this->_Data.Sort();
 
-		Ref<Material> PrevMaterial = nullptr;
-		Frustum CameraFrustum(ViewProjMatrix);
-		for (const auto& Command : this->_Data.CommandQueue)
+		for (const auto& Eye : this->_Data.Eyes)
 		{
-			if (CameraFrustum.ContainsAABB(Command.mesh->GetAABB(Command.ModelMatrix)))
+			this->_Data.Discriminate(Eye);
+
+			Mat4x4 ViewProjMatrix = Eye.ProjectionMatrix * Eye.ViewMatrix;
+			Vec3 EyePosition = Vec3(Eye.ViewMatrix[0][3], Eye.ViewMatrix[1][3], Eye.ViewMatrix[2][3]);
+			this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
+			this->_CameraUniforms->Set("EyePosition", &EyePosition);
+
+			Ref<Material> PrevMaterial = nullptr;
+			for (const auto& Command : this->_Data.CommandQueue)
 			{
-				if (Command.material != PrevMaterial)
+				if (!Command.Discriminated)
 				{
-					Command.material->UpdateShader();
-					PrevMaterial = Command.material;
+					if (Command.material != PrevMaterial)
+					{
+						Command.material->UpdateShader();
+						PrevMaterial = Command.material;
+					}
+
+					Ref<Shader> MaterialShader = Command.material->GetShader();
+
+					if (MaterialShader->HasUniform("_ModelMatrix"))
+					{
+						MaterialShader->SetMat4x4("_ModelMatrix", Command.ModelMatrix);
+					}
+
+					Command.mesh->Bind();
+					this->_API->DrawIndexed(Command.mesh);
 				}
-
-				Ref<Shader> MaterialShader = Command.material->GetShader();
-
-				if (MaterialShader->HasUniform("_ModelMatrix"))
-				{
-					MaterialShader->SetMat4x4("_ModelMatrix", Command.ModelMatrix);
-				}
-
-				Command.mesh->Bind();
-				this->_API->DrawIndexed(Command.mesh);
 			}
 		}
 	}

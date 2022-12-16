@@ -65,19 +65,7 @@ namespace Volund
 
 	void Scene::UpdateCallback(TimeStep TS)
 	{
-		VL::Camera* ActiveCamera = VL::Camera::GetActiveCamera();
-
-		if (ActiveCamera != nullptr)
-		{
-			IVec2 ViewSize = RenderingAPI::GetViewSize();
-
-			Renderer::Begin(ActiveCamera->GetViewMatrix(), ActiveCamera->GetProjectionMatrix((float)ViewSize.x / (float)ViewSize.y));
-
-		}
-		else
-		{
-			Renderer::Begin(Mat4x4(1.0f), Mat4x4(1.0f));
-		}
+		Renderer::Begin();
 
 		for (const auto& [entity, Container] : _Data.Registry)
 		{	

@@ -69,6 +69,7 @@ void main()
         float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
         Result += (Diffuse + Specular) * LightColors[i] * FinalColor;
     }
+
     FragColor = vec4(Result, 1.0f);
 }
 )====="

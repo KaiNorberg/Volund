@@ -29,6 +29,8 @@ void Editor::OnTerminate()
 
 void Editor::OnUpdate(VL::TimeStep TS)
 {
+	VL::Window::SetVsync(true);
+
 	VL::ImGuiModule::BeginFrame();
 
 	if (VL::ImGuiModule::BeginDockSpace())

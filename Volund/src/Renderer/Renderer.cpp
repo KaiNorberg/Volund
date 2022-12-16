@@ -20,9 +20,9 @@ namespace Volund
 		_Instance.reset();
 	}
 
-	void Renderer::Begin(const Mat4x4& ViewMatrix, const Mat4x4& ProjectionMatrix)
+	void Renderer::Begin()
 	{
-		_Instance->Begin(ViewMatrix, ProjectionMatrix);
+		_Instance->Begin();
 	}
 
 	void Renderer::Submit(const RendererCommand& Command)
@@ -33,6 +33,11 @@ namespace Volund
 	void Renderer::Submit(const RendererLight& Light)
 	{
 		_Instance->Submit(Light);
+	}
+
+	void Renderer::Submit(const RendererEye& Eye)
+	{
+		_Instance->Submit(Eye);
 	}
 
 	void Renderer::End()
@@ -46,5 +51,15 @@ namespace Volund
 		{
 			return A.material < B.material;
 		});
+	}
+
+	void RendererInstance::Data::Discriminate(const RendererEye& Eye)
+	{
+		Frustum CameraFrustum(Eye.ProjectionMatrix * Eye.ViewMatrix);
+
+		for (auto& Command : this->CommandQueue)
+		{
+			Command.Discriminated = !CameraFrustum.ContainsAABB(Command.mesh->GetAABB(Command.ModelMatrix));
+		}
 	}
 }

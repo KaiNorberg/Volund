@@ -34,10 +34,10 @@ namespace Volund
 			EntityTransform->Position += EntityTransform->GetRight() * float(TS) * this->Speed;
 		}
 
-		IVec2 Delta = _Input.GetMousePosition() - this->_OldMousePosition;
-
-		Delta.x = (int32_t)((float)Utils::Clamp(Delta.x, -10, 10) * this->Sensitivity);
-		Delta.y = (int32_t)((float)Utils::Clamp(Delta.y, -10, 10) * this->Sensitivity);
+		Vec2 Delta = _Input.GetMousePosition() - this->_OldMousePosition;
+		
+		Delta.x = (int32_t)((float)Utils::Clamp(Delta.x, -10.0f, 10.0f) * this->Sensitivity);
+		Delta.y = (int32_t)((float)Utils::Clamp(Delta.y, -10.0f, 10.0f) * this->Sensitivity);
 
 		_Rotation -= Vec3(Delta.y, Delta.x, 0.0f) * this->Sensitivity;
 		_Rotation.x = Utils::Clamp(_Rotation.x, -89.0f, 89.0f);
