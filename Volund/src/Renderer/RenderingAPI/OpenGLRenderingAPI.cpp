@@ -114,8 +114,7 @@ namespace Volund
 	{
 		glClearColor(Color.r, Color.g, Color.b, Color.a);
 
-		glClear(GL_DEPTH_BUFFER_BIT);
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
 	void OpenGLRenderingAPI::DrawIndexed(const Ref<Mesh>& VArray)

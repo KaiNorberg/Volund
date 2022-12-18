@@ -18,7 +18,7 @@ namespace Volund
 			{
 				axisVert.x = aabb.Max.x;
 			}
-
+			
 			// y-axis
 			if (_FrustumPlanes[y].y < 0.0f)
 			{
@@ -80,5 +80,10 @@ namespace Volund
 		_FrustumPlanes[5].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][2];
 		_FrustumPlanes[5].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][2];
 		_FrustumPlanes[5].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][2];
+
+		for (int i = 0; i < 6; i++)
+		{
+			_FrustumPlanes[i] = glm::normalize(_FrustumPlanes[i]);
+		}
 	}
 }

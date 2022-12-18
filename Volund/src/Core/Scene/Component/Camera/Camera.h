@@ -10,7 +10,7 @@ namespace Volund
 	{
 	public:
 
-		float FOV = 70.0f;
+		float FOV = 80.0f;
 
 		float NearPlane = 0.1f;
 

@@ -1,33 +1,30 @@
 #include "PCH/PCH.h"
 #include "AABB.h"
 
+#include <glm/glm/gtx/matrix_decompose.hpp>
+
 namespace Volund
 {
 	AABB AABB::ToWorldSpace(const Mat4x4& ModelMatrix)
 	{
-		std::array<Vec3, 8> Points;
+		glm::vec3 Scale;
+		glm::quat Rotation;
+		glm::vec3 Position;
+		glm::vec3 Skew;
+		glm::vec4 Perspective;
+		glm::decompose(ModelMatrix, Scale, Rotation, Position, Skew, Perspective);
 
-		Points[0] = (Vec3(Vec4(this->Min.x, this->Min.y, this->Min.z, 1.0)* ModelMatrix));
-		Points[1] = (Vec3(Vec4(this->Max.x, this->Min.y, this->Min.z, 1.0) * ModelMatrix));
-		Points[2] = (Vec3(Vec4(this->Min.x, this->Max.y, this->Min.z, 1.0) * ModelMatrix));
-		Points[3] = (Vec3(Vec4(this->Max.x, this->Max.y, this->Min.z, 1.0) * ModelMatrix));
-		Points[4] = (Vec3(Vec4(this->Min.x, this->Min.y, this->Max.z, 1.0) * ModelMatrix));
-		Points[5] = (Vec3(Vec4(this->Max.x, this->Min.y, this->Max.z, 1.0) * ModelMatrix));
-		Points[6] = (Vec3(Vec4(this->Min.x, this->Max.y, this->Max.z, 1.0) * ModelMatrix));
-		Points[7] = (Vec3(Vec4(this->Max.x, this->Max.y, this->Max.z, 1.0) * ModelMatrix));
-
-		AABB NewAABB;
-
-		for (uint64_t i = 0; i < Points.size(); i++)
+		AABB NewAABB = AABB(Position, Position);
+		glm::mat3x3 RotationMatrix = glm::toMat3(Rotation);
+		for (int i = 0; i < RotationMatrix.length(); i++)
 		{
-			NewAABB.Min.x = Utils::Min(NewAABB.Min.x, Points[i].x);
-			NewAABB.Max.x = Utils::Max(NewAABB.Max.x, Points[i].x);
-
-			NewAABB.Min.y = Utils::Min(NewAABB.Min.y, Points[i].y);
-			NewAABB.Max.y = Utils::Max(NewAABB.Max.y, Points[i].y);
-
-			NewAABB.Min.z = Utils::Min(NewAABB.Min.z, Points[i].z);
-			NewAABB.Max.z = Utils::Max(NewAABB.Max.z, Points[i].z);
+			for (int j = 0; j < RotationMatrix[i].length(); j++)
+			{
+				float A = RotationMatrix[i][j] * this->Min[j] * Scale[j];
+				float B = RotationMatrix[i][j] * this->Max[j] * Scale[j];
+				NewAABB.Min[i] += A < B ? A : B;
+				NewAABB.Max[i] += A < B ? B : A;
+			}
 		}
 
 		return NewAABB;

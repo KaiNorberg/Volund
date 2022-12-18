@@ -33,6 +33,10 @@ namespace Volund
 
 		for (const auto& Eye : this->_Data.Eyes)
 		{
+			this->_Data.Discriminate(Eye);
+
+			this->UpdateCameraUniforms(Eye);
+
 			Eye.Target->Bind();
 
 			auto& TargetSpec = Eye.Target->GetSpec();
@@ -40,9 +44,7 @@ namespace Volund
 			VL::RenderingAPI::Clear();						
 			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)TargetSpec.Width, (int32_t)TargetSpec.Height);
 
-			this->_Data.Discriminate(Eye);
-
-			this->UpdateCameraUniforms(Eye);
+			int i = 0;
 
 			Ref<Material> PrevMaterial = nullptr;
 			for (const auto& Command : this->_Data.CommandQueue)
@@ -65,7 +67,13 @@ namespace Volund
 					Command.mesh->Bind();
 					this->_API->DrawIndexed(Command.mesh);
 				}
+				else
+				{
+					i++;
+				}
 			}
+
+			VOLUND_INFO("Disriminated: %d", i);
 
 			Eye.Target->Unbind();
 		}
