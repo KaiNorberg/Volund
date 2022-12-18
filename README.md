@@ -60,6 +60,6 @@ Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation 
 - 3rd party 3D physics engine
 - Audio system
 - Lua scripting
-- A feature-complete Entity Component system
-- Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan
-- Tools for training and using deep learing/neural networks.
+- A feature-complete Entity Component system.
+- Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan.
+- Tools for training and using deep learning/neural networks.
