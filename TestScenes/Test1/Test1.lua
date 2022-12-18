@@ -19,6 +19,10 @@ BlueMaterial = Material:new(SimpleShader)
 BlueMaterial:SetFloat("ColorTextureMix", 0.0)
 BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
 
+WhiteMaterial = Material:new(SimpleShader)
+WhiteMaterial:SetFloat("ColorTextureMix", 0.0)
+WhiteMaterial:SetVec3("Color", Vec3:new(1.0, 1.0, 1.0))
+
 Camera = Entity:new()
 Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
 Camera:AddComponent(Component.CAMERA, {IsActive = true})
@@ -40,5 +44,9 @@ PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:n
 Teapot = Entity:new()
 Teapot:AddComponent(Component.TRANSFORM, {Position = Vec3:new(2.9, 0.0, 0.0)})
 Teapot:AddComponent(Component.MESH_RENDERER, {Mesh = TeapotMesh, Material = BlueMaterial})
+
+Ground = Entity:new()
+Ground:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, -10.0, 0.0), Scale = Vec3:new(1000, 1, 1000)})
+Ground:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = WhiteMaterial})
 
 Window:SetCursorMode(CursorMode.DISABLED)

@@ -18,8 +18,6 @@ namespace Volund
 
 		void End() override;
 
-		ForwardRenderer();
-
 	private:		
 
 	};

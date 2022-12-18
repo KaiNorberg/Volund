@@ -12,6 +12,8 @@
 #define VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS 1
 #define VOLUND_MAX_LIGHTS 64
 
+#define VOLUND_UNIFORM_NAME_MODELMATRIX "_ModelMatrix"
+
 namespace Volund
 {
 	struct RendererCommand
@@ -53,11 +55,15 @@ namespace Volund
 
 		virtual void End() = 0;
 
-		RendererInstance() = default;
+		RendererInstance();
 
 		virtual ~RendererInstance() = default;
 
 	protected:
+
+		void UpdateLightUniforms();
+
+		void UpdateCameraUniforms(const RendererEye& Eye);
 
 		struct Data
 		{
@@ -72,11 +78,10 @@ namespace Volund
 
 		Ref<RenderingAPI> _API;
 
-		Ref<UniformBuffer> _CameraUniforms;
-
-		Ref<UniformBuffer> _LightsUniforms;
-
 	private:
+
+		Ref<UniformBuffer> _CameraUniforms;
+		Ref<UniformBuffer> _LightsUniforms;
 	};
 
 	class Renderer

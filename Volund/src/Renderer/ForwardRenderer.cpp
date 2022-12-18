@@ -27,28 +27,15 @@ namespace Volund
 
 	void ForwardRenderer::End()
 	{
-		uint32_t LightAmount = (uint32_t)this->_Data.Lights.size();
-		this->_LightsUniforms->Set("LightAmount", &LightAmount);
-		for (uint64_t i = 0; i < LightAmount; i++)
-		{
-			Vec3 LightColor = this->_Data.Lights[i].Color * this->_Data.Lights[i].Brightness;
-			this->_LightsUniforms->Set("Position" + std::to_string(i), &this->_Data.Lights[i].Position);
-			this->_LightsUniforms->Set("Color" + std::to_string(i), &LightColor);
-		} 
-
-		this->_CameraUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
-		this->_LightsUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS);
-
 		this->_Data.Sort();
+
+		this->UpdateLightUniforms();
 
 		for (const auto& Eye : this->_Data.Eyes)
 		{
 			this->_Data.Discriminate(Eye);
 
-			Mat4x4 ViewProjMatrix = Eye.ProjectionMatrix * Eye.ViewMatrix;
-			Vec3 EyePosition = Vec3(Eye.ViewMatrix[0][3], Eye.ViewMatrix[1][3], Eye.ViewMatrix[2][3]);
-			this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
-			this->_CameraUniforms->Set("EyePosition", &EyePosition);
+			this->UpdateCameraUniforms(Eye);
 
 			Ref<Material> PrevMaterial = nullptr;
 			for (const auto& Command : this->_Data.CommandQueue)
@@ -63,9 +50,9 @@ namespace Volund
 
 					Ref<Shader> MaterialShader = Command.material->GetShader();
 
-					if (MaterialShader->HasUniform("_ModelMatrix"))
+					if (MaterialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
 					{
-						MaterialShader->SetMat4x4("_ModelMatrix", Command.ModelMatrix);
+						MaterialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, Command.ModelMatrix);
 					}
 
 					Command.mesh->Bind();
@@ -73,25 +60,5 @@ namespace Volund
 				}
 			}
 		}
-	}
-
-	ForwardRenderer::ForwardRenderer()
-	{
-		this->_CameraUniforms = UniformBuffer::Create();		
-		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
-		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
-		this->_CameraUniforms->Allocate();
-
-		this->_LightsUniforms = UniformBuffer::Create();
-		this->_LightsUniforms->PushScalar<int>("LightAmount");			
-		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
-		{
-			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
-		}
-		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
-		{
-			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
-		}
-		this->_LightsUniforms->Allocate();
 	}
 }

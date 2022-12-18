@@ -118,7 +118,6 @@ namespace Volund
 
 		VOLUND_INFO("Deserializing Scene...");
 		
-		_Data = SceneData();
 		_Data.Filepath = Filepath;
 
 		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
@@ -152,6 +151,8 @@ namespace Volund
 
 		std::string ParentPath = std::filesystem::path(_Data.Filepath).parent_path().string();
 		VL::Filesystem::RemoveRelativeFilepath(ParentPath);
+
+		_Data = SceneData();
 	}
 
 	Scene::~Scene()

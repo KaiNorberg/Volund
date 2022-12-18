@@ -11,9 +11,7 @@ namespace Volund
 {
 	AABB Mesh::GetAABB(const Mat4x4& ModelMatrix)
 	{
-		glm::vec3 Position(ModelMatrix[3]);
-
-		return AABB(this->_AABB.Min + Position, this->_AABB.Max + Position);
+		return this->_AABB.ToWorldSpace(ModelMatrix);
 	}
 
 	std::string Mesh::GetFilepath()

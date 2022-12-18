@@ -43,6 +43,8 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 			if (!Filepath.empty())
 			{
 				VL::Scene::Load(Filepath);
+				ImGui::End();
+				return;
 			}
 		}
 
@@ -53,6 +55,8 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 			if (ImGui::Button("Reload (Shift + R)"))
 			{
 				VL::Scene::Load(VL::Scene::GetFilepath());
+				ImGui::End();
+				return;
 			}
 
 			if (ImGui::BeginChild("ViewPort"))

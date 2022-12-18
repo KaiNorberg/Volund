@@ -22,8 +22,6 @@ namespace Volund
 		
 		void LoadOBJ(const std::string& Filepath);
 
-		void CreateAABB();
-
 		struct ArrayHasher
 		{
 			std::uint64_t operator()(const std::array<V, 8>& Array) const
@@ -54,7 +52,7 @@ namespace Volund
 			VOLUND_WARNING("Unable to read unknown model file type (%s)!", Filepath.data());
 		}
 
-		this->CreateAABB();
+		this->aabb = AABB(this->Vertices);
 	}
 
 	template <typename V, typename I>
@@ -177,22 +175,6 @@ namespace Volund
 			{
 				//Not implemented
 			}
-		}
-	}
-
-	template<typename V, typename I>
-	inline void ModelLoader<V, I>::CreateAABB()
-	{
-		for (uint64_t i = 0; i < this->Vertices.size(); i += 3)
-		{
-			this->aabb.Min.x = Utils::Min(this->aabb.Min.x, this->Vertices[i]);
-			this->aabb.Max.x = Utils::Max(this->aabb.Max.x, this->Vertices[i]);
-
-			this->aabb.Min.y = Utils::Min(this->aabb.Min.y, this->Vertices[i + 1]);
-			this->aabb.Max.y = Utils::Max(this->aabb.Max.y, this->Vertices[i + 1]);
-
-			this->aabb.Min.z = Utils::Min(this->aabb.Min.z, this->Vertices[i + 2]);
-			this->aabb.Max.z = Utils::Max(this->aabb.Max.z, this->Vertices[i + 2]);
 		}
 	}
 }
