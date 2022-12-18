@@ -62,3 +62,4 @@ Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation 
 - Lua scripting
 - A feature-complete Entity Component system
 - Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan
+- Tools for training and using deep learing/neural networks.
