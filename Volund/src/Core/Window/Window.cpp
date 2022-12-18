@@ -33,7 +33,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, true));
+			EventDispatcher::Dispatch(KeyEvent((uint32_t)wparam, true));
 		}
 		break;
 		case WM_KEYUP:
@@ -43,7 +43,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(KeyEvent((uint32_t)wparam, false));
+			EventDispatcher::Dispatch(KeyEvent((uint32_t)wparam, false));
 		}
 		break;
 		case WM_MOUSEMOVE:
@@ -78,11 +78,11 @@ namespace Volund
 				VirtualXPos += xPos - MiddleX;
 				VirtualYPos += yPos - MiddleY;
 
-				Data->Dispatcher->Dispatch(MouseMoveEvent(VirtualXPos, VirtualYPos));
+				EventDispatcher::Dispatch(MouseMoveEvent(VirtualXPos, VirtualYPos));
 			}
 			else
 			{
-				Data->Dispatcher->Dispatch(MouseMoveEvent(xPos, yPos));
+				EventDispatcher::Dispatch(MouseMoveEvent(xPos, yPos));
 			}
 		}
 		break;
@@ -93,7 +93,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true));
+			EventDispatcher::Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true));
 		}
 		break;
 		case WM_LBUTTONUP:
@@ -103,7 +103,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false));
+			EventDispatcher::Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false));
 		}
 		break;
 		case WM_MBUTTONDOWN:
@@ -113,7 +113,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true));
+			EventDispatcher::Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true));
 		}
 		break;
 		case WM_MBUTTONUP:
@@ -123,7 +123,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false));
+			EventDispatcher::Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false));
 		}
 		break;
 		case WM_RBUTTONDOWN:
@@ -133,7 +133,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true));
+			EventDispatcher::Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true));
 		}
 		break;
 		case WM_RBUTTONUP:
@@ -143,7 +143,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false));
+			EventDispatcher::Dispatch(MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false));
 		}
 		break;
 		case WM_MOUSEWHEEL:
@@ -155,7 +155,7 @@ namespace Volund
 
 			int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
 
-			Data->Dispatcher->Dispatch(ScrollEvent(0, (uint32_t)zDelta));
+			EventDispatcher::Dispatch(ScrollEvent(0, (uint32_t)zDelta));
 		}
 		break;
 		case WM_SIZE:
@@ -171,7 +171,7 @@ namespace Volund
 			Data->Width = (uint64_t)WindowRect.right;
 			Data->Height = (uint64_t)WindowRect.bottom;
 
-			Data->Dispatcher->Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
+			EventDispatcher::Dispatch(WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height));
 		}
 		break;
 		case WM_SETFOCUS:
@@ -202,7 +202,7 @@ namespace Volund
 				break;
 			}
 
-			Data->Dispatcher->Dispatch(WindowCloseEvent());
+			EventDispatcher::Dispatch(WindowCloseEvent());
 		}
 		break;
 		case WM_DESTROY:
@@ -288,7 +288,7 @@ namespace Volund
 
 	void Window::SetVsync(bool Enabled)
 	{
-		_Data.Context->SetVSync(Enabled);
+		_Data.RenderingContext->SetVSync(Enabled);
 	}
 
 	Vec2 Window::GetSize()
@@ -324,14 +324,14 @@ namespace Volund
 	}
 
 	void Window::Show()
-	{		
+	{	
 		ShowWindow((HWND)_Data._Handle, SW_SHOW);
 		Window::Update();
 	}
 
 	void Window::Flush()
 	{
-		_Data.Context->Flush();
+		_Data.RenderingContext->Flush();
 		::SwapBuffers((HDC)_Data._DeviceContext);
 	}
 
@@ -341,7 +341,7 @@ namespace Volund
 		Window::SetVsync(true);
 	}
 
-	void Window::Create(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
+	void Window::Create(uint64_t Width, uint64_t Height, bool FullScreen)
 	{
 		static Window _Singleton;
 
@@ -352,7 +352,6 @@ namespace Volund
 
 		VOLUND_INFO("Creating window...");
 
-		_Data.Dispatcher = Dispatcher;
 		_Data.FullScreen = FullScreen;
 
 		_Data._Instance = GetModuleHandle(nullptr);
@@ -449,8 +448,8 @@ namespace Volund
 
 		SetWindowLongPtr((HWND)_Data._Handle, GWLP_USERDATA, (LONG_PTR)&_Data);
 
-		_Data.Context = VL::Context::Create(Window::GetDeviceContext());
-		_Data.Context->MakeCurrent();
+		_Data.RenderingContext = VL::Context::Create(Window::GetDeviceContext());
+		_Data.RenderingContext->MakeCurrent();
 
 		Window::Reset();
 	}
@@ -469,6 +468,8 @@ namespace Volund
 		DestroyWindow((HWND)_Data._Handle);
 
 		UnregisterClass(L"VolundWindow", (HINSTANCE)_Data._Instance);
+
+		_Data = WindowData();
 	}
 
 	Window::~Window()

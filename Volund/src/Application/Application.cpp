@@ -26,11 +26,6 @@ namespace Volund
 		return this->_ShouldRun;
 	}
 
-	Ref<EventDispatcher> Application::GetEventDispatcher()
-	{
-		return this->_EventDispatcher;
-	}
-
 	void Application::EventCallback(Event* E)
 	{
 		this->OnEvent(E);
@@ -106,8 +101,6 @@ namespace Volund
 #else
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif	
-		
-		this->_EventDispatcher = Ref<EventDispatcher>(new EventDispatcher(this));
 	}
 
 	Application::~Application()

@@ -7,6 +7,11 @@
 
 namespace Volund
 {
+	uint32_t Framebuffer::GetID()
+	{
+		return this->_ID;
+	}
+
 	uint32_t Framebuffer::GetAttachment(uint32_t Index)
 	{
 		if (Index >= this->_ColorAttachments.size())
@@ -28,6 +33,7 @@ namespace Volund
 	void Framebuffer::SetSpec(const FramebufferSpec& Spec)
 	{
 		this->_Spec = Spec;
+		this->Invalidate();
 	}
 
 	const FramebufferSpec Framebuffer::GetSpec() const

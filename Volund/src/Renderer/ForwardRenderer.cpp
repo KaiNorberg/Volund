@@ -33,6 +33,13 @@ namespace Volund
 
 		for (const auto& Eye : this->_Data.Eyes)
 		{
+			Eye.Target->Bind();
+
+			auto& TargetSpec = Eye.Target->GetSpec();
+
+			VL::RenderingAPI::Clear();						
+			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)TargetSpec.Width, (int32_t)TargetSpec.Height);
+
 			this->_Data.Discriminate(Eye);
 
 			this->UpdateCameraUniforms(Eye);
@@ -59,6 +66,8 @@ namespace Volund
 					this->_API->DrawIndexed(Command.mesh);
 				}
 			}
+
+			Eye.Target->Unbind();
 		}
 	}
 }

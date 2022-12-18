@@ -16,6 +16,11 @@ namespace Volund
 		return _Data.Filepath;
 	}
 
+	Ref<Framebuffer> Scene::GetTargetBuffer()
+	{
+		return _Data.TargetBuffer;
+	}
+
 	Input& Scene::GetInput()
 	{
 		return _Data.MainInput;
@@ -63,7 +68,7 @@ namespace Volund
 		VOLUND_ERROR("Unable to find component (%d)", component);
 	}
 
-	void Scene::UpdateCallback(TimeStep TS)
+	void Scene::Render(TimeStep TS)
 	{
 		Renderer::Begin();
 
@@ -79,6 +84,19 @@ namespace Volund
 		}
 
 		Renderer::End();
+	}
+
+	void Scene::ResizeTarget(uint32_t Width, uint32_t Height)
+	{
+		auto Spec = _Data.TargetBuffer->GetSpec();
+
+		if (_Data.TargetBuffer != nullptr && (Width != Spec.Width || Height != Spec.Height))
+		{
+			Spec.Width = Width;
+			Spec.Height = Height;
+
+			_Data.TargetBuffer->SetSpec(Spec);
+		}
 	}
 
 	void Scene::EventCallback(Event* E)
@@ -117,7 +135,14 @@ namespace Volund
 		Window::Reset();
 
 		VOLUND_INFO("Deserializing Scene...");
-		
+
+		VL::FramebufferSpec Spec;
+		Spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
+		Spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::DEPTH24STENCIL8);
+		Spec.Height = Window::GetSize().y;
+		Spec.Width = Window::GetSize().x;
+		_Data.TargetBuffer = VL::Framebuffer::Create(Spec);
+
 		_Data.Filepath = Filepath;
 
 		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();

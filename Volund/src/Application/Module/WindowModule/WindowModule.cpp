@@ -18,7 +18,7 @@ namespace Volund
 
 	void WindowModule::OnAttach(Application* App)
 	{
-		Window::Create(App->GetEventDispatcher(), 1980, 1080, false);
+		Window::Create(1980, 1080, false);
 
 		Window::SetTitle("Volund Editor");
 		Window::SetFocus();

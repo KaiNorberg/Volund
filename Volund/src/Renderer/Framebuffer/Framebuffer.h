@@ -26,6 +26,10 @@ namespace Volund
 
 		virtual void Invalidate() = 0;
 
+		virtual void BlitTo(const Ref<Framebuffer>& DrawFramebuffer) = 0;
+
+		uint32_t GetID();
+
 		uint32_t GetAttachment(uint32_t Index);
 
 		uint32_t GetDepthAttachment();
@@ -39,7 +43,9 @@ namespace Volund
 		virtual ~Framebuffer() = default;
 
 	protected:
-	
+
+		uint32_t _ID;
+
 		FramebufferSpec _Spec;		
 		
 		std::vector<uint32_t> _ColorAttachments;

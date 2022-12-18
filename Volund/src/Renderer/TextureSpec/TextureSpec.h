@@ -7,6 +7,7 @@ namespace Volund
 		NONE,
 
 		RGBA8,
+		RGBA16F,
 		RED_INTEGER,
 
 		DEPTH24STENCIL8,

@@ -4,6 +4,7 @@
 
 #include "Core/Scene/Scene.h"
 #include "Core/Scene/Component/Transform/Transform.h"
+#include "Core/Window/Window.h"
 
 #include "Renderer/Renderer.h"
 
@@ -65,10 +66,11 @@ namespace Volund
 
 	void Camera::OnUpdate(TimeStep TS)
 	{
-		IVec2 ViewSize = RenderingAPI::GetViewSize();
+		auto Spec = Scene::GetTargetBuffer()->GetSpec();
 
 		RendererEye Eye;
-		Eye.ProjectionMatrix = this->GetProjectionMatrix((float)ViewSize.x / (float)ViewSize.y);
+		Eye.Target = Scene::GetTargetBuffer();
+		Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
 		Eye.ViewMatrix = this->GetViewMatrix();
 
 		Renderer::Submit(Eye);

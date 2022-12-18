@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EventDispatcher/Event.h"
+#include "Core/EventDispatcher/Event.h"
 
 namespace Volund
 {

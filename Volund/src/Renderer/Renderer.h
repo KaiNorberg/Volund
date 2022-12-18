@@ -37,7 +37,6 @@ namespace Volund
 		Mat4x4 ViewMatrix;
 		Mat4x4 ProjectionMatrix;
 
-		bool DrawToScreen = true;
 		Ref<Framebuffer> Target;
 	};
 

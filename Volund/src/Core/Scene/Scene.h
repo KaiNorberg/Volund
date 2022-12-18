@@ -1,8 +1,10 @@
 #pragma once
 
-#include "EventDispatcher/Event.h"
+#include "Core/EventDispatcher/Event.h"
 #include "Component/Component.h"
 #include "Container/Container.h"
+
+#include "Renderer/Framebuffer/Framebuffer.h"
 
 #include "Input/Input.h"
 
@@ -16,6 +18,7 @@ namespace Volund
 	public:
 
 		static std::string GetFilepath();
+		static Ref<Framebuffer> GetTargetBuffer();
 		static Input& GetInput();
 
 		static Entity CreateEntity();
@@ -37,8 +40,10 @@ namespace Volund
 		template <typename T>
 		static std::vector<std::vector<Ref<Component>>> View();
 
-		static void EventCallback(Event* E);
-		static void UpdateCallback(TimeStep TS);
+		static void ResizeTarget(uint32_t Width, uint32_t Height);
+		
+		static void	EventCallback(Event* E);
+		static void Render(TimeStep TS);
 
 		static Registry::iterator begin();
 		static Registry::iterator end();
@@ -66,6 +71,8 @@ namespace Volund
 			uint64_t NewEntity = 1;
 
 			Input MainInput;
+
+			Ref<Framebuffer> TargetBuffer;
 
 		} _Data;
 	};

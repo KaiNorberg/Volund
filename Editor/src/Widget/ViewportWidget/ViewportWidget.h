@@ -17,7 +17,5 @@ public:
 private:
 
 	VL::Input _Input;
-
-	VL::Ref<VL::Framebuffer> _Framebuffer = nullptr;
 };
 

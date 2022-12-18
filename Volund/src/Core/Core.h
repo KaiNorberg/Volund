@@ -29,6 +29,12 @@ namespace Volund
 	template <typename T>
 	using Ref = std::shared_ptr<T>;
 
+	/// <summary>
+	/// Weak ptr
+	/// </summary>
+	template <typename T>
+	using WeakRef = std::weak_ptr<T>;
+
 	void Entry();
 }
 

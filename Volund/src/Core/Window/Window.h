@@ -1,8 +1,10 @@
 #pragma once
 
-#include "EventDispatcher/EventDispatcher.h"
+#include "Core/EventDispatcher/EventDispatcher.h"
 
 #include "Renderer/Context/Context.h"
+
+#include "Renderer/Framebuffer/Framebuffer.h"
 
 namespace Volund
 {
@@ -24,9 +26,7 @@ namespace Volund
 
 		ProcCatch ProcedureCatch = nullptr;
 
-		Ref<EventDispatcher> Dispatcher = nullptr;
-
-		Ref<Context> Context;
+		Ref<Context> RenderingContext;
 	};
 
 	enum class CursorMode
@@ -69,7 +69,7 @@ namespace Volund
 
 		static void Reset();
 
-		static void Create(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
+		static void Create(uint64_t Width, uint64_t Height, bool FullScreen);
 
 		static void Destroy();
 

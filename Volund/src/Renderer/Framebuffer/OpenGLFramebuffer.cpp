@@ -54,6 +54,11 @@ namespace Volund
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->_Spec.Width, this->_Spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 			}
 			break;
+			case TextureFormat::RGBA16F:
+			{
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->_Spec.Width, this->_Spec.Height, 0, GL_RGBA, GL_FLOAT, nullptr);
+			}
+			break;
 			case TextureFormat::RED_INTEGER:
 			{
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, this->_Spec.Width, this->_Spec.Height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
@@ -105,6 +110,14 @@ namespace Volund
 		//VOLUND_ASSERT(glCheckFramebufferStatus(this->_ID) == GL_FRAMEBUFFER_COMPLETE, "Error occurred while creating Framebuffer!"); False positive?
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	void OpenGLFramebuffer::BlitTo(const Ref<Framebuffer>& DrawFramebuffer)
+	{
+		glBlitNamedFramebuffer(this->_ID, DrawFramebuffer->GetID(),
+			0, 0, this->_Spec.Width, this->_Spec.Height,
+			0, 0, DrawFramebuffer->GetSpec().Width, DrawFramebuffer->GetSpec().Height,
+			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpec& Spec)

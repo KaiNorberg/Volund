@@ -4,7 +4,7 @@
 
 #include "Time/Time.h"
 #include "Container/Container.h"
-#include "EventDispatcher/EventDispatcher.h"
+#include "Core/EventDispatcher/EventDispatcher.h"
 
 namespace Volund
 {
@@ -17,8 +17,6 @@ namespace Volund
 		void Terminate();
 
 		bool ShouldRun() const;
-
-		Ref<EventDispatcher> GetEventDispatcher();
 
 		template<typename T>
 		void AttachModule(T* NewModule);
@@ -55,8 +53,6 @@ namespace Volund
 	protected:
 
 		Container<Module> _Modules;
-
-		Ref<EventDispatcher> _EventDispatcher;
 	};
 
 	template<typename T>

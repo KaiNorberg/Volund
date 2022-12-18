@@ -14,13 +14,13 @@ namespace Volund
 
 		void Invalidate() override;
 
+		void BlitTo(const Ref<Framebuffer>& DrawFramebuffer) override;
+
 		OpenGLFramebuffer(const FramebufferSpec& Spec);
 
 		~OpenGLFramebuffer();
 
 	private:
-
-		uint32_t _ID;
 	};
 }
 
