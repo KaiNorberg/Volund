@@ -44,8 +44,6 @@ namespace Volund
 			VL::RenderingAPI::Clear();						
 			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)TargetSpec.Width, (int32_t)TargetSpec.Height);
 
-			int i = 0;
-
 			Ref<Material> PrevMaterial = nullptr;
 			for (const auto& Command : this->_Data.CommandQueue)
 			{
@@ -67,13 +65,7 @@ namespace Volund
 					Command.mesh->Bind();
 					this->_API->DrawIndexed(Command.mesh);
 				}
-				else
-				{
-					i++;
-				}
 			}
-
-			VOLUND_INFO("Disriminated: %d", i);
 
 			Eye.Target->Unbind();
 		}
