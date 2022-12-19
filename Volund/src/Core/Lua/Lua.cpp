@@ -15,10 +15,27 @@ namespace Volund
 {
 	void Lua::Connect(sol::state& Lua)
 	{
-		Lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::io, sol::lib::package);
+		Lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::utf8, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::package);
 
 		Lua["require"] = LuaRequire;
 		Lua["Print"] = LuaPrint;
+
+		Lua.new_usertype<LuaInput>("VolundInput",
+			"IsHeld", &LuaInput::IsHeld,
+			"IsPressed", &LuaInput::IsPressed,
+			"IsMouseButtonHeld", &LuaInput::IsMouseButtonHeld,
+			"IsMouseButtonPressed", &LuaInput::IsMouseButtonPressed,
+			"GetScrollPosition", &LuaInput::GetScrollPosition,
+			"GetMousePosition", &LuaInput::GetMousePosition);
+
+		Lua["Input"] = LuaInput();
+
+		Lua.new_usertype<LuaWindow>("VolundWindow",
+			"SetCursorMode", &LuaWindow::SetCursorMode,
+			"SetTitle", &LuaWindow::SetTitle,
+			"SetVsync", &LuaWindow::SetVsync);
+
+		Lua["Window"] = LuaWindow();
 
 		Lua.new_usertype<LuaVec4>("Vec4", sol::constructors<void(), void(float), void(float, float, float, float)>(),
 			"x", &LuaVec4::x,
@@ -65,26 +82,9 @@ namespace Volund
 
 		Lua.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>());
 
-		Lua.new_usertype<LuaInput>("VolundInput",
-			"IsHeld", &LuaInput::IsHeld,
-			"IsPressed", &LuaInput::IsPressed,
-			"IsMouseButtonHeld", &LuaInput::IsMouseButtonHeld,
-			"IsMouseButtonPressed", &LuaInput::IsMouseButtonPressed,
-			"GetScrollPosition", &LuaInput::GetScrollPosition,
-			"GetMousePosition", &LuaInput::GetMousePosition);
-
-		Lua["Input"] = LuaInput();
-
-		Lua.new_usertype<LuaWindow>("VolundWindow",
-			"SetCursorMode", &LuaWindow::SetCursorMode,
-			"SetTitle", &LuaWindow::SetTitle,
-			"SetVsync", &LuaWindow::SetVsync);
-
-		Lua["Window"] = LuaWindow();
-
 		Lua.new_usertype<LuaMaterial>("Material", sol::constructors<void(LuaShader)>(),
-			"SetInt", &LuaMaterial::SetInt, 
-			"SetFloat", &LuaMaterial::SetFloat, 
+			"SetInt", &LuaMaterial::SetInt,
+			"SetFloat", &LuaMaterial::SetFloat,
 			"SetDouble", &LuaMaterial::SetDouble,
 			"SetVec2", &LuaMaterial::SetVec2,
 			"SetVec3", &LuaMaterial::SetVec3,
