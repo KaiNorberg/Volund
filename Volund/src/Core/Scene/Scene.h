@@ -80,6 +80,8 @@ namespace Volund
 	template<typename T>
 	inline void Scene::DeleteComponent(Entity entity, uint64_t Index)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		uint64_t EntityIndex = FindEntity(entity);
 
 		if (EntityIndex != -1)
@@ -96,6 +98,8 @@ namespace Volund
 	template<typename T, class ...ARGS>
 	inline Ref<T> Scene::CreateComponent(Entity entity, ARGS && ...Args)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		uint64_t Index = FindEntity(entity);
 
 		if (Index != -1)
@@ -117,39 +121,28 @@ namespace Volund
 	template<typename T>
 	inline bool Scene::HasComponent(Entity entity, uint64_t Index)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		uint64_t RegistryIndex = FindEntity(entity);
 
-		if (RegistryIndex != -1)
-		{
-			return _Data.Registry[RegistryIndex].second.Contains<T>(Index);
-
-		}
-		else
-		{
-			return false;
-		}
+		return RegistryIndex != -1 && _Data.Registry[RegistryIndex].second.Contains<T>(Index);
 	}
 
 	template<typename T>
 	inline Ref<T> Scene::GetComponent(Entity entity, uint64_t Index)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		uint64_t RegistryIndex = FindEntity(entity);
 
-		if (RegistryIndex != -1)
-		{
-			return _Data.Registry[RegistryIndex].second.Get<T>(Index);
-
-		}
-		else
-		{
-			VOLUND_ERROR("Unable to find entity (%d)", entity);
-			return nullptr;
-		}
+		return RegistryIndex != -1 ? _Data.Registry[RegistryIndex].second.Get<T>(Index) : nullptr;
 	}
 
 	template<typename T>
 	inline const std::vector<Ref<Component>>& Scene::View(Entity entity)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		uint64_t Index = FindEntity(entity);
 
 		if (Index != -1)
@@ -166,6 +159,8 @@ namespace Volund
 	template<typename T>
 	inline std::vector<std::vector<Ref<Component>>> Scene::View()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		std::vector<std::vector<Ref<Component>>> Return;
 
 		for (auto& [Entity, View] : _Data.Registry)

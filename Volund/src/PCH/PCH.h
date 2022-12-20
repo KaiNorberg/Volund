@@ -36,3 +36,4 @@
 #include "Core/Core.h"
 #include "Utils/Utils.h"
 #include "Logger/Logger.h"
+#include "Instrumentor/Instrumentor.h"

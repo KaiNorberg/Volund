@@ -15,6 +15,8 @@ namespace Volund
 {
 	void Lua::Connect(sol::state& Lua)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		Lua.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::utf8, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::package);
 
 		Lua["require"] = LuaRequire;

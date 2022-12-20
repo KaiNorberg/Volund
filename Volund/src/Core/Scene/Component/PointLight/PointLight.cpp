@@ -11,6 +11,8 @@ namespace Volund
 {
 	void PointLight::OnUpdate(TimeStep TS)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
 
 		RendererLight Light;

@@ -9,64 +9,84 @@ namespace Volund
 {
 	bool OpenGLShader::HasUniform(std::string_view Name)
 	{
+		VOLUND_PROFILE_FUNCTION();
 		return UniformLocations.contains(Name.data()) || glGetUniformLocation(this->ID, Name.data()) != -1;
 	}
 
 	void OpenGLShader::Bind()
 	{
+		VOLUND_PROFILE_FUNCTION();
 		glUseProgram(this->ID);
 	}
 
 	void OpenGLShader::SetInt(std::string_view Name, int32_t Value)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniform1i(this->GetUniformLocation(Name), Value);
 	}
 
 	void OpenGLShader::SetFloat(std::string_view Name, float Value)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniform1f(this->GetUniformLocation(Name), Value);
 	}
 
 	void OpenGLShader::SetDouble(std::string_view Name, double Value)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniform1d(this->GetUniformLocation(Name), Value);
 	}
 
 	void OpenGLShader::SetVec2(std::string_view Name, const Vec2& Value)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniform2fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
 	void OpenGLShader::SetVec3(std::string_view Name, const Vec3& Value)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniform3fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
 	void OpenGLShader::SetVec4(std::string_view Name, const Vec4& Value)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniform4fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
 	}
 
 	void OpenGLShader::SetMat3x3(std::string_view Name, const Mat3x3& Value, bool Transpose)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniformMatrix3fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
 	void OpenGLShader::SetMat4x4(std::string_view Name, const Mat4x4& Value, bool Transpose)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		this->Bind();
 		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
 	}
 
 	void OpenGLShader::SetTexture(std::string_view Name, const Ref<Texture>& Value, uint32_t TextureUnit)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		glActiveTexture(GL_TEXTURE0 + TextureUnit);
 		glBindTexture(GL_TEXTURE_2D, Value->GetID());
 		this->SetInt(Name, TextureUnit);

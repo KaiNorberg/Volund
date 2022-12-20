@@ -32,6 +32,8 @@ namespace Volund
 
 	void Material::UpdateShader()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		for (auto& Value : this->View<int>())
 		{
 			this->_Shader->SetInt(Value->GetName(), Value->GetValue());

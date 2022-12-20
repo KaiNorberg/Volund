@@ -7,6 +7,8 @@ namespace Volund
 {
 	AABB AABB::ToWorldSpace(const Mat4x4& ModelMatrix)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		glm::vec3 Scale;
 		glm::quat Rotation;
 		glm::vec3 Position;

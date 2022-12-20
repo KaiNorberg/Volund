@@ -66,6 +66,8 @@ namespace Volund
 
 	void Camera::OnUpdate(TimeStep TS)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		auto Spec = Scene::GetTargetBuffer()->GetSpec();
 
 		RendererEye Eye;

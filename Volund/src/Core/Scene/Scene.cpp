@@ -187,6 +187,8 @@ namespace Volund
 
 	uint64_t Scene::FindEntity(Entity entity)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		auto it = std::lower_bound(_Data.Registry.begin(), _Data.Registry.end(), entity, [](const std::pair<Entity, Container<Component>>& A, Entity entity)
 		{
 			return A.first < entity;

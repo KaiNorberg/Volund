@@ -7,7 +7,10 @@ namespace Volund
 {
 	void ForwardRenderer::Begin()
 	{
+		uint64_t OldCommandSize = this->_Data.CommandQueue.size();
+
 		this->_Data = Data();
+		this->_Data.CommandQueue.reserve(OldCommandSize);
 	}
 
 	void ForwardRenderer::Submit(const RendererCommand& Command)

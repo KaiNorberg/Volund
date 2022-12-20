@@ -27,6 +27,8 @@ namespace Volund
 
 	void RendererInstance::UpdateLightUniforms()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		uint32_t LightAmount = (uint32_t)this->_Data.Lights.size();
 		this->_LightsUniforms->Set("LightAmount", &LightAmount);
 		for (uint64_t i = 0; i < LightAmount; i++)
@@ -41,6 +43,8 @@ namespace Volund
 
 	void RendererInstance::UpdateCameraUniforms(const RendererEye& Eye)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		Mat4x4 ViewProjMatrix = Eye.ProjectionMatrix * Eye.ViewMatrix;
 		Vec3 EyePosition = Vec3(Eye.ViewMatrix[0][3], Eye.ViewMatrix[1][3], Eye.ViewMatrix[2][3]);
 		this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
@@ -51,14 +55,18 @@ namespace Volund
 
 	void RendererInstance::Data::Sort()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		std::sort(this->CommandQueue.begin(), this->CommandQueue.end(), [](const RendererCommand& A, const RendererCommand& B)
-			{
-				return A.material < B.material;
-			});
+		{
+			return A.material < B.material;
+		});
 	}
 
 	void RendererInstance::Data::Discriminate(const RendererEye& Eye)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		Frustum CameraFrustum(Eye.ProjectionMatrix * Eye.ViewMatrix);
 
 		for (auto& Command : this->CommandQueue)
@@ -84,26 +92,36 @@ namespace Volund
 
 	void Renderer::Begin()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->Begin();
 	}
 
 	void Renderer::Submit(const RendererCommand& Command)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->Submit(Command);
 	}
 
 	void Renderer::Submit(const RendererLight& Light)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->Submit(Light);
 	}
 
 	void Renderer::Submit(const RendererEye& Eye)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->Submit(Eye);
 	}
 
 	void Renderer::End()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->End();
 	}
 }

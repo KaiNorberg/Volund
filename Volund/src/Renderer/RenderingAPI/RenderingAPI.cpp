@@ -12,16 +12,22 @@ namespace Volund
 
 	void RenderingAPI::Clear(const RGBA Color)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->Clear(Color);
 	}
 	
 	void RenderingAPI::SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->SetViewPort(X, Y, Width, Height);
 	}
 
 	void RenderingAPI::DrawIndexed(const Ref<Mesh>& VArray)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Instance->DrawIndexed(VArray);
 	}
 

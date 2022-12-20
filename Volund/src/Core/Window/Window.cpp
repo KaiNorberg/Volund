@@ -221,6 +221,8 @@ namespace Volund
 
 	void Window::Update()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		MSG Message;
 
 		while (PeekMessageW(&Message, nullptr, 0, 0, PM_REMOVE) > 0)
@@ -331,6 +333,8 @@ namespace Volund
 
 	void Window::Flush()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		_Data.RenderingContext->Flush();
 		::SwapBuffers((HDC)_Data._DeviceContext);
 	}

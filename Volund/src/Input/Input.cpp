@@ -41,6 +41,8 @@ namespace Volund
 
 	void Input::HandleEvent(Event* E)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		switch (E->GetType())
 		{
 		case EventType::KEY:

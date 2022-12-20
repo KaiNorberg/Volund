@@ -5,6 +5,8 @@ namespace Volund
 {
 	bool Frustum::ContainsAABB(const AABB& aabb) const
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		Vec4 axisVert(1.0f);
 
 		for (int32_t y = 0; y < 6; y++)
@@ -50,6 +52,8 @@ namespace Volund
 
 	Frustum::Frustum(Mat4x4 ViewProjMatrix)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		// Left clipping plane
 		_FrustumPlanes[0].x = ViewProjMatrix[0][3] + ViewProjMatrix[0][0];
 		_FrustumPlanes[0].y = ViewProjMatrix[1][3] + ViewProjMatrix[1][0];

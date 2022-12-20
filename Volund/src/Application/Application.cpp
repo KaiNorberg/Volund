@@ -30,6 +30,8 @@ namespace Volund
 	{
 		this->OnEvent(E);
 
+		VOLUND_PROFILE_FUNCTION();
+
 		for (const auto& View : this->_Modules)
 		{
 			for (const auto& Module : View)
@@ -74,6 +76,8 @@ namespace Volund
 
 		while (this->_ShouldRun)
 		{
+			VOLUND_PROFILING_START(uint64_t(this));
+
 			std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - OldTime;
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());
@@ -86,7 +90,9 @@ namespace Volund
 				{
 					Module->OnUpdate(TS);
 				}
-			}
+			}			
+			
+			VOLUND_PROFILING_END();
 		}
 	}
 

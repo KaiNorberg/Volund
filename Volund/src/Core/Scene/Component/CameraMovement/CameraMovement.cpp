@@ -15,6 +15,8 @@ namespace Volund
 
 	void CameraMovement::OnUpdate(TimeStep TS)
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
 
 		if (_Input.IsHeld('W'))
@@ -36,8 +38,8 @@ namespace Volund
 
 		Vec2 Delta = _Input.GetMousePosition() - this->_OldMousePosition;
 		
-		Delta.x = (int32_t)((float)Utils::Clamp(Delta.x, -10.0f, 10.0f) * this->Sensitivity);
-		Delta.y = (int32_t)((float)Utils::Clamp(Delta.y, -10.0f, 10.0f) * this->Sensitivity);
+		Delta.x = ((float)Utils::Clamp(Delta.x, -10.0f, 10.0f) * this->Sensitivity);
+		Delta.y = ((float)Utils::Clamp(Delta.y, -10.0f, 10.0f) * this->Sensitivity);
 
 		_Rotation -= Vec3(Delta.y, Delta.x, 0.0f) * this->Sensitivity;
 		_Rotation.x = Utils::Clamp(_Rotation.x, -89.0f, 89.0f);

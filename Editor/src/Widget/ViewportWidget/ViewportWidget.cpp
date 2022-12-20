@@ -71,7 +71,6 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 		{
 			ImGui::Text("No Scene Selected!");
 		}
-
 	}
 	ImGui::End();
 }

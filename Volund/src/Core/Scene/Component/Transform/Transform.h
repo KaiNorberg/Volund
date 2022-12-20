@@ -29,12 +29,6 @@ namespace Volund
 		Transform();
 
 	private:
-		Mat4x4 _ModelMatrix = Mat4x4(1.0f);
 
-		Vec3 _Front = Vec3(0.0f);
-
-		Vec3 _Right = Vec3(0.0f);
-
-		Vec3 _Up = Vec3(0.0f);
 	};
 }

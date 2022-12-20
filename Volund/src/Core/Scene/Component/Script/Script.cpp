@@ -24,7 +24,9 @@ namespace Volund
 	}
 
 	void Script::OnUpdate(TimeStep TS)
-	{	
+	{
+		VOLUND_PROFILE_FUNCTION();
+
 		if (this->_LuaOnUpdate != sol::lua_nil)
 		{
 			try

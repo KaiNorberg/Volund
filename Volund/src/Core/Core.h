@@ -15,6 +15,8 @@
 #define VOLUND_KEY_CONTROL 17
 #define VOLUND_KEY_ESCAPE 27
 
+#define VOLUND_ENABLE_PROFILING false
+
 namespace Volund
 {
 	/// <summary>
