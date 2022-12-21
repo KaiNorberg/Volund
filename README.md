@@ -60,6 +60,8 @@ I currently welcome contributions to the project. I currently have no hard stand
 
 ## Goals:
 
+The main goal of the project is to create a game engine that allows for low level experimentation without the complexity of working on a low level.
+
 - PBR 3D rendering
 - 3rd party 3D physics engine
 - Audio system
