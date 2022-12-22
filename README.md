@@ -54,7 +54,13 @@ PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:n
 
 Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation on the lua API.
 
+## Contributing
+
+I currently welcome contributions to the project. I currently have no hard standards on how to contribute so for now just submit pull requests that you find appropriate. If the project ever grows significantly (which I doubt it will) I will consider standardizing the process.
+
 ## Goals:
+
+The main goal of the project is to create a game engine that allows for low level experimentation without the complexity of working on a low level.
 
 - PBR 3D rendering
 - 3rd party 3D physics engine
