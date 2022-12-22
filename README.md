@@ -56,7 +56,7 @@ Go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation 
 
 ## Contributing
 
-I currently welcome contributions to the project. I currently have no hard standards on how to contribute so just submit what you find appropriate. If the project ever grows significantly (which I doubt it will) I will consider standardizing the process.
+I currently welcome contributions to the project. I currently have no hard standards on how to contribute so for now just submit pull requests that you find appropriate. If the project ever grows significantly (which I doubt it will) I will consider standardizing the process.
 
 ## Goals:
 
