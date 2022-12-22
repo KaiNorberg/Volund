@@ -135,7 +135,7 @@ namespace Volund
 
 		uint64_t RegistryIndex = FindEntity(entity);
 
-		return RegistryIndex != -1 ? _Data.Registry[RegistryIndex].second.Get<T>(Index) : nullptr;
+		return RegistryIndex != -1 && _Data.Registry[RegistryIndex].second.Contains<T>(Index) ? _Data.Registry[RegistryIndex].second.Get<T>(Index) : nullptr;
 	}
 
 	template<typename T>

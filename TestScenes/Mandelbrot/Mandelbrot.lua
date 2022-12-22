@@ -1,6 +1,6 @@
-Movement = require("Movement.lua")
+Movement = require("Scripts/Movement.lua")
 
-MandelbrotShader = Shader:new("Mandelbrot.vshader")
+MandelbrotShader = Shader:new("Shaders/Mandelbrot.shader")
 MandelbrotMaterial = Material:new(MandelbrotShader)
 QuadMesh = Mesh:new("Quad.vobj")
 
