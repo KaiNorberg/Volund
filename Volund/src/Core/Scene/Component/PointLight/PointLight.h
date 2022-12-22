@@ -12,7 +12,7 @@ namespace Volund
 
 		float Brightness = 1.0f;
 
-		void OnUpdate(TimeStep TS);
+		void OnRender();
 
 		PointLight();
 

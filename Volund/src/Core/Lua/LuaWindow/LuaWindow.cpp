@@ -5,16 +5,21 @@ namespace Volund
 {
 	void LuaWindow::SetCursorMode(CursorMode NewMode)
 	{
-		Window::SetCursorMode(NewMode);
+		this->_Window->SetCursorMode(NewMode);
 	}
 
 	void LuaWindow::SetTitle(std::string Title)
 	{
-		Window::SetTitle(Title);
+		this->_Window->SetTitle(Title);
 	}
 
 	void LuaWindow::SetVsync(bool Enabled)
 	{
-		Window::SetVsync(Enabled);
+		this->_Window->SetVsync(Enabled);
+	}
+
+	LuaWindow::LuaWindow(Ref<Window> window)
+	{
+		this->_Window = window; 
 	}
 }

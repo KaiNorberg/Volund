@@ -14,9 +14,13 @@ namespace Volund
 	{
 	public:
 
+		Ref<Window> GetWindow();
+
 		void OnEvent(Event* E) override;
 
 		void OnUpdate(TimeStep TS) override;
+
+		void OnRender() override;
 
 		void OnAttach(Application* App) override;
 
@@ -25,5 +29,7 @@ namespace Volund
 		WindowModule();
 
 	private:	
+
+		Ref<Window> _Window;
 	};
 }

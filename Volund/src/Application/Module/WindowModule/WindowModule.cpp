@@ -5,6 +5,11 @@
 
 namespace Volund
 {
+	Ref<Window> WindowModule::GetWindow()
+	{
+		return this->_Window;
+	}
+
 	void WindowModule::OnEvent(Event* E)
 	{
 
@@ -12,18 +17,23 @@ namespace Volund
 
 	void WindowModule::OnUpdate(TimeStep TS)
 	{
-		Window::Update();
-		Window::Flush();
+
+	}
+
+	void WindowModule::OnRender()
+	{
+		this->_Window->Update();
+		this->_Window->Flush();
 	}
 
 	void WindowModule::OnAttach(Application* App)
 	{
-		Window::Create(1980, 1080, false);
+		this->_Window = std::make_shared<Window>(App->GetEventDispatcher(), 1980, 1080, false);
 
-		Window::SetTitle("Volund Editor");
-		Window::SetFocus();
+		this->_Window->SetTitle("Volund");
+		this->_Window->SetFocus();
 
-		Window::Show();
+		this->_Window->Show();
 	}
 
 	void WindowModule::OnDestroy()

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Input/Input.h"
+
 namespace Volund
 {
 	struct LuaInput
@@ -15,5 +17,11 @@ namespace Volund
 		uint32_t GetScrollPosition() const;
 
 		Vec2 GetMousePosition() const;
+
+		LuaInput(Ref<Input> input);
+
+	private:
+
+		Ref<Input> _Input;
 	};
 }

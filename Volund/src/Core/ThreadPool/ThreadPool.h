@@ -8,25 +8,27 @@ namespace Volund
 	{
 	public:
 
-		static void Init();
-
-		static void QueueJob(ThreadJob Job);
+		void Submit(ThreadJob Job);
 		
-		static void Terminate();
+		bool Busy();
 
-		static bool Busy();
+		ThreadPool();
+
+		~ThreadPool();
 
 	private:
 
-		static inline bool _ShouldTerminate = false;
-		static inline bool _IsInitialized = false;
+		bool _ShouldTerminate = false;
 
-		static inline std::mutex _Mutex;
-		static inline std::condition_variable _MutexCondition;
+		int _ActiveThreads = 0;
 
-		static inline std::vector<std::thread> _Threads;
-		static inline std::queue<ThreadJob> _Jobs;
+		std::queue<ThreadJob> _JobQueue;
 
-		static void Loop();
+		std::vector<std::thread> _Threads;
+
+		std::condition_variable _Condition;
+		std::mutex _Mutex;
+
+		void Loop();
 	};
 }

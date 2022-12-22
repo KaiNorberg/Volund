@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-	void MeshRenderer::OnUpdate(TimeStep TS)
+	void MeshRenderer::OnRender()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -18,7 +18,7 @@ namespace Volund
 			Command.mesh = this->_Mesh;
 			Command.material = this->_Material;
 
-			auto TransformComponent = VL::Scene::GetComponent<Transform>(this->GetEntity());
+			auto TransformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 			Command.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);
 
 			Renderer::Submit(Command);

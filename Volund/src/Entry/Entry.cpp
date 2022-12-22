@@ -4,11 +4,7 @@
 
 int Main()
 {
-	VL::ThreadPool::Init();
-
 	VL::Entry();
-
-	VL::ThreadPool::Terminate();
 
 	return EXIT_SUCCESS;
 }

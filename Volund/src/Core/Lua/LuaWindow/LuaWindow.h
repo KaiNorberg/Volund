@@ -14,7 +14,11 @@ namespace Volund
 
 		void SetVsync(bool Enabled);
 
+		LuaWindow(Ref<Window> window);
+
 	private:
+
+		Ref<Window> _Window;
 
 	};
 }

@@ -26,6 +26,8 @@ namespace Volund
 
 		ProcCatch ProcedureCatch = nullptr;
 
+		Ref<EventDispatcher> Dispatcher;
+
 		Ref<Context> RenderingContext;
 	};
 
@@ -41,45 +43,41 @@ namespace Volund
 	{
 	public:
 
-		static void Update();
+		void Update();
 
-		static void SetProcedureCatch(ProcCatch ProcedureCatch);
+		void SetProcedureCatch(ProcCatch ProcedureCatch);
 
-		static void SetCursorMode(CursorMode NewMode);
+		void SetCursorMode(CursorMode NewMode);
 
-		static void SetTitle(std::string_view Title);
+		void SetTitle(std::string_view Title);
 
-		static void SetVsync(bool Enabled);
+		void SetVsync(bool Enabled);
 
-		static void SetFocus();
+		void SetFocus();
 
-		static Vec2 GetSize();
+		Vec2 GetSize();
 
-		static float GetAspectRatio();
+		float GetAspectRatio();
 
-		static void* GetInstance();
+		void* GetInstance();
 
-		static void* GetHandle();
+		void* GetHandle();
 
-		static void* GetDeviceContext();
+		void* GetDeviceContext();
 
-		static void Show();
+		void Show();
 
-		static void Flush();
+		void Flush();
 
-		static void Reset();
+		void Reset();
 
-		static void Create(uint64_t Width, uint64_t Height, bool FullScreen);
-
-		static void Destroy();
-
-	private:
-
-		Window() = default;
+		Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
 
 		~Window();
 
-		static inline WindowData _Data;
+	private:
+
+		WindowData _Data;
 	};
 
-} //namespace Volund
+}

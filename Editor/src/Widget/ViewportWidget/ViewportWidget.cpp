@@ -9,27 +9,35 @@ const char* ViewportWidget::GetName()
 
 void ViewportWidget::OnEvent(VL::Event* E)
 {
+	auto LuaModule = this->_App->GetModule<VL::LuaModule>();
+
 	this->_Input.HandleEvent(E);
 
 	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
 		if (this->_Input.IsPressed('R'))
 		{
-			VL::Scene::Load(VL::Scene::GetFilepath());
+			auto Scene = LuaModule->GetScene();
+			if (Scene != nullptr)
+			{
+				LuaModule->LoadScene(LuaModule->GetFilepath());
+			}
 		}		
 		else if (this->_Input.IsPressed('E'))
 		{
 			std::string Filepath = VL::FileDialog::OpenFile();
 			if (!Filepath.empty())
 			{
-				VL::Scene::Load(Filepath);
+				LuaModule->LoadScene(Filepath);
 			}
 		}
 	}
 }
 
-void ViewportWidget::OnUpdate(VL::TimeStep TS)
+void ViewportWidget::OnRender()
 {
+	auto LuaModule = this->_App->GetModule<VL::LuaModule>();
+
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
 		if (ImGui::Button("Load Scene (Shift + E)"))
@@ -37,19 +45,20 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 			std::string Filepath = VL::FileDialog::OpenFile();
 			if (!Filepath.empty())
 			{
-				VL::Scene::Load(Filepath);
+				LuaModule->LoadScene(Filepath);
 				ImGui::End();
 				return;
 			}
 		}
 
-		if (!VL::Scene::GetFilepath().empty())
+		auto Scene = LuaModule->GetScene();
+		if (Scene != nullptr)
 		{
 			ImGui::SameLine();
 
 			if (ImGui::Button("Reload (Shift + R)"))
 			{
-				VL::Scene::Load(VL::Scene::GetFilepath());
+				LuaModule->LoadScene(LuaModule->GetFilepath());
 				ImGui::End();
 				return;
 			}
@@ -58,11 +67,9 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 			{
 				auto ViewportSize = ImGui::GetContentRegionAvail();
 
-				VL::Scene::ResizeTarget(ViewportSize.x, ViewportSize.y);
+				Scene->ResizeTarget(ViewportSize.x, ViewportSize.y);
 
-				VL::Scene::Render(TS);
-
-				ImGui::Image(reinterpret_cast<void*>(VL::Scene::GetTargetBuffer()->GetAttachment(0)), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>(Scene->GetTargetBuffer()->GetAttachment(0)), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
 
 				ImGui::EndChild();
 			}
@@ -75,8 +82,8 @@ void ViewportWidget::OnUpdate(VL::TimeStep TS)
 	ImGui::End();
 }
 
-ViewportWidget::ViewportWidget()
+ViewportWidget::ViewportWidget(VL::Application* App)
 {
-
+	this->_App = App;
 }
 	

@@ -42,12 +42,14 @@ namespace Volund
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.IniFilename = IniFilename.c_str();
 
+		auto AppWindow = App->GetModule<WindowModule>()->GetWindow();
+
 		SetupImGuiStyle();
 
-		ImGui_ImplWin32_Init(Window::GetHandle());
+		ImGui_ImplWin32_Init(AppWindow->GetHandle());
 		ImGui_ImplOpenGL3_Init();
 
-		Window::SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+		AppWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 	}
 
 	void ImGuiModule::OnDestroy()

@@ -30,7 +30,7 @@ namespace Volund
 
 		void OnCreate() override;
 
-		void OnUpdate(TimeStep TS) override;
+		void OnRender() override;
 
 		void OnDelete() override;
 

@@ -7,26 +7,13 @@
 
 namespace Volund
 {
-	void EventDispatcher::ConnectApp(WeakRef<Application> App)
+	void EventDispatcher::Dispatch(Event* E)
 	{
-		_Apps.push_back(App);
+		this->_App->EventCallback(E);
 	}
 
-	void EventDispatcher::SendEventToApps(Event* E)
+	EventDispatcher::EventDispatcher(Application* App)
 	{
-		for (int i = 0; i < _Apps.size(); i++)
-		{
-			if (!_Apps[i].expired())
-			{
-				auto LockedRef = _Apps[i].lock();
-
-				LockedRef->EventCallback(E);
-			}
-			else
-			{
-				_Apps.erase(_Apps.begin() + i);
-				i--;
-			}
-		}
+		this->_App = App;
 	}
 }

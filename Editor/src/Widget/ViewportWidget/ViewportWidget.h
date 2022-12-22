@@ -8,11 +8,11 @@ public:
 
 	const char* GetName();
 
-	void OnEvent(VL::Event* E);
+	void OnEvent(VL::Event* E) override;
 
-	void OnUpdate(VL::TimeStep TS);
+	void OnRender() override;
 
-	ViewportWidget();
+	ViewportWidget(VL::Application* App);
 
 private:
 

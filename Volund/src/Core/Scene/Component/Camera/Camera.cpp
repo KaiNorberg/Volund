@@ -27,21 +27,33 @@ namespace Volund
 
 	Mat4x4 Camera::GetViewMatrix() const
 	{
-		VOLUND_ASSERT(VL::Scene::HasComponent<Transform>(this->GetEntity()), "Camera unable to find a Transform component!");
+		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
-
-		return lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(),
-		              EntityTransform->GetUp());
+		if (EntityTransform != nullptr)
+		{
+			return lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(),
+				EntityTransform->GetUp());
+		}
+		else
+		{
+			return lookAt(Vec3(0.0f), Vec3(0.0f),
+				Vec3(0.0f));
+		}
 	}
 
 	Mat4x4 Camera::GetOriginViewMatrix() const
 	{
-		VOLUND_ASSERT(VL::Scene::HasComponent<Transform>(this->GetEntity()), "Camera unable to find a Transform component!");
+		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-		Ref<Transform> EntityTransform = VL::Scene::GetComponent<Transform>(this->GetEntity());
-
-		return lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());
+		if (EntityTransform != nullptr)
+		{
+			return lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());
+		}
+		else
+		{
+			return lookAt(Vec3(0.0f), Vec3(0.0f),
+				Vec3(0.0f));
+		}
 	}
 
 	Mat4x4 Camera::GetProjectionMatrix(float AspectRatio) const
@@ -64,14 +76,15 @@ namespace Volund
 		}
 	}
 
-	void Camera::OnUpdate(TimeStep TS)
+	void Camera::OnRender()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		auto Spec = Scene::GetTargetBuffer()->GetSpec();
+		auto TargetBuffer = this->GetScene()->GetTargetBuffer();
+		auto Spec = TargetBuffer->GetSpec();
 
 		RendererEye Eye;
-		Eye.Target = Scene::GetTargetBuffer();
+		Eye.Target = TargetBuffer;
 		Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
 		Eye.ViewMatrix = this->GetViewMatrix();
 

@@ -2,37 +2,28 @@
 
 #include "Scene.h"
 
-#include "Core/Lua/Lua.h"
 #include "Core/Window/Window.h"
 
 #include "Component/Components.h"
 #include "Filesystem/Filesystem.h"
 #include "Renderer/Renderer.h"
 
+#include "Core/ThreadPool/ThreadPool.h"
+
 namespace Volund
 {	
-	std::string Scene::GetFilepath()
-	{
-		return _Data.Filepath;
-	}
-
 	Ref<Framebuffer> Scene::GetTargetBuffer()
 	{
-		return _Data.TargetBuffer;
-	}
-
-	Input& Scene::GetInput()
-	{
-		return _Data.MainInput;
+		return this->_TargetBuffer;
 	}
 
 	Entity Scene::CreateEntity()
 	{
-		Entity NewEntity = _Data.NewEntity;
+		Entity NewEntity = this->_NewEntity;
 
-		_Data.Registry.push_back(std::pair<Entity, Container<Component>>(NewEntity, Container<Component>()));
+		this->_Registry.push_back(std::pair<Entity, Container<Component>>(NewEntity, Container<Component>()));
 
-		_Data.NewEntity++;
+		this->_NewEntity++;
 		return NewEntity;
 	}
 
@@ -42,7 +33,7 @@ namespace Volund
 
 		if (Index != -1)
 		{
-			_Data.Registry.erase(_Data.Registry.begin() + Index);
+			this->_Registry.erase(this->_Registry.begin() + Index);
 		}
 		else
 		{
@@ -57,7 +48,7 @@ namespace Volund
 
 	void Scene::DeleteComponent(Component* component)
 	{
-		for (auto& [entity, Container] : _Data.Registry)
+		for (auto& [entity, Container] : this->_Registry)
 		{
 			if (Container.Erase(component))
 			{
@@ -68,11 +59,9 @@ namespace Volund
 		VOLUND_ERROR("Unable to find component (%d)", component);
 	}
 
-	void Scene::Render(TimeStep TS)
+	void Scene::OnUpdate(TimeStep TS)
 	{
-		Renderer::Begin();
-
-		for (const auto& [entity, Container] : _Data.Registry)
+		for (const auto& [entity, Container] : this->_Registry)
 		{	
 			for (const auto& View : Container)
 			{
@@ -82,28 +71,38 @@ namespace Volund
 				}
 			}
 		}
+	}
 
-		Renderer::End();
+	void Scene::OnRender()
+	{
+		for (const auto& [entity, Container] : this->_Registry)
+		{
+			for (const auto& View : Container)
+			{
+				for (const auto& component : View)
+				{
+					component->OnRender();
+				}
+			}
+		}
 	}
 
 	void Scene::ResizeTarget(uint32_t Width, uint32_t Height)
 	{
-		auto Spec = _Data.TargetBuffer->GetSpec();
+		auto Spec = this->_TargetBuffer->GetSpec();
 
-		if (_Data.TargetBuffer != nullptr && (Width != Spec.Width || Height != Spec.Height))
+		if (this->_TargetBuffer != nullptr && (Width != Spec.Width || Height != Spec.Height))
 		{
 			Spec.Width = Width;
 			Spec.Height = Height;
 
-			_Data.TargetBuffer->SetSpec(Spec);
+			this->_TargetBuffer->SetSpec(Spec);
 		}
 	}
 
-	void Scene::EventCallback(Event* E)
+	void Scene::OnEvent(Event* E)
 	{
-		_Data.MainInput.HandleEvent(E);
-
-		for (const auto& [entity, Container] : _Data.Registry)
+		for (const auto& [entity, Container] : this->_Registry)
 		{
 			for (const auto& View : Container)
 			{
@@ -117,53 +116,47 @@ namespace Volund
 
 	Registry::iterator Scene::begin()
 	{
-		return _Data.Registry.begin();
+		return this->_Registry.begin();
 	}
 
 	Registry::iterator Scene::end()
 	{
-		return _Data.Registry.end();
+		return this->_Registry.end();
 	}
 
-	void Scene::Load(const std::string& Filepath)
+
+	Scene::Scene()
 	{
-		if (!_Data.Filepath.empty())
-		{
-			Scene::Destroy();
-		}
-
-		Window::Reset();
-
-		VOLUND_INFO("Deserializing Scene...");
-
 		VL::FramebufferSpec Spec;
 		Spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
 		Spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::DEPTH24STENCIL8);
-		Spec.Height = Window::GetSize().y;
-		Spec.Width = Window::GetSize().x;
-		_Data.TargetBuffer = VL::Framebuffer::Create(Spec);
-
-		_Data.Filepath = Filepath;
-
-		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
-		VL::Filesystem::AddRelativeFilepath(ParentPath);
-
-		try
-		{
-			Lua::Connect(_Data.LuaState);
-			_Data.LuaState.script_file(_Data.Filepath);
-		}
-		catch (sol::error E)
-		{
-			VOLUND_WARNING(E.what());
-		}
-
-		VOLUND_INFO("Finished deserializing Scene!");
+		Spec.Height = 1080;
+		Spec.Width = 1920;
+		this->_TargetBuffer = VL::Framebuffer::Create(Spec);
 	}
 
-	void Scene::Destroy()
+	uint64_t Scene::FindEntity(Entity entity)
 	{
-		for (const auto& [entity, Container] : _Data.Registry)
+		VOLUND_PROFILE_FUNCTION();
+
+		auto it = std::lower_bound(this->_Registry.begin(), this->_Registry.end(), entity, [](const std::pair<Entity, Container<Component>>& A, Entity entity)
+		{
+			return A.first < entity;
+		});
+
+		if (it != this->_Registry.end())
+		{
+			return it - this->_Registry.begin();
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	Scene::~Scene()
+	{
+		for (const auto& [entity, Container] : this->_Registry)
 		{
 			for (const auto& View : Container)
 			{
@@ -172,35 +165,6 @@ namespace Volund
 					component->OnDelete();
 				}
 			}
-		}
-
-		std::string ParentPath = std::filesystem::path(_Data.Filepath).parent_path().string();
-		VL::Filesystem::RemoveRelativeFilepath(ParentPath);
-
-		_Data = SceneData();
-	}
-
-	Scene::~Scene()
-	{
-		Scene::Destroy();
-	}
-
-	uint64_t Scene::FindEntity(Entity entity)
-	{
-		VOLUND_PROFILE_FUNCTION();
-
-		auto it = std::lower_bound(_Data.Registry.begin(), _Data.Registry.end(), entity, [](const std::pair<Entity, Container<Component>>& A, Entity entity)
-		{
-			return A.first < entity;
-		});
-
-		if (it != _Data.Registry.end())
-		{
-			return it - _Data.Registry.begin();
-		}
-		else
-		{
-			return -1;
 		}
 	}
 }

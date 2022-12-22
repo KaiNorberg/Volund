@@ -11,7 +11,7 @@ namespace Volund
 	{
 	public:
 
-		void OnUpdate(TimeStep TS) override;
+		void OnRender() override;
 
 		void SetMesh(Ref<Mesh> NewMesh);
 

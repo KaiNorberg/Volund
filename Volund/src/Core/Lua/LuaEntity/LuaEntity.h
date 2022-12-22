@@ -11,19 +11,21 @@ namespace Volund
 	{
 	public:
 
-		void AddComponent(LuaComponent Component, const sol::table& Table);
+		void AddComponent(sol::this_state S, LuaComponent Component, const sol::table& Table);
 
-		void DeleteComponent(LuaComponent Component, uint64_t I = 0);
+		void DeleteComponent(sol::this_state S, LuaComponent Component, uint64_t I = 0);
 
 		sol::object GetComponent(sol::this_state S, LuaComponent Component, uint64_t I = 0);
 
-		void Destroy();
+		void Destroy(sol::this_state S);
 
-		LuaEntity(Entity Entity);
+		LuaEntity(Scene* ThisScene, Entity entity);
 
-		LuaEntity();
+		LuaEntity(Scene* ThisScene);
 
 	private:
+
+		Scene* _Scene;
 
 		Entity _Entity;
 	};

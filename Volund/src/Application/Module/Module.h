@@ -15,6 +15,8 @@ namespace Volund
 
 		virtual void OnUpdate(TimeStep TS);
 
+		virtual void OnRender();
+
 		virtual void OnAttach(Application* App);
 
 		virtual void OnDestroy();

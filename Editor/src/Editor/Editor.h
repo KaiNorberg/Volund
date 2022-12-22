@@ -12,6 +12,8 @@ public:
 
 	void OnUpdate(VL::TimeStep TS) override;
 
+	void OnRender() override;
+
 	void OnEvent(VL::Event* E) override;
 
 private:

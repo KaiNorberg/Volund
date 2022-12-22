@@ -12,24 +12,13 @@ namespace Volund
 	{
 	public:
 
-		template <typename T>
-		static void Dispatch(T E);
+		void Dispatch(Event* E);
 
-		static void ConnectApp(WeakRef<Application> App);
+		EventDispatcher(Application* App);
 
 	private:
 
-		EventDispatcher() = delete;
-
-		static void SendEventToApps(Event* E);
-
-		static inline std::vector<WeakRef<Application>> _Apps;
+		Application* _App = nullptr;
 	};
 
-	template <typename T>
-	void EventDispatcher::Dispatch(T E)
-	{
-		Scene::EventCallback(static_cast<Event*>(&E));
-		SendEventToApps(static_cast<Event*>(&E));
-	}
 }

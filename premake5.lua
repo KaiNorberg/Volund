@@ -19,6 +19,11 @@ project "Volund"
 	systemversion "latest"
 	staticruntime "on"
 
+	buildoptions 
+	{ 
+		"/bigobj" 
+	}
+
 	dependson 
 	{
 		"ImGui",

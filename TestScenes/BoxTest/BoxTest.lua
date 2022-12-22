@@ -14,13 +14,13 @@ function ShowFPS(Entity, TS)
     Print(1.0 / TS)
 end
 
-Camera = Entity:new()
+Camera = Scene:CreateEntity()
 Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 25.0)})
 Camera:AddComponent(Component.CAMERA, {IsActive = true})
 Camera:AddComponent(Component.SCRIPT, {OnUpdate = ShowFPS})
 
 for i = 0, 10000 do
-    NewEntity = Entity:new()
+    NewEntity = Scene:CreateEntity()
 
     NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new(math.random(-10, 10), math.random(-10, 10), math.random(-10, 10))})
     

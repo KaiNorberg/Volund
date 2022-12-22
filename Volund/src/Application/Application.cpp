@@ -7,6 +7,8 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
+#include "Core/ThreadPool/ThreadPool.h"
+
 namespace Volund
 {
 	void Application::Run()
@@ -26,11 +28,16 @@ namespace Volund
 		return this->_ShouldRun;
 	}
 
+	Ref<EventDispatcher> Application::GetEventDispatcher()
+	{
+		return this->_EventDispatcher;
+	}
+
 	void Application::EventCallback(Event* E)
 	{
-		this->OnEvent(E);
-
 		VOLUND_PROFILE_FUNCTION();
+
+		this->OnEvent(E);
 
 		for (const auto& View : this->_Modules)
 		{
@@ -51,24 +58,15 @@ namespace Volund
 	}
 
 	void Application::OnEvent(Event* E)
-	{
-
-	}
-
+	{}
 	void Application::OnUpdate(TimeStep TS)
-	{
-
-	}
-
+	{}
+	void Application::OnRender()
+	{}
 	void Application::OnRun()
-	{
-
-	}
-
+	{}
 	void Application::OnTerminate()
-	{
-
-	}
+	{}
 
 	void Application::Loop()
 	{
@@ -82,16 +80,35 @@ namespace Volund
 			OldTime = std::chrono::high_resolution_clock::now();
 			TimeStep TS = TimeStep(Duration.count());
 
-			this->OnUpdate(TS);
+			this->_ThreadPool.Submit([this, TS]()
+			{
+				this->OnUpdate(TS);
+
+				for (const auto& View : this->_Modules)
+				{
+					for (const auto& Module : View)
+					{
+						Module->OnUpdate(TS);
+					}
+				}
+			});	
+
+			Renderer::Begin();
+
+			this->OnRender();
 
 			for (const auto& View : this->_Modules)
 			{
 				for (const auto& Module : View)
 				{
-					Module->OnUpdate(TS);
+					Module->OnRender();
 				}
-			}			
-			
+			}	
+
+			while (this->_ThreadPool.Busy());
+
+			Renderer::End();
+
 			VOLUND_PROFILING_END();
 		}
 	}
@@ -107,6 +124,8 @@ namespace Volund
 #else
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif	
+
+		this->_EventDispatcher = std::make_shared<EventDispatcher>(this);
 	}
 
 	Application::~Application()

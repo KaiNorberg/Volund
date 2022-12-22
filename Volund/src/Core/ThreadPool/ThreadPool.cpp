@@ -3,83 +3,72 @@
 
 namespace Volund
 {
-	void ThreadPool::Init()
-	{
-		if (ThreadPool::_IsInitialized)
-		{
-			return;
-		}
-		ThreadPool::_IsInitialized = true;
-		ThreadPool::_ShouldTerminate = false;
-
-		uint64_t ThreadCount = std::thread::hardware_concurrency();
-
-		ThreadPool::_Threads.resize(ThreadCount);
-
-		for (uint64_t i = 0; i < ThreadCount; i++)
-		{
-			ThreadPool::_Threads[i] = std::thread(ThreadPool::Loop);
-		}
-	}
-
-	void ThreadPool::QueueJob(ThreadJob Job)
+	void ThreadPool::Submit(ThreadJob Job)
 	{
 		{
-			std::unique_lock<std::mutex> lock(ThreadPool::_Mutex);
-			ThreadPool::_Jobs.push(Job);
+			std::unique_lock Lock(_Mutex);
+			_JobQueue.push(Job);
 		}
-		_MutexCondition.notify_one();
-	}
-
-	void ThreadPool::Terminate()
-	{
-		ThreadPool::_IsInitialized = false;
-		{
-			std::unique_lock<std::mutex> lock(ThreadPool::_Mutex);
-			ThreadPool::_ShouldTerminate = true;
-		}
-		_MutexCondition.notify_all();
-
-		for (std::thread& active_thread : ThreadPool::_Threads) 
-		{
-			active_thread.join();
-		}
-		ThreadPool::_Threads.clear();
+		_Condition.notify_one();
 	}
 
 	bool ThreadPool::Busy()
 	{
-		bool Busy;
-		{
-			std::unique_lock<std::mutex> lock(ThreadPool::_Mutex);
-			Busy = !ThreadPool::_Jobs.empty();
-		}
-		return Busy;
+		return !_JobQueue.empty() || _ActiveThreads != 0;
 	}
 
-	void ThreadPool::Loop()
+	ThreadPool::ThreadPool()
 	{
+		ThreadPool::_ShouldTerminate = false;
+
+		uint64_t ThreadCount = std::thread::hardware_concurrency();
+		_Threads.resize(ThreadCount);
+		for (uint64_t i = 0; i < ThreadCount; i++)
+		{
+			_Threads[i] = std::thread([this]() { Loop(); });
+		}
+	}
+
+	ThreadPool::~ThreadPool()
+	{
+		{
+			std::unique_lock Lock(_Mutex);
+			_ShouldTerminate = true;
+		}
+
+		_Condition.notify_all();
+
+		for (std::thread& active_thread : _Threads)
+		{
+			active_thread.join();
+		}
+		_Threads.clear();
+	}
+
+
+	void ThreadPool::Loop()
+	{		
 		while (true)
 		{
-			ThreadJob Job = nullptr;
+			ThreadJob Job;
 			{
-				std::unique_lock<std::mutex> lock(ThreadPool::_Mutex);
+				std::unique_lock Lock(_Mutex);
+				_Condition.wait(Lock, [this]() { return _ShouldTerminate || !_JobQueue.empty(); });
 
-				_MutexCondition.wait(lock, [] 
+				if (_ShouldTerminate && _JobQueue.empty())
 				{
-					return !ThreadPool::_Jobs.empty() || ThreadPool::_ShouldTerminate;
-				});
-
-				if (ThreadPool::_ShouldTerminate)
-				{
-					_MutexCondition.notify_all();
 					return;
 				}
 
-				Job = ThreadPool::_Jobs.front();
-				ThreadPool::_Jobs.pop();
+				_ActiveThreads++;
+
+				Job = _JobQueue.front();
+				_JobQueue.pop();
 			}
+
 			Job();
+
+			_ActiveThreads--;
 		}
 	}
 }

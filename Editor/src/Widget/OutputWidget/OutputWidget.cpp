@@ -14,10 +14,11 @@ void OutputWidget::OnEvent(VL::Event* E)
 
 void OutputWidget::OnUpdate(VL::TimeStep TS)
 {
-	static float TotalTime = 0.0f;
-
 	TotalTime += (float)TS;
+}
 
+void OutputWidget::OnRender()
+{
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
 		if (ImGui::BeginListBox("###OutputTextbox", ImVec2(-FLT_MIN, -FLT_MIN)))
@@ -47,7 +48,6 @@ void OutputWidget::OnUpdate(VL::TimeStep TS)
 
 			ImGui::EndListBox();
 		}
-
 	}
 
 	ImGui::End();
@@ -63,8 +63,10 @@ void OutputWidget::LoggerCallback(const std::string& String)
 	_Output.push_back(String);
 }
 
-OutputWidget::OutputWidget()
+OutputWidget::OutputWidget(VL::Application* App)
 {
+	this->_App = App;
+
 	VL::Logger::GetClientLogger().SetCallback(LoggerCallback);
 	VL::Logger::GetCoreLogger().SetCallback(LoggerCallback);
 }

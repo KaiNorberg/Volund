@@ -8,15 +8,19 @@ public:
 
 	const char* GetName();
 
-	void OnEvent(VL::Event* E);
+	void OnEvent(VL::Event* E) override;
 
-	void OnUpdate(VL::TimeStep TS);
+	void OnUpdate(VL::TimeStep TS) override;
+
+	void OnRender() override;
 
 	static void LoggerCallback(const std::string& String);
 
-	OutputWidget();
+	OutputWidget(VL::Application* App);
 
 private:
+
+	float TotalTime = 0.0f;
 
 	static inline std::vector<std::string> _Output;
 };

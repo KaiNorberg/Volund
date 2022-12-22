@@ -11,6 +11,7 @@ void Editor::OnRun()
 
 	this->AttachModule(new VL::WindowModule());
 	this->AttachModule(new VL::ImGuiModule());
+	this->AttachModule(new VL::LuaModule());
 
 	VL::RenderingAPI::Init();
 	VL::Renderer::Init(new VL::ForwardRenderer());
@@ -18,8 +19,8 @@ void Editor::OnRun()
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
-	this->_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget()));
-	this->_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget()));
+	this->_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this)));
+	this->_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this)));
 }
 
 void Editor::OnTerminate()
@@ -29,7 +30,18 @@ void Editor::OnTerminate()
 
 void Editor::OnUpdate(VL::TimeStep TS)
 {
-	VL::Window::SetVsync(true);
+	for (auto Widget : this->_Widgets)
+	{
+		if (Widget->IsActive)
+		{
+			Widget->OnUpdate(TS);
+		}
+	}
+}
+
+void Editor::OnRender()
+{
+	this->GetModule<VL::WindowModule>()->GetWindow()->SetVsync(true);
 
 	VL::ImGuiModule::BeginFrame();
 
@@ -57,7 +69,7 @@ void Editor::OnUpdate(VL::TimeStep TS)
 		{
 			if (Widget->IsActive)
 			{
-				Widget->OnUpdate(TS);
+				Widget->OnRender();
 			}
 		}
 	}

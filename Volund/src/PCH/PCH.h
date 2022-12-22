@@ -20,6 +20,7 @@
 #include <future>
 #include <memory>
 #include <string_view>
+#include <atomic>
 
 #define SOL_NO_EXCEPTIONS 0
 #define SOL_PRINT_ERRORS 0

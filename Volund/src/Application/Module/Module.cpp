@@ -13,6 +13,10 @@ namespace Volund
 
 	}
 
+	void Module::OnRender()
+	{
+	}
+
 	void Module::OnAttach(Application* App)
 	{
 

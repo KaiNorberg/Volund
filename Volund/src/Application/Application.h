@@ -5,6 +5,7 @@
 #include "Time/Time.h"
 #include "Container/Container.h"
 #include "Core/EventDispatcher/EventDispatcher.h"
+#include "Core/ThreadPool/ThreadPool.h"
 
 namespace Volund
 {
@@ -17,6 +18,8 @@ namespace Volund
 		void Terminate();
 
 		bool ShouldRun() const;
+
+		Ref<EventDispatcher> GetEventDispatcher();
 
 		template<typename T>
 		void AttachModule(T* NewModule);
@@ -32,12 +35,10 @@ namespace Volund
 
 		void EventCallback(Event* E);
 
-		virtual void OnEvent(Event* E);
-		
+		virtual void OnEvent(Event* E);	
 		virtual void OnUpdate(TimeStep TS);
-
+		virtual void OnRender();
 		virtual void OnRun();
-
 		virtual void OnTerminate();
 
 		Application();
@@ -45,12 +46,16 @@ namespace Volund
 		virtual ~Application();
 
 	private:
-		
+
 		void Loop();
 
 		bool _ShouldRun = true;
 
+		Ref<EventDispatcher> _EventDispatcher;
+
 	protected:
+
+		ThreadPool _ThreadPool;
 
 		Container<Module> _Modules;
 	};
