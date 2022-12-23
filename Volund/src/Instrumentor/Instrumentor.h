@@ -16,29 +16,30 @@ namespace Volund
 	{
 	public:
 
+		InstrumentorTimer(uint64_t GroupID, const std::string& Name);
+
 		~InstrumentorTimer();
 
 	private:
 
 		friend class Instrumentor;
 
-		InstrumentorTimer(uint64_t GroupID, const std::string& Name);
+		static inline std::mutex _Mutex;
 
 		uint64_t _GroupID;
 
 		std::string _Name;
 
 		std::chrono::time_point<std::chrono::steady_clock> _Start;
-
 	};
 
 	class Instrumentor
 	{
 	public:
 
-		static void Start(uint64_t GroupID);
+		static uint64_t GetCurrentGroupID();
 
-		static Ref<InstrumentorTimer> StartTimer(const std::string& Name);
+		static void Start(uint64_t GroupID);
 
 		static void End();
 
@@ -90,7 +91,7 @@ namespace Volund
 
 #define VOLUND_PROFILING_START(ID) Volund::Instrumentor::Start(ID)
 #define VOLUND_PROFILING_END() Volund::Instrumentor::End()
-#define VOLUND_PROFILE_SCOPE(Name) auto Timer##__LINE__ = Volund::Instrumentor::StartTimer(Name)
+#define VOLUND_PROFILE_SCOPE(Name) auto Timer##__LINE__ = Volund::InstrumentorTimer(Volund::Instrumentor::GetCurrentGroupID(), Name)
 #define VOLUND_PROFILE_FUNCTION() VOLUND_PROFILE_SCOPE(VOLUND_FUNC_SIG)
 
 #else

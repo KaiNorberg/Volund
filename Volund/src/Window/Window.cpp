@@ -383,7 +383,6 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->_Data.RenderingContext->Flush();
 		::SwapBuffers((HDC)this->_Data._DeviceContext);
 	}
 

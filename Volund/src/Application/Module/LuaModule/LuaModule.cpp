@@ -80,14 +80,5 @@ namespace Volund
 		{
 			this->_LuaState->Procedure(E);
 		}
-
-		switch (E.Type)
-		{
-		default:
-		{
-
-		}
-		break;
-		}
 	}
 }

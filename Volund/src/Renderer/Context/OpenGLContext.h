@@ -13,8 +13,6 @@ namespace Volund
 
 		void SetVSync(bool Enabled) override;
 
-		void Flush() override;
-
 		OpenGLContext(void* DeviceContext);
 		
 		~OpenGLContext();

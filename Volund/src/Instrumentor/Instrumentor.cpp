@@ -14,12 +14,19 @@ namespace Volund
 
 	InstrumentorTimer::~InstrumentorTimer()
 	{
+		std::unique_lock Lock(_Mutex);
+
 		std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - this->_Start;
 	
 		if (this->_GroupID != 0)
 		{
 			Instrumentor::_Groups[this->_GroupID].Events[this->_Name].Timings.push_back(Duration.count());
 		}
+	}
+
+	uint64_t Instrumentor::GetCurrentGroupID()
+	{
+		return _CurrentGroupID;
 	}
 
 	void Instrumentor::Start(uint64_t GroupID)
@@ -29,11 +36,6 @@ namespace Volund
 		_GroupStart = std::chrono::high_resolution_clock::now();
 
 		_CurrentGroupID = GroupID;
-	}
-
-	Ref<InstrumentorTimer> Instrumentor::StartTimer(const std::string& Name)
-	{
-		return Ref<InstrumentorTimer>(new InstrumentorTimer(_CurrentGroupID, Name));
 	}
 
 	void Instrumentor::End()

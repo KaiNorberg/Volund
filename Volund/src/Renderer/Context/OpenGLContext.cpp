@@ -34,11 +34,6 @@ namespace Volund
 		}
 	}
 
-	void OpenGLContext::Flush()
-	{
-
-	}
-
 	bool OpenGLContext::WGLExtensionSupported(std::string_view Name) const
 	{
 		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");

@@ -12,8 +12,6 @@ namespace Volund
 
 		virtual void SetVSync(bool Enabled) = 0;
 
-		virtual void Flush() = 0;
-
 		static Ref<Context> Create(void* DeviceContext);
 
 		virtual ~Context() = default;

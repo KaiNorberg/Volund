@@ -50,15 +50,6 @@ namespace Volund
 	void ImGuiModule::Procedure(const Event& E)
 	{
 		VOLUND_PROFILE_FUNCTION();
-
-		switch (E.Type)
-		{
-		default:
-		{
-
-		}
-		break;
-		}
 	}
 
 	bool ImGuiModule::BeginDockSpace()
