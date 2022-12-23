@@ -7,7 +7,7 @@
 #include "Renderer/Renderer.h"
 #include "Renderer/RenderingAPI/RenderingAPI.h"
 
-#include "Core/ThreadPool/ThreadPool.h"
+#include "ThreadPool/ThreadPool.h"
 
 namespace Volund
 {

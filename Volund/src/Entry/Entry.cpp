@@ -1,6 +1,6 @@
 #include "PCH/PCH.h"
 
-#include "Core/ThreadPool/ThreadPool.h"
+#include "ThreadPool/ThreadPool.h"
 
 int Main()
 {

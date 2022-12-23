@@ -2,7 +2,7 @@
 
 #include "../Module.h"
 
-#include "Core/Window/Window.h"
+#include "Window/Window.h"
 #include "Renderer/Context/Context.h"
 
 #include "Renderer/RenderingAPI/RenderingAPI.h"

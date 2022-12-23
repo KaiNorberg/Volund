@@ -2,7 +2,7 @@
 
 #include "../Module.h"
 
-#include "Core/Lua/LuaState/LuaState.h"
+#include "Lua/LuaState/LuaState.h"
 
 namespace Volund
 {

@@ -2,7 +2,7 @@
 
 #include "PCH/PCH.h"
 
-#include "Core/ThreadPool/ThreadPool.h"
+#include "ThreadPool/ThreadPool.h"
 
 #include "Application/Application.h"
 #include "Application/Module/Modules.h"
@@ -13,9 +13,9 @@
 #include "Renderer/Context/Context.h"
 #include "Renderer/Texture/Texture.h"
 
-#include "Core/Scene/Scene.h"
-#include "Core/Scene/Component/Components.h"
-#include "Core/Window/Window.h"
+#include "Scene/Scene.h"
+#include "Scene/Component/Components.h"
+#include "Window/Window.h"
 
 #include "Filesystem/Filesystem.h"
 

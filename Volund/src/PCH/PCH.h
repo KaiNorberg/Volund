@@ -2,6 +2,9 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
+#define SOL_NO_EXCEPTIONS 0
+#define SOL_PRINT_ERRORS 0
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -21,9 +24,6 @@
 #include <memory>
 #include <string_view>
 #include <atomic>
-
-#define SOL_NO_EXCEPTIONS 0
-#define SOL_PRINT_ERRORS 0
 
 #include <sol/sol.hpp>
 

@@ -4,8 +4,8 @@
 
 #include "Time/Time.h"
 #include "Container/Container.h"
-#include "Core/EventDispatcher/EventDispatcher.h"
-#include "Core/ThreadPool/ThreadPool.h"
+#include "EventDispatcher/EventDispatcher.h"
+#include "ThreadPool/ThreadPool.h"
 
 namespace Volund
 {
