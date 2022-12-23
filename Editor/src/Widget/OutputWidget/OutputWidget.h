@@ -8,8 +8,6 @@ public:
 
 	const char* GetName();
 
-	void OnEvent(VL::Event* E) override;
-
 	void OnUpdate(VL::TimeStep TS) override;
 
 	void OnRender() override;

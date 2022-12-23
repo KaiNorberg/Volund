@@ -39,41 +39,45 @@ namespace Volund
 		return this->_MousePosition;
 	}
 
-	void Input::HandleEvent(Event* E)
+	void Input::HandleEvent(const Event& E)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E->GetType())
+		switch (E.Type)
 		{
 		case EventType::KEY:
 		{
-			KeyEvent* KE = (KeyEvent*)E;
-			this->_Keys[KE->GetKey()] += KE->IsDown();
-			this->_Keys[KE->GetKey()] *= KE->IsDown();
-			this->_Keys[KE->GetKey()] = Utils::Min(this->_Keys[KE->GetKey()], (int8_t)100);
+			bool IsDown = (bool)VOLUND_EVENT_KEY_GET_ISDOWN(E);
+			uint64_t Key = VOLUND_EVENT_KEY_GET_KEY(E);
+
+			this->_Keys[Key] += IsDown;
+			this->_Keys[Key] *= IsDown;
+			this->_Keys[Key] = Utils::Min(this->_Keys[Key], (int8_t)100);
 		}
 		break;
 		case EventType::MOUSE_BUTTON:
-		{
-			MouseButtonEvent* MBE = (MouseButtonEvent*)E;
+		{			
+			bool IsDown = (bool)VOLUND_EVENT_MOUSE_BUTTON_GET_ISDOWN(E);
+			uint64_t Button = VOLUND_EVENT_MOUSE_BUTTON_GET_BUTTON(E);
 
-			this->_MouseButtons[MBE->GetButton()] += MBE->IsDown();
-			this->_MouseButtons[MBE->GetButton()] *= MBE->IsDown();
-			this->_MouseButtons[MBE->GetButton()] = Utils::Min(this->_MouseButtons[MBE->GetButton()], (int8_t)100);
+			this->_MouseButtons[Button] += IsDown;
+			this->_MouseButtons[Button] *= IsDown;
+			this->_MouseButtons[Button] = Utils::Min(this->_MouseButtons[Button], (int8_t)100);
 		}
 		break;
-		case EventType::SCROLL:
+		case EventType::MOUSE_WHEEL:
 		{
-			ScrollEvent* SE = (ScrollEvent*)E;
+			uint64_t Delta = VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(E);
 
-			this->_ScrollPosition += SE->GetYOffset();
+			this->_ScrollPosition += Delta;
 		}
 		break;
 		case EventType::MOUSE_MOVE:
-		{
-			MouseMoveEvent* MME = (MouseMoveEvent*)E;
+		{			
+			uint64_t XPos = VOLUND_EVENT_MOUSE_MOVE_GET_XPOS(E);
+			uint64_t YPos = VOLUND_EVENT_MOUSE_MOVE_GET_YPOS(E);
 
-			this->_MousePosition = IVec2(MME->GetXPos(), MME->GetYPos());
+			this->_MousePosition = IVec2(XPos, YPos);
 		}
 		break;
 		}

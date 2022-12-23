@@ -45,29 +45,13 @@ namespace Volund
 		this->_SolState.script_file(Filepath);
 	}
 
-	void LuaState::OnEvent(Event* E)
+	void LuaState::Procedure(const Event& E)
 	{
 		this->_Input->HandleEvent(E);
 
 		if (this->_ThisScene != nullptr)
 		{
-			this->_ThisScene->OnEvent(E);
-		}
-	}
-
-	void LuaState::OnUpdate(TimeStep TS)
-	{
-		if (this->_ThisScene != nullptr)
-		{
-			this->_ThisScene->OnUpdate(TS);
-		}
-	}
-
-	void LuaState::OnRender()
-	{
-		if (this->_ThisScene != nullptr)
-		{
-			this->_ThisScene->OnRender();
+			this->_ThisScene->Procedure(E);
 		}
 	}
 
@@ -121,9 +105,7 @@ namespace Volund
 			"GetNearPlane", &LuaCamera::GetNearPlane,
 			"SetNearPlane", &LuaCamera::SetNearPlane,
 			"GetFarPlane", &LuaCamera::GetFarPlane,
-			"SetFarPlane", &LuaCamera::SetFarPlane,
-			"IsActive", &LuaCamera::IsActive,
-			"SetActive", &LuaCamera::SetActive);
+			"SetFarPlane", &LuaCamera::SetFarPlane);
 
 		this->_SolState.new_usertype<LuaCameraMovement>("VOLUND_CAMERA_MOVEMENT",
 			"GetSpeed", &LuaCameraMovement::GetSpeed,

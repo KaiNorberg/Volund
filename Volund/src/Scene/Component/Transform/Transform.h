@@ -24,8 +24,6 @@ namespace Volund
 
 		Quat Quaternion = Quat(Vec3(0.0f));
 
-		void OnUpdate(TimeStep TS) override;
-
 		Transform();
 
 	private:

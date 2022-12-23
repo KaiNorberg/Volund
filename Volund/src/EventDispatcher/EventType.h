@@ -5,11 +5,13 @@ namespace Volund
 	enum class EventType
 	{
 		NONE,
+		UPDATE,
+		RENDER,
 		WINDOW_CLOSE,
 		WINDOW_SIZE,
 		KEY,
+		MOUSE_MOVE,
 		MOUSE_BUTTON,
-		SCROLL,
-		MOUSE_MOVE
+		MOUSE_WHEEL,
 	};
 }

@@ -12,7 +12,7 @@ namespace Volund
 
 		float Brightness = 1.0f;
 
-		void OnRender();
+		void Procedure(const Event& E);
 
 		PointLight();
 

@@ -20,9 +20,6 @@ namespace Volund
 		float GetFarPlane();
 		void SetFarPlane(float FarPlane);
 
-		bool IsActive();
-		void SetActive();
-
 		LuaCamera(Ref<Camera> Camera);
 
 	private:

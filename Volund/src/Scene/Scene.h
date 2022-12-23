@@ -42,9 +42,7 @@ namespace Volund
 
 		void ResizeTarget(uint32_t Width, uint32_t Height);
 		
-		void OnEvent(Event* E);
-		void OnUpdate(TimeStep TS);
-		void OnRender();
+		void Procedure(const Event& E);
 
 		Registry::iterator begin();
 		Registry::iterator end();
@@ -73,7 +71,7 @@ namespace Volund
 
 		if (EntityIndex != -1)
 		{
-			this->_Registry[EntityIndex].second.Get<T>(Index)->OnDelete();
+			this->_Registry[EntityIndex].second.Get<T>(Index)->OnDestroy();
 			this->_Registry[EntityIndex].second.Erase<T>(Index);
 		}
 		else

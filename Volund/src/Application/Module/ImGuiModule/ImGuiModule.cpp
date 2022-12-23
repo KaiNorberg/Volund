@@ -16,16 +16,6 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace Volund
 {
-	void ImGuiModule::OnEvent(Event* E)
-	{
-
-	}
-
-	void ImGuiModule::OnUpdate(TimeStep TS)
-	{
-
-	}
-
 	void ImGuiModule::OnAttach(Application* App)
 	{
 		if (!App->HasModule<WindowModule>())
@@ -52,9 +42,23 @@ namespace Volund
 		AppWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 	}
 
-	void ImGuiModule::OnDestroy()
+	void ImGuiModule::OnDetach()
 	{
 
+	}
+
+	void ImGuiModule::Procedure(const Event& E)
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		switch (E.Type)
+		{
+		default:
+		{
+
+		}
+		break;
+		}
 	}
 
 	bool ImGuiModule::BeginDockSpace()

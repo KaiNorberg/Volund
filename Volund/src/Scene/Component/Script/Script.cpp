@@ -7,6 +7,37 @@
 
 namespace Volund
 {
+	void Script::Procedure(const Event& E)
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		switch (E.Type)
+		{
+		case EventType::UPDATE:
+		{			
+			float TS = VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
+
+			if (this->_LuaOnUpdate != sol::lua_nil)
+			{
+				try
+				{
+					this->_LuaOnUpdate.call<void>(LuaEntity(this->GetScene(), this->GetEntity()), TS);
+				}
+				catch (sol::error E)
+				{
+					VOLUND_WARNING(E.what());
+				}
+			}
+		}
+		break;
+		default:
+		{
+
+		}
+		break;
+		}
+	}
+
 	void Script::OnCreate()
 	{
 		if (this->_LuaOnCreate != sol::lua_nil)
@@ -22,15 +53,13 @@ namespace Volund
 		}
 	}
 
-	void Script::OnUpdate(TimeStep TS)
+	void Script::OnDestroy()
 	{
-		VOLUND_PROFILE_FUNCTION();
-
-		if (this->_LuaOnUpdate != sol::lua_nil)
+		if (this->_LuaOnDestroy != sol::lua_nil)
 		{
 			try
 			{
-				this->_LuaOnUpdate.call<void>(LuaEntity(this->GetScene(), this->GetEntity()), TS.GetSeconds());
+				this->_LuaOnDestroy.call<void>(LuaEntity(this->GetScene(), this->GetEntity()));
 			}
 			catch (sol::error E)
 			{
@@ -39,25 +68,10 @@ namespace Volund
 		}
 	}
 
-	void Script::OnDelete()
-	{
-		if (this->_LuaOnDelete != sol::lua_nil)
-		{
-			try
-			{
-				this->_LuaOnDelete.call<void>(LuaEntity(this->GetScene(), this->GetEntity()));
-			}
-			catch (sol::error E)
-			{
-				VOLUND_WARNING(E.what());
-			}
-		}
-	}
-
-	Script::Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDelete)
+	Script::Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDestroy)
 	{
 		this->_LuaOnCreate = LuaOnCreate;
 		this->_LuaOnUpdate = LuaOnUpdate;
-		this->_LuaOnDelete = LuaOnDelete;
+		this->_LuaOnDestroy = LuaOnDestroy;
 	}
 }

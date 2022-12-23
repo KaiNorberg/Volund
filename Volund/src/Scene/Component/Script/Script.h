@@ -8,18 +8,18 @@ namespace Volund
 	{
 	public:
 
+		void Procedure(const Event& E);
+
 		void OnCreate() override;
 
-		void OnUpdate(TimeStep TS) override;
+		void OnDestroy() override;
 
-		void OnDelete() override;
-
-		Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDelete);
+		Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDestroy);
 
 	private:
 
 		sol::function _LuaOnCreate;
 		sol::function _LuaOnUpdate;
-		sol::function _LuaOnDelete;
+		sol::function _LuaOnDestroy;
 	};
 }

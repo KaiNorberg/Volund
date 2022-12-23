@@ -41,6 +41,10 @@ namespace Volund::Utils
 	static inline const Vec3 One = Vec3(1, 1, 1);
 	static inline const Vec3 Zero = Vec3(0, 0, 0);
 
+	uint32_t CastFloatToInt(float Value);
+
+	float CastIntToFloat(int Value);
+
     std::string ReplaceAll(std::string Str, const std::string& From, const std::string& To);
 
     std::wstring ConvertToWString(std::string_view String);		

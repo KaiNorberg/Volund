@@ -16,15 +16,11 @@ namespace Volund
 
 		Ref<Window> GetWindow();
 
-		void OnEvent(Event* E) override;
-
-		void OnUpdate(TimeStep TS) override;
-
-		void OnRender() override;
-
 		void OnAttach(Application* App) override;
 
-		void OnDestroy() override;
+		void OnDetach() override;
+
+		void Procedure(const Event& E) override;
 
 		WindowModule();
 

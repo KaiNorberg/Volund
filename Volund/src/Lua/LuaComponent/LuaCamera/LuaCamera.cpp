@@ -33,16 +33,6 @@ namespace Volund
 		this->_Camera->FarPlane = FarPlane;
 	}
 
-	bool LuaCamera::IsActive()
-	{
-		return this->_Camera->IsActive();
-	}
-
-	void LuaCamera::SetActive()
-	{
-		this->_Camera->SetActive();
-	}
-
 	LuaCamera::LuaCamera(Ref<Camera> Camera)
 	{
 		this->_Camera = Camera;

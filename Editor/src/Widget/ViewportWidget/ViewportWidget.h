@@ -8,7 +8,7 @@ public:
 
 	const char* GetName();
 
-	void OnEvent(VL::Event* E) override;
+	void OnKey(const VL::Event& E) override;
 
 	void OnRender() override;
 

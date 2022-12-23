@@ -7,7 +7,7 @@ const char* ViewportWidget::GetName()
 	return "Viewport";
 }
 
-void ViewportWidget::OnEvent(VL::Event* E)
+void ViewportWidget::OnKey(const VL::Event& E)
 {
 	auto LuaModule = this->_App->GetModule<VL::LuaModule>();
 

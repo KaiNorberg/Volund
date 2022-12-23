@@ -26,11 +26,7 @@ namespace Volund
 
 		void ScriptFile(const std::string& Filepath);
 
-		void OnEvent(Event* E);
-
-		void OnUpdate(TimeStep TS);
-
-		void OnRender();
+		void Procedure(const Event& E);
 
 		LuaState(Ref<Scene> ThisScene, Ref<Window> ThisWindow);
 

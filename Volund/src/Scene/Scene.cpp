@@ -59,34 +59,6 @@ namespace Volund
 		VOLUND_ERROR("Unable to find component (%d)", component);
 	}
 
-	void Scene::OnUpdate(TimeStep TS)
-	{
-		for (const auto& [entity, Container] : this->_Registry)
-		{	
-			for (const auto& View : Container)
-			{
-				for (const auto& component : View)
-				{
-					component->OnUpdate(TS);
-				}
-			}
-		}
-	}
-
-	void Scene::OnRender()
-	{
-		for (const auto& [entity, Container] : this->_Registry)
-		{
-			for (const auto& View : Container)
-			{
-				for (const auto& component : View)
-				{
-					component->OnRender();
-				}
-			}
-		}
-	}
-
 	void Scene::ResizeTarget(uint32_t Width, uint32_t Height)
 	{
 		auto Spec = this->_TargetBuffer->GetSpec();
@@ -100,7 +72,7 @@ namespace Volund
 		}
 	}
 
-	void Scene::OnEvent(Event* E)
+	void Scene::Procedure(const Event& E)
 	{
 		for (const auto& [entity, Container] : this->_Registry)
 		{
@@ -108,7 +80,7 @@ namespace Volund
 			{
 				for (const auto& component : View)
 				{
-					component->OnEvent(E);
+					component->Procedure(E);
 				}
 			}
 		}
@@ -162,7 +134,7 @@ namespace Volund
 			{
 				for (const auto& component : View)
 				{
-					component->OnDelete();
+					component->OnDestroy();
 				}
 			}
 		}

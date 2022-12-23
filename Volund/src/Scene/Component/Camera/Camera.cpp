@@ -10,21 +10,6 @@
 
 namespace Volund
 {
-	bool Camera::IsActive() const
-	{
-		return _ActiveCamera == this;
-	}
-
-	void Camera::SetActive()
-	{
-		_ActiveCamera = this;
-	}
-
-	Camera* Camera::GetActiveCamera()
-	{
-		return _ActiveCamera;
-	}
-
 	Mat4x4 Camera::GetViewMatrix() const
 	{
 		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
@@ -68,34 +53,30 @@ namespace Volund
 		}
 	}
 
-	void Camera::OnCreate()
-	{
-		if (_ActiveCamera == nullptr)
-		{
-			_ActiveCamera = this;
-		}
-	}
-
-	void Camera::OnRender()
+	void Camera::Procedure(const Event& E)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		auto TargetBuffer = this->GetScene()->GetTargetBuffer();
-		auto Spec = TargetBuffer->GetSpec();
-
-		RendererEye Eye;
-		Eye.Target = TargetBuffer;
-		Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
-		Eye.ViewMatrix = this->GetViewMatrix();
-
-		Renderer::Submit(Eye);
-	}
-
-	void Camera::OnDelete()
-	{
-		if (this->IsActive())
+		switch (E.Type)
 		{
-			_ActiveCamera = nullptr;
+		case EventType::RENDER:
+		{
+			auto TargetBuffer = this->GetScene()->GetTargetBuffer();
+			auto Spec = TargetBuffer->GetSpec();
+
+			RendererEye Eye;
+			Eye.Target = TargetBuffer;
+			Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
+			Eye.ViewMatrix = this->GetViewMatrix();
+
+			Renderer::Submit(Eye);
+		}
+		break;
+		default:
+		{
+
+		}
+		break;
 		}
 	}
 }

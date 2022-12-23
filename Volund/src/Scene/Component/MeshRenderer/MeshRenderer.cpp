@@ -8,23 +8,6 @@
 
 namespace Volund
 {
-	void MeshRenderer::OnRender()
-	{
-		VOLUND_PROFILE_FUNCTION();
-
-		if (this->_Mesh != nullptr && this->_Material != nullptr)
-		{
-			RendererCommand Command;
-			Command.mesh = this->_Mesh;
-			Command.material = this->_Material;
-
-			auto TransformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
-			Command.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);
-
-			Renderer::Submit(Command);
-		}
-	}
-
 	void MeshRenderer::SetMesh(Ref<Mesh> NewMesh)
 	{
 		this->_Mesh = NewMesh;
@@ -43,6 +26,35 @@ namespace Volund
 	Ref<Material> MeshRenderer::GetMaterial()
 	{
 		return this->_Material;
+	}
+
+	void MeshRenderer::Procedure(const Event& E)
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		switch (E.Type)
+		{
+		case EventType::RENDER:
+		{
+			if (this->_Mesh != nullptr && this->_Material != nullptr)
+			{
+				RendererCommand Command;
+				Command.mesh = this->_Mesh;
+				Command.material = this->_Material;
+
+				auto TransformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+				Command.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);
+
+				Renderer::Submit(Command);
+			}
+		}
+		break;
+		default:
+		{
+
+		}
+		break;
+		}
 	}
 
 	MeshRenderer::MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef)

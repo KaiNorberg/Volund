@@ -3,30 +3,6 @@
 
 namespace Volund
 {
-	void Module::OnEvent(Event* E)
-	{
-
-	}
-
-	void Module::OnUpdate(TimeStep TS)
-	{
-
-	}
-
-	void Module::OnRender()
-	{
-	}
-
-	void Module::OnAttach(Application* App)
-	{
-
-	}
-
-	void Module::OnDestroy()
-	{
-
-	}
-
 	Module::Module()
 	{
 
@@ -34,6 +10,6 @@ namespace Volund
 
 	Module::~Module()
 	{
-		this->OnDestroy();
+
 	}
 }

@@ -10,11 +10,7 @@ public:
 
 	void OnTerminate() override;
 
-	void OnUpdate(VL::TimeStep TS) override;
-
-	void OnRender() override;
-
-	void OnEvent(VL::Event* E) override;
+	void Procedure(const VL::Event& E) override;
 
 private:
 	

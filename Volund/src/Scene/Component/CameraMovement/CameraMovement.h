@@ -14,11 +14,11 @@ namespace Volund
 
 		float Sensitivity = 1.0f;
 
-		void OnEvent(Event* E) override;
+		void Procedure(const Event& E);
 
-		void OnUpdate(TimeStep TS) override;
+		virtual void OnCreate();
 
-		CameraMovement();
+		CameraMovement() = default;
 
 	private:
 

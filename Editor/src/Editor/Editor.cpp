@@ -28,66 +28,87 @@ void Editor::OnTerminate()
 
 }
 
-void Editor::OnUpdate(VL::TimeStep TS)
+void Editor::Procedure(const VL::Event& E)
 {
-	for (auto Widget : this->_Widgets)
+	VOLUND_PROFILE_FUNCTION();
+
+	this->_Input.HandleEvent(E);
+
+	switch (E.Type)
 	{
-		if (Widget->IsActive)
-		{
-			Widget->OnUpdate(TS);
-		}
-	}
-}
-
-void Editor::OnRender()
-{
-	this->GetModule<VL::WindowModule>()->GetWindow()->SetVsync(true);
-
-	VL::ImGuiModule::BeginFrame();
-
-	if (VL::ImGuiModule::BeginDockSpace())
+	case VL::EventType::RENDER:
 	{
-		if (ImGui::BeginMenuBar())
+		this->GetModule<VL::WindowModule>()->GetWindow()->SetVsync(true);
+
+		VL::ImGuiModule::BeginFrame();
+
+		if (VL::ImGuiModule::BeginDockSpace())
 		{
-			if (ImGui::BeginMenu("Widget"))
+			if (ImGui::BeginMenuBar())
 			{
-				for (auto Widget : this->_Widgets)
+				if (ImGui::BeginMenu("Widget"))
 				{
-					if (ImGui::MenuItem(Widget->GetName()))
+					for (auto& Widget : this->_Widgets)
 					{
-						Widget->IsActive = true;
+						if (ImGui::MenuItem(Widget->GetName()))
+						{
+							Widget->IsActive = true;
+						}
 					}
+
+					ImGui::EndMenu();
 				}
 
-				ImGui::EndMenu();
+				ImGui::EndMenuBar();
 			}
 
-			ImGui::EndMenuBar();
+			for (auto& Widget : this->_Widgets)
+			{
+				if (Widget->IsActive)
+				{
+					Widget->OnRender();
+				}
+			}
 		}
 
-		for (auto Widget : this->_Widgets)
+		ImGui::End();
+
+		VL::ImGuiModule::EndFrame();
+	}
+	break;	
+	case VL::EventType::UPDATE:
+	{			
+		float TS = VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
+
+		for (auto& Widget : this->_Widgets)
 		{
 			if (Widget->IsActive)
 			{
-				Widget->OnRender();
+				Widget->OnUpdate(TS);
 			}
 		}
 	}
-
-	ImGui::End();
-
-	VL::ImGuiModule::EndFrame();
-}
-
-void Editor::OnEvent(VL::Event* E)
-{
-	this->_Input.HandleEvent(E);
-
-	for (auto Widget : this->_Widgets)
+	break;
+	case VL::EventType::KEY:
 	{
-		if (Widget->IsActive)
+		for (auto& Widget : this->_Widgets)
 		{
-			Widget->OnEvent(E);
+			if (Widget->IsActive)
+			{
+				Widget->OnKey(E);
+			}
 		}
+	}
+	break;
+	case VL::EventType::WINDOW_CLOSE:
+	{
+		this->Terminate();
+	}
+	break;
+	default:
+	{
+
+	}
+	break;
 	}
 }

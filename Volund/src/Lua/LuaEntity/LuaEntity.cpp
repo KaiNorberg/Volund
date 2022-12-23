@@ -23,11 +23,6 @@ namespace Volund
 		{
 			auto NewComponent = this->_Scene->CreateComponent<Camera>(this->_Entity);
 
-			if (Table["IsActive"] != sol::lua_nil && Table["IsActive"])
-			{
-				NewComponent->SetActive();
-			}
-
 			if (Table["FOV"] != sol::lua_nil)
 			{
 				NewComponent->FOV = Table["FOV"];
@@ -94,9 +89,9 @@ namespace Volund
 		{
 			sol::function OnCreate = Table["OnCreate"];
 			sol::function OnUpdate = Table["OnUpdate"];
-			sol::function OnDelete = Table["OnDelete"];
+			sol::function OnDestroy = Table["OnDestroy"];
 
-			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, OnCreate, OnUpdate, OnDelete);
+			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, OnCreate, OnUpdate, OnDestroy);
 		}
 		break;
 		case LuaComponent::TAG:

@@ -33,8 +33,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = KeyEvent((uint32_t)wparam, true);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::KEY);
+			VOLUND_EVENT_KEY_SET_KEY(E, (uint32_t)wparam);
+			VOLUND_EVENT_KEY_SET_ISDOWN(E, true);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_KEYUP:
@@ -44,8 +47,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = KeyEvent((uint32_t)wparam, false);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::KEY);
+			VOLUND_EVENT_KEY_SET_KEY(E, (uint32_t)wparam);
+			VOLUND_EVENT_KEY_SET_ISDOWN(E, false);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_MOUSEMOVE:
@@ -80,13 +86,19 @@ namespace Volund
 				VirtualXPos += xPos - MiddleX;
 				VirtualYPos += yPos - MiddleY;
 
-				auto Event = MouseMoveEvent(VirtualXPos, VirtualYPos);
-				Data->Dispatcher->Dispatch(&Event);
+				Event E = Event(EventType::MOUSE_MOVE);
+				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(E, VirtualXPos);
+				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(E, VirtualYPos);
+
+				Data->Dispatcher->Dispatch(E);
 			}
 			else
 			{
-				auto Event = MouseMoveEvent(xPos, yPos);
-				Data->Dispatcher->Dispatch(&Event);
+				Event E = Event(EventType::MOUSE_MOVE);
+				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(E, xPos);
+				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(E, yPos);
+
+				Data->Dispatcher->Dispatch(E);
 			}
 		}
 		break;
@@ -97,8 +109,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, true);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_BUTTON);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_LEFT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, true);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_LBUTTONUP:
@@ -108,8 +123,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = MouseButtonEvent(VOLUND_MOUSE_BUTTON_LEFT, false);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_BUTTON);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_LEFT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, false);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_MBUTTONDOWN:
@@ -119,8 +137,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, true);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_BUTTON);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_MIDDLE);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, true);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_MBUTTONUP:
@@ -130,8 +151,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = MouseButtonEvent(VOLUND_MOUSE_BUTTON_MIDDLE, false);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_BUTTON);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_MIDDLE);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, false);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_RBUTTONDOWN:
@@ -141,8 +165,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, true);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_BUTTON);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_RIGHT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, true);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_RBUTTONUP:
@@ -152,8 +179,11 @@ namespace Volund
 				break;
 			}
 
-			auto Event = MouseButtonEvent(VOLUND_MOUSE_BUTTON_RIGHT, false);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_BUTTON);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_RIGHT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, false);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_MOUSEWHEEL:
@@ -165,8 +195,10 @@ namespace Volund
 
 			int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
 
-			auto Event = ScrollEvent(0, (uint32_t)zDelta);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::MOUSE_WHEEL);
+			VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(E, zDelta);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_SIZE:
@@ -182,8 +214,11 @@ namespace Volund
 			Data->Width = (uint64_t)WindowRect.right;
 			Data->Height = (uint64_t)WindowRect.bottom;
 
-			auto Event = WindowSizeEvent((uint32_t)Data->Width, (uint32_t)Data->Height);
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::WINDOW_SIZE);
+			VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(E, Data->Width);
+			VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(E, Data->Height);
+
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_SETFOCUS:
@@ -214,8 +249,8 @@ namespace Volund
 				break;
 			}
 
-			auto Event = WindowCloseEvent();
-			Data->Dispatcher->Dispatch(&Event);
+			Event E = Event(EventType::WINDOW_CLOSE);
+			Data->Dispatcher->Dispatch(E);
 		}
 		break;
 		case WM_DESTROY:

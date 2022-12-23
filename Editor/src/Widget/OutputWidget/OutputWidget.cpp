@@ -7,11 +7,6 @@ const char* OutputWidget::GetName()
 	return "Output";
 }
 
-void OutputWidget::OnEvent(VL::Event* E)
-{
-
-}
-
 void OutputWidget::OnUpdate(VL::TimeStep TS)
 {
 	TotalTime += (float)TS;

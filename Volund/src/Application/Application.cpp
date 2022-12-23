@@ -17,12 +17,6 @@ namespace Volund
 		this->Loop();
 	}
 
-	void Application::Terminate()
-	{
-		this->OnTerminate();
-		this->_ShouldRun = false;
-	}
-
 	bool Application::ShouldRun() const
 	{
 		return this->_ShouldRun;
@@ -33,40 +27,11 @@ namespace Volund
 		return this->_EventDispatcher;
 	}
 
-	void Application::EventCallback(Event* E)
+	void Application::Terminate()
 	{
-		VOLUND_PROFILE_FUNCTION();
-
-		this->OnEvent(E);
-
-		for (const auto& View : this->_Modules)
-		{
-			for (const auto& Module : View)
-			{
-				Module->OnEvent(E);
-			}
-		}	
-		
-		switch (E->GetType())
-		{
-		case VL::EventType::WINDOW_CLOSE:
-		{
-			this->Terminate();
-		}
-		break;
-		}
+		this->OnTerminate();
+		this->_ShouldRun = false;
 	}
-
-	void Application::OnEvent(Event* E)
-	{}
-	void Application::OnUpdate(TimeStep TS)
-	{}
-	void Application::OnRender()
-	{}
-	void Application::OnRun()
-	{}
-	void Application::OnTerminate()
-	{}
 
 	void Application::Loop()
 	{
@@ -82,32 +47,19 @@ namespace Volund
 
 			this->_ThreadPool.Submit([this, TS]()
 			{
-				this->OnUpdate(TS);
-
-				for (const auto& View : this->_Modules)
-				{
-					for (const auto& Module : View)
-					{
-						Module->OnUpdate(TS);
-					}
-				}
+				Event E = Event(EventType::UPDATE);
+				VOLUND_EVENT_UPDATE_SET_TIMESTEP(E, float(TS));
+				this->_EventDispatcher->Dispatch(E);
 			});	
 
 			Renderer::Begin();
 
-			this->OnRender();
-
-			for (const auto& View : this->_Modules)
-			{
-				for (const auto& Module : View)
-				{
-					Module->OnRender();
-				}
-			}	
-
-			while (this->_ThreadPool.Busy());
+			Event E = Event(EventType::RENDER);
+			this->_EventDispatcher->Dispatch(E);
 
 			Renderer::End();
+
+			while (this->_ThreadPool.Busy());
 
 			VOLUND_PROFILING_END();
 		}
@@ -130,6 +82,12 @@ namespace Volund
 
 	Application::~Application()
 	{
-
+		for (const auto& View : this->_Modules)
+		{
+			for (const auto& Module : View)
+			{
+				Module->OnDetach();
+			}
+		}
 	}
 }

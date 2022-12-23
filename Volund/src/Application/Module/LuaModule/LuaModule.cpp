@@ -53,30 +53,6 @@ namespace Volund
 		}
 	}
 
-	void LuaModule::OnEvent(Event* E)
-	{
-		if (this->_LuaState != nullptr)
-		{
-			this->_LuaState->OnEvent(E);
-		}
-	}
-
-	void LuaModule::OnRender()
-	{
-		if (this->_LuaState != nullptr)
-		{
-			this->_LuaState->OnRender();
-		}
-	}
-
-	void LuaModule::OnUpdate(TimeStep TS)
-	{
-		if (this->_LuaState != nullptr)
-		{
-			this->_LuaState->OnUpdate(TS);
-		}
-	}
-
 	void LuaModule::OnAttach(Application* App)
 	{
 		this->_App = App;
@@ -87,12 +63,31 @@ namespace Volund
 		}
 	}
 
-	void LuaModule::OnDestroy()
+	void LuaModule::OnDetach()
 	{
 		if (!this->_Filepath.empty())
 		{
 			std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
 			Filesystem::RemoveRelativeFilepath(ParentPath);
+		}
+	}
+
+	void LuaModule::Procedure(const Event& E)
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		if (this->_LuaState != nullptr)
+		{
+			this->_LuaState->Procedure(E);
+		}
+
+		switch (E.Type)
+		{
+		default:
+		{
+
+		}
+		break;
 		}
 	}
 }

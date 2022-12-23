@@ -59,13 +59,9 @@ namespace Volund
 		return ModelMatrix;
 	}
 
-	void Transform::OnUpdate(TimeStep TS)
-	{
-		VOLUND_PROFILE_FUNCTION();
-	}
 
 	Transform::Transform()
 	{
-		this->OnUpdate(0.0f);
+
 	}
 }

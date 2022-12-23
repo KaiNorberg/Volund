@@ -11,8 +11,6 @@ namespace Volund
 	{
 	public:
 
-		void OnRender() override;
-
 		void SetMesh(Ref<Mesh> NewMesh);
 
 		void SetMaterial(Ref<Material> NewMaterial);
@@ -20,6 +18,8 @@ namespace Volund
 		Ref<Mesh> GetMesh();
 
 		Ref<Material> GetMaterial();
+
+		void Procedure(const Event& E);
 
 		MeshRenderer() = default;
 

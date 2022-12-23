@@ -16,28 +16,16 @@ namespace Volund
 
 		float FarPlane = 100.0f;
 
-		bool IsActive() const;
-
-		void SetActive();
-
-		static Camera* GetActiveCamera();
-
 		Mat4x4 GetViewMatrix() const;
 
 		Mat4x4 GetOriginViewMatrix() const;
 
 		Mat4x4 GetProjectionMatrix(float AspectRatio) const;
 
-		void OnCreate() override;
-
-		void OnRender() override;
-
-		void OnDelete() override;
+		void Procedure(const Event& E);
 
 		Camera() = default;
 
 	private:
-
-		static inline Camera* _ActiveCamera = nullptr;
 	};
 }

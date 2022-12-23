@@ -15,8 +15,6 @@ namespace Volund
 
 		void Run();
 
-		void Terminate();
-
 		bool ShouldRun() const;
 
 		Ref<EventDispatcher> GetEventDispatcher();
@@ -33,19 +31,17 @@ namespace Volund
 		template<typename T>
 		bool HasModule(int Index = 0);
 
-		void EventCallback(Event* E);
-
-		virtual void OnEvent(Event* E);	
-		virtual void OnUpdate(TimeStep TS);
-		virtual void OnRender();
-		virtual void OnRun();
-		virtual void OnTerminate();
+		virtual void OnRun() = 0;
+		virtual void OnTerminate() = 0;
+		virtual void Procedure(const Event& E) = 0;
 
 		Application();
 
 		virtual ~Application();
 
 	private:
+
+		friend class EventDispatcher;
 
 		void Loop();
 
@@ -54,6 +50,8 @@ namespace Volund
 		Ref<EventDispatcher> _EventDispatcher;
 
 	protected:
+
+		void Terminate();
 
 		ThreadPool _ThreadPool;
 

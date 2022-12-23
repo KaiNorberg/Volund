@@ -10,21 +10,17 @@ namespace Volund
 	{
 	public:
 
+		void OnAttach(Application* App) override;
+
+		void OnDetach() override;
+
+		void Procedure(const Event& E) override;
+
 		std::string GetFilepath();
 
 		Ref<Scene> GetScene();
 
 		void LoadScene(const std::string& Filepath);
-
-		void OnEvent(Event* E) override;
-
-		void OnRender() override;
-
-		void OnUpdate(TimeStep TS) override;
-
-		void OnAttach(Application* App) override;
-
-		void OnDestroy() override;
 
 	private:	
 

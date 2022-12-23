@@ -6,7 +6,7 @@ public:
 
 	virtual const char* GetName() = 0;
 
-	virtual void OnEvent(VL::Event* E) {}
+	virtual void OnKey(const VL::Event& E) {}
 
 	virtual void OnUpdate(VL::TimeStep TS) {}
 

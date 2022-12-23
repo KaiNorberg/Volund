@@ -17,7 +17,7 @@ namespace Volund
 
 		IVec2 GetMousePosition() const;
 
-		void HandleEvent(Event* E);
+		void HandleEvent(const Event& E);
 
 		Input();
 

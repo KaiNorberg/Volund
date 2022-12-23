@@ -12,7 +12,7 @@ namespace Volund
 	{
 	public:
 
-		void Dispatch(Event* E);
+		void Dispatch(const Event& E);
 
 		EventDispatcher(Application* App);
 

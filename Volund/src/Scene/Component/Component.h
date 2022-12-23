@@ -14,19 +14,15 @@ namespace Volund
 	{
 	public:
 
+		virtual void OnCreate() {}
+		
+		virtual void OnDestroy() {}
+
+		virtual void Procedure(const Event& E) {}
+
 		Entity GetEntity() const;
 
 		Scene* GetScene() const;
-
-		virtual void OnRender() {};
-
-		virtual void OnCreate() {};
-
-		virtual void OnDelete() {};
-
-		virtual void OnUpdate(TimeStep) {};
-
-		virtual void OnEvent(Event*) {};
 
 		Component() = default;
 
