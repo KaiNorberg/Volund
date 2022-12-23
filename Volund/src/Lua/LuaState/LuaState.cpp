@@ -47,10 +47,10 @@ namespace Volund
 
 	void LuaState::Procedure(const Event& E)
 	{
-		this->_Input->HandleEvent(E);
-
 		if (this->_ThisScene != nullptr)
 		{
+			this->_Input->HandleEvent(E);
+
 			this->_ThisScene->Procedure(E);
 		}
 	}
@@ -58,6 +58,8 @@ namespace Volund
 	LuaState::LuaState(Ref<Scene> ThisScene, Ref<Window> ThisWindow)
 	{
 		VOLUND_PROFILE_FUNCTION();
+
+		ThisWindow->Reset();
 
 		this->_ThisScene = ThisScene;
 		this->_Input = std::make_shared<Input>();

@@ -20,5 +20,4 @@ namespace Volund
 
 		Application* _App = nullptr;
 	};
-
 }

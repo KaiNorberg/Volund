@@ -11,8 +11,6 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->_App->Procedure(E);
-
 		for (const auto& View : this->_App->_Modules)
 		{
 			for (const auto& Module : View)
@@ -20,6 +18,8 @@ namespace Volund
 				Module->Procedure(E);
 			}
 		}
+
+		this->_App->Procedure(E);
 	}
 
 	EventDispatcher::EventDispatcher(Application* App)

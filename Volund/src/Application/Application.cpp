@@ -50,7 +50,7 @@ namespace Volund
 				Event E = Event(EventType::UPDATE);
 				VOLUND_EVENT_UPDATE_SET_TIMESTEP(E, float(TS));
 				this->_EventDispatcher->Dispatch(E);
-			});	
+			});
 
 			Renderer::Begin();
 

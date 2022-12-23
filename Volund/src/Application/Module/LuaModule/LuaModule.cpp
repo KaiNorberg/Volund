@@ -42,6 +42,8 @@ namespace Volund
 		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
 		Filesystem::AddRelativeFilepath(ParentPath);
 
+		this->_LuaState.reset();
+
 		try
 		{
 			this->_LuaState = std::make_shared<LuaState>(NewScene, AppWindow);
