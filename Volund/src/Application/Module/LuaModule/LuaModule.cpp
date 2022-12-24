@@ -28,31 +28,34 @@ namespace Volund
 
 	void LuaModule::LoadScene(const std::string& Filepath)
 	{
-		auto NewScene = std::make_shared<Scene>();
-		auto AppWindow = this->_App->GetModule<WindowModule>()->GetWindow();
-
-		if (!this->_Filepath.empty())
+		this->_App->DelayTask([this, Filepath]()
 		{
-			std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
-			Filesystem::RemoveRelativeFilepath(ParentPath);
-		}
+			auto NewScene = std::make_shared<Scene>();
+			auto AppWindow = this->_App->GetModule<WindowModule>()->GetWindow();
 
-		this->_Filepath = Filepath;
+			if (!this->_Filepath.empty())
+			{
+				std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
+				Filesystem::RemoveRelativeFilepath(ParentPath);
+			}
 
-		std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
-		Filesystem::AddRelativeFilepath(ParentPath);
+			this->_Filepath = Filepath;
 
-		this->_LuaState.reset();
+			std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
+			Filesystem::AddRelativeFilepath(ParentPath);
 
-		try
-		{
-			this->_LuaState = std::make_shared<LuaState>(NewScene, AppWindow);
-			this->_LuaState->ScriptFile(this->_Filepath);
-		}
-		catch (sol::error E)
-		{
-			VOLUND_WARNING(E.what());
-		}
+			this->_LuaState.reset();
+
+			try
+			{
+				this->_LuaState = std::make_shared<LuaState>(NewScene, AppWindow);
+				this->_LuaState->ScriptFile(this->_Filepath);
+			}
+			catch (sol::error E)
+			{
+				VOLUND_WARNING(E.what());
+			}
+		});
 	}
 
 	void LuaModule::OnAttach(Application* App)

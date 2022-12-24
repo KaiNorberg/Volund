@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 
 #include "EventDispatcher/Event.h"
 #include "Component/Component.h"

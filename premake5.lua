@@ -77,12 +77,12 @@ project "Volund"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
-		optimize "On"
+		optimize "Speed"
 		runtime "Release"
 
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
-		optimize "On"
+		optimize "Speed"
 		runtime "Release"	
 		
 project "Editor"
@@ -137,13 +137,13 @@ project "Editor"
 
 	filter "configurations:Release"
 		defines "VOLUND_RELEASE"
-		optimize "On"
+		optimize "Speed"
 		runtime "Release"
 		kind "ConsoleApp"
 
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
-		optimize "On"
+		optimize "Speed"
 		runtime "Release"	
 		kind "WindowedApp"		
 		targetdir (TargetDir .. "\\Editor")
@@ -181,7 +181,7 @@ project "Glad"
 
 	filter "configurations:Release"
 		runtime "Release"
-		optimize "on"
+		optimize "Speed"
 
 project "ImGui"
 	kind "StaticLib"
@@ -231,9 +231,9 @@ project "ImGui"
 
 	filter "configurations:Release"
 		runtime "Release"
-		optimize "on"
+		optimize "Speed"
 
     filter "configurations:Dist"
 		runtime "Release"
-		optimize "on"
+		optimize "Speed"
         symbols "off"

@@ -30,6 +30,8 @@ namespace Volund
 
 		LuaState(Ref<Scene> ThisScene, Ref<Window> ThisWindow);
 
+		~LuaState();
+
 	private:
 
 		void CreateUserTypes();

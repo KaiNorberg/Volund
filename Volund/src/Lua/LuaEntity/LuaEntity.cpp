@@ -3,6 +3,7 @@
 
 #include "Scene/Component/Components.h"
 
+#include "Lua/LuaComponent/LuaComponents.h"
 #include "Lua/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaMesh/LuaMesh.h"
 
@@ -91,7 +92,7 @@ namespace Volund
 			sol::function OnUpdate = Table["OnUpdate"];
 			sol::function OnDestroy = Table["OnDestroy"];
 
-			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, OnCreate, OnUpdate, OnDestroy);
+			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, S, OnCreate, OnUpdate, OnDestroy);
 		}
 		break;
 		case LuaComponent::TAG:
@@ -199,12 +200,12 @@ namespace Volund
 		{
 		case LuaComponent::CAMERA:
 		{
-			return sol::make_object(S, *(this->_Scene->GetComponent<Camera>(this->_Entity, I).get()));
+			return sol::make_object(S, LuaCamera(this->_Scene->GetComponent<Camera>(this->_Entity, I)));
 		}
 		break;
 		case LuaComponent::CAMERA_MOVEMENT:
 		{
-			return sol::make_object(S, *(this->_Scene->GetComponent<CameraMovement>(this->_Entity, I).get()));
+			return sol::make_object(S, LuaCameraMovement(this->_Scene->GetComponent<CameraMovement>(this->_Entity, I)));
 		}
 		break;
 		case LuaComponent::MESH_RENDERER:
@@ -214,17 +215,17 @@ namespace Volund
 		break;
 		case LuaComponent::POINT_LIGHT:
 		{
-			return sol::make_object(S, *(this->_Scene->GetComponent<PointLight>(this->_Entity, I).get()));
+			return sol::make_object(S, LuaPointLight(this->_Scene->GetComponent<PointLight>(this->_Entity, I)));
 		}
 		break;
 		case LuaComponent::SCRIPT:
 		{
-			return sol::make_object(S, *(this->_Scene->GetComponent<Script>(this->_Entity, I).get()));
+			return sol::make_object(S, LuaScript(this->_Scene->GetComponent<Script>(this->_Entity, I)));
 		}
 		break;
 		case LuaComponent::TAG:
 		{
-			return sol::make_object(S, *(this->_Scene->GetComponent<Tag>(this->_Entity, I).get()));
+			return sol::make_object(S, LuaTag(this->_Scene->GetComponent<Tag>(this->_Entity, I)));
 		}
 		break;
 		case LuaComponent::TRANSFORM:

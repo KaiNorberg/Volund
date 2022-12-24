@@ -93,15 +93,21 @@ namespace Volund
 		);
 	}
 
+	LuaState::~LuaState()
+	{
+		this->_ThisScene.reset();
+	}
+
 	void LuaState::CreateUserTypes()
 	{
-		this->_SolState.new_usertype<LuaEntity>("VOLUND_ENTITY",
+		this->_SolState.new_usertype<LuaEntity>("VOLUND_ENTITY", sol::no_constructor,
+			"Padding", &LuaEntity::Padding,
 			"AddComponent", &LuaEntity::AddComponent,
 			"DeleteComponent", &LuaEntity::DeleteComponent,
 			"GetComponent", &LuaEntity::GetComponent,
 			"Destroy", &LuaEntity::Destroy);
 
-		this->_SolState.new_usertype<LuaCamera>("VOLUND_CAMERA",
+		this->_SolState.new_usertype<LuaCamera>("VOLUND_CAMERA", sol::no_constructor,
 			"GetFOV", &LuaCamera::GetFOV,
 			"SetFOV", &LuaCamera::SetFOV,
 			"GetNearPlane", &LuaCamera::GetNearPlane,
@@ -109,31 +115,31 @@ namespace Volund
 			"GetFarPlane", &LuaCamera::GetFarPlane,
 			"SetFarPlane", &LuaCamera::SetFarPlane);
 
-		this->_SolState.new_usertype<LuaCameraMovement>("VOLUND_CAMERA_MOVEMENT",
+		this->_SolState.new_usertype<LuaCameraMovement>("VOLUND_CAMERA_MOVEMENT", sol::no_constructor,
 			"GetSpeed", &LuaCameraMovement::GetSpeed,
 			"SetSpeed", &LuaCameraMovement::SetSpeed,
 			"SetSensitivity", &LuaCameraMovement::SetSensitivity,
 			"GetSensitivity", &LuaCameraMovement::GetSensitivity);
 
-		this->_SolState.new_usertype<LuaMeshRenderer>("VOLUND_MESH_RENDERER",
+		this->_SolState.new_usertype<LuaMeshRenderer>("VOLUND_MESH_RENDERER", sol::no_constructor,
 			"SetMesh", &LuaMeshRenderer::SetMesh,
 			"SetMaterial", &LuaMeshRenderer::SetMaterial,
 			"GetMesh", &LuaMeshRenderer::GetMesh,
 			"GetMaterial", &LuaMeshRenderer::GetMaterial);
 
-		this->_SolState.new_usertype<LuaPointLight>("VOLUND_POINT_LIGHT",
+		this->_SolState.new_usertype<LuaPointLight>("VOLUND_POINT_LIGHT", sol::no_constructor,
 			"SetColor", &LuaPointLight::SetColor,
 			"GetColor", &LuaPointLight::GetColor,
 			"SetBrightness", &LuaPointLight::SetBrightness,
 			"GetBrightness", &LuaPointLight::GetBrightness);
 
-		this->_SolState.new_usertype<LuaScript>("VOLUND_SCRIPT");
+		this->_SolState.new_usertype<LuaScript>("VOLUND_SCRIPT", sol::no_constructor);
 
-		this->_SolState.new_usertype<LuaTag>("VOLUND_TAG",
+		this->_SolState.new_usertype<LuaTag>("VOLUND_TAG", sol::no_constructor,
 			"Get", &LuaTag::Get,
 			"Set", &LuaTag::Set);
 
-		this->_SolState.new_usertype<LuaTransform>("VOLUND_TRANSFORM",
+		this->_SolState.new_usertype<LuaTransform>("VOLUND_TRANSFORM", sol::no_constructor,
 			"SetPosition", &LuaTransform::SetPosition,
 			"GetPosition", &LuaTransform::GetPosition,
 			"AddPosition", &LuaTransform::AddPosition,
@@ -147,10 +153,10 @@ namespace Volund
 			"GetRight", &LuaTransform::GetRight,
 			"GetUp", &LuaTransform::GetUp);
 
-		this->_SolState.new_usertype<LuaScene>("VOLUND_SCENE",
+		this->_SolState.new_usertype<LuaScene>("VOLUND_SCENE", sol::no_constructor,
 			"CreateEntity", &LuaScene::CreateEntity);
 
-		this->_SolState.new_usertype<LuaInput>("VOLUND_INPUT",
+		this->_SolState.new_usertype<LuaInput>("VOLUND_INPUT", sol::no_constructor,
 			"IsHeld", &LuaInput::IsHeld,
 			"IsPressed", &LuaInput::IsPressed,
 			"IsMouseButtonHeld", &LuaInput::IsMouseButtonHeld,
@@ -158,7 +164,7 @@ namespace Volund
 			"GetScrollPosition", &LuaInput::GetScrollPosition,
 			"GetMousePosition", &LuaInput::GetMousePosition);
 
-		this->_SolState.new_usertype<LuaWindow>("VOLUND_WINDOW",
+		this->_SolState.new_usertype<LuaWindow>("VOLUND_WINDOW", sol::no_constructor,
 			"SetCursorMode", &LuaWindow::SetCursorMode,
 			"SetTitle", &LuaWindow::SetTitle,
 			"SetVsync", &LuaWindow::SetVsync);

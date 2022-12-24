@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Scene/Component/Component.h"
+#include "Lua/LuaEntity/LuaEntity.h"
 
 namespace Volund
 {
@@ -14,9 +15,13 @@ namespace Volund
 
 		void OnDestroy() override;
 
-		Script(sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDestroy);
+		Script(const sol::this_state& S, sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDestroy);
 
 	private:
+
+		lua_State* _LuaState;
+
+		sol::object _ThisEntity;
 
 		sol::function _LuaOnCreate;
 		sol::function _LuaOnUpdate;

@@ -22,6 +22,11 @@ namespace Volund
 		return this->_ShouldRun;
 	}
 
+	void Application::DelayTask(const std::function<void()>& Task)
+	{
+		this->_DelayedTasks.push_back(Task);
+	}
+
 	Ref<EventDispatcher> Application::GetEventDispatcher()
 	{
 		return this->_EventDispatcher;
@@ -54,12 +59,18 @@ namespace Volund
 
 			Renderer::Begin();
 
-			Event E = Event(EventType::RENDER);
-			this->_EventDispatcher->Dispatch(E);
+			Event E2 = Event(EventType::RENDER);
+			this->_EventDispatcher->Dispatch(E2);
 
 			Renderer::End();
 
 			while (this->_ThreadPool.Busy());
+
+			for (auto& Task : this->_DelayedTasks)
+			{
+				Task();
+			}
+			this->_DelayedTasks.clear();
 
 			VOLUND_PROFILING_END();
 		}

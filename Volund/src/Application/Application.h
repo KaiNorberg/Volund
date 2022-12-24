@@ -17,6 +17,8 @@ namespace Volund
 
 		bool ShouldRun() const;
 
+		void DelayTask(const std::function<void()>& Task);
+
 		Ref<EventDispatcher> GetEventDispatcher();
 
 		template<typename T>
@@ -46,6 +48,8 @@ namespace Volund
 		void Loop();
 
 		bool _ShouldRun = true;
+
+		std::vector<std::function<void()>> _DelayedTasks;
 
 		Ref<EventDispatcher> _EventDispatcher;
 

@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Lua/LuaComponent/LuaComponent.h"
-#include "Lua/LuaComponent/LuaComponents.h"
 
 #include "Scene/Component/Camera/Camera.h"
 
