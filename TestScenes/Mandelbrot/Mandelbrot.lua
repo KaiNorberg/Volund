@@ -10,4 +10,4 @@ Camera:AddComponent(Component.CAMERA, {IsActive = true})
 
 Mandelbrot = Scene:CreateEntity()
 Mandelbrot:AddComponent(Component.MESH_RENDERER, {Mesh = QuadMesh, Material = MandelbrotMaterial})
-Mandelbrot:AddComponent(Component.SCRIPT, {OnUpdate = Movement.OnUpdate})
+Mandelbrot:AddComponent(Component.SCRIPT, {Script = Movement})

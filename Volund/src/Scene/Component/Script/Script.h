@@ -15,13 +15,17 @@ namespace Volund
 
 		void OnDestroy() override;
 
-		Script(const sol::this_state& S, sol::function LuaOnCreate, sol::function LuaOnUpdate, sol::function LuaOnDestroy);
+		Script(const sol::this_state& S, sol::table LuaTable, sol::table Args);
 
 	private:
 
-		lua_State* _LuaState;
+		sol::state_view _LuaState;
+
+		sol::table _Args;
 
 		sol::object _ThisEntity;
+
+		sol::table _LuaTable;
 
 		sol::function _LuaOnCreate;
 		sol::function _LuaOnUpdate;

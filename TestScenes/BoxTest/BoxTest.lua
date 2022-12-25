@@ -1,4 +1,5 @@
 Scale = require("Scripts/Scale.lua")
+ShowFPS = require("Scripts/ShowFPS.lua")
 
 SimpleShader = Shader:new("Simple.vshader")
 
@@ -12,13 +13,10 @@ BlueMaterial:SetFloat("AmbientLighting", 1.0)
 
 CubeMesh = Mesh:new("Cube.vobj")
 
-function ShowFPS(Entity, TS)
-    --Print(1.0 / TS)
-end
 Camera = Scene:CreateEntity()
 Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 25.0)})
 Camera:AddComponent(Component.CAMERA, {IsActive = true})
-Camera:AddComponent(Component.SCRIPT, {OnUpdate = ShowFPS})
+Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
 
 Count = 20
 
@@ -27,8 +25,8 @@ for X = -Count / 2, Count / 2 do
         for Z = -Count / 2, Count / 2 do
             NewEntity = Scene:CreateEntity()
 
-            NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z), Scale})
-            NewEntity:AddComponent(Component.SCRIPT, {OnUpdate = Scale.OnUpdate})
+            NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z)})
+            NewEntity:AddComponent(Component.SCRIPT, {Script = require("Scripts/Scale.lua")})
             
             if math.abs(Z) % 2 == 0 then
                 NewEntity:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = BlueMaterial})

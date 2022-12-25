@@ -11,6 +11,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding;
+
 		void SetPosition(const LuaVec3& Position);
 		LuaVec3 GetPosition() const;
 		void AddPosition(const LuaVec3& Position);

@@ -30,9 +30,9 @@ namespace Volund
 		return this->_Input->GetScrollPosition();
 	}
 
-	Vec2 LuaInput::GetMousePosition() const
+	LuaVec2 LuaInput::GetMousePosition() const
 	{
-		return this->_Input->GetMousePosition();
+		return LuaVec2(this->_Input->GetMousePosition());
 	}
 
 	LuaInput::LuaInput(Ref<Input> input)

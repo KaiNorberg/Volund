@@ -31,7 +31,7 @@ Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
 TextureCube = Scene:CreateEntity()
 TextureCube:AddComponent(Component.TRANSFORM, {Position = Vec3:new(-3.0, 0.0, 0.0)})
 TextureCube:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = TextureMaterial})
-TextureCube:AddComponent(Component.SCRIPT, {OnUpdate = Rotate.OnUpdate})
+TextureCube:AddComponent(Component.SCRIPT, {Script = Rotate})
 
 GreenCube = Scene:CreateEntity()
 GreenCube:AddComponent(Component.TRANSFORM, {Position = Vec3:new(-6.8, 4.5, -7.6)})

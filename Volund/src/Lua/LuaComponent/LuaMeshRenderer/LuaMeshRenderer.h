@@ -14,6 +14,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding;
+
 		void SetMesh(LuaMesh NewMesh);
 		void SetMaterial(LuaMaterial NewMaterial);
 

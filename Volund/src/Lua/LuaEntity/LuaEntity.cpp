@@ -88,11 +88,7 @@ namespace Volund
 		break;
 		case LuaComponent::SCRIPT:
 		{
-			sol::function OnCreate = Table["OnCreate"];
-			sol::function OnUpdate = Table["OnUpdate"];
-			sol::function OnDestroy = Table["OnDestroy"];
-
-			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, S, OnCreate, OnUpdate, OnDestroy);
+			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, S, Table["Script"], Table);
 		}
 		break;
 		case LuaComponent::TAG:

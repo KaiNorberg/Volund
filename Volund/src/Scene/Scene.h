@@ -19,6 +19,8 @@ namespace Volund
 	{
 	public:
 
+		std::chrono::time_point<std::chrono::steady_clock> GetStartTime();
+
 		Ref<Framebuffer> GetTargetBuffer();
 
 		Entity CreateEntity();
@@ -58,6 +60,8 @@ namespace Volund
 		uint64_t _NewEntity = 1;
 
 		Registry _Registry;
+
+		std::chrono::time_point<std::chrono::steady_clock> _StartTime;
 
 		Ref<Framebuffer> _TargetBuffer;
 	};

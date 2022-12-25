@@ -11,7 +11,12 @@
 #include "ThreadPool/ThreadPool.h"
 
 namespace Volund
-{	
+{
+	std::chrono::time_point<std::chrono::steady_clock> Scene::GetStartTime()
+	{
+		return this->_StartTime;
+	}
+
 	Ref<Framebuffer> Scene::GetTargetBuffer()
 	{
 		return this->_TargetBuffer;
@@ -105,6 +110,8 @@ namespace Volund
 		Spec.Height = 1080;
 		Spec.Width = 1920;
 		this->_TargetBuffer = VL::Framebuffer::Create(Spec);
+
+		this->_StartTime = std::chrono::high_resolution_clock::now();
 	}
 
 	uint64_t Scene::FindEntity(Entity entity)

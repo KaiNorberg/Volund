@@ -10,6 +10,10 @@ namespace Volund
 	{
 	public:
 
+		int Padding;
+
+		float TimeSinceStart();
+
 		LuaEntity CreateEntity();
 
 		LuaScene(Ref<Scene> scene);

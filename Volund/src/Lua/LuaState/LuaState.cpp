@@ -75,7 +75,7 @@ namespace Volund
 		this->_SolState["require"] = LuaRequire;
 		this->_SolState["Print"] = LuaPrint;
 
-		this->_SolState["Component"] = this->_SolState.create_table_with(
+		this->_SolState.new_enum("Component",
 			"CAMERA", LuaComponent::CAMERA,
 			"CAMERA_MOVEMENT", LuaComponent::CAMERA_MOVEMENT,
 			"MESH_RENDERER", LuaComponent::MESH_RENDERER,
@@ -85,7 +85,7 @@ namespace Volund
 			"TRANSFORM", LuaComponent::TRANSFORM
 		);
 
-		this->_SolState["CursorMode"] = this->_SolState.create_table_with(
+		this->_SolState.new_enum("CursorMode",
 			"NORMAL", CursorMode::NORMAL,
 			"HIDDEN", CursorMode::HIDDEN,
 			"DISABLED", CursorMode::DISABLED,
@@ -122,12 +122,14 @@ namespace Volund
 			"GetSensitivity", &LuaCameraMovement::GetSensitivity);
 
 		this->_SolState.new_usertype<LuaMeshRenderer>("VOLUND_MESH_RENDERER", sol::no_constructor,
+			"Padding", &LuaMeshRenderer::Padding,
 			"SetMesh", &LuaMeshRenderer::SetMesh,
 			"SetMaterial", &LuaMeshRenderer::SetMaterial,
 			"GetMesh", &LuaMeshRenderer::GetMesh,
 			"GetMaterial", &LuaMeshRenderer::GetMaterial);
 
 		this->_SolState.new_usertype<LuaPointLight>("VOLUND_POINT_LIGHT", sol::no_constructor,
+			"Padding", &LuaPointLight::Padding,
 			"SetColor", &LuaPointLight::SetColor,
 			"GetColor", &LuaPointLight::GetColor,
 			"SetBrightness", &LuaPointLight::SetBrightness,
@@ -140,6 +142,7 @@ namespace Volund
 			"Set", &LuaTag::Set);
 
 		this->_SolState.new_usertype<LuaTransform>("VOLUND_TRANSFORM", sol::no_constructor,
+			"Padding", &LuaTransform::Padding,
 			"SetPosition", &LuaTransform::SetPosition,
 			"GetPosition", &LuaTransform::GetPosition,
 			"AddPosition", &LuaTransform::AddPosition,
@@ -154,9 +157,12 @@ namespace Volund
 			"GetUp", &LuaTransform::GetUp);
 
 		this->_SolState.new_usertype<LuaScene>("VOLUND_SCENE", sol::no_constructor,
+			"Padding", &LuaScene::Padding,
+			"TimeSinceStart", &LuaScene::TimeSinceStart,
 			"CreateEntity", &LuaScene::CreateEntity);
 
 		this->_SolState.new_usertype<LuaInput>("VOLUND_INPUT", sol::no_constructor,
+			"Padding", &LuaInput::Padding,
 			"IsHeld", &LuaInput::IsHeld,
 			"IsPressed", &LuaInput::IsPressed,
 			"IsMouseButtonHeld", &LuaInput::IsMouseButtonHeld,

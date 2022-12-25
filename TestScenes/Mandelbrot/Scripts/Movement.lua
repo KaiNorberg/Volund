@@ -1,18 +1,18 @@
-local Movement = {}
+local Movement = {
+    Iter = 1000,
+    Position = Vec2:new(0.5, 0.0),
+    Scale = 1.0,
 
-local Iter = 1000
-local Position = Vec2:new(0.5, 0.0)
-local Scale = 1.0
+    IterStepsize = 1000,
+    PositionStepsize = 2.0,
+    ScaleStepsize = 1.0,
+    JuliaCStepsize = 0.25,
 
-local IterStepsize = 1000
-local PositionStepsize = 2.0
-local ScaleStepsize = 1.0
-local JuliaCStepsize = 0.25
+    Julia = false,
+    JuliaC = 0.0
+}
 
-local Julia = false
-local JuliaC = 0.0
-
-function Control(Value, Upkey, DownKey, StepSize, TimeStep)
+function Movement.Control(Value, Upkey, DownKey, StepSize, TimeStep)
     if Input:IsHeld(Upkey) then
         return Value + StepSize * TimeStep 
     elseif Input:IsHeld(DownKey) then
@@ -22,30 +22,29 @@ function Control(Value, Upkey, DownKey, StepSize, TimeStep)
     end    
 end
 
-function Movement.OnUpdate(Entity, TimeStep)
-    
-    EntityMat = Entity:GetComponent(Component.MESH_RENDERER):GetMaterial()
+function Movement:OnUpdate(TimeStep)    
+    EntityMat = self.Entity:GetComponent(Component.MESH_RENDERER):GetMaterial()
 
-    EntityMat:SetInt("Julia", Julia)   
-    EntityMat:SetDouble("JuliaC", JuliaC)
+    EntityMat:SetInt("Julia", self.Julia)   
+    EntityMat:SetDouble("JuliaC", self.JuliaC)
 
-    EntityMat:SetInt("MaxIterations", Iter)
-    EntityMat:SetVec2("Position", Position)
-    EntityMat:SetDouble("Scale", Scale)
+    EntityMat:SetInt("MaxIterations", self.Iter)
+    EntityMat:SetVec2("Position", self.Position)
+    EntityMat:SetDouble("Scale", self.Scale)
 
     if Input:IsPressed('J') then
-        if Julia == 1 then
-            Julia = 0
+        if self.Julia == 1 then
+            self.Julia = 0
         else
-            Julia = 1
+            self.Julia = 1
         end
     end
 
-    Iter = Control(Iter, 'E', 'Q', IterStepsize, TimeStep)
-    JuliaC = Control(JuliaC, 'T', 'G', JuliaCStepsize, TimeStep)
-    Position.y = Control(Position.y, 'S', 'W', PositionStepsize * Scale, TimeStep)
-    Position.x = Control(Position.x, 'A', 'D', PositionStepsize * Scale, TimeStep)
-    Scale = Control(Scale, 'R', 'F', ScaleStepsize * Scale, TimeStep)
+    self.Iter = self.Control(self.Iter, 'E', 'Q', self.IterStepsize, TimeStep)
+    self.JuliaC = self.Control(self.JuliaC, 'T', 'G', self.JuliaCStepsize, TimeStep)
+    self.Position.y = self.Control(self.Position.y, 'S', 'W', self.PositionStepsize * self.Scale, TimeStep)
+    self.Position.x = self.Control(self.Position.x, 'A', 'D', self.PositionStepsize * self.Scale, TimeStep)
+    self.Scale = self.Control(self.Scale, 'R', 'F', self.ScaleStepsize * self.Scale, TimeStep)
 end
 
 return Movement

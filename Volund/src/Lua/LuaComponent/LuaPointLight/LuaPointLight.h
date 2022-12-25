@@ -12,6 +12,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding;
+
 		LuaVec3 GetColor();
 		void SetColor(LuaVec3 Color);
 
