@@ -9,42 +9,42 @@ namespace Volund
 	{
 		{
 			std::unique_lock Lock(_Mutex);
-			_JobQueue.push(Job);
+			this->_JobQueue.push(Job);
 		}
-		_Condition.notify_one();
+		this->_Condition.notify_one();
 	}
 
 	bool ThreadPool::Busy()
 	{
-		return !_JobQueue.empty() || _ActiveThreads != 0;
+		return !this->_JobQueue.empty() || this->_ActiveThreads != 0;
 	}
 
 	ThreadPool::ThreadPool()
 	{
-		ThreadPool::_ShouldTerminate = false;
+		this->_ShouldTerminate = false;
 
 		uint64_t ThreadCount = std::thread::hardware_concurrency();
-		_Threads.resize(ThreadCount);
+		this->_Threads.resize(ThreadCount);
 		for (uint64_t i = 0; i < ThreadCount; i++)
 		{
-			_Threads[i] = std::thread([this]() { Loop(); });
+			this->_Threads[i] = std::thread([this]() { Loop(); });
 		}
 	}
 
 	ThreadPool::~ThreadPool()
 	{
 		{
-			std::unique_lock Lock(_Mutex);
-			_ShouldTerminate = true;
+			std::unique_lock Lock(this->_Mutex);
+			this->_ShouldTerminate = true;
 		}
 
-		_Condition.notify_all();
+		this->_Condition.notify_all();
 
-		for (std::thread& active_thread : _Threads)
+		for (std::thread& active_thread : this->_Threads)
 		{
 			active_thread.join();
 		}
-		_Threads.clear();
+		this->_Threads.clear();
 	}
 
 	ThreadPool& ThreadPool::GetGlobalPool()
@@ -58,23 +58,28 @@ namespace Volund
 		{
 			ThreadJob Job;
 			{
-				std::unique_lock Lock(_Mutex);
-				_Condition.wait(Lock, [this]() { return _ShouldTerminate || !_JobQueue.empty(); });
+				std::unique_lock Lock(this->_Mutex);
+				this->_Condition.wait(Lock, [this]() { return this->_ShouldTerminate || !this->_JobQueue.empty(); });
 
-				if (_ShouldTerminate && _JobQueue.empty())
+				if (this->_ShouldTerminate && this->_JobQueue.empty())
 				{
 					return;
 				}
 
-				_ActiveThreads++;
+				this->_ActiveThreads++;
 
-				Job = _JobQueue.front();
-				_JobQueue.pop();
+				Job = this->_JobQueue.front();
+				this->_JobQueue.pop();
 			}
 
 			Job();
 
-			_ActiveThreads--;
+			this->_ActiveThreads--;
+
+			if (!this->Busy())
+			{
+				this->_WaitCondition.notify_all();
+			}
 		}
 	}
 }
