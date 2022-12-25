@@ -7,6 +7,8 @@
 
 #include "Filesystem/Filesystem.h"
 
+#include "DelayedTaskHandler/DelayedTaskHandler.h"
+
 namespace Volund
 {
 	std::string LuaModule::GetFilepath()
@@ -28,7 +30,9 @@ namespace Volund
 
 	void LuaModule::LoadScene(const std::string& Filepath)
 	{
-		this->_App->DelayTask([this, Filepath]()
+		std::unique_lock Lock(this->_Mutex);
+
+		DelayedTaskHandler::DelayTask([this, Filepath]()
 		{
 			auto NewScene = std::make_shared<Scene>();
 			auto AppWindow = this->_App->GetModule<WindowModule>()->GetWindow();

@@ -16,7 +16,7 @@ namespace Volund
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
-	OpenGLIndexbuffer::OpenGLIndexbuffer(uint32_t Indices[], uint32_t Count)
+	OpenGLIndexbuffer::OpenGLIndexbuffer(const uint32_t Indices[], uint32_t Count)
 	{
 		this->_Count = Count;
 		glCreateBuffers(1, &this->_ID);

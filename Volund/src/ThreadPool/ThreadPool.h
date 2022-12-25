@@ -16,7 +16,11 @@ namespace Volund
 
 		~ThreadPool();
 
+		static ThreadPool& GetGlobalPool();
+
 	private:
+
+		static ThreadPool _GlobalPool;
 
 		bool _ShouldTerminate = false;
 
@@ -32,3 +36,6 @@ namespace Volund
 		void Loop();
 	};
 }
+
+#define VOLUND_THREADPOOL_SUBMIT(...) ::Volund::ThreadPool::GetGlobalPool().Submit(__VA_ARGS__)
+#define VOLUND_THREADPOOL_BUSY() ::Volund::ThreadPool::GetGlobalPool().Busy()

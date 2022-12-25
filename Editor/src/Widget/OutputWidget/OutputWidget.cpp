@@ -14,6 +14,8 @@ void OutputWidget::OnUpdate(VL::TimeStep TS)
 
 void OutputWidget::OnRender()
 {
+	std::unique_lock Lock(_Mutex);
+
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
 		if (ImGui::BeginListBox("###OutputTextbox", ImVec2(-FLT_MIN, -FLT_MIN)))
@@ -50,7 +52,9 @@ void OutputWidget::OnRender()
 
 void OutputWidget::LoggerCallback(const std::string& String)
 {
-	if (_Output.size() > 100)
+	std::unique_lock Lock(_Mutex);
+
+	if (_Output.size() > 25)
 	{
 		_Output.erase(_Output.begin());
 	}

@@ -9,6 +9,8 @@
 
 #include "ThreadPool/ThreadPool.h"
 
+#include "DelayedTaskHandler/DelayedTaskHandler.h"
+
 namespace Volund
 {
 	void Application::Run()
@@ -20,11 +22,6 @@ namespace Volund
 	bool Application::ShouldRun() const
 	{
 		return this->_ShouldRun;
-	}
-
-	void Application::DelayTask(const std::function<void()>& Task)
-	{
-		this->_DelayedTasks.push_back(Task);
 	}
 
 	Ref<EventDispatcher> Application::GetEventDispatcher()
@@ -66,11 +63,7 @@ namespace Volund
 
 			while (this->_ThreadPool.Busy());
 
-			for (auto& Task : this->_DelayedTasks)
-			{
-				Task();
-			}
-			this->_DelayedTasks.clear();
+			DelayedTaskHandler::Execute();
 
 			VOLUND_PROFILING_END();
 		}

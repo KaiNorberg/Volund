@@ -24,6 +24,8 @@ namespace Volund
 
 	private:	
 
+		std::mutex _Mutex;
+
 		Ref<LuaState> _LuaState;
 
 		Application* _App = nullptr;

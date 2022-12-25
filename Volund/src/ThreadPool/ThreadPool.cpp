@@ -3,6 +3,8 @@
 
 namespace Volund
 {
+	ThreadPool ThreadPool::_GlobalPool = ThreadPool();
+
 	void ThreadPool::Submit(ThreadJob Job)
 	{
 		{
@@ -45,6 +47,10 @@ namespace Volund
 		_Threads.clear();
 	}
 
+	ThreadPool& ThreadPool::GetGlobalPool()
+	{
+		return _GlobalPool;
+	}
 
 	void ThreadPool::Loop()
 	{		

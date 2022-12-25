@@ -50,6 +50,11 @@ namespace Volund
 		Buffer->Bind();
 	}
 
+	OpenGLMesh::OpenGLMesh()
+	{
+		glGenVertexArrays(1, &this->_ID);
+	}
+
 	OpenGLMesh::OpenGLMesh(Ref<Vertexbuffer>& VBuffer, Ref<Indexbuffer>& IBuffer)
 	{
 		glGenVertexArrays(1, &this->_ID);

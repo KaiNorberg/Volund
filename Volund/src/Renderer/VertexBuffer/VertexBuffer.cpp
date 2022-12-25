@@ -15,7 +15,7 @@ namespace Volund
 		return this->_Count;
 	}
 
-	Ref<Vertexbuffer> Vertexbuffer::Create(float Vertices[], uint32_t Count)
+	Ref<Vertexbuffer> Vertexbuffer::Create(const float Vertices[], uint32_t Count)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

@@ -11,7 +11,7 @@ namespace Volund
 
 		uint32_t GetCount() const;
 
-		static Ref<Indexbuffer> Create(uint32_t Indices[], uint32_t Size);
+		static Ref<Indexbuffer> Create(const uint32_t Indices[], uint32_t Size);
 
 		virtual ~Indexbuffer() = default;
 

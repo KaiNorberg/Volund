@@ -20,6 +20,8 @@ private:
 
 	float TotalTime = 0.0f;
 
+	static inline std::mutex _Mutex;
+
 	static inline std::vector<std::string> _Output;
 };
 

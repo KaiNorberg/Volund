@@ -13,7 +13,7 @@ namespace Volund
 		return this->_Count;
 	}
 
-	Ref<Indexbuffer> Indexbuffer::Create(uint32_t Indices[], uint32_t Size)
+	Ref<Indexbuffer> Indexbuffer::Create(const uint32_t Indices[], uint32_t Size)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

@@ -17,7 +17,7 @@ namespace Volund
 
 		virtual VertexLayout GetLayout() = 0;
 
-		static Ref<Vertexbuffer> Create(float Vertices[], uint32_t Count);
+		static Ref<Vertexbuffer> Create(const float Vertices[], uint32_t Count);
 
 		virtual ~Vertexbuffer() = default;
 	private:
