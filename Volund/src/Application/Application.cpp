@@ -37,11 +37,13 @@ namespace Volund
 
 	void Application::Loop()
 	{
+		VOLUND_PROFILE_FUNCTION();
+
 		std::chrono::time_point<std::chrono::steady_clock> OldTime = std::chrono::high_resolution_clock::now();
 
 		while (this->_ShouldRun)
 		{
-			VOLUND_PROFILING_START(uint64_t(this));
+			VOLUND_PROFILE_SCOPE("MainLoop");
 
 			std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - OldTime;
 			OldTime = std::chrono::high_resolution_clock::now();
@@ -64,8 +66,6 @@ namespace Volund
 			while (this->_ThreadPool.Busy());
 
 			DelayedTaskHandler::Execute();
-
-			VOLUND_PROFILING_END();
 		}
 	}
 

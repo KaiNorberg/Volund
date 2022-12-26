@@ -28,6 +28,7 @@ namespace Volund
 	class Logger
 	{
 	public:
+
 		static Logger& GetCoreLogger();
 
 		static Logger& GetClientLogger();
@@ -43,6 +44,7 @@ namespace Volund
 		Logger(std::string_view Name);
 
 	private:
+
 		static Logger _CoreLogger;
 		static Logger _ClientLogger;
 

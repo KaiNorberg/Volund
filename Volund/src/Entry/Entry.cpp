@@ -4,6 +4,8 @@
 
 int Main()
 {
+	VOLUND_PROFILE_FUNCTION();
+
 	VL::Entry();
 
 	return EXIT_SUCCESS;

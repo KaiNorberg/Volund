@@ -1,22 +1,34 @@
 #pragma once
 
-#if VOLUND_ENABLE_PROFILING
-	#ifndef VOLUND_DIST
-		#define VOLUND_PROFILING_ENABLED
-	#endif
-#endif
-
-#ifdef VOLUND_PROFILING_ENABLED
+#ifdef VOLUND_ENABLE_PROFILING
 
 namespace Volund
 {
 	class Instrumentor;
 
+	struct InstrumentorNode
+	{
+		std::string Name;
+
+		std::chrono::time_point<std::chrono::steady_clock> Start;
+		std::chrono::time_point<std::chrono::steady_clock> End;
+
+		Ref<InstrumentorNode> Parent;
+
+		std::vector<Ref<InstrumentorNode>> Children;
+
+		std::string FormatTime();
+
+		std::string FormatName();
+
+		std::string Serialize(int Depth);
+	};
+
 	class InstrumentorTimer
 	{
 	public:
 
-		InstrumentorTimer(uint64_t GroupID, const std::string& Name);
+		InstrumentorTimer(const std::string& Name);
 
 		~InstrumentorTimer();
 
@@ -24,49 +36,23 @@ namespace Volund
 
 		friend class Instrumentor;
 
-		static inline std::mutex _Mutex;
-
-		uint64_t _GroupID;
-
-		std::string _Name;
-
-		std::chrono::time_point<std::chrono::steady_clock> _Start;
+		Ref<InstrumentorNode> _Node;
 	};
 
 	class Instrumentor
 	{
 	public:
-
-		static uint64_t GetCurrentGroupID();
-
-		static void Start(uint64_t GroupID);
-
-		static void End();
-
 	private:
 
 		friend class InstrumentorTimer;
 
-		static inline uint64_t _CurrentGroupID = 0;
-
-		static inline std::chrono::time_point<std::chrono::steady_clock> _GroupStart;
-
-		struct Event
-		{
-			std::vector<float> Timings;
-		};
-
-		struct Group
-		{
-			std::map<std::string, Event> Events;
-			std::vector<float> Timings;
-		};
-
-		static inline std::map<uint64_t, Group> _Groups;
-
-		Instrumentor() = default;
+		Instrumentor();
 
 		~Instrumentor();
+
+		static inline Ref<InstrumentorNode> FirstNode;
+
+		static inline Ref<InstrumentorNode> CurrentNode;
 	};
 }
 
@@ -88,16 +74,11 @@ namespace Volund
 #define VOLUND_FUNC_SIG "VOLUND_FUNC_SIG unknown!"
 #endif
 
-
-#define VOLUND_PROFILING_START(ID) Volund::Instrumentor::Start(ID)
-#define VOLUND_PROFILING_END() Volund::Instrumentor::End()
-#define VOLUND_PROFILE_SCOPE(Name) auto Timer##__LINE__ = Volund::InstrumentorTimer(Volund::Instrumentor::GetCurrentGroupID(), Name)
+#define VOLUND_PROFILE_SCOPE(Name) auto Timer##__LINE__ = Volund::InstrumentorTimer(Name)
 #define VOLUND_PROFILE_FUNCTION() VOLUND_PROFILE_SCOPE(VOLUND_FUNC_SIG)
 
 #else
 
-#define VOLUND_PROFILING_START(ID)
-#define VOLUND_PROFILING_END()
 #define VOLUND_PROFILE_FUNCTION()
 #define VOLUND_PROFILE_SCOPE()
 

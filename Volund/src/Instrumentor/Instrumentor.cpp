@@ -1,87 +1,89 @@
 #include "PCH/PCH.h"
 #include "Instrumentor.h"
 
-#ifdef VOLUND_PROFILING_ENABLED
+#ifdef VOLUND_ENABLE_PROFILING
 
 namespace Volund
 {
-	InstrumentorTimer::InstrumentorTimer(uint64_t GroupID, const std::string& Name)
+	std::string InstrumentorNode::FormatTime()
 	{
-		this->_Name = Name;
-		this->_GroupID = GroupID;
-		this->_Start = std::chrono::high_resolution_clock::now();
+		std::chrono::duration<double> Duration = this->End - this->Start;
+
+		double Count = Duration.count();
+
+		return std::to_string(Count);
+	}
+
+	std::string InstrumentorNode::FormatName()
+	{
+		auto StartOfName = this->Name.find("__cdecl") + 8;
+		auto EndOfName = this->Name.find_first_of('(');
+
+		if (StartOfName != std::string::npos && EndOfName != std::string::npos)
+		{
+			return this->Name.substr(StartOfName, EndOfName - StartOfName);
+		}
+		else
+		{
+			return this->Name;
+		}
+	}
+
+	std::string InstrumentorNode::Serialize(int Depth)
+	{
+		std::string Output;
+
+		if (Depth >= 0)
+		{
+			Output += std::string(Depth, '\t') + this->FormatName() + " - " + this->FormatTime() + "s\n";
+		}
+
+		for (auto& Child : this->Children)
+		{
+			Output += Child->Serialize(Depth + 1);
+		}
+
+		return Output;
+	}
+
+	InstrumentorTimer::InstrumentorTimer(const std::string& Name)
+	{
+		static Instrumentor Singleton;
+
+		this->_Node = std::make_shared<InstrumentorNode>();
+		this->_Node->Name = Name;
+		this->_Node->Start = std::chrono::high_resolution_clock::now();
+
+		this->_Node->Parent = Instrumentor::CurrentNode; 
+		Instrumentor::CurrentNode->Children.push_back(this->_Node);
+		Instrumentor::CurrentNode = this->_Node;
 	}
 
 	InstrumentorTimer::~InstrumentorTimer()
 	{
-		std::unique_lock Lock(_Mutex);
-
-		std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - this->_Start;
-	
-		if (this->_GroupID != 0)
+		if (Instrumentor::CurrentNode == this->_Node)
 		{
-			Instrumentor::_Groups[this->_GroupID].Events[this->_Name].Timings.push_back(Duration.count());
+			Instrumentor::CurrentNode->End = std::chrono::high_resolution_clock::now();
+			Instrumentor::CurrentNode = Instrumentor::CurrentNode->Parent;
+		}
+		else
+		{
+			VOLUND_ERROR("Invalid Node");
 		}
 	}
 
-	uint64_t Instrumentor::GetCurrentGroupID()
+	Instrumentor::Instrumentor()
 	{
-		return _CurrentGroupID;
-	}
+		Instrumentor::CurrentNode = std::make_shared<InstrumentorNode>();
+		Instrumentor::FirstNode = Instrumentor::CurrentNode;
 
-	void Instrumentor::Start(uint64_t GroupID)
-	{
-		static Instrumentor SingleTon;
-
-		_GroupStart = std::chrono::high_resolution_clock::now();
-
-		_CurrentGroupID = GroupID;
-	}
-
-	void Instrumentor::End()
-	{
-		std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - _GroupStart;
-
-		Instrumentor::_Groups[_CurrentGroupID].Timings.push_back(Duration.count());
-
-		_CurrentGroupID = 0;
 	}
 
 	Instrumentor::~Instrumentor()
 	{
 		std::ofstream OutFile("Instrumentor.txt");
 
-		for (auto& [GroupID, Group] : this->_Groups)
-		{
-			OutFile << "NEW GROUP: " << GroupID << std::endl;
-
-			float TotalSessionTime = 0.0f;
-			for (auto& Timing : Group.Timings)
-			{
-				TotalSessionTime += Timing;
-			}
-			float AverageSessionTime = TotalSessionTime / Group.Timings.size();
-
-			for (auto& [EventName, Event] : Group.Events)
-			{
-				float TotalEventTime = 0.0f;
-				for (auto& Timing : Event.Timings)
-				{
-					TotalEventTime += Timing;
-				}
-				float AverageEventTime = TotalEventTime / Event.Timings.size();
-
-				int SpaceCount = 125 - EventName.size();
-				OutFile << EventName;
-				for (int i = 0; i < SpaceCount; i++)
-				{
-					OutFile << ' ';
-				}
-				OutFile << " | " << AverageEventTime << ",s " << (TotalEventTime / TotalSessionTime) * 100.0f << "%" << std::endl;
-			}
-
-			OutFile << "END GROUP" << std::endl << std::endl;
-		}
+		OutFile << Instrumentor::FirstNode->Serialize(-1);
 	}
 }
 
