@@ -56,8 +56,8 @@ namespace Volund
 
 			Renderer::Begin();
 
-			Event E2 = Event(EventType::RENDER);
-			this->_EventDispatcher->Dispatch(E2);
+			Event E = Event(EventType::RENDER);
+			this->_EventDispatcher->Dispatch(E);
 
 			Renderer::End();
 

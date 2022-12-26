@@ -75,11 +75,6 @@ namespace Volund
 			Job();
 
 			this->_ActiveThreads--;
-
-			if (!this->Busy())
-			{
-				this->_WaitCondition.notify_all();
-			}
 		}
 	}
 }

@@ -53,7 +53,7 @@ namespace Volund
 
 		void Terminate();
 
-		ThreadPool _ThreadPool;
+ 		ThreadPool _ThreadPool;
 
 		Container<Module> _Modules;
 	};
