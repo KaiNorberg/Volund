@@ -30,9 +30,9 @@ namespace Volund
 		return State.require_script(Filepath, Source);
 	}
 
-	void LuaState::LuaPrint(std::string String)
+	void LuaState::LuaPrint(sol::object Object)
 	{
-		VOLUND_INFO(String.c_str());		
+		VOLUND_INFO(Object.as<std::string>().c_str());
 	}
 
 	Ref<Scene> LuaState::GetScene()
@@ -42,7 +42,13 @@ namespace Volund
 
 	void LuaState::ScriptFile(const std::string& Filepath)
 	{
-		this->_SolState.script_file(Filepath);
+		this->_SolState.safe_script_file(Filepath, [](lua_State*, sol::protected_function_result pfr)
+		{		
+			sol::error err = pfr;
+			VOLUND_WARNING(err.what());
+
+			return pfr;
+		});
 	}
 
 	void LuaState::Procedure(const Event& E)
@@ -73,7 +79,7 @@ namespace Volund
 		this->_SolState["Window"] = LuaWindow(ThisWindow);
 
 		this->_SolState["require"] = LuaRequire;
-		this->_SolState["Print"] = LuaPrint;
+		this->_SolState["print"] = LuaPrint;
 
 		this->_SolState.new_enum("Component",
 			"CAMERA", LuaComponent::CAMERA,

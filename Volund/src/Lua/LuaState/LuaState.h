@@ -20,7 +20,7 @@ namespace Volund
 
 		static sol::object LuaRequire(sol::this_state S, std::string Filepath);
 
-		static void LuaPrint(std::string String);
+		static void LuaPrint(sol::object Object);
 		
 		Ref<Scene> GetScene();
 

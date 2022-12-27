@@ -26,7 +26,7 @@ for X = -Count / 2, Count / 2 do
             NewEntity = Scene:CreateEntity()
 
             NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z)})
-            NewEntity:AddComponent(Component.SCRIPT, {Script = require("Scripts/Scale.lua")})
+            NewEntity:AddComponent(Component.SCRIPT, {Script = Scale})
             
             if math.abs(Z) % 2 == 0 then
                 NewEntity:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = BlueMaterial})
@@ -37,4 +37,4 @@ for X = -Count / 2, Count / 2 do
     end
 end
 
-Window:SetCursorMode(CursorMode.DISABLED)
+--Window:SetCursorMode(CursorMode.DISABLED)

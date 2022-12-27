@@ -27,8 +27,8 @@ namespace Volund
 
 		sol::table _LuaTable;
 
-		sol::function _LuaOnCreate;
-		sol::function _LuaOnUpdate;
-		sol::function _LuaOnDestroy;
+		sol::safe_function _LuaOnCreate;
+		sol::safe_function _LuaOnUpdate;
+		sol::safe_function _LuaOnDestroy;
 	};
 }

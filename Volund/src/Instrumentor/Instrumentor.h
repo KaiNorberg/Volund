@@ -80,6 +80,6 @@ namespace Volund
 #else
 
 #define VOLUND_PROFILE_FUNCTION()
-#define VOLUND_PROFILE_SCOPE()
+#define VOLUND_PROFILE_SCOPE(Name)
 
 #endif
