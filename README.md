@@ -9,11 +9,11 @@ Volund is a game engine written in C++ with Lua scripting for the Windows 10/11 
 
 ## Getting Started
 
-Visual Studio 2019/2022 is recommended since any other tool sets are not officially tested however, you are welcome to try and use any other tool sets should you wish. Windows 10/11 will be required to build Volund.
+To get started with Volund, it is recommended to use Visual Studio 2019 or 2022. Other tool sets may work, but are not officially tested. You will need to be using Windows 10/11 to build Volund.
 
 <ins>**1. Cloning (downloading) this repository**</ins>
 
-Cloning this repository can either be done via the green ```Code``` button at the top of the screen or if you have git installed the following command ```git clone --recursive https://github.com/Kaj9296/Volund```.
+To clone (download) this repository, you can use the ```Code``` button at the top left of the screen, or use the following command if you have git installed ```git clone --recursive https://github.com/Kaj9296/Volund```.
 
 <ins>**2. Building Volund**</ins>
 
@@ -53,7 +53,7 @@ There are more examples provided in the [TestScenes](https://github.com/Kaj9296/
 
 ## Contributing
 
-I currently welcome contributions to the project. I currently have no hard standards on how to contribute so for now just submit pull requests that you find appropriate. If the project ever grows significantly (which I doubt it will) I will consider standardizing the process.
+Volund is open to contributions. There are currently no strict guidelines for contributing, so feel free to submit pull requests that you think are appropriate. If the project grows significantly in the future, a more standardized process for contributions may be implemented.
 
 ## Goals:
 
