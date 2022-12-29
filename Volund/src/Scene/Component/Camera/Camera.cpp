@@ -60,7 +60,9 @@ namespace Volund
 		switch (E.Type)
 		{
 		case EventType::RENDER:
-		{
+		{		
+			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+
 			auto TargetBuffer = this->GetScene()->GetTargetBuffer();
 			auto Spec = TargetBuffer->GetSpec();
 
@@ -68,6 +70,7 @@ namespace Volund
 			Eye.Target = TargetBuffer;
 			Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
 			Eye.ViewMatrix = this->GetViewMatrix();
+			Eye.Position = EntityTransform->Position;
 
 			Renderer::Submit(Eye);
 		}

@@ -20,10 +20,10 @@ uniform mat4 _ModelMatrix;
 
 void main()
 {
-    Position = vec3(_ModelMatrix * vec4(Vertex_Position, 1.0));
+    Position = (_ModelMatrix * vec4(Vertex_Position, 1.0)).xyz;
     TextureCoord = Vertex_TextureCoord;
     Normal = normalize(mat3(_ModelMatrix) * Vertex_Normal);
-    gl_Position = ViewProjMatrix * _ModelMatrix * vec4(Vertex_Position, 1.0f);
+    gl_Position = ViewProjMatrix * vec4(Position, 1.0f);
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT
@@ -34,7 +34,7 @@ in vec2 TextureCoord;
 in vec3 Normal;
 
 layout(std140, binding = 0) uniform Camera
-{
+{    
     mat4 ViewProjMatrix;
     vec3 EyePosition;
 };
@@ -61,13 +61,21 @@ void main()
 
     vec3 Result = FinalColor * AmbientLighting;
     for (int i = 0; i < LightAmount; i++)
-    {
-        vec3 LightDir = normalize(LightPositions[i] - Position);
-        float Diffuse = max(dot(Normal, LightDir), 0.0);
-        vec3 ViewDir = normalize(EyePosition - Position);
-        vec3 ReflectDir = reflect(-LightDir, Normal);
-        float Specular = pow(max(dot(ViewDir, ReflectDir), 0.0), 32);
-        Result += (Diffuse + Specular) * LightColors[i] * FinalColor;
+    {  
+        vec3 L = normalize(LightPositions[i] - Position);
+
+        // Lambert's cosine law
+        float Lambertian = max(dot(Normal, L), 0.0);
+        if (Lambertian > 0.0)
+        {
+            vec3 R = reflect(-L, Normal);
+            vec3 V = normalize(EyePosition - Position);
+
+            float SpecAngle = max(dot(R, V), 0.0);
+            float Specular = pow(SpecAngle, 32.0f);
+
+            Result += vec3(Lambertian + Specular) * LightColors[i] * FinalColor;
+        }
     }
 
     FragColor = vec4(Result, 1.0f);

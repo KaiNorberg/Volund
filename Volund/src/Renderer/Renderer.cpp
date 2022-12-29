@@ -46,9 +46,8 @@ namespace Volund
 		VOLUND_PROFILE_FUNCTION();
 
 		Mat4x4 ViewProjMatrix = Eye.ProjectionMatrix * Eye.ViewMatrix;
-		Vec3 EyePosition = Vec3(Eye.ViewMatrix[0][3], Eye.ViewMatrix[1][3], Eye.ViewMatrix[2][3]);
 		this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
-		this->_CameraUniforms->Set("EyePosition", &EyePosition);		
+		this->_CameraUniforms->Set("EyePosition", &Eye.Position);		
 		
 		this->_CameraUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
 	}

@@ -37,6 +37,8 @@ namespace Volund
 		Mat4x4 ViewMatrix;
 		Mat4x4 ProjectionMatrix;
 
+		Vec3 Position;
+
 		Ref<Framebuffer> Target;
 	};
 
