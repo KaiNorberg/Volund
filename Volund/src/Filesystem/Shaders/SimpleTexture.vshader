@@ -48,13 +48,15 @@ layout(std140, binding = 1) uniform LightsUniform
 
 //Material Uniforms
 uniform vec3 AmbientLighting;
-uniform vec3 Color;
+uniform sampler2D ColorTexture;
 
 layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-    vec3 Result = Color * AmbientLighting;
+    vec3 TextureColor = texture(ColorTexture, FragTextureCoord).rgb;
+
+    vec3 Result = TextureColor * AmbientLighting;
     for (int i = 0; i < LightAmount; i++)
     {  
         vec3 L = normalize(LightPositions[i] - FragPosition);
@@ -69,7 +71,7 @@ void main()
 
             float Specular = pow(max(dot(FragNormal, HalfV), 0.0), 32.0f);
 
-            Result += vec3(Lambertian + Specular) * LightColors[i] * Color;
+            Result += vec3(Lambertian + Specular) * LightColors[i] * TextureColor;
         }
     }
 

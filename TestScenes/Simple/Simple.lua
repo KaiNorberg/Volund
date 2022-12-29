@@ -1,26 +1,23 @@
 Rotate = require("Scripts/Rotate.lua")
 
 SimpleShader = Shader:new("Simple.vshader")
+SimpleTextureShader = Shader:new("SimpleTexture.vshader")
 
 TestTexture = Texture:new("Textures/Test.jpg")
 
 CubeMesh = Mesh:new("Cube.vobj")
 TeapotMesh = Mesh:new("Models/Teapot.obj")
 
-TextureMaterial = Material:new(SimpleShader)
-TextureMaterial:SetFloat("ColorTextureMix", 1.0)
+TextureMaterial = Material:new(SimpleTextureShader)
 TextureMaterial:SetTexture("ColorTexture", TestTexture)
 
 GreenMaterial = Material:new(SimpleShader)
-GreenMaterial:SetFloat("ColorTextureMix", 0.0)
 GreenMaterial:SetVec3("Color", Vec3:new(0.0, 1.0, 0.0))
 
 BlueMaterial = Material:new(SimpleShader)
-BlueMaterial:SetFloat("ColorTextureMix", 0.0)
 BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
 
 WhiteMaterial = Material:new(SimpleShader)
-WhiteMaterial:SetFloat("ColorTextureMix", 0.0)
 WhiteMaterial:SetVec3("Color", Vec3:new(1.0, 1.0, 1.0))
 
 Camera = Scene:CreateEntity()

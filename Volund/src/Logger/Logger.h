@@ -33,11 +33,11 @@ namespace Volund
 
 		static Logger& GetClientLogger();
 
-		void Info(const char* Format, ...) const;
+		void Info(const char* Format, ...);
 
-		void Warning(const char* Format, ...) const;
+		void Warning(const char* Format, ...);
 
-		void Error(const char* Format, ...) const;
+		void Error(const char* Format, ...);
 
 		void SetCallback(LoggerCallback NewCallback);
 
@@ -47,6 +47,8 @@ namespace Volund
 
 		static Logger _CoreLogger;
 		static Logger _ClientLogger;
+
+		std::mutex _Mutex;
 
 		std::string FormatString(LoggerColor Color, const char* Format, std::va_list Args) const;
 

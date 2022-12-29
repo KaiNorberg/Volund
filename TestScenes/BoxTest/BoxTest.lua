@@ -5,11 +5,11 @@ SimpleShader = Shader:new("Simple.vshader")
 
 RedMaterial = Material:new(SimpleShader)
 RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
-RedMaterial:SetFloat("AmbientLighting", 1.0)
+RedMaterial:SetVec3("AmbientLighting", Vec3:new(1.0))
 
 BlueMaterial = Material:new(SimpleShader)
 BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
-BlueMaterial:SetFloat("AmbientLighting", 1.0)
+BlueMaterial:SetVec3("AmbientLighting", Vec3:new(1.0))
 
 CubeMesh = Mesh:new("Cube.vobj")
 
@@ -36,5 +36,3 @@ for X = -Count / 2, Count / 2 do
         end
     end
 end
-
---Window:SetCursorMode(CursorMode.DISABLED)

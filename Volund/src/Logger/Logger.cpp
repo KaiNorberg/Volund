@@ -22,8 +22,10 @@ namespace Volund
 		return _ClientLogger;
 	}
 
-	void Logger::Info(const char* Format, ...) const
+	void Logger::Info(const char* Format, ...)
 	{
+		std::unique_lock Lock(this->_Mutex);
+
 		std::va_list Args;
 		va_start(Args, Format);
 
@@ -37,8 +39,10 @@ namespace Volund
 		va_end(Args);
 	}
 
-	void Logger::Warning(const char* Format, ...) const
+	void Logger::Warning(const char* Format, ...)
 	{
+		std::unique_lock Lock(this->_Mutex);
+
 		std::va_list Args;
 		va_start(Args, Format);
 
@@ -52,8 +56,10 @@ namespace Volund
 		va_end(Args);
 	}
 
-	void Logger::Error(const char* Format, ...) const
+	void Logger::Error(const char* Format, ...)
 	{
+		std::unique_lock Lock(this->_Mutex);
+
 		std::va_list Args;
 		va_start(Args, Format);
 

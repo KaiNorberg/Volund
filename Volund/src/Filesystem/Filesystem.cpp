@@ -99,6 +99,9 @@ namespace Volund
 		CreateResource("Simple.vshader",
 			#include "Shaders/Simple.vshader"
 		);
+		CreateResource("SimpleTexture.vshader",
+			#include "Shaders/SimpleTexture.vshader"
+		);
 		CreateResource("PBR.vshader",
 			#include "Shaders/PBR.vshader"
 		);

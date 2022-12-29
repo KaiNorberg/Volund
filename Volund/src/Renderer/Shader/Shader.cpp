@@ -68,7 +68,7 @@ namespace Volund
 			SourceStrings[(uint32_t)ShaderType::GEOMETRY].str());
 	}
 
-	Ref<Shader> Shader::Create(std::string_view VertexSource, std::string_view FragmentSource, std::string_view GeometrySource)
+	Ref<Shader> Shader::Create(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
