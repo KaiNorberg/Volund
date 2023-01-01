@@ -11,7 +11,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		for (const auto& View : this->_App->_Modules)
+		for (const auto& [TypeID, View] : this->_App->_Modules)
 		{
 			for (const auto& Module : View)
 			{

@@ -51,19 +51,6 @@ namespace Volund
 		return FindEntity(entity) != -1;
 	}
 
-	void Scene::DeleteComponent(Component* component)
-	{
-		for (auto& [entity, Container] : this->_Registry)
-		{
-			if (Container.Erase(component))
-			{
-				return;
-			}
-		}			
-		
-		VOLUND_ERROR("Unable to find component (%d)", component);
-	}
-
 	void Scene::ResizeTarget(uint32_t Width, uint32_t Height)
 	{
 		auto Spec = this->_TargetBuffer->GetSpec();
@@ -81,9 +68,9 @@ namespace Volund
 	{
 		for (const auto& [entity, Container] : this->_Registry)
 		{
-			for (const auto& View : Container)
+			for (auto& [TypeID, Components] : Container)
 			{
-				for (const auto& component : View)
+				for (const auto& component : Components)
 				{
 					component->Procedure(E);
 				}
@@ -100,7 +87,6 @@ namespace Volund
 	{
 		return this->_Registry.end();
 	}
-
 
 	Scene::Scene()
 	{
@@ -137,9 +123,9 @@ namespace Volund
 	{
 		for (const auto& [entity, Container] : this->_Registry)
 		{
-			for (const auto& View : Container)
+			for (auto& [TypeID, Components] : Container)
 			{
-				for (const auto& component : View)
+				for (const auto& component : Components)
 				{
 					component->OnDestroy();
 				}

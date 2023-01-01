@@ -1,15 +1,11 @@
 #pragma once
 
+#include "Scene/Component/Components.h"
+
+#include "Lua/LuaEntity/LuaEntity.h"
+
 namespace Volund
 {
-	enum class LuaComponent
-	{
-		CAMERA = 1,
-		CAMERA_MOVEMENT = 2,
-		MESH_RENDERER = 3,
-		POINT_LIGHT = 4,
-		SCRIPT = 5,
-		TAG = 6,
-		TRANSFORM = 7,
-	};
+	template<typename T>
+	sol::table GenerateComponentTable(sol::this_state S, Ref<T> C);
 }

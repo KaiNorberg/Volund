@@ -15,21 +15,17 @@ namespace Volund
 
 		std::string GetFilepath();
 
-		template <typename T>
-		const std::vector<Ref<MaterialValue<T>>> View() const;
+		void SetInt(const std::string& Name, int Value);
 
-		template <typename T>
-		T Get(std::string_view Name) const;
+		void SetFloat(const std::string& Name, float Value);
 
-		template <typename T>
-		void Set(std::string_view Name, T Value);
+		void SetDouble(const std::string& Name, double Value);
 
-		template <typename T>
-		bool Has(std::string_view Name);
+		void SetVec2(const std::string& Name, const Vec2& Value);
 
-		Ref<Texture> GetTexture(const std::string& Name);
+		void SetVec3(const std::string& Name, const Vec3& Value);
+
 		void SetTexture(const std::string& Name, Ref<Texture> Value);
-		bool HasTexture(const std::string& Name);
 
 		void UpdateShader();
 		Ref<Shader> GetShader();
@@ -40,67 +36,20 @@ namespace Volund
 
 	private:
 
-		Container<BaseMaterialValue> _Container;
+		std::unordered_map<std::string, int> _IntUniforms;
 
-		std::unordered_map<std::string, Ref<Texture>> _Textures;
+		std::unordered_map<std::string, float> _FloatUniforms;
+
+		std::unordered_map<std::string, double> _DoubleUniforms;
+
+		std::unordered_map<std::string, Vec2> _Vec2Uniforms;
+
+		std::unordered_map<std::string, Vec3> _Vec3Uniforms;
+
+		std::unordered_map<std::string, Ref<Texture>> _TextureUniforms;
 
 		Ref<Shader> _Shader;
 
 		std::string _Filepath;
 	};
-
-	template<typename T>
-	inline const std::vector<Ref<MaterialValue<T>>> Material::View() const
-	{
-		if (this->_Container.Contains<MaterialValue<T>>(0))
-		{
-			auto View = this->_Container.View<MaterialValue<T>>();
-
-			std::vector<Ref<MaterialValue<T>>> Return;
-			Return.reserve(View.size());
-			for (auto& Value : View)
-			{
-				Ref<MaterialValue<T>> Temp = std::dynamic_pointer_cast<MaterialValue<T>>(Value);
-				Return.push_back(Temp);
-			}
-
-			return Return;
-		}
-		else
-		{
-			return std::vector<Ref<MaterialValue<T>>>();
-		}
-	}
-
-	template<typename T>
-	inline T Material::Get(std::string_view Name) const
-	{
-		for (const auto& Value : this->_Container.View<MaterialValue<T>>())
-		{
-			if (Value->GetName() == Name)
-			{
-				return *(static_cast<MaterialValue<T>*>(Value));
-			}
-		}
-	}
-
-	template<typename T>
-	inline void Material::Set(std::string_view Name, T Value)
-	{
-		this->_Container.PushBack(std::make_shared<MaterialValue<T>>(Name, Value));
-	}
-
-	template<typename T>
-	inline bool Material::Has(std::string_view Name)
-	{
-		for (const auto& Value : this->_Container.View<MaterialValue<T>>())
-		{
-			if (Value->GetName() == Name)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
 }

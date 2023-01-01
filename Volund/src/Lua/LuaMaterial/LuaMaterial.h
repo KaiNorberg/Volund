@@ -13,7 +13,7 @@ namespace Volund
 
 		Ref<Material> Get();
 
-		void SetInt(const std::string& Name, lua_Integer Value);
+		void SetInt(const std::string& Name, int Value);
 
 		void SetFloat(const std::string& Name, float Value);
 
@@ -23,7 +23,7 @@ namespace Volund
 
 		void SetVec3(const std::string& Name, Vec3 Value);
 
-		void SetTexture(const std::string& Name, LuaTexture& Value);
+		void SetTexture(const std::string& Name, LuaTexture Value);
 
 		LuaMaterial(Ref<Material> Material);
 

@@ -15,7 +15,15 @@ namespace Volund
 
 		T w = 0;
 
+		LuaVec<Size, T> Cross(const LuaVec<Size, T>& Other);
+
+		LuaVec<Size, T> Normalize();
+
+		T Length();
+		
 		int GetSize();
+			
+		glm::vec<Size, T> GLM() const;
 
 		operator glm::vec<Size, T>() const;
 
@@ -65,6 +73,45 @@ namespace Volund
 	private:
 	};
 
+	template<>
+	inline LuaVec<3, float> LuaVec<3, float>::Cross(const LuaVec<3, float>& Other)
+	{
+		return LuaVec<3, float>(glm::cross(this->GLM(), Other.GLM()));
+	}
+
+	template<int Size, typename T>
+	inline LuaVec<Size, T> LuaVec<Size, T>::Cross(const LuaVec<Size, T>& Other)
+	{
+		return LuaVec<Size, T>(0.0);
+	}
+
+	template<int Size, typename T>
+	inline LuaVec<Size, T> LuaVec<Size, T>::Normalize()
+	{
+		T Length = this->Length();
+		LuaVec<Size, T> Temp;
+		for (int i = 0; i < Size; i++)
+		{
+			Temp[i] = (*this)[i] / Length;
+		}
+
+		return Temp;
+	}
+
+	template<int Size, typename T>
+	inline T LuaVec<Size, T>::Length()
+	{
+		T Length = T(0);
+		for (int i = 0; i < Size; i++)
+		{
+			Length += ((*this)[i] * (*this)[i]);
+		}
+
+		Length = sqrt(Length);
+
+		return Length;
+	}
+
 	template<int Size, typename T>
 	inline int LuaVec<Size, T>::GetSize() 
 	{
@@ -72,7 +119,7 @@ namespace Volund
 	}
 
 	template<int Size, typename T>
-	inline LuaVec<Size, T>::operator glm::vec<Size, T>() const
+	inline glm::vec<Size, T> LuaVec<Size, T>::GLM() const
 	{
 		glm::vec<Size, T> Temp;
 		for (int i = 0; i < Size; i++)
@@ -81,6 +128,12 @@ namespace Volund
 		}
 
 		return Temp;
+	}
+
+	template<int Size, typename T>
+	inline LuaVec<Size, T>::operator glm::vec<Size, T>() const
+	{
+		return this->GLM();
 	}
 
 	template<int Size, typename T>

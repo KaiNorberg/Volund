@@ -8,7 +8,9 @@
 
 #include "Time/Time.h"
 
-namespace Volund
+#include "Lua/LuaVec/LuaVec.h"
+
+namespace Volund 
 {
 	class Scene;
 
@@ -21,7 +23,7 @@ namespace Volund
 		static sol::object LuaRequire(sol::this_state S, std::string Filepath);
 
 		static void LuaPrint(sol::object Object);
-		
+
 		Ref<Scene> GetScene();
 
 		void ScriptFile(const std::string& Filepath);

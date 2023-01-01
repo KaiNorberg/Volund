@@ -9,6 +9,10 @@ namespace Volund
 	{
 	public:
 
+		sol::table Table;
+
+		bool Compare(sol::table Other);
+
 		void Procedure(const Event& E);
 
 		void OnCreate() override;
@@ -25,10 +29,10 @@ namespace Volund
 
 		sol::object _ThisEntity;
 
-		sol::table _LuaTable;
-
 		sol::safe_function _LuaOnCreate;
 		sol::safe_function _LuaOnUpdate;
 		sol::safe_function _LuaOnDestroy;
+
+		void* _ID;
 	};
 }

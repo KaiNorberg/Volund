@@ -10,187 +10,125 @@ namespace Volund
 	{
 	public:
 
-		template <typename D>
-		void PushBack(const Ref<D>& Entry);
+		template<typename D>
+		void PushBack(Ref<D> Entry);
 
-		template <typename D>
+		template<typename D>
 		void PushBack(D* Entry);
 
-		template <typename D>
+		template<typename D>
 		void Erase(uint64_t Index = 0);
 
-		bool Erase(void* Address);
+		template<typename D>
+		Ref<D> Get(uint64_t Index = 0);
 
-		template <typename D>
-		Ref<D> Get(uint64_t Index = 0) const;
+		template<typename D>
+		bool Contains();
 
-		template <typename D>
-		bool Contains(uint64_t Index = 0) const;
+		template<typename D>
+		uint64_t Size();
 
-		template <typename D>
-		const std::vector<Ref<T>>& View() const;
+		template<typename D>
+		const std::vector<Ref<T>>& View();
 
-		template <typename D>
-		uint64_t Size() const;
+		std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator begin();
+		std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator end();
 
-		std::vector<std::vector<Ref<T>>>::iterator begin();
-		std::vector<std::vector<Ref<T>>>::iterator end();
-
-		std::vector<std::vector<Ref<T>>>::const_iterator begin() const;
-		std::vector<std::vector<Ref<T>>>::const_iterator end() const;
+		std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator begin() const;
+		std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator end() const;
 
 	private:
 
-		template <typename D>
-		uint64_t GetTypeID() const;
-
-		static inline uint64_t _NewTypeID = 0;
-
-		std::vector<std::vector<Ref<T>>> _Data;
+		std::unordered_map<uint64_t, std::vector<Ref<T>>> _Data;
 	};
 
-	template <typename T>
-	template <typename D>
-	inline void Container<T>::PushBack(const Ref<D>& Entry)
+	template<typename T>
+	template<typename D>
+	inline void Container<T>::PushBack(Ref<D> Entry)
 	{
-		static uint64_t TypeID = this->GetTypeID<D>();
-
-		while (this->_Data.size() <= TypeID)
-		{
-			this->_Data.push_back(std::vector<Ref<T>>());
-		}
+		static uint64_t TypeID = typeid(D).hash_code();
 
 		this->_Data[TypeID].push_back(Entry);
 	}
 
-	template <typename T>
-	template <typename D>
+	template<typename T>
+	template<typename D>
 	inline void Container<T>::PushBack(D* Entry)
 	{
-		static uint64_t TypeID = this->GetTypeID<D>();
-
-		while (this->_Data.size() <= TypeID)
-		{
-			this->_Data.push_back(std::vector<Ref<T>>());
-		}
+		static uint64_t TypeID = typeid(D).hash_code();
 
 		this->_Data[TypeID].push_back(Ref<D>(Entry));
 	}
 
-	template <typename T>
-	template <typename D>
+	template<typename T>
+	template<typename D>
 	inline void Container<T>::Erase(uint64_t Index)
 	{
-		static uint64_t TypeID = this->GetTypeID<D>();
+		static uint64_t TypeID = typeid(D).hash_code();
 
-		if (!this->Contains<D>(Index))
+		if (this->_Data.contains(TypeID) && this->_Data[TypeID].size() > Index)
 		{
-			VOLUND_ERROR("Container of type (%s) does not contain derived type (%s) with index (%d)!", typeid(T).name(), typeid(D).name(), Index);
+			this->_Data[TypeID].erase(this->_Data[TypeID].begin() + Index);
 		}
-
-		this->_Data[TypeID].erase(this->_Data[TypeID].begin() + Index);
 	}
 
-	template <typename T>
-	template <typename D>
-	inline Ref<D> Container<T>::Get(uint64_t Index) const
+	template<typename T>
+	template<typename D>
+	inline Ref<D> Container<T>::Get(uint64_t Index)
 	{
-		static uint64_t TypeID = this->GetTypeID<D>();
-
-		if (!this->Contains<D>(Index))
-		{
-			VOLUND_ERROR("Container of type (%s) does not contain derived type (%s) with index (%d)!", typeid(T).name(), typeid(D).name(), Index);
-		}
+		static uint64_t TypeID = typeid(D).hash_code();
 
 		return std::dynamic_pointer_cast<D>(this->_Data[TypeID][Index]);
 	}
 
-	template <typename T>
-	template <typename D>
-	inline bool Container<T>::Contains(uint64_t Index) const
+	template<typename T>
+	template<typename D>
+	inline bool Container<T>::Contains()
 	{
-		static uint64_t TypeID = this->GetTypeID<D>();
+		static uint64_t TypeID = typeid(D).hash_code();
 
-		return TypeID < this->_Data.size() && Index < this->_Data[TypeID].size();
+		return this->_Data.contains(TypeID);
 	}
 
 	template<typename T>
-	template <typename D>
-	inline const std::vector<Ref<T>>& Container<T>::View() const
+	template<typename D>
+	inline uint64_t Container<T>::Size()
 	{
-		static uint64_t TypeID = this->GetTypeID<D>();
-
-		if (!this->Contains<D>(0))
-		{
-			VOLUND_ERROR("Container of type (%s) does not contain derived type (%s)!", typeid(T).name(), typeid(D).name());
-		}
-
-		return this->_Data[TypeID];
-	}
-
-	template <typename T>
-	template <typename D>
-	inline uint64_t Container<T>::Size() const
-	{
-		static uint64_t TypeID = this->GetTypeID<D>();
-
-		if (!this->Contains<D>(0))
-		{
-			VOLUND_ERROR("Container of type (%s) does not contain derived type (%s)!", typeid(T).name(), typeid(D).name());
-		}
+		static uint64_t TypeID = typeid(D).hash_code();
 
 		return this->_Data[TypeID].size();
 	}
 
 	template<typename T>
-	template <typename D>
-	inline uint64_t Container<T>::GetTypeID() const
+	template<typename D>
+	inline const std::vector<Ref<T>>& Container<T>::View()
 	{
-		static uint64_t ID = _NewTypeID++;
+		static uint64_t TypeID = typeid(D).hash_code();
 
-		return ID;
+		return this->_Data[TypeID];
 	}
 
 	template<typename T>
-	inline bool Container<T>::Erase(void* Address)
-	{
-		for (auto& View : this->_Data)
-		{
-			for (int i = 0; i < View.size(); i++)
-			{
-				if (View[i].get() == Address)
-				{
-					View.erase(View.begin() + i);
-					return true;
-				}
-			}
-		}
-
-		return false;
-	}
-
-	template<typename T>
-	inline std::vector<std::vector<Ref<T>>>::iterator Container<T>::begin()
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator Container<T>::begin()
 	{
 		return this->_Data.begin();
 	}
 
 	template<typename T>
-	inline std::vector<std::vector<Ref<T>>>::iterator Container<T>::end()
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator Container<T>::end()
 	{
 		return this->_Data.end();
 	}
 
 	template<typename T>
-	inline std::vector<std::vector<Ref<T>>>::const_iterator Container<T>::begin() const
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator Container<T>::begin() const
 	{
 		return this->_Data.begin();
 	}
 
 	template<typename T>
-	inline std::vector<std::vector<Ref<T>>>::const_iterator Container<T>::end() const
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator Container<T>::end() const
 	{
 		return this->_Data.end();
 	}
-
 }

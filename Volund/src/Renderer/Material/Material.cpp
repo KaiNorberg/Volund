@@ -8,59 +8,67 @@ namespace Volund
 		return this->_Filepath;
 	}
 
-	Ref<Texture> Material::GetTexture(const std::string& Name)
+	void Material::SetInt(const std::string& Name, int Value)
 	{
-		if (this->HasTexture(Name))
-		{
-			return this->_Textures[Name];
-		}
-		else
-		{
-			return nullptr;
-		}
+		this->_IntUniforms[Name] = Value;
+	}
+
+	void Material::SetFloat(const std::string& Name, float Value)
+	{
+		this->_FloatUniforms[Name] = Value;
+	}
+
+	void Material::SetDouble(const std::string& Name, double Value)
+	{
+		this->_DoubleUniforms[Name] = Value;
+	}
+
+	void Material::SetVec2(const std::string& Name, const Vec2& Value)
+	{
+		this->_Vec2Uniforms[Name] = Value;
+	}
+
+	void Material::SetVec3(const std::string& Name, const Vec3& Value)
+	{
+		this->_Vec3Uniforms[Name] = Value;
 	}
 
 	void Material::SetTexture(const std::string& Name, Ref<Texture> Value)
 	{
-		this->_Textures[Name] = Value;
-	}
-
-	bool Material::HasTexture(const std::string& Name)
-	{
-		return this->_Textures.contains(Name);
+		this->_TextureUniforms[Name] = Value;
 	}
 
 	void Material::UpdateShader()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		for (auto& Value : this->View<int>())
+		for (auto& [Name, Value] : this->_IntUniforms)
 		{
-			this->_Shader->SetInt(Value->GetName(), Value->GetValue());
+			this->_Shader->SetInt(Name, Value);
 		}
 
-		for (auto& Value : this->View<float>())
+		for (auto& [Name, Value] : this->_FloatUniforms)
 		{
-			this->_Shader->SetFloat(Value->GetName(), Value->GetValue());
+			this->_Shader->SetFloat(Name, Value);
 		}
 
-		for (auto& Value : this->View<double>())
+		for (auto& [Name, Value] : this->_DoubleUniforms)
 		{
-			this->_Shader->SetDouble(Value->GetName(), Value->GetValue());
+			this->_Shader->SetDouble(Name, Value);
 		}
 
-		for (auto& Value : this->View<Vec2>())
+		for (auto& [Name, Value] : this->_Vec2Uniforms)
 		{
-			this->_Shader->SetVec2(Value->GetName(), Value->GetValue());
+			this->_Shader->SetVec2(Name, Value);
 		}
 
-		for (auto& Value : this->View<Vec3>())
+		for (auto& [Name, Value] : this->_Vec3Uniforms)
 		{
-			this->_Shader->SetVec3(Value->GetName(), Value->GetValue());
+			this->_Shader->SetVec3(Name, Value);
 		}
 
 		int TextureUnit = 0;
-		for (auto& [Name, Value] : this->_Textures)
+		for (auto& [Name, Value] : this->_TextureUniforms)
 		{
 			this->_Shader->SetTexture(Name, Value, TextureUnit);
 			TextureUnit++;

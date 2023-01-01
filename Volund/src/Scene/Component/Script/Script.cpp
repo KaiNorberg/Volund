@@ -5,6 +5,11 @@
 
 namespace Volund
 {
+	bool Script::Compare(sol::table Other)
+	{
+		return this->_ID == Other.pointer();
+	}
+
 	void Script::Procedure(const Event& E)
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -19,7 +24,7 @@ namespace Volund
 			{
 				try
 				{		
-					this->_LuaOnUpdate(this->_LuaTable, TS);
+					this->_LuaOnUpdate(this->Table, TS);
 				}
 				catch (sol::error E)
 				{
@@ -39,13 +44,13 @@ namespace Volund
 	void Script::OnCreate()
 	{
 		auto ThisEntity = sol::make_object(this->_LuaState, LuaEntity(this->GetScene(), this->GetEntity()));
-		this->_LuaTable["Entity"] = ThisEntity;
+		this->Table["Entity"] = ThisEntity;
 
 		if (this->_LuaOnCreate.valid())
 		{
 			try
 			{
-				this->_LuaOnCreate(this->_LuaTable, this->_Args);
+				this->_LuaOnCreate(this->Table, this->_Args);
 			}
 			catch (sol::error E)
 			{
@@ -62,7 +67,7 @@ namespace Volund
 		{
 			try
 			{
-				this->_LuaOnDestroy(this->_LuaTable);
+				this->_LuaOnDestroy(this->Table);
 			}
 			catch (sol::error E)
 			{
@@ -71,18 +76,20 @@ namespace Volund
 		}
 	}
 
-	Script::Script(const sol::this_state& S, sol::table Table, sol::table Args) : _LuaState(S)
+	Script::Script(const sol::this_state& S, sol::table LuaTable, sol::table Args) : _LuaState(S)
 	{
 		this->_Args = Args;
 
-		this->_LuaOnCreate = Table["OnCreate"];
-		this->_LuaOnUpdate = Table["OnUpdate"];
-		this->_LuaOnDestroy = Table["OnDestroy"];
+		this->_LuaOnCreate = LuaTable["OnCreate"];
+		this->_LuaOnUpdate = LuaTable["OnUpdate"];
+		this->_LuaOnDestroy = LuaTable["OnDestroy"];
 
-		this->_LuaTable = this->_LuaState.create_table_with();
-		for (auto& [Key, Value] : Table)
+		this->_ID = (void*)LuaTable.pointer();
+
+		this->Table = this->_LuaState.create_table_with();
+		for (auto& [Key, Value] : LuaTable)
 		{
-			this->_LuaTable[Key] = Value;
+			this->Table[Key] = Value;
 		}
 	}
 }

@@ -26,10 +26,10 @@ namespace Volund
 		void AttachModule(Ref<T> NewModule);
 
 		template<typename T>
-		Ref<T> GetModule(int Index = 0);
+		Ref<T> GetModule();
 
 		template<typename T>
-		bool HasModule(int Index = 0);
+		bool HasModule();
 
 		virtual void OnRun() = 0;
 		virtual void OnTerminate() = 0;
@@ -61,6 +61,11 @@ namespace Volund
 	template<typename T>
 	void Application::AttachModule(T* NewModule)
 	{
+		if (this->HasModule<T>())
+		{
+			VOLUND_ERROR("Module of specifed type already attached!");
+		}
+
 		this->_Modules.PushBack(NewModule);
 		NewModule->OnAttach(this);
 	}
@@ -68,19 +73,24 @@ namespace Volund
 	template<typename T>
 	void Application::AttachModule(Ref<T> NewModule)
 	{
+		if (this->HasModule<T>())
+		{
+			VOLUND_ERROR("Module of specifed type already attached!");
+		}
+
 		this->_Modules.PushBack(NewModule);
 		NewModule->OnAttach(this);
 	}
 
 	template<typename T>
-	inline Ref<T> Application::GetModule(int Index)
+	inline Ref<T> Application::GetModule()
 	{
-		return this->_Modules.Get<T>(Index);
+		return this->_Modules.Get<T>();
 	}
 
 	template<typename T>
-	inline bool Application::HasModule(int Index)
+	inline bool Application::HasModule()
 	{
-		return this->_Modules.Contains<T>(Index);
+		return this->_Modules.Contains<T>();
 	}
 }

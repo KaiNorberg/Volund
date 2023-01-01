@@ -3,13 +3,13 @@
 
 #include "Scene/Component/Components.h"
 
-#include "Lua/LuaComponent/LuaComponents.h"
+#include "Lua/LuaComponent/LuaComponent.h"
 #include "Lua/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaMesh/LuaMesh.h"
 
 namespace Volund
 {
-	void LuaEntity::AddComponent(sol::this_state S, LuaComponent Component, const sol::table& Table)
+	void LuaEntity::AddComponent(sol::this_state S, LuaComponentID Component, const sol::table& Table)
 	{
 		if (!this->_Scene->HasEntity(this->_Entity))
 		{
@@ -20,7 +20,7 @@ namespace Volund
 
 		switch (Component)
 		{
-		case LuaComponent::CAMERA:
+		case LuaComponentID::CAMERA:
 		{
 			auto NewComponent = this->_Scene->CreateComponent<Camera>(this->_Entity);
 
@@ -40,7 +40,7 @@ namespace Volund
 			}
 		}
 		break;
-		case LuaComponent::CAMERA_MOVEMENT:
+		case LuaComponentID::CAMERA_MOVEMENT:
 		{
 			auto NewComponent = this->_Scene->CreateComponent<CameraMovement>(this->_Entity);
 
@@ -55,7 +55,7 @@ namespace Volund
 			}
 		}
 		break;
-		case LuaComponent::MESH_RENDERER:
+		case LuaComponentID::MESH_RENDERER:
 		{
 			if (Table["Mesh"] != sol::lua_nil && Table["Material"] != sol::lua_nil)
 			{
@@ -70,7 +70,7 @@ namespace Volund
 			}
 		}
 		break;
-		case LuaComponent::POINT_LIGHT:
+		case LuaComponentID::POINT_LIGHT:
 		{
 			auto NewComponent = this->_Scene->CreateComponent<PointLight>(this->_Entity);
 
@@ -86,19 +86,19 @@ namespace Volund
 			}
 		}
 		break;
-		case LuaComponent::SCRIPT:
+		case LuaComponentID::SCRIPT:
 		{
 			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, S, Table["Script"], Table);
 		}
 		break;
-		case LuaComponent::TAG:
+		case LuaComponentID::TAG:
 		{
 			std::string String = Table["String"];
 
 			auto NewComponent = this->_Scene->CreateComponent<Tag>(this->_Entity, String);
 		}
 		break;
-		case LuaComponent::TRANSFORM:
+		case LuaComponentID::TRANSFORM:
 		{
 			auto NewComponent = this->_Scene->CreateComponent<Transform>(this->_Entity);
 
@@ -129,7 +129,7 @@ namespace Volund
 		}
 	}
 
-	void LuaEntity::DeleteComponent(sol::this_state S, LuaComponent Component, uint64_t I)
+	void LuaEntity::DeleteComponent(sol::this_state S, LuaComponentID Component, uint64_t I)
 	{
 		if (!this->_Scene->HasEntity(this->_Entity))
 		{
@@ -140,37 +140,37 @@ namespace Volund
 
 		switch (Component)
 		{
-		case LuaComponent::CAMERA:
+		case LuaComponentID::CAMERA:
 		{
 			this->_Scene->DeleteComponent<Camera>(this->_Entity, I);
 		}
 		break;
-		case LuaComponent::CAMERA_MOVEMENT:
+		case LuaComponentID::CAMERA_MOVEMENT:
 		{
 			this->_Scene->DeleteComponent<CameraMovement>(this->_Entity, I);
 		}
 		break;
-		case LuaComponent::MESH_RENDERER:
+		case LuaComponentID::MESH_RENDERER:
 		{
 			this->_Scene->DeleteComponent<MeshRenderer>(this->_Entity, I);
 		}
 		break;
-		case LuaComponent::POINT_LIGHT:
+		case LuaComponentID::POINT_LIGHT:
 		{
 			this->_Scene->DeleteComponent<PointLight>(this->_Entity, I);
 		}
 		break;
-		case LuaComponent::SCRIPT:
+		case LuaComponentID::SCRIPT:
 		{
 			this->_Scene->DeleteComponent<Script>(this->_Entity, I);
 		}
 		break;
-		case LuaComponent::TAG:
+		case LuaComponentID::TAG:
 		{
 			this->_Scene->DeleteComponent<Tag>(this->_Entity, I);
 		}
 		break;
-		case LuaComponent::TRANSFORM:
+		case LuaComponentID::TRANSFORM:
 		{
 			this->_Scene->DeleteComponent<Transform>(this->_Entity, I);
 		}
@@ -183,7 +183,119 @@ namespace Volund
 		}
 	}
 
-	sol::object LuaEntity::GetComponent(sol::this_state S, LuaComponent Component, uint64_t I)
+	bool LuaEntity::HasComponent(LuaComponentID Component)
+	{
+		if (!this->_Scene->HasEntity(this->_Entity))
+		{
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+
+			return false;
+		}
+
+		switch (Component)
+		{
+		case LuaComponentID::CAMERA:
+		{
+			return this->_Scene->HasComponent<Camera>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::CAMERA_MOVEMENT:
+		{
+			return this->_Scene->HasComponent<CameraMovement>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::MESH_RENDERER:
+		{
+			return this->_Scene->HasComponent<MeshRenderer>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::POINT_LIGHT:
+		{
+			return this->_Scene->HasComponent<PointLight>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::SCRIPT:
+		{
+			return this->_Scene->HasComponent<Script>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::TAG:
+		{
+			return this->_Scene->HasComponent<Tag>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::TRANSFORM:
+		{
+			return this->_Scene->HasComponent<Transform>(this->_Entity);
+		}
+		break;
+		default:
+		{
+			VOLUND_ERROR("Unknown Component type (%d)!", Component);
+		}
+		break;
+		}
+
+		return false;
+	}
+
+	uint64_t LuaEntity::ComponentAmount(LuaComponentID Component)
+	{
+		if (!this->_Scene->HasEntity(this->_Entity))
+		{
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+
+			return 0;
+		}
+
+		switch (Component)
+		{
+		case LuaComponentID::CAMERA:
+		{
+			return this->_Scene->ComponentAmount<Camera>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::CAMERA_MOVEMENT:
+		{
+			return this->_Scene->ComponentAmount<CameraMovement>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::MESH_RENDERER:
+		{
+			return this->_Scene->ComponentAmount<MeshRenderer>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::POINT_LIGHT:
+		{
+			return this->_Scene->ComponentAmount<PointLight>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::SCRIPT:
+		{
+			return this->_Scene->ComponentAmount<Script>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::TAG:
+		{
+			return this->_Scene->ComponentAmount<Tag>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::TRANSFORM:
+		{
+			return this->_Scene->ComponentAmount<Transform>(this->_Entity);
+		}
+		break;
+		default:
+		{
+			VOLUND_ERROR("Unknown Component type (%d)!", Component);
+		}
+		break;
+		}
+
+		return 0;
+	}
+
+	sol::table LuaEntity::GetComponent(sol::this_state S, LuaComponentID Component, uint64_t I)
 	{
 		if (!this->_Scene->HasEntity(this->_Entity))
 		{
@@ -194,39 +306,39 @@ namespace Volund
 
 		switch (Component)
 		{
-		case LuaComponent::CAMERA:
+		case LuaComponentID::CAMERA:
 		{
-			return sol::make_object(S, LuaCamera(this->_Scene->GetComponent<Camera>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<Camera>(this->_Entity, I));
 		}
 		break;
-		case LuaComponent::CAMERA_MOVEMENT:
+		case LuaComponentID::CAMERA_MOVEMENT:
 		{
-			return sol::make_object(S, LuaCameraMovement(this->_Scene->GetComponent<CameraMovement>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<CameraMovement>(this->_Entity, I));
 		}
 		break;
-		case LuaComponent::MESH_RENDERER:
+		case LuaComponentID::MESH_RENDERER:
 		{
-			return sol::make_object(S, LuaMeshRenderer(this->_Scene->GetComponent<MeshRenderer>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<MeshRenderer>(this->_Entity, I));
 		}
 		break;
-		case LuaComponent::POINT_LIGHT:
+		case LuaComponentID::POINT_LIGHT:
 		{
-			return sol::make_object(S, LuaPointLight(this->_Scene->GetComponent<PointLight>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<PointLight>(this->_Entity, I));
 		}
 		break;
-		case LuaComponent::SCRIPT:
+		case LuaComponentID::SCRIPT:
 		{
-			return sol::make_object(S, LuaScript(this->_Scene->GetComponent<Script>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<Script>(this->_Entity, I));
 		}
 		break;
-		case LuaComponent::TAG:
+		case LuaComponentID::TAG:
 		{
-			return sol::make_object(S, LuaTag(this->_Scene->GetComponent<Tag>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<Tag>(this->_Entity, I));
 		}
 		break;
-		case LuaComponent::TRANSFORM:
+		case LuaComponentID::TRANSFORM:
 		{
-			return sol::make_object(S, LuaTransform(this->_Scene->GetComponent<Transform>(this->_Entity, I)));
+			return GenerateComponentTable(S, this->_Scene->GetComponent<Transform>(this->_Entity, I));
 		}
 		break;
 		default:

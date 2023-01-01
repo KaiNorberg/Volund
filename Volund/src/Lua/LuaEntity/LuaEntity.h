@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Lua/LuaComponent/LuaComponent.h"
+#include "Lua/LuaComponent/LuaComponentID.h"
 
 #include "Scene/Scene.h"
 
@@ -12,11 +12,15 @@ namespace Volund
 
 		int Padding;
 
-		void AddComponent(sol::this_state S, LuaComponent Component, const sol::table& Table);
+		void AddComponent(sol::this_state S, LuaComponentID Component, const sol::table& Table);
 
-		void DeleteComponent(sol::this_state S, LuaComponent Component, uint64_t I = 0);
+		void DeleteComponent(sol::this_state S, LuaComponentID Component, uint64_t I = 0);
 
-		sol::object GetComponent(sol::this_state S, LuaComponent Component, uint64_t I = 0);
+		bool HasComponent(LuaComponentID Component);
+
+		uint64_t ComponentAmount(LuaComponentID Component);
+
+		sol::table GetComponent(sol::this_state S, LuaComponentID Component, uint64_t I = 0);
 
 		void Destroy(sol::this_state S);
 

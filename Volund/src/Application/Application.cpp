@@ -86,7 +86,7 @@ namespace Volund
 
 	Application::~Application()
 	{
-		for (const auto& View : this->_Modules)
+		for (const auto& [TypeID, View] : this->_Modules)
 		{
 			for (const auto& Module : View)
 			{
