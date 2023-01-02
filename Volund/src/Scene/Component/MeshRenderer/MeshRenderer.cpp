@@ -38,14 +38,14 @@ namespace Volund
 		{
 			if (this->_Mesh != nullptr && this->_Material != nullptr)
 			{
-				RendererCommand Command;
-				Command.mesh = this->_Mesh;
-				Command.material = this->_Material;
+				RendererModel Model;
+				Model.mesh = this->_Mesh;
+				Model.material = this->_Material;
 
 				auto TransformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
-				Command.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);
+				Model.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);
 
-				Renderer::Submit(Command);
+				Renderer::Submit(Model);
 			}
 		}
 		break;

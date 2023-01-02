@@ -53,10 +53,10 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
 			//Mesh
-			"GetMesh", [C](sol::table Self) { return C->GetMesh(); },
+			"GetMesh", [C](sol::table Self) { return LuaMesh(C->GetMesh()); },
 			"SetMesh", [C](sol::table Self, LuaMesh Mesh) { C->SetMesh(Mesh.Get()); },
 			//Material
-			"GetMaterial", [C](sol::table Self) { return C->GetMaterial(); },
+			"GetMaterial", [C](sol::table Self) { return LuaMaterial(C->GetMaterial()); },
 			"SetMaterial", [C](sol::table Self, LuaMaterial Material) { C->SetMaterial(Material.Get()); }
 		);
 

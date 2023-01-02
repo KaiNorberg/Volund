@@ -7,25 +7,10 @@ namespace Volund
 {
 	void ForwardRenderer::Begin()
 	{
-		uint64_t OldCommandSize = this->_Data.CommandQueue.size();
+		uint64_t OldCommandSize = this->_Data.Models.size();
 
 		this->_Data = Data();
-		this->_Data.CommandQueue.reserve(OldCommandSize);
-	}
-
-	void ForwardRenderer::Submit(const RendererCommand& Command)
-	{
-		this->_Data.CommandQueue.push_back(Command);
-	}
-
-	void ForwardRenderer::Submit(const RendererLight& Light)
-	{
-		this->_Data.Lights.push_back(Light);
-	}
-
-	void ForwardRenderer::Submit(const RendererEye& Eye)
-	{
-		this->_Data.Eyes.push_back(Eye);
+		this->_Data.Models.reserve(OldCommandSize);
 	}
 
 	void ForwardRenderer::End()
@@ -48,25 +33,25 @@ namespace Volund
 			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)TargetSpec.Width, (int32_t)TargetSpec.Height);
 
 			Ref<Material> PrevMaterial = nullptr;
-			for (const auto& Command : this->_Data.CommandQueue)
+			for (const auto& Model : this->_Data.Models)
 			{
-				if (!Command.Discriminated)
+				if (!Model.Discriminated)
 				{
-					if (Command.material != PrevMaterial)
+					if (Model.material != PrevMaterial)
 					{
-						Command.material->UpdateShader();
-						PrevMaterial = Command.material;
+						Model.material->UpdateShader();
+						PrevMaterial = Model.material;
 					}
 
-					Ref<Shader> MaterialShader = Command.material->GetShader();
+					Ref<Shader> MaterialShader = Model.material->GetShader();
 
 					if (MaterialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
 					{
-						MaterialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, Command.ModelMatrix);
+						MaterialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, Model.ModelMatrix);
 					}
 
-					Command.mesh->Bind();
-					this->_API->DrawIndexed(Command.mesh);
+					Model.mesh->Bind();
+					this->_API->DrawIndexed(Model.mesh);
 				}
 			}
 

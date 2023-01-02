@@ -5,24 +5,19 @@
 
 namespace Volund
 {
-	RendererInstance::RendererInstance()
+	void RendererInstance::Submit(const RendererModel& Model)
 	{
-		this->_CameraUniforms = UniformBuffer::Create();
-		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
-		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
-		this->_CameraUniforms->Allocate();
+		this->_Data.Models.push_back(Model);
+	}
 
-		this->_LightsUniforms = UniformBuffer::Create();
-		this->_LightsUniforms->PushScalar<int>("LightAmount");
-		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
-		{
-			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
-		}
-		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
-		{
-			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
-		}
-		this->_LightsUniforms->Allocate();
+	void RendererInstance::Submit(const RendererLight& Light)
+	{
+		this->_Data.Lights.push_back(Light);
+	}
+
+	void RendererInstance::Submit(const RendererEye& Eye)
+	{
+		this->_Data.Eyes.push_back(Eye);
 	}
 
 	void RendererInstance::UpdateLightUniforms()
@@ -47,16 +42,36 @@ namespace Volund
 
 		Mat4x4 ViewProjMatrix = Eye.ProjectionMatrix * Eye.ViewMatrix;
 		this->_CameraUniforms->Set("ViewProjMatrix", &ViewProjMatrix);
-		this->_CameraUniforms->Set("EyePosition", &Eye.Position);		
-		
+		this->_CameraUniforms->Set("EyePosition", &Eye.Position);
+
 		this->_CameraUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
+	}
+
+	RendererInstance::RendererInstance()
+	{
+		this->_CameraUniforms = UniformBuffer::Create();
+		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
+		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
+		this->_CameraUniforms->Allocate();
+
+		this->_LightsUniforms = UniformBuffer::Create();
+		this->_LightsUniforms->PushScalar<int>("LightAmount");
+		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
+		{
+			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
+		}
+		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
+		{
+			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
+		}
+		this->_LightsUniforms->Allocate();
 	}
 
 	void RendererInstance::Data::Sort()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		std::sort(this->CommandQueue.begin(), this->CommandQueue.end(), [](const RendererCommand& A, const RendererCommand& B)
+		std::sort(this->Models.begin(), this->Models.end(), [](const RendererModel& A, const RendererModel& B)
 		{
 			return A.material < B.material;
 		});
@@ -68,9 +83,9 @@ namespace Volund
 
 		Frustum CameraFrustum(Eye.ProjectionMatrix * Eye.ViewMatrix);
 
-		for (auto& Command : this->CommandQueue)
+		for (auto& Model : this->Models)
 		{
-			Command.Discriminated = !CameraFrustum.ContainsAABB(Command.mesh->GetAABB(Command.ModelMatrix));
+			Model.Discriminated = !CameraFrustum.ContainsAABB(Model.mesh->GetAABB(Model.ModelMatrix));
 		}
 	}
 
@@ -96,11 +111,11 @@ namespace Volund
 		_Instance->Begin();
 	}
 
-	void Renderer::Submit(const RendererCommand& Command)
+	void Renderer::Submit(const RendererModel& Model)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		_Instance->Submit(Command);
+		_Instance->Submit(Model);
 	}
 
 	void Renderer::Submit(const RendererLight& Light)

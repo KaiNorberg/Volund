@@ -18,6 +18,8 @@ namespace Volund
 
 		LuaEntity CreateEntity();
 
+		LuaEntity CreateEntityWithComponents(sol::this_state S, sol::table Components);
+
 		sol::table ComponentView(sol::this_state S, LuaComponentID Component);
 
 		sol::table ScriptView(sol::this_state S, sol::table ScriptTable);

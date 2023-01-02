@@ -121,7 +121,7 @@ namespace Volund
 		this->_SolState.new_usertype<LuaScene>("VOLUND_SCENE", sol::no_constructor,
 			"Padding", &LuaScene::Padding,
 			"TimeSinceStart", &LuaScene::TimeSinceStart,
-			"CreateEntity", &LuaScene::CreateEntity,
+			"CreateEntity", sol::overload(&LuaScene::CreateEntity, &LuaScene::CreateEntityWithComponents),
 			"View", sol::overload(&LuaScene::ComponentView, &LuaScene::ScriptView));
 
 		this->_SolState.new_usertype<LuaInput>("VOLUND_INPUT", sol::no_constructor,

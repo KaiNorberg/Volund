@@ -17,6 +17,19 @@ namespace Volund
 		return LuaEntity(this->_Scene.get());
 	}
 
+	LuaEntity LuaScene::CreateEntityWithComponents(sol::this_state S, sol::table Components)
+	{
+		LuaEntity NewEntity = this->CreateEntity();
+
+		for (auto& Component : Components)
+		{
+			sol::table ComponentTable = ((sol::table)Component.second);
+			NewEntity.AddComponent(S, ComponentTable[1], ComponentTable[2]);
+		}
+
+		return NewEntity;
+	}
+
 	sol::table LuaScene::ComponentView(sol::this_state S, LuaComponentID Component)
 	{
 		switch (Component)

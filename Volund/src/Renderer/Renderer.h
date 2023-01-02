@@ -16,7 +16,7 @@
 
 namespace Volund
 {
-	struct RendererCommand
+	struct RendererModel
 	{
 		Mat4x4 ModelMatrix;
 		Ref<Mesh> mesh;
@@ -48,11 +48,11 @@ namespace Volund
 
 		virtual void Begin() = 0;
 
-		virtual void Submit(const RendererCommand& Command) = 0;
+		void Submit(const RendererModel& Model);
 
-		virtual void Submit(const RendererLight& Light) = 0;
+		void Submit(const RendererLight& Light);
 
-		virtual void Submit(const RendererEye& Eye) = 0;
+		void Submit(const RendererEye& Eye);
 
 		virtual void End() = 0;
 
@@ -72,7 +72,7 @@ namespace Volund
 
 			void Discriminate(const RendererEye& Eye);
 
-			std::vector<RendererCommand> CommandQueue;
+			std::vector<RendererModel> Models;
 			std::vector<RendererLight> Lights;
 			std::vector<RendererEye> Eyes;
 		} _Data;
@@ -97,7 +97,7 @@ namespace Volund
 
 		static void Begin();
 
-		static void Submit(const RendererCommand& Command);
+		static void Submit(const RendererModel& Model);
 
 		static void Submit(const RendererLight& Light);
 
