@@ -114,6 +114,7 @@ namespace Volund
 			"AddComponent", &LuaEntity::AddComponent,
 			"DeleteComponent", &LuaEntity::DeleteComponent,
 			"GetComponent", &LuaEntity::GetComponent,
+			"GetScript", &LuaEntity::GetScript,
 			"HasComponent", &LuaEntity::HasComponent,
 			"ComponentAmount", &LuaEntity::ComponentAmount);
 
@@ -145,6 +146,7 @@ namespace Volund
 			"w", &LuaVec4::w,
 			"Length", &LuaVec4::Length,
 			"Normalize", &LuaVec4::Normalize,
+			"Reflect", &LuaVec4::Reflect,
 			sol::meta_function::addition,		sol::overload(sol::resolve<LuaVec4(const LuaVec4&)>(&LuaVec4::operator+), sol::resolve<LuaVec4(float)>(&LuaVec4::operator+)),
 			sol::meta_function::subtraction,	sol::overload(sol::resolve<LuaVec4(const LuaVec4&)>(&LuaVec4::operator-), sol::resolve<LuaVec4(float)>(&LuaVec4::operator-)),
 			sol::meta_function::multiplication, sol::overload(sol::resolve<LuaVec4(const LuaVec4&)>(&LuaVec4::operator*), sol::resolve<LuaVec4(float)>(&LuaVec4::operator*)),
@@ -157,6 +159,7 @@ namespace Volund
 			"Length", &LuaVec3::Length,
 			"Normalize", &LuaVec3::Normalize,
 			"Cross", &LuaVec3::Cross,
+			"Reflect", &LuaVec3::Reflect,
 			sol::meta_function::addition,		sol::overload(sol::resolve<LuaVec3(const LuaVec3&)>(&LuaVec3::operator+), sol::resolve<LuaVec3(float)>(&LuaVec3::operator+)),
 			sol::meta_function::subtraction,	sol::overload(sol::resolve<LuaVec3(const LuaVec3&)>(&LuaVec3::operator-), sol::resolve<LuaVec3(float)>(&LuaVec3::operator-)),
 			sol::meta_function::multiplication, sol::overload(sol::resolve<LuaVec3(const LuaVec3&)>(&LuaVec3::operator*), sol::resolve<LuaVec3(float)>(&LuaVec3::operator*)),
@@ -167,6 +170,7 @@ namespace Volund
 			"y", &LuaVec2::y,
 			"Length", &LuaVec2::Length,
 			"Normalize", &LuaVec2::Normalize,
+			"Reflect", &LuaVec2::Reflect,
 			sol::meta_function::addition,		sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator+), sol::resolve<LuaVec2(float)>(&LuaVec2::operator+)),
 			sol::meta_function::subtraction,	sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator-), sol::resolve<LuaVec2(float)>(&LuaVec2::operator-)),
 			sol::meta_function::multiplication, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator*), sol::resolve<LuaVec2(float)>(&LuaVec2::operator*)),

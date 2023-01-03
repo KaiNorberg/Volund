@@ -22,6 +22,8 @@ namespace Volund
 
 		uint64_t ComponentAmount(sol::this_state S, LuaComponentID Component);
 
+		sol::table GetScript(sol::this_state S, sol::table Table);
+
 		sol::table GetComponent(sol::this_state S, LuaComponentID Component, uint64_t I = 0);
 
 		LuaEntity(LuaScene* ThisScene, Entity entity);

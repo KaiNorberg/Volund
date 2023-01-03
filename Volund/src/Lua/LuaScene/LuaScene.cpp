@@ -319,6 +319,22 @@ namespace Volund
 		return 0;
 	}
 
+	sol::table LuaScene::GetScript(sol::this_state S, Entity entity, sol::table Table)
+	{
+		for (int i = 0; i < this->_Scene->ComponentAmount<Script>(entity); i++)
+		{
+			auto EntityScript = this->_Scene->GetComponent<Script>(entity, i);
+			if (EntityScript->Compare(Table))
+			{
+				return EntityScript->Table;
+			}
+		}
+
+		VOLUND_WARNING("Entity does not conntain Script!");
+
+		return nullptr;
+	}
+
 	sol::table LuaScene::GetComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID, uint64_t I)
 	{
 		if (!this->_Scene->HasEntity(entity))

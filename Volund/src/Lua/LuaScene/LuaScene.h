@@ -28,6 +28,8 @@ namespace Volund
 
 		uint64_t ComponentAmount(sol::this_state S, Entity entity, LuaComponentID ComponentID);
 
+		sol::table GetScript(sol::this_state S, Entity entity, sol::table Table);
+
 		sol::table GetComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID, uint64_t I = 0);
 
 		sol::table ComponentView(sol::this_state S, LuaComponentID ComponentID);

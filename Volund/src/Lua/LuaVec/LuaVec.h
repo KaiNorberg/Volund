@@ -19,6 +19,8 @@ namespace Volund
 
 		LuaVec<Size, T> Normalize();
 
+		LuaVec<Size, T> Reflect(const LuaVec<Size, T>& Normal);
+
 		T Length();
 		
 		int GetSize();
@@ -96,6 +98,12 @@ namespace Volund
 		}
 
 		return Temp;
+	}
+
+	template<int Size, typename T>
+	inline LuaVec<Size, T> LuaVec<Size, T>::Reflect(const LuaVec<Size, T>& Normal)
+	{
+		return LuaVec<Size, T>(glm::reflect(this->GLM(), Normal.GLM()));
 	}
 
 	template<int Size, typename T>

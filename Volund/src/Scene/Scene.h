@@ -123,7 +123,7 @@ namespace Volund
 
 		uint64_t EntityIndex = FindEntity(entity);
 
-		return EntityIndex != -1 && this->_Registry[EntityIndex].second.Contains<T>() && this->_Registry[EntityIndex].second.Size<T>();
+		return EntityIndex != -1 && this->_Registry[EntityIndex].second.Contains<T>() ? this->_Registry[EntityIndex].second.Size<T>() : 0;
 	}
 
 	template<typename T>

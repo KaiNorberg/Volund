@@ -30,6 +30,11 @@ namespace Volund
 		return this->_Scene->ComponentAmount(S, this->_Entity, Component);
 	}
 
+	sol::table LuaEntity::GetScript(sol::this_state S, sol::table Table)
+	{
+		return this->_Scene->GetScript(S, this->_Entity, Table);
+	}
+
 	sol::table LuaEntity::GetComponent(sol::this_state S, LuaComponentID Component, uint64_t I)
 	{
 		return this->_Scene->GetComponent(S, this->_Entity, Component, I);
