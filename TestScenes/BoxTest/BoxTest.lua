@@ -5,20 +5,20 @@ SimpleShader = Shader:new("Simple.vshader")
 
 RedMaterial = Material:new(SimpleShader)
 RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
-RedMaterial:SetVec3("AmbientLighting", Vec3:new(1.0))
+RedMaterial:SetVec3("AmbientLighting", Vec3:new(1.0, 1.0, 1.0))
 
 BlueMaterial = Material:new(SimpleShader)
 BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
-BlueMaterial:SetVec3("AmbientLighting", Vec3:new(1.0))
+BlueMaterial:SetVec3("AmbientLighting", Vec3:new(1.0, 1.0, 1.0))
 
 CubeMesh = Mesh:new("Cube.vobj")
 
-Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 25.0)})
-Camera:AddComponent(Component.CAMERA, {IsActive = true})
-Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
-
 Count = 20
+
+Camera = Scene:CreateEntity()
+Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 25)})
+Camera:AddComponent(Component.CAMERA, {NearPlane = 1.0})
+Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
 
 for X = -Count / 2, Count / 2 do
     for Y = -Count / 2, Count / 2 do

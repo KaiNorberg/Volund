@@ -24,6 +24,7 @@
 #include <memory>
 #include <string_view>
 #include <atomic>
+#include <set>
 
 #include <sol/sol.hpp>
 

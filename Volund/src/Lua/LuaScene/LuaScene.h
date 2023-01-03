@@ -18,9 +18,19 @@ namespace Volund
 
 		LuaEntity CreateEntity();
 
-		LuaEntity CreateEntityWithComponents(sol::this_state S, sol::table Components);
+		void DeleteEntity(LuaEntity E);
 
-		sol::table ComponentView(sol::this_state S, LuaComponentID Component);
+		void AddComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID, sol::table Table);
+
+		void DeleteComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID, uint64_t I = 0);
+
+		bool HasComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID);
+
+		uint64_t ComponentAmount(sol::this_state S, Entity entity, LuaComponentID ComponentID);
+
+		sol::table GetComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID, uint64_t I = 0);
+
+		sol::table ComponentView(sol::this_state S, LuaComponentID ComponentID);
 
 		sol::table ScriptView(sol::this_state S, sol::table ScriptTable);
 
@@ -30,6 +40,11 @@ namespace Volund
 
 		template<typename T>
 		sol::table GenerateComponentView(sol::this_state S);
+
+		template<typename T>
+		sol::table GetComponentTable(sol::this_state S, Entity E, Ref<T> C);
+
+		std::unordered_map<Ref<Component>, sol::table> _ComponentCache;
 
 		Ref<Scene> _Scene;
 	};
@@ -46,9 +61,24 @@ namespace Volund
 
 		for (auto& Component : View)
 		{
-			Output.add(GenerateComponentTable(S, Component));
+			Output.add(GetComponentTable(S, Component->GetEntity(), Component));
 		}
 
 		return Output;
+	}
+
+	template<typename T>
+	inline sol::table LuaScene::GetComponentTable(sol::this_state S, Entity E, Ref<T> C)
+	{
+		if (_ComponentCache.contains(C))
+		{
+			return _ComponentCache[C];
+		}
+		else
+		{
+			auto NewTable = GenerateComponentTable(S, LuaEntity(this, E), C);
+			_ComponentCache[C] = NewTable;
+			return NewTable;
+		}
 	}
 }

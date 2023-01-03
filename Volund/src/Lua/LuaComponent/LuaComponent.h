@@ -7,5 +7,5 @@
 namespace Volund
 {
 	template<typename T>
-	sol::table GenerateComponentTable(sol::this_state S, Ref<T> C);
+	sol::table GenerateComponentTable(sol::this_state S, const LuaEntity& E, Ref<T> C);
 }

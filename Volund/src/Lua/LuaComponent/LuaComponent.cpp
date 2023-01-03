@@ -5,16 +5,16 @@
 #include "Lua/LuaMesh/LuaMesh.h"
 #include "Lua/LuaMaterial/LuaMaterial.h"
 
-#define VOLUND_BASE_TABLE() "Entity", LuaEntity(C->GetScene(), C->GetEntity())
+#define VOLUND_BASE_TABLE(EntityInstance) "Entity", EntityInstance
 
 namespace Volund
 {
 	template<>
-	sol::table GenerateComponentTable<Camera>(sol::this_state S, Ref<Camera> C)
+	sol::table GenerateComponentTable<Camera>(sol::this_state S, const LuaEntity& E, Ref<Camera> C)
 	{
 		sol::state_view StateView = S;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//FOV
 			"GetFOV", [C](sol::table Self) { return C->FOV; },
 			"SetFOV", [C](sol::table Self, float FOV) { C->FOV = FOV; },
@@ -30,11 +30,11 @@ namespace Volund
 	}
 
 	template<>
-	sol::table GenerateComponentTable<CameraMovement>(sol::this_state S, Ref<CameraMovement> C)
+	sol::table GenerateComponentTable<CameraMovement>(sol::this_state S, const LuaEntity& E, Ref<CameraMovement> C)
 	{
 		sol::state_view StateView = S;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Speed
 			"GetSpeed", [C](sol::table Self) { return C->Speed; },
 			"SetSpeed", [C](sol::table Self, float Speed) { C->Speed = Speed; },
@@ -47,11 +47,11 @@ namespace Volund
 	}
 
 	template<>
-	sol::table GenerateComponentTable<MeshRenderer>(sol::this_state S, Ref<MeshRenderer> C)
+	sol::table GenerateComponentTable<MeshRenderer>(sol::this_state S, const LuaEntity& E, Ref<MeshRenderer> C)
 	{
 		sol::state_view StateView = S;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Mesh
 			"GetMesh", [C](sol::table Self) { return LuaMesh(C->GetMesh()); },
 			"SetMesh", [C](sol::table Self, LuaMesh Mesh) { C->SetMesh(Mesh.Get()); },
@@ -64,11 +64,11 @@ namespace Volund
 	}
 
 	template<>
-	sol::table GenerateComponentTable<PointLight>(sol::this_state S, Ref<PointLight> C)
+	sol::table GenerateComponentTable<PointLight>(sol::this_state S, const LuaEntity& E, Ref<PointLight> C)
 	{
 		sol::state_view StateView = S;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Color
 			"GetColor", [C](sol::table Self) { return C->Color; },
 			"SetColor", [C](sol::table Self, const LuaVec3& Color) { C->Color = Color; },
@@ -81,17 +81,17 @@ namespace Volund
 	}
 
 	template<>
-	sol::table GenerateComponentTable<Script>(sol::this_state S, Ref<Script> C)
+	sol::table GenerateComponentTable<Script>(sol::this_state S, const LuaEntity& E, Ref<Script> C)
 	{
 		return C->Table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<Tag>(sol::this_state S, Ref<Tag> C)
+	sol::table GenerateComponentTable<Tag>(sol::this_state S, const LuaEntity& E, Ref<Tag> C)
 	{
 		sol::state_view StateView = S;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//String
 			"Get", [C](sol::table Self) { return C->String; },
 			"Set", [C](sol::table Self, std::string String) { C->String = String; }
@@ -101,11 +101,11 @@ namespace Volund
 	}
 
 	template<>
-	sol::table GenerateComponentTable<Transform>(sol::this_state S, Ref<Transform> C)
+	sol::table GenerateComponentTable<Transform>(sol::this_state S, const LuaEntity& E, Ref<Transform> C)
 	{
 		sol::state_view StateView = S;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(),
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Position
 			"GetPosition", [C](sol::table Self) { return LuaVec3(C->Position); },
 			"SetPosition", [C](sol::table Self, const LuaVec3& Position) { C->Position = Position.GLM(); },

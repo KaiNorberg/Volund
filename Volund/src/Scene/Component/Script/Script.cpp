@@ -43,9 +43,6 @@ namespace Volund
 
 	void Script::OnCreate()
 	{
-		auto ThisEntity = sol::make_object(this->_LuaState, LuaEntity(this->GetScene(), this->GetEntity()));
-		this->Table["Entity"] = ThisEntity;
-
 		if (this->_LuaOnCreate.valid())
 		{
 			try
@@ -76,20 +73,23 @@ namespace Volund
 		}
 	}
 
-	Script::Script(const sol::this_state& S, sol::table LuaTable, sol::table Args) : _LuaState(S)
+	Script::Script(const sol::this_state& S, LuaEntity ThisEntity, sol::table ScriptTable, sol::table Args)
 	{
+		sol::state_view StateView = S;
+
 		this->_Args = Args;
+		this->_ID = (void*)ScriptTable.pointer();
 
-		this->_LuaOnCreate = LuaTable["OnCreate"];
-		this->_LuaOnUpdate = LuaTable["OnUpdate"];
-		this->_LuaOnDestroy = LuaTable["OnDestroy"];
+		this->_LuaOnCreate = ScriptTable["OnCreate"];
+		this->_LuaOnUpdate = ScriptTable["OnUpdate"];
+		this->_LuaOnDestroy = ScriptTable["OnDestroy"];
 
-		this->_ID = (void*)LuaTable.pointer();
-
-		this->Table = this->_LuaState.create_table_with();
-		for (auto& [Key, Value] : LuaTable)
+		this->Table = StateView.create_table_with();
+		for (auto& [Key, Value] : ScriptTable)
 		{
 			this->Table[Key] = Value;
 		}
+
+		this->Table["Entity"] = ThisEntity;
 	}
 }

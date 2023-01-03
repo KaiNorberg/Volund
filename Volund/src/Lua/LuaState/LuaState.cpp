@@ -115,13 +115,13 @@ namespace Volund
 			"DeleteComponent", &LuaEntity::DeleteComponent,
 			"GetComponent", &LuaEntity::GetComponent,
 			"HasComponent", &LuaEntity::HasComponent,
-			"ComponentAmount", &LuaEntity::ComponentAmount,
-			"Destroy", &LuaEntity::Destroy);
+			"ComponentAmount", &LuaEntity::ComponentAmount);
 
 		this->_SolState.new_usertype<LuaScene>("VOLUND_SCENE", sol::no_constructor,
 			"Padding", &LuaScene::Padding,
 			"TimeSinceStart", &LuaScene::TimeSinceStart,
-			"CreateEntity", sol::overload(&LuaScene::CreateEntity, &LuaScene::CreateEntityWithComponents),
+			"CreateEntity", &LuaScene::CreateEntity,
+			"DeleteEntity", &LuaScene::DeleteEntity,
 			"View", sol::overload(&LuaScene::ComponentView, &LuaScene::ScriptView));
 
 		this->_SolState.new_usertype<LuaInput>("VOLUND_INPUT", sol::no_constructor,
