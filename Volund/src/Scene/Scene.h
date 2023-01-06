@@ -41,9 +41,6 @@ namespace Volund
 		template <typename T>
 		void View(std::vector<Ref<T>>& Output);
 
-		template <typename T>
-		const Container<Component>& View(Entity entity, std::vector<Ref<T>>& Output);
-
 		void ResizeTarget(uint32_t Width, uint32_t Height);
 		
 		void Procedure(const Event& E);
@@ -153,15 +150,5 @@ namespace Volund
 				Output.push_back(std::dynamic_pointer_cast<T>(component));
 			}
 		}
-	}
-
-	template<typename T>
-	inline const Container<Component>& Scene::View(Entity entity, std::vector<Ref<T>>& Output)
-	{
-		VOLUND_PROFILE_FUNCTION();
-
-		uint64_t EntityIndex = FindEntity(entity);
-
-		return this->_Registry[EntityIndex].second;
 	}
 }
