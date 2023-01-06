@@ -6,47 +6,44 @@ BigG = 6.674 * 10^-11
 
 local Controller = 
 {
-
+    GravityView = nil
 }
 
 function Controller:OnCreate(Args)
-    View = Scene:View(Gravity)
-    StarMass = View[1].Mass
-    for i = 2, #View do           
-        Position = View[i].Entity:GetComponent(Component.TRANSFORM):GetPosition()
+    self.GravityView = Scene:View(Gravity)
+    StarMass = self.GravityView[1].Mass
+    for i = 2, #self.GravityView do           
+        Position = self.GravityView[i].Entity:GetComponent(Component.TRANSFORM):GetPosition()
 
         Speed = math.sqrt((BigG * StarMass) / (Position:Length()))
 
         Direction = (Vec3:new(0.0) - Position):Normalize()
 
-        View[i].Velocity = Direction:Cross(Vec3:new(0, 1, 0)):Normalize() * (Speed)
+        self.GravityView[i].Velocity = Direction:Cross(Vec3:new(0, 1, 0)):Normalize() * (Speed)
     end    
 end
 
 function Controller:OnUpdate(TimeStep)
-    View = Scene:View(Gravity)
-    for i = 1, #View do    
-
-        Transform = View[i].Entity:GetComponent(Component.TRANSFORM)
+    for i = 1, #self.GravityView do    
+        Transform = self.GravityView[i].Entity:GetComponent(Component.TRANSFORM)
 
         PositionOne = Transform:GetPosition()
-        MassOne = View[i].Mass 
+        MassOne = self.GravityView[i].Mass 
 
-        for j = i + 1, #View do               
-            PositionTwo = View[j].Entity:GetComponent(Component.TRANSFORM):GetPosition()
-
-            MassTwo = View[j].Mass
+        for j = i + 1, #self.GravityView do               
+            PositionTwo = self.GravityView[j].Entity:GetComponent(Component.TRANSFORM):GetPosition()
+            MassTwo = self.GravityView[j].Mass
 
             Distance = (PositionOne - PositionTwo):Length()
 
             Force = ((BigG) / ((Distance * Distance)))
             Direction = (PositionTwo - PositionOne) / Distance
 
-            View[i].Velocity = View[i].Velocity + Direction * Force * TimeUnit * MassTwo
-            View[j].Velocity = View[j].Velocity - Direction * Force * TimeUnit * MassOne
+            self.GravityView[i].Velocity = self.GravityView[i].Velocity + Direction * Force * TimeUnit * MassTwo
+            self.GravityView[j].Velocity = self.GravityView[j].Velocity - Direction * Force * TimeUnit * MassOne
         end        
        
-        Transform:AddPosition(View[i].Velocity * TimeUnit)
+        Transform:AddPosition(self.GravityView[i].Velocity * TimeUnit)
     end
 end
 

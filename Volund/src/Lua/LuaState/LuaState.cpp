@@ -62,6 +62,20 @@ namespace Volund
 
 			this->_ThisScene->Procedure(E);
 		}
+
+		switch (E.Type)
+		{
+		case EventType::UPDATE:
+		{
+			this->_SolState.collect_garbage();
+		}
+		break;
+		default:
+		{
+
+		}
+		break;
+		}
 	}
 
 	LuaState::LuaState(Ref<Scene> ThisScene, Ref<Window> ThisWindow)

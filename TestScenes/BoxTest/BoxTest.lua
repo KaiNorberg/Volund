@@ -1,5 +1,5 @@
 Scale = require("Scripts/Scale.lua")
-ShowFPS = require("Scripts/ShowFPS.lua")
+ShowFPS = require("../Common/ShowFPS.lua")
 
 SimpleShader = Shader:new("Simple.vshader")
 

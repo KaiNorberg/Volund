@@ -43,11 +43,6 @@ namespace Volund
 		template<typename T>
 		sol::table GenerateComponentView(sol::this_state S);
 
-		template<typename T>
-		sol::table GetComponentTable(sol::this_state S, Entity E, Ref<T> C);
-
-		std::unordered_map<Ref<Component>, sol::table> _ComponentCache;
-
 		Ref<Scene> _Scene;
 	};
 
@@ -63,24 +58,9 @@ namespace Volund
 
 		for (auto& Component : View)
 		{
-			Output.add(GetComponentTable(S, Component->GetEntity(), Component));
+			Output.add(GenerateComponentTable(S, LuaEntity(this, Component->GetEntity()), Component));
 		}
 
 		return Output;
-	}
-
-	template<typename T>
-	inline sol::table LuaScene::GetComponentTable(sol::this_state S, Entity E, Ref<T> C)
-	{
-		if (_ComponentCache.contains(C))
-		{
-			return _ComponentCache[C];
-		}
-		else
-		{
-			auto NewTable = GenerateComponentTable(S, LuaEntity(this, E), C);
-			_ComponentCache[C] = NewTable;
-			return NewTable;
-		}
 	}
 }

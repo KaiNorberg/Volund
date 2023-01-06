@@ -14,6 +14,8 @@ namespace Volund
 
 		int Padding = 0;
 
+		Entity Get();
+
 		void AddComponent(sol::this_state S, LuaComponentID Component, sol::table Table);
 
 		void DeleteComponent(sol::this_state S, LuaComponentID Component, uint64_t I = 0);

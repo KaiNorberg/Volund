@@ -1,4 +1,4 @@
-ShowFPS = require("Scripts/ShowFPS.lua")
+ShowFPS = require("../Common/ShowFPS.lua")
 Gravity = require("Scripts/Gravity.lua")
 Controller = require("Scripts/Controller.lua")
 

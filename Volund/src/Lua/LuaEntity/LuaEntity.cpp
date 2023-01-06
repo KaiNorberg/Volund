@@ -10,6 +10,11 @@
 
 namespace Volund
 {
+	Entity LuaEntity::Get()
+	{
+		return this->_Entity;
+	}
+
 	void LuaEntity::AddComponent(sol::this_state S, LuaComponentID Component, sol::table Table)
 	{
 		this->_Scene->AddComponent(S, this->_Entity, Component, Table);

@@ -1,3 +1,5 @@
+ShowFPS = require("../Common/ShowFPS.lua")
+
 PBRShader = Shader:new("PBR.vshader")
 
 SphereMesh = Mesh:new("Sphere.vobj")
@@ -6,6 +8,7 @@ Camera = Scene:CreateEntity()
 Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 20.0)})
 Camera:AddComponent(Component.CAMERA, {IsActive = true})
 Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
+Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
 
 PointLight = Scene:CreateEntity()
 PointLight:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0, 150.0)})

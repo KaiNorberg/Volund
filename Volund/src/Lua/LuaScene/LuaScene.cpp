@@ -23,7 +23,7 @@ namespace Volund
 
 	void LuaScene::DeleteEntity(LuaEntity E)
 	{
-
+		this->_Scene->DestroyEntity(E.Get());
 	}
 
 	void LuaScene::AddComponent(sol::this_state S, Entity entity, LuaComponentID ComponentID, sol::table Table)
@@ -159,43 +159,36 @@ namespace Volund
 		{
 		case LuaComponentID::CAMERA:
 		{
-			this->_ComponentCache.erase(this->_Scene->GetComponent<Camera>(entity, I));
 			this->_Scene->DeleteComponent<Camera>(entity, I);
 		}
 		break;
 		case LuaComponentID::CAMERA_MOVEMENT:
 		{
-			this->_ComponentCache.erase(this->_Scene->GetComponent<CameraMovement>(entity, I));
 			this->_Scene->DeleteComponent<CameraMovement>(entity, I);
 		}
 		break;
 		case LuaComponentID::MESH_RENDERER:
 		{
-			this->_ComponentCache.erase(this->_Scene->GetComponent<MeshRenderer>(entity, I));
 			this->_Scene->DeleteComponent<MeshRenderer>(entity, I);
 		}
 		break;
 		case LuaComponentID::POINT_LIGHT:
 		{			
-			this->_ComponentCache.erase(this->_Scene->GetComponent<PointLight>(entity, I));
 			this->_Scene->DeleteComponent<PointLight>(entity, I);
 		}
 		break;
 		case LuaComponentID::SCRIPT:
 		{
-			this->_ComponentCache.erase(this->_Scene->GetComponent<Script>(entity, I));
 			this->_Scene->DeleteComponent<Script>(entity, I);
 		}
 		break;
 		case LuaComponentID::TAG:
 		{
-			this->_ComponentCache.erase(this->_Scene->GetComponent<Tag>(entity, I));
 			this->_Scene->DeleteComponent<Tag>(entity, I);
 		}
 		break;
 		case LuaComponentID::TRANSFORM:
 		{
-			this->_ComponentCache.erase(this->_Scene->GetComponent<Transform>(entity, I));
 			this->_Scene->DeleteComponent<Transform>(entity, I);
 		}
 		break;
@@ -348,37 +341,37 @@ namespace Volund
 		{
 		case LuaComponentID::CAMERA:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<Camera>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<Camera>(entity, I));
 		}
 		break;
 		case LuaComponentID::CAMERA_MOVEMENT:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<CameraMovement>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<CameraMovement>(entity, I));
 		}
 		break;
 		case LuaComponentID::MESH_RENDERER:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<MeshRenderer>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<MeshRenderer>(entity, I));
 		}
 		break;
 		case LuaComponentID::POINT_LIGHT:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<PointLight>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<PointLight>(entity, I));
 		}
 		break;
 		case LuaComponentID::SCRIPT:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<Script>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<Script>(entity, I));
 		}
 		break;
 		case LuaComponentID::TAG:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<Tag>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<Tag>(entity, I));
 		}
 		break;
 		case LuaComponentID::TRANSFORM:
 		{
-			return this->GetComponentTable(S, entity, this->_Scene->GetComponent<Transform>(entity, I));
+			return GenerateComponentTable(S, LuaEntity(this, entity), this->_Scene->GetComponent<Transform>(entity, I));
 		}
 		break;
 		default:
