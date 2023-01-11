@@ -167,6 +167,7 @@ namespace Volund
 			"z", &LuaVec4::z,
 			"w", &LuaVec4::w,
 			"Length", &LuaVec4::Length,
+			"Length2", &LuaVec4::Length2,
 			"Normalize", &LuaVec4::Normalize,
 			"Reflect", &LuaVec4::Reflect,
 			sol::meta_function::addition, sol::overload(sol::resolve<LuaVec4(const LuaVec4&)>(&LuaVec4::operator+), sol::resolve<LuaVec4(float)>(&LuaVec4::operator+)),
@@ -180,6 +181,7 @@ namespace Volund
 			"y", &LuaVec3::y,
 			"z", &LuaVec3::z,
 			"Length", &LuaVec3::Length,
+			"Length2", &LuaVec3::Length2,
 			"Normalize", &LuaVec3::Normalize,
 			"Cross", &LuaVec3::Cross,
 			"Reflect", &LuaVec3::Reflect,
@@ -193,6 +195,7 @@ namespace Volund
 			"x", &LuaVec2::x,
 			"y", &LuaVec2::y,
 			"Length", &LuaVec2::Length,
+			"Length2", &LuaVec2::Length2,
 			"Normalize", &LuaVec2::Normalize,
 			"Reflect", &LuaVec2::Reflect,
 			sol::meta_function::addition, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator+), sol::resolve<LuaVec2(float)>(&LuaVec2::operator+)),
@@ -223,8 +226,8 @@ namespace Volund
 			"CreateEntity", [ThisScene](sol::table Self) { return LuaEntity(ThisScene, ThisScene->CreateEntity()); },
 			"DeleteEntity", [ThisScene](sol::table Self, LuaEntity& E) { return ThisScene->DestroyEntity(E.Get()); },
 			"View", sol::overload(
-				[ThisScene](sol::this_state S, sol::table Self, LuaComponentID ComponentID) {return LuaState::LuaComponentView(S, ThisScene, ComponentID); },
-				[ThisScene](sol::this_state S, sol::table Self, sol::table ScriptTable) {return LuaState::LuaScriptView(S, ThisScene, ScriptTable); })
+				[ThisScene](sol::this_state S, sol::table Self, LuaComponentID ComponentID) { return LuaState::LuaComponentView(S, ThisScene, ComponentID); },
+				[ThisScene](sol::this_state S, sol::table Self, sol::table ScriptTable) { return LuaState::LuaScriptView(S, ThisScene, ScriptTable); })
 		);
 
 		this->_SolState.create_named_table("Input",

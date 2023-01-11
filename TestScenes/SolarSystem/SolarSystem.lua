@@ -4,10 +4,10 @@ Controller = require("Scripts/Controller.lua")
 
 --Variables
 
-SystemRadius = 5 * 10^3
+SystemRadius = 9 * 10^3
 PlanetAmount = 15
-PlanetScale = 0.2
-StarScale = 0.005
+PlanetScale = 0.3
+StarScale = 0.002
 
 MaxPlanetMass = 50
 MinPlanetMass = 5
@@ -32,7 +32,7 @@ Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = Syste
 --Create Galaxy
 
 Star = Scene:CreateEntity()
-Star:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0), Scale = Vec3:new(StarMass * StarScale)})
+Star:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0), Scale = Vec3:new(((6 * StarMass) * math.pi) ^ 1/3 * StarScale)})
 Star:AddComponent(Component.SCRIPT, {Script = Gravity, Mass = StarMass})
 Star:AddComponent(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = StarMaterial})
 

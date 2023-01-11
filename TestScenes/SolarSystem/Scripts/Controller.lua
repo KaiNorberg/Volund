@@ -11,6 +11,7 @@ local Controller =
 
 function Controller:OnCreate(Args)
     self.GravityView = Scene:View(Gravity)
+
     StarMass = self.GravityView[1].Mass
     for i = 2, #self.GravityView do           
         Position = self.GravityView[i].Entity:GetComponent(Component.TRANSFORM):GetPosition()
@@ -20,7 +21,7 @@ function Controller:OnCreate(Args)
         Direction = (Vec3:new(0.0) - Position):Normalize()
 
         self.GravityView[i].Velocity = Direction:Cross(Vec3:new(0, 1, 0)):Normalize() * (Speed)
-    end    
+    end
 end
 
 function Controller:OnUpdate(TimeStep)
@@ -34,13 +35,15 @@ function Controller:OnUpdate(TimeStep)
             PositionTwo = self.GravityView[j].Entity:GetComponent(Component.TRANSFORM):GetPosition()
             MassTwo = self.GravityView[j].Mass
 
-            Distance = (PositionOne - PositionTwo):Length()
+            Delta = PositionOne - PositionTwo
 
-            Force = ((BigG) / ((Distance * Distance)))
-            Direction = (PositionTwo - PositionOne) / Distance
+            Distance2 = Delta:Length2()
 
-            self.GravityView[i].Velocity = self.GravityView[i].Velocity + Direction * Force * TimeUnit * MassTwo
-            self.GravityView[j].Velocity = self.GravityView[j].Velocity - Direction * Force * TimeUnit * MassOne
+            ForceConstant = BigG / Distance2
+            Direction = Delta / math.sqrt(Distance2)
+
+            self.GravityView[i].Velocity = self.GravityView[i].Velocity - Direction * ForceConstant * TimeUnit * MassTwo
+            self.GravityView[j].Velocity = self.GravityView[j].Velocity + Direction * ForceConstant * TimeUnit * MassOne
         end        
        
         Transform:AddPosition(self.GravityView[i].Velocity * TimeUnit)

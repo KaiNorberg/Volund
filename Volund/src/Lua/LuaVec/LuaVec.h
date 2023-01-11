@@ -22,7 +22,9 @@ namespace Volund
 		LuaVec<Size, T> Reflect(const LuaVec<Size, T>& Normal);
 
 		T Length();
-		
+
+		T Length2();
+
 		int GetSize();
 			
 		glm::vec<Size, T> GLM() const;
@@ -109,13 +111,17 @@ namespace Volund
 	template<int Size, typename T>
 	inline T LuaVec<Size, T>::Length()
 	{
+		return sqrt(this->Length2());
+	}
+
+	template<int Size, typename T>
+	inline T LuaVec<Size, T>::Length2()
+	{
 		T Length = T(0);
 		for (int i = 0; i < Size; i++)
 		{
 			Length += ((*this)[i] * (*this)[i]);
 		}
-
-		Length = sqrt(Length);
 
 		return Length;
 	}
