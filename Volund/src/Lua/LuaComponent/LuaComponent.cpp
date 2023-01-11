@@ -1,9 +1,9 @@
 #include "PCH/PCH.h"
 
 #include "Lua/LuaComponent/LuaComponent.h"
-
 #include "Lua/LuaMesh/LuaMesh.h"
 #include "Lua/LuaMaterial/LuaMaterial.h"
+#include "Lua/LuaVec/LuaVec.h"
 
 #define VOLUND_BASE_TABLE(EntityInstance) "Entity", EntityInstance
 

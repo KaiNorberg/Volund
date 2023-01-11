@@ -6,33 +6,31 @@
 
 namespace Volund
 {
-	class LuaScene;
-
 	struct LuaEntity
 	{
 	public:
 
-		int Padding = 0;
+		int Padding = NULL;
 
 		Entity Get();
 
-		void AddComponent(sol::this_state S, LuaComponentID Component, sol::table Table);
+		void AddComponent(sol::this_state S, LuaComponentID ComponentID, sol::table Table);
 
-		void DeleteComponent(sol::this_state S, LuaComponentID Component, uint64_t I = 0);
+		void DeleteComponent(sol::this_state S, LuaComponentID ComponentID, uint64_t I = 0);
 
-		bool HasComponent(sol::this_state S, LuaComponentID Component);
+		bool HasComponent(sol::this_state S, LuaComponentID ComponentID);
 
-		uint64_t ComponentAmount(sol::this_state S, LuaComponentID Component);
+		uint64_t ComponentAmount(sol::this_state S, LuaComponentID ComponentID);
+
+		sol::table GetComponent(sol::this_state S, LuaComponentID ComponentID, uint64_t I = 0);
 
 		sol::table GetScript(sol::this_state S, sol::table Table);
 
-		sol::table GetComponent(sol::this_state S, LuaComponentID Component, uint64_t I = 0);
-
-		LuaEntity(LuaScene* ThisScene, Entity entity);
+		LuaEntity(Ref<Scene> ThisScene, Entity entity);
 
 	private:
 
-		LuaScene* _Scene;
+		Ref<Scene> _Scene;
 
 		Entity _Entity;
 	};

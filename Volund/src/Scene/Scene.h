@@ -8,8 +8,6 @@
 
 #include "Input/Input.h"
 
-#include "Lua/LuaState/LuaState.h"
-
 namespace Volund
 {
 	using Entity = uint64_t;

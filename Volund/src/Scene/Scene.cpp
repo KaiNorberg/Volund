@@ -94,7 +94,7 @@ namespace Volund
 		Spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
 		Spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::DEPTH24STENCIL8);
 		Spec.Height = 1080;
-		Spec.Width = 1920;
+		Spec.Width = 1920;					
 		this->_TargetBuffer = VL::Framebuffer::Create(Spec);
 
 		this->_StartTime = std::chrono::high_resolution_clock::now();
