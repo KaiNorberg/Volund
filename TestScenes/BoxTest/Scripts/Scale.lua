@@ -8,7 +8,7 @@ function Scale:OnCreate(TimeStep)
 end
 
 function Scale:OnUpdate(TimeStep)
-    X = math.abs(math.cos(Scene:TimeSinceStart()))
+    X = (math.cos(Scene:TimeSinceStart() * 2) + 1) / 2
     self.Scale.x = X
     self.Scale.y = X
     self.Scale.z = X
