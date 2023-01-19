@@ -4,6 +4,7 @@
 #include "Lua/LuaMesh/LuaMesh.h"
 #include "Lua/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaVec/LuaVec.h"
+#include "Lua/LuaSound/LuaSound.h"
 
 #define VOLUND_BASE_TABLE(EntityInstance) "Entity", EntityInstance
 
@@ -122,6 +123,22 @@ namespace Volund
 			"GetFront", [C](sol::table Self) { return LuaVec3(C->GetFront()); },
 			"GetRight", [C](sol::table Self) { return LuaVec3(C->GetRight()); },
 			"GetUp", [C](sol::table Self) { return LuaVec3(C->GetUp()); }
+		);
+
+		return Table;
+	}
+
+	template<>
+	sol::table GenerateComponentTable<SoundSource>(sol::this_state S, const LuaEntity& E, Ref<SoundSource> C)
+	{
+		sol::state_view StateView = S;
+
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+			"Play", [C](sol::table Self) { C->Play(); },
+			"SetSound", [C](sol::table Self, LuaSound Sound) { C->SetBuffer(Sound.GetBuffer()); },
+			"SetPitch", [C](sol::table Self, float Pitch) { C->SetPitch(Pitch); },
+			"SetLooping", [C](sol::table Self, bool Looping) { C->SetLooping(Looping); },
+			"SetGain", [C](sol::table Self, float Gain) { C->SetGain(Gain); }
 		);
 
 		return Table;

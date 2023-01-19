@@ -6,6 +6,7 @@
 #include "Lua/LuaComponent/LuaComponent.h"
 #include "Lua/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaMesh/LuaMesh.h"
+#include "Lua/LuaSound/LuaSound.h"
 
 namespace Volund
 {
@@ -126,6 +127,40 @@ namespace Volund
 			}
 		}
 		break;
+		case LuaComponentID::SOUND_SOURCE:
+		{
+			auto NewComponent = this->_Scene->CreateComponent<SoundSource>(this->_Entity);
+
+			if (Table["Looping"] != sol::lua_nil)
+			{
+				bool Looping = Table["Looping"];
+				NewComponent->SetLooping(Looping);
+			}
+
+			if (Table["Pitch"] != sol::lua_nil)
+			{
+				float Pitch = Table["Pitch"];
+				NewComponent->SetPitch(Pitch);
+			}
+
+			if (Table["Gain"] != sol::lua_nil)
+			{
+				float Gain = Table["Gain"];
+				NewComponent->SetGain(Gain);
+			}
+
+			if (Table["Sound"] != sol::lua_nil)
+			{
+				LuaSound Sound = Table["Sound"];
+				NewComponent->SetBuffer(Sound.GetBuffer());
+			}
+
+			if (Table["Play"] != sol::lua_nil && Table["Play"] == true)
+			{
+				NewComponent->Play();
+			}
+		}
+		break;
 		default:
 		{
 			VOLUND_WARNING("Unknown ComponentID type (%d)!", ComponentID);
@@ -180,6 +215,11 @@ namespace Volund
 			this->_Scene->DeleteComponent<Transform>(this->_Entity, I);
 		}
 		break;
+		case LuaComponentID::SOUND_SOURCE:
+		{
+			this->_Scene->DeleteComponent<SoundSource>(this->_Entity, I);
+		}
+		break;
 		default:
 		{
 			VOLUND_ERROR("Unknown ComponentID type (%d)!", ComponentID);
@@ -232,6 +272,11 @@ namespace Volund
 		case LuaComponentID::TRANSFORM:
 		{
 			return this->_Scene->HasComponent<Transform>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::SOUND_SOURCE:
+		{
+			return this->_Scene->HasComponent<SoundSource>(this->_Entity);
 		}
 		break;
 		default:
@@ -290,6 +335,11 @@ namespace Volund
 			return this->_Scene->ComponentAmount<Transform>(this->_Entity);
 		}
 		break;
+		case LuaComponentID::SOUND_SOURCE:
+		{
+			return this->_Scene->ComponentAmount<SoundSource>(this->_Entity);
+		}
+		break;
 		default:
 		{
 			VOLUND_ERROR("Unknown ComponentID type (%d)!", ComponentID);
@@ -344,6 +394,11 @@ namespace Volund
 		case LuaComponentID::TRANSFORM:
 		{
 			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<Transform>(this->_Entity, I));
+		}
+		break;
+		case LuaComponentID::SOUND_SOURCE:
+		{
+			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<SoundSource>(this->_Entity, I));
 		}
 		break;
 		default:

@@ -2,7 +2,7 @@
 
 #include "EventDispatcher/EventDispatcher.h"
 
-#include "Renderer/Context/Context.h"
+#include "Renderer/RenderingContext/RenderingContext.h"
 
 #include "Renderer/Framebuffer/Framebuffer.h"
 
@@ -28,7 +28,7 @@ namespace Volund
 
 		Ref<EventDispatcher> Dispatcher;
 
-		Ref<Context> RenderingContext;
+		Ref<RenderingContext> Context;
 	};
 
 	enum class CursorMode

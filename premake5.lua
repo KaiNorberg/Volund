@@ -51,15 +51,20 @@ project "Volund"
 	libdirs
 	{
 		TargetDir,
-		"vendor/lua"
+		"vendor/lua",
+		"vendor/OpenAL_Soft/lib"
 	}
 	
 	links
 	{
 		"OpenGL32.lib",
+		"OpenAL32.lib",
+		"common.lib",
+		"ex-common.lib",
 		"Glad.lib",
 		"ImGui",
-		"lua54"
+		"lua54",
+		"winmm"
 	}
 	
 	defines

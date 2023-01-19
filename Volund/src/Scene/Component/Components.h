@@ -7,3 +7,4 @@
 #include "Transform/Transform.h"
 #include "Tag/Tag.h"
 #include "Script/Script.h"
+#include "SoundSource/SoundSource.h"
