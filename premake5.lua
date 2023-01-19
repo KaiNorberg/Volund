@@ -30,7 +30,7 @@ project "Volund"
 		"Glad"
 	}
 
-	targetdir ("Editor\\data\\vendor\\Volund\\lib")
+	targetdir (TargetDir)
 	objdir (ObjDir)
 
 	files
