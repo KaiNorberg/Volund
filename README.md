@@ -63,6 +63,7 @@ The main goal of the project is to create a game engine that allows for low leve
 - 3rd party 3D physics engine
 - Audio system
 - Lua scripting
+- C++ scripting
 - A feature-complete Entity Component system.
 - Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan.
 - Tools for training and using deep learning/neural networks.
