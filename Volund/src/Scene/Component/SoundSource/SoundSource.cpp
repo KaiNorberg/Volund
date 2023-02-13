@@ -13,11 +13,6 @@ namespace Volund
 		this->_Source.Play();
 	}
 
-	void SoundSource::SetBuffer(const AudioBuffer& Buffer)
-	{
-		this->_Source.SetBuffer(Buffer);
-	}
-
 	void SoundSource::SetBuffer(Ref<AudioBuffer> Buffer)
 	{
 		this->_Source.SetBuffer(Buffer);
@@ -48,10 +43,12 @@ namespace Volund
 		{		
 			static Vec3 OldPosition = Vec3(0.0f);
 
+			float TimeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
+
 			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			this->_Source.SetPosition(EntityTransform->Position);
-			this->_Source.SetVelocity(EntityTransform->Position - OldPosition);
+			this->_Source.SetVelocity((EntityTransform->Position - OldPosition) * TimeStep);
 			this->_Source.SetDirection(EntityTransform->GetFront());
 		}
 		break;

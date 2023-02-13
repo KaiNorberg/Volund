@@ -16,6 +16,8 @@ namespace Volund
 
 		AudioContext(const AudioDevice& Device);
 
+		AudioContext(Ref<AudioDevice> Device);
+
 		~AudioContext();
 
 	private:

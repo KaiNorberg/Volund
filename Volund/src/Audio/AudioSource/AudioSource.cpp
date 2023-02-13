@@ -10,13 +10,9 @@ namespace Volund
         alCall(alSourcePlay, this->_Source);
     }
 
-    void AudioSource::SetBuffer(const AudioBuffer& Buffer)
-    {
-        alCall(alSourcei, this->_Source, AL_BUFFER, Buffer.GetBuffer());
-    }
-
     void AudioSource::SetBuffer(Ref<AudioBuffer> Buffer)
     {
+        this->_Buffer = Buffer;
         alCall(alSourcei, this->_Source, AL_BUFFER, Buffer->GetBuffer());
     }
 
@@ -65,6 +61,7 @@ namespace Volund
 
     AudioSource::~AudioSource()
     {
+        alCall(alSourceStop, this->_Source);
         alCall(alDeleteSources, 1, &this->_Source);
     }
 }

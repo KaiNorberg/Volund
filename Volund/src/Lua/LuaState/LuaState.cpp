@@ -106,6 +106,11 @@ namespace Volund
 			return LuaState::GenerateComponentView<SoundSource>(S, ThisScene);
 		}
 		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			return LuaState::GenerateComponentView<SoundListener>(S, ThisScene);
+		}
+		break;
 		default:
 		{
 			VOLUND_ERROR("Unknown ComponentID type (%d)!", ComponentID);
@@ -261,7 +266,9 @@ namespace Volund
 			"POINT_LIGHT", LuaComponentID::POINT_LIGHT,
 			"SCRIPT", LuaComponentID::SCRIPT,
 			"TAG", LuaComponentID::TAG,
-			"TRANSFORM", LuaComponentID::TRANSFORM
+			"TRANSFORM", LuaComponentID::TRANSFORM,
+			"SOUND_SOURCE", LuaComponentID::SOUND_SOURCE,
+			"SOUND_LISTENER", LuaComponentID::SOUND_LISTENER
 		);
 
 		this->_SolState.new_enum("CursorMode",

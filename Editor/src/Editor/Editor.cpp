@@ -12,6 +12,7 @@ void Editor::OnRun()
 	this->AttachModule(new VL::WindowModule());
 	this->AttachModule(new VL::ImGuiModule());
 	this->AttachModule(new VL::LuaModule());
+	this->AttachModule(new VL::AudioModule());
 
 	VL::RenderingAPI::Init();
 

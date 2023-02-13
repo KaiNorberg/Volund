@@ -143,4 +143,14 @@ namespace Volund
 
 		return Table;
 	}
+
+	template<>
+	sol::table GenerateComponentTable<SoundListener>(sol::this_state S, const LuaEntity& E, Ref<SoundListener> C)
+	{
+		sol::state_view StateView = S;
+
+		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E));
+
+		return Table;
+	}
 }

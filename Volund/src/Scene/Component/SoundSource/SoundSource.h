@@ -12,8 +12,6 @@ namespace Volund
 
 		void Play();
 
-		void SetBuffer(const AudioBuffer& Buffer);
-
 		void SetBuffer(Ref<AudioBuffer> Buffer);
 
 		void SetPitch(float Pitch);

@@ -12,6 +12,8 @@ namespace Volund
 
 	AudioDevice::AudioDevice(const char* Device)
 	{
+		VOLUND_INFO("Retriving audio device %d...", Device);
+
 		this->_Device = alcOpenDevice(Device);
 		if (!this->_Device)
 		{

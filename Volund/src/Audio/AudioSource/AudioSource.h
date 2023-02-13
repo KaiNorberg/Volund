@@ -10,8 +10,6 @@ namespace Volund
 
 		void Play();
 
-		void SetBuffer(const AudioBuffer& Buffer);
-
 		void SetBuffer(Ref<AudioBuffer> Buffer);
 
 		void SetPitch(float Pitch);
@@ -31,6 +29,8 @@ namespace Volund
 		~AudioSource();
 
 	private:
+
+		Ref<AudioBuffer> _Buffer;
 
 		uint32_t _Source;
 	};

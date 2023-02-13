@@ -24,8 +24,12 @@ namespace Volund
 		}
 		File.writePCMToBuffer(PCMDataBytes);
 
-		int AudioFormat = 0;		
-		if (File.getBitDepth() == 16)
+		int AudioFormat = 0;
+		if (File.getBitDepth() == 32)
+		{
+			AudioFormat = File.isStereo() ? AL_FORMAT_STEREO_FLOAT32 : AL_FORMAT_MONO_FLOAT32;
+		}
+		else if (File.getBitDepth() == 16)
 		{
 			AudioFormat = File.isStereo() ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
 		}
@@ -44,6 +48,10 @@ namespace Volund
 
 	AudioBuffer::~AudioBuffer()
 	{
-		alCall(alDeleteBuffers, 1, &this->_Buffer);
+		if (this->_Buffer != NULL && alIsBuffer(this->_Buffer))
+		{
+			alCall(alDeleteBuffers, 1, &this->_Buffer);
+			this->_Buffer = NULL;
+		}
 	}
 }

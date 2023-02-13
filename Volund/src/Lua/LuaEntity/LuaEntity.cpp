@@ -161,6 +161,11 @@ namespace Volund
 			}
 		}
 		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			auto NewComponent = this->_Scene->CreateComponent<SoundListener>(this->_Entity);
+		}
+		break;
 		default:
 		{
 			VOLUND_WARNING("Unknown ComponentID type (%d)!", ComponentID);
@@ -220,6 +225,11 @@ namespace Volund
 			this->_Scene->DeleteComponent<SoundSource>(this->_Entity, I);
 		}
 		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			this->_Scene->DeleteComponent<SoundListener>(this->_Entity, I);
+		}
+		break;
 		default:
 		{
 			VOLUND_ERROR("Unknown ComponentID type (%d)!", ComponentID);
@@ -277,6 +287,11 @@ namespace Volund
 		case LuaComponentID::SOUND_SOURCE:
 		{
 			return this->_Scene->HasComponent<SoundSource>(this->_Entity);
+		}
+		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			return this->_Scene->HasComponent<SoundListener>(this->_Entity);
 		}
 		break;
 		default:
@@ -340,6 +355,11 @@ namespace Volund
 			return this->_Scene->ComponentAmount<SoundSource>(this->_Entity);
 		}
 		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			return this->_Scene->ComponentAmount<SoundListener>(this->_Entity);
+		}
+		break;
 		default:
 		{
 			VOLUND_ERROR("Unknown ComponentID type (%d)!", ComponentID);
@@ -399,6 +419,11 @@ namespace Volund
 		case LuaComponentID::SOUND_SOURCE:
 		{
 			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<SoundSource>(this->_Entity, I));
+		}
+		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<SoundListener>(this->_Entity, I));
 		}
 		break;
 		default:

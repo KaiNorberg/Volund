@@ -11,6 +11,7 @@ namespace Volund
 		SCRIPT = 5,
 		TAG = 6,
 		TRANSFORM = 7,
-		SOUND_SOURCE = 8
+		SOUND_SOURCE = 8,
+		SOUND_LISTENER = 9
 	};
 }

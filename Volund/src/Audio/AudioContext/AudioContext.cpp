@@ -29,6 +29,16 @@ namespace Volund
 		}
 	}
 
+	AudioContext::AudioContext(Ref<AudioDevice> Device)
+	{
+		this->_Device = Device->GetDevice();
+
+		if (!alcCall(alcCreateContext, this->_Context, this->_Device, this->_Device, nullptr) || !this->_Context)
+		{
+			VOLUND_ERROR("Unable to create alc context!");
+		}
+	}
+
 	AudioContext::~AudioContext()
 	{
 		this->MakeCurrent();
