@@ -9,6 +9,7 @@
 #include "Lua/LuaMesh/LuaMesh.h"
 #include "Lua/LuaShader/LuaShader.h"
 #include "Lua/LuaTexture/LuaTexture.h"
+#include "Lua/LuaSound/LuaSound.h"
 
 #include "Filesystem/Filesystem.h"
 
@@ -98,6 +99,16 @@ namespace Volund
 		case LuaComponentID::TRANSFORM:
 		{
 			return LuaState::GenerateComponentView<Transform>(S, ThisScene);
+		}
+		break;
+		case LuaComponentID::SOUND_SOURCE:
+		{
+			return LuaState::GenerateComponentView<SoundSource>(S, ThisScene);
+		}
+		break;
+		case LuaComponentID::SOUND_LISTENER:
+		{
+			return LuaState::GenerateComponentView<SoundListener>(S, ThisScene);
 		}
 		break;
 		default:
@@ -210,6 +221,8 @@ namespace Volund
 
 		this->_SolState.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>());
 
+		this->_SolState.new_usertype<LuaSound>("Sound", sol::constructors<void(const std::string&)>());
+
 		this->_SolState.new_usertype<LuaMaterial>("Material", sol::constructors<void(LuaShader)>(),
 			"SetInt", &LuaMaterial::SetInt,
 			"SetFloat", &LuaMaterial::SetFloat,
@@ -241,8 +254,7 @@ namespace Volund
 
 		this->_SolState.create_named_table("Window",
 			"SetCursorMode", [ThisWindow](sol::table Self, CursorMode NewCursorMode) { return ThisWindow->SetCursorMode(NewCursorMode); },
-			"SetTitle", [ThisWindow](sol::table Self, const std::string& NewTitle) { return ThisWindow->SetTitle(NewTitle); },
-			"SetVsync", [ThisWindow](sol::table Self, bool Enabled) { return ThisWindow->SetVsync(Enabled); }
+			"SetTitle", [ThisWindow](sol::table Self, const std::string& NewTitle) { return ThisWindow->SetTitle(NewTitle); }
 		);
 
 		//Enums
@@ -254,7 +266,9 @@ namespace Volund
 			"POINT_LIGHT", LuaComponentID::POINT_LIGHT,
 			"SCRIPT", LuaComponentID::SCRIPT,
 			"TAG", LuaComponentID::TAG,
-			"TRANSFORM", LuaComponentID::TRANSFORM
+			"TRANSFORM", LuaComponentID::TRANSFORM,
+			"SOUND_SOURCE", LuaComponentID::SOUND_SOURCE,
+			"SOUND_LISTENER", LuaComponentID::SOUND_LISTENER
 		);
 
 		this->_SolState.new_enum("CursorMode",

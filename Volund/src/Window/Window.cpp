@@ -338,7 +338,7 @@ namespace Volund
 
 	void Window::SetVsync(bool Enabled)
 	{
-		this->_Data.RenderingContext->SetVSync(Enabled);
+		this->_Data.Context->SetVSync(Enabled);
 	}
 
 	Vec2 Window::GetSize()
@@ -493,8 +493,8 @@ namespace Volund
 
 		SetWindowLongPtr((HWND)this->_Data._Handle, GWLP_USERDATA, (LONG_PTR)&this->_Data);
 
-		this->_Data.RenderingContext = VL::Context::Create(Window::GetDeviceContext());
-		this->_Data.RenderingContext->MakeCurrent();
+		this->_Data.Context = VL::RenderingContext::Create(Window::GetDeviceContext());
+		this->_Data.Context->MakeCurrent();
 
 		this->Reset();
 	}
