@@ -12,6 +12,10 @@ namespace Volund
 		this->_Device = std::make_shared<AudioDevice>(AL_DefaultDeviceString);
 		this->_Context = std::make_shared<AudioContext>(this->_Device);
 		this->_Context->MakeCurrent();
+
+		VOLUND_INFO("OpenAL Renderer: %s", alGetString(AL_RENDERER));
+		VOLUND_INFO("OpenAL Version: %s", alGetString(AL_VERSION));
+		VOLUND_INFO("OpenAL Vendor: %s", alGetString(AL_VENDOR));
 	}
 
 	void AudioModule::OnDetach()

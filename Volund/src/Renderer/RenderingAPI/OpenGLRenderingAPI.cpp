@@ -144,9 +144,5 @@ namespace Volund
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, nullptr);
-
-		VOLUND_INFO("OpenGL Renderer: %s", (const char*)glGetString(GL_RENDERER));
-		VOLUND_INFO("OpenGL Version: %s", (const char*)glGetString(GL_VERSION));
-		VOLUND_INFO("OpenGL Vendor: %s", (const char*)glGetString(GL_VENDOR));
 	}
 }

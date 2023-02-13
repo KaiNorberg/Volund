@@ -3,6 +3,8 @@
 
 #include "Application/Application.h"
 
+#include "glad/glad.h"
+
 namespace Volund
 {
 	Ref<Window> WindowModule::GetWindow()
@@ -18,6 +20,13 @@ namespace Volund
 		this->_Window->SetFocus();
 
 		this->_Window->Show();
+
+		VL::RenderingAPI::Init();
+		VL::Renderer::Init(this->_RendererInstance);
+
+		VOLUND_INFO("OpenGL Renderer: %s", glGetString(GL_RENDERER));
+		VOLUND_INFO("OpenGL Version: %s", glGetString(GL_VERSION));
+		VOLUND_INFO("OpenGL Vendor: %s", glGetString(GL_VENDOR));		
 	}
 
 	void WindowModule::OnDetach()
@@ -43,9 +52,10 @@ namespace Volund
 		break;
 		}
 	}
-	
-	WindowModule::WindowModule()
-	{
 
+	WindowModule::WindowModule(GraphicsAPI API, Ref<RendererInstance> Instance)
+	{
+		VL::RenderingAPI::Select(VL::GraphicsAPI::OPENGL);
+		this->_RendererInstance = Instance;
 	}
 }

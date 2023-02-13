@@ -7,16 +7,10 @@
 
 void Editor::OnRun()
 {
-	VL::RenderingAPI::Select(VL::GraphicsAPI::OPENGL);
-
-	this->AttachModule(new VL::WindowModule());
+	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OPENGL, std::make_shared<VL::ForwardRenderer>()));
 	this->AttachModule(new VL::ImGuiModule());
 	this->AttachModule(new VL::LuaModule());
 	this->AttachModule(new VL::AudioModule());
-
-	VL::RenderingAPI::Init();
-
-	VL::Renderer::Init(new VL::ForwardRenderer());
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);

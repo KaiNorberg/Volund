@@ -20,6 +20,26 @@ namespace Volund
 		this->_Data.Eyes.push_back(Eye);
 	}
 
+	void RendererInstance::Init()
+	{
+		this->_CameraUniforms = UniformBuffer::Create();
+		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
+		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
+		this->_CameraUniforms->Allocate();
+
+		this->_LightsUniforms = UniformBuffer::Create();
+		this->_LightsUniforms->PushScalar<int>("LightAmount");
+		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
+		{
+			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
+		}
+		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
+		{
+			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
+		}
+		this->_LightsUniforms->Allocate();
+	}
+
 	void RendererInstance::UpdateLightUniforms()
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -47,26 +67,6 @@ namespace Volund
 		this->_CameraUniforms->Assign(VOLUND_UNIFORM_BUFFER_BINDING_CAMERA);
 	}
 
-	RendererInstance::RendererInstance()
-	{
-		this->_CameraUniforms = UniformBuffer::Create();
-		this->_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
-		this->_CameraUniforms->PushVector<Vec3>("EyePosition");
-		this->_CameraUniforms->Allocate();
-
-		this->_LightsUniforms = UniformBuffer::Create();
-		this->_LightsUniforms->PushScalar<int>("LightAmount");
-		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
-		{
-			this->_LightsUniforms->PushVector<Vec3>("Position" + std::to_string(i));
-		}
-		for (uint64_t i = 0; i < VOLUND_MAX_LIGHTS; i++)
-		{
-			this->_LightsUniforms->PushVector<Vec3>("Color" + std::to_string(i));
-		}
-		this->_LightsUniforms->Allocate();
-	}
-
 	void RendererInstance::Data::Sort()
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -89,14 +89,10 @@ namespace Volund
 		}
 	}
 
-	void Renderer::Init(const Ref<RendererInstance>& Instance)
+	void Renderer::Init(Ref<RendererInstance> Instance)
 	{
 		_Instance = Instance;
-	}
-
-	void Renderer::Init(RendererInstance* Instance)
-	{
-		_Instance = Ref<RendererInstance>(Instance);
+		_Instance->Init();
 	}
 
 	void Renderer::Reset()

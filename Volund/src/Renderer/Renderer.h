@@ -16,6 +16,8 @@
 
 namespace Volund
 {
+	class Renderer;
+
 	struct RendererModel
 	{
 		Mat4x4 ModelMatrix;
@@ -56,11 +58,12 @@ namespace Volund
 
 		virtual void End() = 0;
 
-		RendererInstance();
-
 		virtual ~RendererInstance() = default;
 
 	protected:
+		friend class Renderer;
+
+		void Init();
 
 		void UpdateLightUniforms();
 
@@ -89,9 +92,7 @@ namespace Volund
 	{
 	public:
 		
-		static void Init(const Ref<RendererInstance>& Instance);
-
-		static void Init(RendererInstance* Instance);
+		static void Init(Ref<RendererInstance> Instance);
 
 		static void Reset();
 
