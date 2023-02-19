@@ -37,7 +37,7 @@ RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
 CubeMesh = Mesh:new("Cube.vobj")
 
 Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
+Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 4.0)})
 Camera:AddComponent(Component.CAMERA, {IsActive = true})
 
 RedCube = Scene:CreateEntity()
