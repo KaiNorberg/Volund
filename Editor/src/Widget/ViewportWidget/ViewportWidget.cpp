@@ -9,18 +9,18 @@ const char* ViewportWidget::GetName()
 
 void ViewportWidget::OnKey(const VL::Event& E)
 {
-	auto LuaModule = this->_App->GetModule<VL::LuaModule>();
+	auto GameModule = this->_App->GetModule<VL::GameModule>();
 
-	this->_Input.HandleEvent(E);
+	this->_Input.Procedure(E);
 
 	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
 		if (this->_Input.IsPressed('R'))
 		{
-			auto Scene = LuaModule->GetScene();
+			auto Scene = GameModule->GetScene();
 			if (Scene != nullptr)
 			{
-				LuaModule->LoadScene(LuaModule->GetFilepath());
+				GameModule->NewState(GameModule->GetFilepath());
 			}
 		}		
 		else if (this->_Input.IsPressed('E'))
@@ -28,7 +28,7 @@ void ViewportWidget::OnKey(const VL::Event& E)
 			std::string Filepath = VL::FileDialog::OpenFile();
 			if (!Filepath.empty())
 			{
-				LuaModule->LoadScene(Filepath);
+				GameModule->NewState(Filepath);
 			}
 		}
 	}
@@ -36,7 +36,7 @@ void ViewportWidget::OnKey(const VL::Event& E)
 
 void ViewportWidget::OnRender()
 {
-	auto LuaModule = this->_App->GetModule<VL::LuaModule>();
+	auto GameModule = this->_App->GetModule<VL::GameModule>();
 
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
@@ -45,20 +45,20 @@ void ViewportWidget::OnRender()
 			std::string Filepath = VL::FileDialog::OpenFile();
 			if (!Filepath.empty())
 			{
-				LuaModule->LoadScene(Filepath);
+				GameModule->NewState(Filepath);
 				ImGui::End();
 				return;
 			}
 		}
 
-		auto Scene = LuaModule->GetScene();
+		auto Scene = GameModule->GetScene();
 		if (Scene != nullptr)
 		{
 			ImGui::SameLine();
 
 			if (ImGui::Button("Reload (Shift + R)"))
 			{
-				LuaModule->LoadScene(LuaModule->GetFilepath());
+				GameModule->NewState(GameModule->GetFilepath());
 				ImGui::End();
 				return;
 			}

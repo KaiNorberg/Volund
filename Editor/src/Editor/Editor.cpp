@@ -9,7 +9,7 @@ void Editor::OnRun()
 {
 	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OPENGL, std::make_shared<VL::ForwardRenderer>()));
 	this->AttachModule(new VL::ImGuiModule());
-	this->AttachModule(new VL::LuaModule());
+	this->AttachModule(new VL::GameModule());
 	this->AttachModule(new VL::AudioModule());
 
 	ImGuiIO& io = ImGui::GetIO();
@@ -28,7 +28,7 @@ void Editor::Procedure(const VL::Event& E)
 {
 	VOLUND_PROFILE_FUNCTION();
 
-	this->_Input.HandleEvent(E);
+	this->_Input.Procedure(E);
 
 	switch (E.Type)
 	{

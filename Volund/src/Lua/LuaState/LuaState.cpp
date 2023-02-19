@@ -23,11 +23,6 @@
 
 namespace Volund
 {
-	Ref<Scene> LuaState::GetScene()
-	{
-		return this->_ThisScene;
-	}
-
 	void LuaState::ScriptFile(const std::string& Filepath)
 	{
 		this->_SolState.safe_script_file(Filepath, [](lua_State*, sol::protected_function_result pfr)
@@ -37,16 +32,6 @@ namespace Volund
 
 			return pfr;
 		});
-	}
-
-	void LuaState::Procedure(const Event& E)
-	{
-		if (this->_ThisScene != nullptr)
-		{
-			this->_ThisInput->HandleEvent(E);
-
-			this->_ThisScene->Procedure(E);
-		}
 	}
 
 	void LuaState::LuaPrint(sol::object Object)
@@ -141,13 +126,11 @@ namespace Volund
 		return Output;
 	}
 
-	LuaState::LuaState(Ref<Scene> ThisScene, Ref<Window> ThisWindow)
+	LuaState::LuaState(Ref<Scene> ThisScene, Ref<Input> ThisInput, Ref<Window> ThisWindow)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		ThisWindow->Reset();
-
-		auto ThisInput = std::make_shared<Input>();
 
 		this->_ThisScene = ThisScene;
 		this->_ThisInput = ThisInput;
@@ -281,6 +264,6 @@ namespace Volund
 
 	LuaState::~LuaState()
 	{
-		this->_ThisScene.reset();
+		this->_SolState.collect_garbage();
 	}
 }

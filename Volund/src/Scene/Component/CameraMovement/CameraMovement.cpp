@@ -12,7 +12,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->_Input.HandleEvent(E);
+		this->_Input.Procedure(E);
 
 		switch (E.Type)
 		{

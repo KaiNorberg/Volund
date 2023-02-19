@@ -39,7 +39,7 @@ namespace Volund
 		return this->_MousePosition;
 	}
 
-	void Input::HandleEvent(const Event& E)
+	void Input::Procedure(const Event& E)
 	{
 		VOLUND_PROFILE_FUNCTION();
 

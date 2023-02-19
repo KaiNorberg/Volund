@@ -1,5 +1,5 @@
 #include "PCH/PCH.h"
-#include "LuaModule.h"
+#include "GameModule.h"
 
 #include "Application/Application.h"
 
@@ -11,16 +11,16 @@
 
 namespace Volund
 {
-	std::string LuaModule::GetFilepath()
+	std::string GameModule::GetFilepath()
 	{
 		return this->_Filepath;
 	}
 
-	Ref<Scene> LuaModule::GetScene()
+	Ref<Scene> GameModule::GetScene()
 	{
-		if (this->_LuaState != nullptr)
+		if (this->_GameState != nullptr)
 		{
-			return this->_LuaState->GetScene();
+			return this->_GameState->GetScene();
 		}
 		else
 		{
@@ -28,15 +28,12 @@ namespace Volund
 		}
 	}
 
-	void LuaModule::LoadScene(const std::string& Filepath)
+	void GameModule::NewState(const std::string& Filepath)
 	{
 		std::unique_lock Lock(this->_Mutex);
 
 		DelayedTaskHandler::DelayTask([this, Filepath]()
 		{
-			auto NewScene = std::make_shared<Scene>();
-			auto AppWindow = this->_App->GetModule<WindowModule>()->GetWindow();
-
 			if (!this->_Filepath.empty())
 			{
 				std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
@@ -48,12 +45,12 @@ namespace Volund
 			std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
 			Filesystem::AddRelativeFilepath(ParentPath);
 
-			this->_LuaState.reset();
+			this->_GameState.reset();
 
 			try
 			{
-				this->_LuaState = std::make_shared<LuaState>(NewScene, AppWindow);
-				this->_LuaState->ScriptFile(this->_Filepath);
+				this->_GameState = std::make_shared<GameState>(this->_GameWindow);
+				this->_GameState->GetLuaState()->ScriptFile(this->_Filepath);
 			}
 			catch (sol::error E)
 			{
@@ -62,17 +59,17 @@ namespace Volund
 		});
 	}
 
-	void LuaModule::OnAttach(Application* App)
+	void GameModule::OnAttach(Application* App)
 	{
-		this->_App = App;
-
 		if (!App->HasModule<WindowModule>())
 		{
 			VOLUND_ERROR("Cant attach LuaModule to an app without a WindowModule!");
 		}
+
+		this->_GameWindow = App->GetModule<WindowModule>()->GetWindow();
 	}
 
-	void LuaModule::OnDetach()
+	void GameModule::OnDetach()
 	{
 		if (!this->_Filepath.empty())
 		{
@@ -81,13 +78,13 @@ namespace Volund
 		}
 	}
 
-	void LuaModule::Procedure(const Event& E)
+	void GameModule::Procedure(const Event& E)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->_LuaState != nullptr)
+		if (this->_GameState != nullptr)
 		{
-			this->_LuaState->Procedure(E);
+			this->_GameState->Procedure(E);
 		}
 	}
 }

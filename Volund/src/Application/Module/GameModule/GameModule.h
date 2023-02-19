@@ -2,11 +2,11 @@
 
 #include "../Module.h"
 
-#include "Lua/LuaState/LuaState.h"
+#include "GameState/GameState.h"
 
 namespace Volund
 {
-	class LuaModule : public Module
+	class GameModule : public Module
 	{
 	public:
 
@@ -20,15 +20,15 @@ namespace Volund
 
 		Ref<Scene> GetScene();
 
-		void LoadScene(const std::string& Filepath);
+		void NewState(const std::string& Filepath);
 
 	private:	
 
 		std::mutex _Mutex;
 
-		Ref<LuaState> _LuaState;
+		Ref<GameState> _GameState;
 
-		Application* _App = nullptr;
+		Ref<Window> _GameWindow;
 
 		std::string _Filepath;
 	};

@@ -20,13 +20,9 @@ namespace Volund
 	{
 	public:
 
-		Ref<Scene> GetScene();
-
 		void ScriptFile(const std::string& Filepath);
 
-		void Procedure(const Event& E);
-
-		LuaState(Ref<Scene> ThisScene, Ref<Window> ThisWindow);
+		LuaState(Ref<Scene> ThisScene, Ref<Input> ThisInput, Ref<Window> ThisWindow);
 
 		~LuaState();
 
