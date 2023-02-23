@@ -20,6 +20,8 @@ namespace Volund
 	{
 	public:
 
+		void Procedure(const Event& E);
+
 		void ScriptFile(const std::string& Filepath);
 
 		LuaState(Ref<Scene> ThisScene, Ref<Input> ThisInput, Ref<Window> ThisWindow);
@@ -32,33 +34,33 @@ namespace Volund
 
 		static sol::object LuaRequire(sol::this_state S, std::string Filepath);
 
-		static sol::table LuaComponentView(sol::this_state S, Ref<Scene> ThisScene, LuaComponentID ComponentID);
+		sol::table LuaComponentView(sol::this_state S, LuaComponentID ComponentID);
 
-		static sol::table LuaScriptView(sol::this_state S, Ref<Scene> ThisScene, sol::table ScriptTable);
+		sol::table LuaScriptView(sol::this_state S, sol::table ScriptTable);
 
 		template<typename T>
-		static sol::table GenerateComponentView(sol::this_state S, Ref<Scene> ThisScene);
+		sol::table GenerateComponentView(sol::this_state S);
 
 		sol::state _SolState;
 
-		Ref<Scene> _ThisScene;
-		Ref<Input> _ThisInput;
-		Ref<Window> _ThisWindow;
+		Ref<Scene> _Scene;
+		Ref<Input> _Input;
+		Ref<Window> _Window;
 	};
 
 	template<typename T>
-	inline sol::table LuaState::GenerateComponentView(sol::this_state S, Ref<Scene> ThisScene)
+	inline sol::table LuaState::GenerateComponentView(sol::this_state S)
 	{
 		sol::state_view StateView = S;
 
 		sol::table Output = StateView.create_table_with();
 
 		std::vector<Ref<T>> View;
-		ThisScene->View(View);
+		this->_Scene->View(View);
 
 		for (auto& Component : View)
 		{
-			Output.add(GenerateComponentTable(S, LuaEntity(ThisScene, Component->GetEntity()), Component));
+			Output.add(GenerateComponentTable(S, LuaEntity(this->_Scene, Component->GetEntity()), Component));
 		}
 
 		return Output;

@@ -8,6 +8,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding = NULL;
+
 		Ref<Shader> Get();
 
 		LuaShader(const std::string& ShaderPath);

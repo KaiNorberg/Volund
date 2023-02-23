@@ -11,6 +11,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding = NULL;
+
 		Ref<Material> Get();
 
 		void SetInt(const std::string& Name, int Value);

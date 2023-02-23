@@ -8,6 +8,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding = NULL;
+
 		Ref<AudioBuffer> GetBuffer();
 
 		LuaSound(const std::string& Filepath);

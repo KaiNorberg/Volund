@@ -8,6 +8,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding = NULL;
+
 		Ref<Mesh> Get();
 
 		LuaMesh(Ref<Mesh> Mesh);

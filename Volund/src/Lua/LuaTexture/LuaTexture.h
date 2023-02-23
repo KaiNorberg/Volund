@@ -8,6 +8,8 @@ namespace Volund
 	{
 	public:
 
+		int Padding = NULL;
+
 		Ref<Texture> Get();
 
 		LuaTexture(const std::string& Filepath);
