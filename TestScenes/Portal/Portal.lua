@@ -59,7 +59,7 @@ Window:SetCursorMode(CursorMode.DISABLED)
 function CreatePortal(Position)
     Arch = Scene:CreateEntity();
     Arch:AddComponent(Component.TRANSFORM, {Position = Position, Rotation = Vec3:new(0.0, 180.0, 0.0)})
-    Arch:AddComponent(Component.MESH_RENDERER, {Mesh = ArchMesh, Material = ArchMaterial, Layer = 2})
+    Arch:AddComponent(Component.MESH_RENDERER, {Mesh = ArchMesh, Material = ArchMaterial, Layer = 1})
     
     Portal = Scene:CreateEntity();
     Portal:AddComponent(Component.TRANSFORM, {Position = Position + Vec3:new(0.0, 2.0, -0.2), Scale = Vec3:new(4.5, 7.0, 0.7)})
