@@ -24,7 +24,6 @@ function PortalScript:OnRender()
 
     if (ScreenSize.x ~= self.RenderTexture:GetSize().x) then
         self.RenderTexture:Resize(ScreenSize)
-        print(ScreenSize.y .. " " .. self.RenderTexture:GetSize().x)
     end
 end
 
