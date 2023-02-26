@@ -56,6 +56,8 @@ namespace Volund
 
 		void SetTexture(const std::string& Name, const Ref<Texture>& Value, uint32_t TextureUnit) override;
 
+		void SetFramebuffer(const std::string& Name, const Ref<Framebuffer>& Value, uint32_t TextureUnit) override;
+
 		OpenGLShader() = default;
 
 		OpenGLShader(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource);

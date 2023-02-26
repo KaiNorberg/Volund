@@ -10,6 +10,26 @@
 
 namespace Volund
 {
+	void Camera::SetLayerMask(uint8_t Index, bool Enabled)
+	{
+		if (Index > 0 && Index <= 16)
+		{
+			if (Enabled)
+			{
+				this->_LayerMask |= 1UL << (Index - 1);
+			}
+			else
+			{
+				this->_LayerMask &= ~(1UL << (Index - 1));
+			}
+		}
+	}
+
+	void Camera::SetTargetBuffer(Ref<Framebuffer> NewTargetBuffer)
+	{
+		this->_TargetBuffer = NewTargetBuffer;
+	}
+
 	Mat4x4 Camera::GetViewMatrix() const
 	{
 		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
@@ -63,14 +83,14 @@ namespace Volund
 		{		
 			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			auto TargetBuffer = this->GetScene()->GetTargetBuffer();
-			auto Spec = TargetBuffer->GetSpec();
+			auto Spec = this->_TargetBuffer->GetSpec();
 
 			RendererEye Eye;
-			Eye.Target = TargetBuffer;
+			Eye.Target = this->_TargetBuffer;
 			Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
 			Eye.ViewMatrix = this->GetViewMatrix();
 			Eye.Position = EntityTransform->Position;
+			Eye.LayerMask = this->_LayerMask;
 
 			Renderer::Submit(Eye);
 		}
@@ -81,5 +101,10 @@ namespace Volund
 		}
 		break;
 		}
+	}
+
+	void Camera::OnCreate()
+	{
+		this->_TargetBuffer = this->GetScene()->GetTargetBuffer();
 	}
 }

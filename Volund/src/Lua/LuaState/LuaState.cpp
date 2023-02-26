@@ -10,6 +10,7 @@
 #include "Lua/LuaShader/LuaShader.h"
 #include "Lua/LuaTexture/LuaTexture.h"
 #include "Lua/LuaSound/LuaSound.h"
+#include "Lua/LuaFramebuffer/LuaFramebuffer.h"
 
 #include "Filesystem/Filesystem.h"
 
@@ -222,6 +223,11 @@ namespace Volund
 		this->_SolState.new_usertype<LuaTexture>("Texture", sol::constructors<void(const std::string&)>(),
 			"Padding", &LuaTexture::Padding);
 
+		this->_SolState.new_usertype<LuaFramebuffer>("Framebuffer", sol::constructors<void(const LuaVec2&)>(),
+			"Padding", &LuaFramebuffer::Padding,
+			"Resize", &LuaFramebuffer::Resize,
+			"GetSize", &LuaFramebuffer::GetSize);
+
 		this->_SolState.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>(),
 			"Padding", &LuaMesh::Padding);
 
@@ -238,32 +244,34 @@ namespace Volund
 			"SetDouble", &LuaMaterial::SetDouble,
 			"SetVec2", &LuaMaterial::SetVec2,
 			"SetVec3", &LuaMaterial::SetVec3,
-			"SetTexture", &LuaMaterial::SetTexture
+			"SetTexture", &LuaMaterial::SetTexture,
+			"SetFramebuffer", &LuaMaterial::SetFramebuffer
 		);
 
 		//Tables
 
 		this->_SolState.create_named_table("Scene",
-			"TimeSinceStart", [this](sol::table Self) { return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - this->_Scene->GetStartTime()).count(); },
-			"CreateEntity", [this](sol::table Self) { return LuaEntity(this->_Scene, this->_Scene->CreateEntity()); },
-			"DeleteEntity", [this](sol::table Self, LuaEntity& E) { return this->_Scene->DestroyEntity(E.Get()); },
+			"GetTargetBuffer", std::function([this](sol::table Self) { return LuaFramebuffer(this->_Scene->GetTargetBuffer()); }),
+			"TimeSinceStart", std::function([this](sol::table Self) { return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - this->_Scene->GetStartTime()).count(); }),
+			"CreateEntity", std::function([this](sol::table Self) { return LuaEntity(this->_Scene, this->_Scene->CreateEntity()); }),
+			"DeleteEntity", std::function([this](sol::table Self, LuaEntity& E) { return this->_Scene->DestroyEntity(E.Get()); }),
 			"View", sol::overload(
-				[this](sol::this_state S, sol::table Self, LuaComponentID ComponentID) { return this->LuaComponentView(S, ComponentID); },
-				[this](sol::this_state S, sol::table Self, sol::table ScriptTable) { return this->LuaScriptView(S, ScriptTable); })
+				std::function([this](sol::this_state S, sol::table Self, LuaComponentID ComponentID) { return this->LuaComponentView(S, ComponentID); }),
+				std::function([this](sol::this_state S, sol::table Self, sol::table ScriptTable) { return this->LuaScriptView(S, ScriptTable); }))
 		);
 
 		this->_SolState.create_named_table("Input",
-			"IsHeld", [this](sol::table Self, char KeyCode) { return this->_Input->IsHeld(KeyCode); },
-			"IsPressed", [this](sol::table Self, char KeyCode) { return this->_Input->IsPressed(KeyCode); },
-			"IsMouseButtonHeld", [this](sol::table Self, char Button) { return this->_Input->IsMouseButtonHeld(Button); },
-			"IsMouseButtonPressed", [this](sol::table Self, char Button) { return this->_Input->IsMouseButtonPressed(Button); },
-			"GetScrollPosition", [this](sol::table Self) { return this->_Input->GetScrollPosition(); },
-			"GetMousePosition", [this](sol::table Self) { return this->_Input->GetMousePosition(); }
+			"IsHeld", std::function([this](sol::table Self, char KeyCode) { return this->_Input->IsHeld(KeyCode); }),
+			"IsPressed", std::function([this](sol::table Self, char KeyCode) { return this->_Input->IsPressed(KeyCode); }),
+			"IsMouseButtonHeld", std::function([this](sol::table Self, char Button) { return this->_Input->IsMouseButtonHeld(Button); }),
+			"IsMouseButtonPressed", std::function([this](sol::table Self, char Button) { return this->_Input->IsMouseButtonPressed(Button); }),
+			"GetScrollPosition", std::function([this](sol::table Self) { return this->_Input->GetScrollPosition(); }),
+			"GetMousePosition", std::function([this](sol::table Self) { return this->_Input->GetMousePosition(); })
 		);
 
 		this->_SolState.create_named_table("Window",
-			"SetCursorMode", [this](sol::table Self, CursorMode NewCursorMode) { return this->_Window->SetCursorMode(NewCursorMode); },
-			"SetTitle", [this](sol::table Self, const std::string& NewTitle) { return this->_Window->SetTitle(NewTitle); }
+			"SetCursorMode", std::function([this](sol::table Self, CursorMode NewCursorMode) { return this->_Window->SetCursorMode(NewCursorMode); }),
+			"SetTitle", std::function([this](sol::table Self, const std::string& NewTitle) { return this->_Window->SetTitle(NewTitle); })
 		);
 
 		//Enums

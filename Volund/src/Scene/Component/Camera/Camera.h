@@ -1,6 +1,7 @@
 #pragma once
 
 #include "../Component.h"
+#include "Renderer/Framebuffer/Framebuffer.h"
 
 namespace Volund
 {
@@ -16,6 +17,10 @@ namespace Volund
 
 		float FarPlane = 100.0f;
 
+		void SetLayerMask(uint8_t Index, bool Enabled);
+
+		void SetTargetBuffer(Ref<Framebuffer> NewTargetBuffer);
+
 		Mat4x4 GetViewMatrix() const;
 
 		Mat4x4 GetOriginViewMatrix() const;
@@ -24,8 +29,14 @@ namespace Volund
 
 		void Procedure(const Event& E);
 
+		void OnCreate() override;
+
 		Camera() = default;
 
 	private:
+
+		uint16_t _LayerMask = std::numeric_limits<uint16_t>::max();
+
+		Ref<Framebuffer> _TargetBuffer;
 	};
 }

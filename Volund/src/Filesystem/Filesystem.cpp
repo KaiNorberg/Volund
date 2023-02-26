@@ -105,6 +105,9 @@ namespace Volund
 		CreateResource("PBR.vshader",
 			#include "Shaders/PBR.vshader"
 		);
+		CreateResource("PBRTexture.vshader",
+			#include "Shaders/PBRTexture.vshader"
+		);
 		CreateResource("Sphere.vobj",
 			#include "Meshes/Sphere.vobj"
 		);

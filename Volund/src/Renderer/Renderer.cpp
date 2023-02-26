@@ -85,7 +85,7 @@ namespace Volund
 
 		for (auto& Model : this->Models)
 		{
-			Model.Discriminated = !CameraFrustum.ContainsAABB(Model.mesh->GetAABB(Model.ModelMatrix));
+			Model.Discriminated = !CameraFrustum.ContainsAABB(Model.mesh->GetAABB(Model.ModelMatrix)) || ((Model.LayerMask & Eye.LayerMask) == 0);
 		}
 	}
 

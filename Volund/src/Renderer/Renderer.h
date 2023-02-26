@@ -24,6 +24,8 @@ namespace Volund
 		Ref<Mesh> mesh;
 		Ref<Material> material;
 
+		uint16_t LayerMask;
+
 		bool Discriminated = false;
 	};
 
@@ -40,6 +42,8 @@ namespace Volund
 		Mat4x4 ProjectionMatrix;
 
 		Vec3 Position;
+
+		uint16_t LayerMask;
 
 		Ref<Framebuffer> Target;
 	};

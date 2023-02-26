@@ -92,6 +92,15 @@ namespace Volund
 		this->SetInt(Name, TextureUnit);
 	}
 
+	void OpenGLShader::SetFramebuffer(const std::string& Name, const Ref<Framebuffer>& Value, uint32_t TextureUnit)
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		glActiveTexture(GL_TEXTURE0 + TextureUnit);
+		glBindTexture(GL_TEXTURE_2D, Value->GetAttachment(0));
+		this->SetInt(Name, TextureUnit);
+	}
+
 	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
 	{
 		uint32_t id = glCreateShader(type);

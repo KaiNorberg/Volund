@@ -27,6 +27,8 @@ namespace Volund
 
 		void SetTexture(const std::string& Name, Ref<Texture> Value);
 
+		void SetFramebuffer(const std::string& Name, Ref<Framebuffer> Value);
+
 		void UpdateShader();
 		Ref<Shader> GetShader();
 
@@ -47,6 +49,8 @@ namespace Volund
 		std::unordered_map<std::string, Vec3> _Vec3Uniforms;
 
 		std::unordered_map<std::string, Ref<Texture>> _TextureUniforms;
+
+		std::unordered_map<std::string, Ref<Framebuffer>> _FramebufferUniforms;
 
 		Ref<Shader> _Shader;
 

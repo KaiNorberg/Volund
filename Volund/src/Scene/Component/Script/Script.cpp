@@ -33,6 +33,21 @@ namespace Volund
 			}
 		}
 		break;
+		case EventType::RENDER:
+		{
+			if (this->_LuaOnRender.valid())
+			{
+				try
+				{
+					this->_LuaOnRender(this->Table);
+				}
+				catch (sol::error E)
+				{
+					VOLUND_WARNING(E.what());
+				}
+			}
+		}
+		break;
 		default:
 		{
 
@@ -81,6 +96,7 @@ namespace Volund
 		this->_ID = (void*)ScriptTable.pointer();
 
 		this->_LuaOnCreate = ScriptTable["OnCreate"];
+		this->_LuaOnRender = ScriptTable["OnRender"];
 		this->_LuaOnUpdate = ScriptTable["OnUpdate"];
 		this->_LuaOnDestroy = ScriptTable["OnDestroy"];
 

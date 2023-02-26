@@ -38,6 +38,11 @@ namespace Volund
 		this->_Material->SetTexture(Name, Value.Get());
 	}
 
+	void LuaMaterial::SetFramebuffer(const std::string& Name, LuaFramebuffer Value)
+	{
+		this->_Material->SetFramebuffer(Name, Value.Get());
+	}
+
 	LuaMaterial::LuaMaterial(Ref<Material> Material)
 	{
 		this->_Material = Material;

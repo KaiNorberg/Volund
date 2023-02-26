@@ -44,6 +44,15 @@ namespace Volund
 			{
 				NewComponent->FarPlane = Table["FarPlane"];
 			}
+
+			if (Table["TargetBuffer"] != sol::lua_nil)
+			{
+				NewComponent->SetTargetBuffer(((LuaFramebuffer)Table["TargetBuffer"]).Get());
+			}
+			else
+			{
+				NewComponent->SetTargetBuffer(this->_Scene->GetTargetBuffer());
+			}
 		}
 		break;
 		case LuaComponentID::CAMERA_MOVEMENT:
@@ -68,7 +77,12 @@ namespace Volund
 				LuaMesh MeshAsset = Table["Mesh"];
 				LuaMaterial MaterialAsset = Table["Material"];
 
-				this->_Scene->CreateComponent<MeshRenderer>(this->_Entity, MeshAsset.Get(), MaterialAsset.Get());
+				auto NewComponent = this->_Scene->CreateComponent<MeshRenderer>(this->_Entity, MeshAsset.Get(), MaterialAsset.Get());			
+				
+				if (Table["Layer"] != sol::lua_nil)
+				{
+					NewComponent->SetLayer(Table["Layer"]);
+				}
 			}
 			else
 			{

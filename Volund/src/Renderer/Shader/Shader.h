@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Texture/Texture.h"
+#include "Renderer/Framebuffer/Framebuffer.h"
 
 namespace Volund
 {
@@ -29,6 +30,8 @@ namespace Volund
 		virtual void SetMat4x4(const std::string& Name, const Mat4x4& Value, bool Transpose = false) = 0;
 
 		virtual void SetTexture(const std::string& Name, const Ref<Texture>& Value, uint32_t TextureUnit) = 0;
+
+		virtual void SetFramebuffer(const std::string& Name, const Ref<Framebuffer>& Value, uint32_t TextureUnit) = 0;
 
 		static Ref<Shader> Create(const std::string& Filepath);
 

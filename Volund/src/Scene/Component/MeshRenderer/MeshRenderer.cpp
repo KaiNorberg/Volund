@@ -8,6 +8,15 @@
 
 namespace Volund
 {
+	void MeshRenderer::SetLayer(uint8_t Layer)
+	{
+		this->_LayerMask = 0;
+		if (Layer > 0 && Layer <= 16)
+		{
+			this->_LayerMask |= 1UL << (Layer - 1);
+		}
+	}
+
 	void MeshRenderer::SetMesh(Ref<Mesh> NewMesh)
 	{
 		this->_Mesh = NewMesh;
@@ -41,6 +50,7 @@ namespace Volund
 				RendererModel Model;
 				Model.mesh = this->_Mesh;
 				Model.material = this->_Material;
+				Model.LayerMask = this->_LayerMask;
 
 				auto TransformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 				Model.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);

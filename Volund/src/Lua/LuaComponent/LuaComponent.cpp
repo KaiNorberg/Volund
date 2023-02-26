@@ -5,6 +5,7 @@
 #include "Lua/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaVec/LuaVec.h"
 #include "Lua/LuaSound/LuaSound.h"
+#include "Lua/LuaFramebuffer/LuaFramebuffer.h"
 
 #define VOLUND_BASE_TABLE(EntityInstance) "Entity", EntityInstance
 
@@ -17,14 +18,18 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//FOV
-			"GetFOV", [C](sol::table Self) { return C->FOV; },
-			"SetFOV", [C](sol::table Self, float FOV) { C->FOV = FOV; },
+			"GetFOV", std::function([C](sol::table Self) { return C->FOV; }),
+			"SetFOV", std::function([C](sol::table Self, float FOV) { C->FOV = FOV; }),
 			//NearPlane
-			"GetNearPlane", [C](sol::table Self) { return C->NearPlane; },
-			"SetNearPlane", [C](sol::table Self, float NearPlane) { C->NearPlane = NearPlane; },
+			"GetNearPlane", std::function([C](sol::table Self) { return C->NearPlane; }),
+			"SetNearPlane", std::function([C](sol::table Self, float NearPlane) { C->NearPlane = NearPlane; }),
 			//FarPlane
-			"GetFarPlane", [C](sol::table Self) { return C->FarPlane; },
-			"SetFarPlane", [C](sol::table Self, float FarPlane) { C->FarPlane = FarPlane; }
+			"GetFarPlane", std::function([C](sol::table Self) { return C->FarPlane; }),
+			"SetFarPlane", std::function([C](sol::table Self, float FarPlane) { C->FarPlane = FarPlane; }),
+			//TargetBuffer
+			"SetTargetBuffer", std::function([C](sol::table Self, LuaFramebuffer TargetBuffer) { C->SetTargetBuffer(TargetBuffer.Get()); }),
+			//LayerMask
+			"SetLayerMask", std::function([C](sol::table Self, uint8_t Index, bool Enabled) { C->SetLayerMask(Index, Enabled); })
 		);
 
 		return Table;
@@ -37,11 +42,11 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Speed
-			"GetSpeed", [C](sol::table Self) { return C->Speed; },
-			"SetSpeed", [C](sol::table Self, float Speed) { C->Speed = Speed; },
+			"GetSpeed", std::function([C](sol::table Self) { return C->Speed; }),
+			"SetSpeed", std::function([C](sol::table Self, float Speed) { C->Speed = Speed; }),
 			//Sensitivity
-			"GetSensitivity", [C](sol::table Self) { return C->Sensitivity; },
-			"SetSensitivity", [C](sol::table Self, float Sensitivity) { C->Sensitivity = Sensitivity; }
+			"GetSensitivity", std::function([C](sol::table Self) { return C->Sensitivity; }),
+			"SetSensitivity", std::function([C](sol::table Self, float Sensitivity) { C->Sensitivity = Sensitivity; })
 		);
 
 		return Table;
@@ -54,11 +59,13 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Mesh
-			"GetMesh", [C](sol::table Self) { return LuaMesh(C->GetMesh()); },
-			"SetMesh", [C](sol::table Self, LuaMesh Mesh) { C->SetMesh(Mesh.Get()); },
+			"GetMesh", std::function([C](sol::table Self) { return LuaMesh(C->GetMesh()); }),
+			"SetMesh", std::function([C](sol::table Self, LuaMesh Mesh) { C->SetMesh(Mesh.Get()); }),
 			//Material
-			"GetMaterial", [C](sol::table Self) { return LuaMaterial(C->GetMaterial()); },
-			"SetMaterial", [C](sol::table Self, LuaMaterial Material) { C->SetMaterial(Material.Get()); }
+			"GetMaterial", std::function([C](sol::table Self) { return LuaMaterial(C->GetMaterial()); }),
+			"Material", std::function([C](sol::table Self, LuaMaterial Material) { C->SetMaterial(Material.Get()); }),
+			//LayerMask
+			"SetLayer", std::function([C](sol::table Self, uint8_t Layer) { C->SetLayer(Layer); })
 		);
 
 		return Table;
@@ -71,11 +78,11 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Color
-			"GetColor", [C](sol::table Self) { return C->Color; },
-			"SetColor", [C](sol::table Self, const LuaVec3& Color) { C->Color = Color; },
+			"GetColor", std::function([C](sol::table Self) { return C->Color; }),
+			"SetColor", std::function([C](sol::table Self, const LuaVec3& Color) { C->Color = Color; }),
 			//Brightness
-			"GetBrightness", [C](sol::table Self) { return C->Brightness; },
-			"SetBrightness", [C](sol::table Self, float Brightness) { C->Brightness = Brightness; }
+			"GetBrightness", std::function([C](sol::table Self) { return C->Brightness; }),
+			"SetBrightness", std::function([C](sol::table Self, float Brightness) { C->Brightness = Brightness; })
 		);
 
 		return Table;
@@ -94,8 +101,8 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//String
-			"Get", [C](sol::table Self) { return C->String; },
-			"Set", [C](sol::table Self, std::string String) { C->String = String; }
+			"Get", std::function([C](sol::table Self) { return C->String; }),
+			"Set", std::function([C](sol::table Self, std::string String) { C->String = String; })
 		);
 
 		return Table;
@@ -108,21 +115,21 @@ namespace Volund
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
 			//Position
-			"GetPosition", [C](sol::table Self) { return LuaVec3(C->Position); },
-			"SetPosition", [C](sol::table Self, const LuaVec3& Position) { C->Position = Position.GLM(); },
-			"AddPosition", [C](sol::table Self, const LuaVec3& Position) { C->Position += Position.GLM(); },
+			"GetPosition", std::function([C](sol::table Self) { return LuaVec3(C->Position); }),
+			"SetPosition", std::function([C](sol::table Self, const LuaVec3& Position) { C->Position = Position.GLM(); }),
+			"AddPosition", std::function([C](sol::table Self, const LuaVec3& Position) { C->Position += Position.GLM(); }),
 			//Rotation
-			"GetRotation", [C](sol::table Self) { return LuaVec3(C->GetRotation()); },
-			"SetRotation", [C](sol::table Self, const LuaVec3& Rotation) { C->SetRotation(Rotation.GLM()); },
-			"AddRotation", [C](sol::table Self, const LuaVec3& Rotation) { C->AddRotation(Rotation.GLM()); },
+			"GetRotation", std::function([C](sol::table Self) { return LuaVec3(C->GetRotation()); }),
+			"SetRotation", std::function([C](sol::table Self, const LuaVec3& Rotation) { C->SetRotation(Rotation.GLM()); }),
+			"AddRotation", std::function([C](sol::table Self, const LuaVec3& Rotation) { C->AddRotation(Rotation.GLM()); }),
 			//Scale
-			"GetScale", [C](sol::table Self) { return LuaVec3(C->Scale); },
-			"SetScale", [C](sol::table Self, const LuaVec3& Scale) { C->Scale = Scale.GLM(); },
-			"AddScale", [C](sol::table Self, const LuaVec3& Scale) { C->Scale += Scale.GLM(); },
+			"GetScale", std::function([C](sol::table Self) { return LuaVec3(C->Scale); }),
+			"SetScale", std::function([C](sol::table Self, const LuaVec3& Scale) { C->Scale = Scale.GLM(); }),
+			"AddScale", std::function([C](sol::table Self, const LuaVec3& Scale) { C->Scale += Scale.GLM(); }),
 			//Directions
-			"GetFront", [C](sol::table Self) { return LuaVec3(C->GetFront()); },
-			"GetRight", [C](sol::table Self) { return LuaVec3(C->GetRight()); },
-			"GetUp", [C](sol::table Self) { return LuaVec3(C->GetUp()); }
+			"GetFront", std::function([C](sol::table Self) { return LuaVec3(C->GetFront()); }),
+			"GetRight", std::function([C](sol::table Self) { return LuaVec3(C->GetRight()); }),
+			"GetUp", std::function([C](sol::table Self) { return LuaVec3(C->GetUp()); })
 		);
 
 		return Table;
@@ -134,11 +141,11 @@ namespace Volund
 		sol::state_view StateView = S;
 
 		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
-			"Play", [C](sol::table Self) { C->Play(); },
-			"SetSound", [C](sol::table Self, LuaSound Sound) { C->SetBuffer(Sound.GetBuffer()); },
-			"SetPitch", [C](sol::table Self, float Pitch) { C->SetPitch(Pitch); },
-			"SetLooping", [C](sol::table Self, bool Looping) { C->SetLooping(Looping); },
-			"SetGain", [C](sol::table Self, float Gain) { C->SetGain(Gain); }
+			"Play", std::function([C](sol::table Self) { C->Play(); }),
+			"SetSound", std::function([C](sol::table Self, LuaSound Sound) { C->SetBuffer(Sound.GetBuffer()); }),
+			"SetPitch", std::function([C](sol::table Self, float Pitch) { C->SetPitch(Pitch); }),
+			"SetLooping", std::function([C](sol::table Self, bool Looping) { C->SetLooping(Looping); }),
+			"SetGain", std::function([C](sol::table Self, float Gain) { C->SetGain(Gain); })
 		);
 
 		return Table;

@@ -11,6 +11,8 @@ namespace Volund
 	{
 	public:
 
+		void SetLayer(uint8_t Layer);
+
 		void SetMesh(Ref<Mesh> NewMesh);
 
 		void SetMaterial(Ref<Material> NewMaterial);
@@ -26,6 +28,9 @@ namespace Volund
 		MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef);
 
 	private:
+
+		uint16_t _LayerMask = 1;
+
 		Ref<Mesh> _Mesh;
 		Ref<Material> _Material;
 	};

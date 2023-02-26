@@ -38,6 +38,11 @@ namespace Volund
 		this->_TextureUniforms[Name] = Value;
 	}
 
+	void Material::SetFramebuffer(const std::string& Name, Ref<Framebuffer> Value)
+	{
+		this->_FramebufferUniforms[Name] = Value;
+	}
+
 	void Material::UpdateShader()
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -71,6 +76,11 @@ namespace Volund
 		for (auto& [Name, Value] : this->_TextureUniforms)
 		{
 			this->_Shader->SetTexture(Name, Value, TextureUnit);
+			TextureUnit++;
+		}
+		for (auto& [Name, Value] : this->_FramebufferUniforms)
+		{
+			this->_Shader->SetFramebuffer(Name, Value, TextureUnit);
 			TextureUnit++;
 		}
 	}

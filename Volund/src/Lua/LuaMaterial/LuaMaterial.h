@@ -4,6 +4,7 @@
 
 #include "Lua/LuaShader/LuaShader.h"
 #include "Lua/LuaTexture/LuaTexture.h"
+#include "Lua/LuaFramebuffer/LuaFramebuffer.h"
 
 namespace Volund
 {
@@ -26,6 +27,8 @@ namespace Volund
 		void SetVec3(const std::string& Name, Vec3 Value);
 
 		void SetTexture(const std::string& Name, LuaTexture Value);
+
+		void SetFramebuffer(const std::string& Name, LuaFramebuffer Value);
 
 		LuaMaterial(Ref<Material> Material);
 

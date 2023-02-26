@@ -29,6 +29,7 @@ namespace Volund
 
 		sol::safe_function _LuaOnCreate;
 		sol::safe_function _LuaOnUpdate;
+		sol::safe_function _LuaOnRender;
 		sol::safe_function _LuaOnDestroy;
 
 		void* _ID;
