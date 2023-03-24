@@ -14,7 +14,7 @@ function Controller:OnCreate(Args)
 
     StarMass = self.GravityView[1].Mass
     for i = 2, #self.GravityView do           
-        Position = self.GravityView[i].Entity:GetComponent(Component.TRANSFORM):GetPosition()
+        Position = self.GravityView[i].Entity:Get(Component.TRANSFORM):GetPosition()
 
         Speed = math.sqrt((BigG * StarMass) / (Position:Length()))
 
@@ -26,13 +26,13 @@ end
 
 function Controller:OnUpdate(TimeStep)
     for i = 1, #self.GravityView do    
-        Transform = self.GravityView[i].Entity:GetComponent(Component.TRANSFORM)
+        Transform = self.GravityView[i].Entity:Get(Component.TRANSFORM)
 
         PositionOne = Transform:GetPosition()
         MassOne = self.GravityView[i].Mass 
 
         for j = i + 1, #self.GravityView do               
-            PositionTwo = self.GravityView[j].Entity:GetComponent(Component.TRANSFORM):GetPosition()
+            PositionTwo = self.GravityView[j].Entity:Get(Component.TRANSFORM):GetPosition()
             MassTwo = self.GravityView[j].Mass
 
             Delta = PositionOne - PositionTwo

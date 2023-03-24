@@ -23,7 +23,7 @@ function Movement.Control(Value, Upkey, DownKey, StepSize, TimeStep)
 end
 
 function Movement:OnUpdate(TimeStep)    
-    EntityMat = self.Entity:GetComponent(Component.MESH_RENDERER):GetMaterial()
+    EntityMat = self.Entity:Get(Component.MESH_RENDERER):GetMaterial()
 
     EntityMat:SetInt("Julia", self.Julia)   
     EntityMat:SetDouble("JuliaC", self.JuliaC)

@@ -16,22 +16,22 @@ CubeMesh = Mesh:new("Cube.vobj")
 Count = 20
 
 Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 25)})
-Camera:AddComponent(Component.CAMERA, {NearPlane = 1.0})
-Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
+Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 25)})
+Camera:Add(Component.CAMERA, {NearPlane = 1.0})
+Camera:Add(Component.SCRIPT, {Script = ShowFPS})
 
 for X = -Count / 2, Count / 2 do
     for Y = -Count / 2, Count / 2 do
         for Z = -Count / 2, Count / 2 do
             NewEntity = Scene:CreateEntity()
 
-            NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z)})
-            NewEntity:AddComponent(Component.SCRIPT, {Script = Scale})
+            NewEntity:Add(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z)})
+            NewEntity:Add(Component.SCRIPT, {Script = Scale})
             
             if math.abs(Z) % 2 == 0 then
-                NewEntity:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = BlueMaterial})
+                NewEntity:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = BlueMaterial})
             else
-                NewEntity:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = RedMaterial})
+                NewEntity:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = RedMaterial})
             end
         end
     end

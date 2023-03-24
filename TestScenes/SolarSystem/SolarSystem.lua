@@ -24,17 +24,17 @@ StarMaterial:SetVec3("AmbientLighting", Vec3:new(1.0))
 SphereMesh = Mesh:new("Sphere.vobj")
 
 Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, SystemRadius, SystemRadius * 2)})
-Camera:AddComponent(Component.CAMERA, {FarPlane = SystemRadius * 10^5})
-Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
-Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = SystemRadius})
+Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, SystemRadius, SystemRadius * 2)})
+Camera:Add(Component.CAMERA, {FarPlane = SystemRadius * 10^5})
+Camera:Add(Component.SCRIPT, {Script = ShowFPS})
+Camera:Add(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = SystemRadius})
 
 --Create Galaxy
 
 Star = Scene:CreateEntity()
-Star:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0), Scale = Vec3:new(((6 * StarMass) * math.pi) ^ 1/3 * StarScale)})
-Star:AddComponent(Component.SCRIPT, {Script = Gravity, Mass = StarMass})
-Star:AddComponent(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = StarMaterial})
+Star:Add(Component.TRANSFORM, {Position = Vec3:new(0.0), Scale = Vec3:new(((6 * StarMass) * math.pi) ^ 1/3 * StarScale)})
+Star:Add(Component.SCRIPT, {Script = Gravity, Mass = StarMass})
+Star:Add(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = StarMaterial})
 
 for i = 1, PlanetAmount do
     NewEntity = Scene:CreateEntity()
@@ -53,11 +53,11 @@ for i = 1, PlanetAmount do
     NewMaterial:SetVec3("Color", Vec3:new(X, Y, Z))
     NewMaterial:SetVec3("AmbientLighting", Vec3:new(1.0))
     
-    NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z), Scale = Vec3:new(PlanetScale * PlanetDiameter)})
-    NewEntity:AddComponent(Component.SCRIPT, {Script = Gravity, Mass = PlanetMass})
-    NewEntity:AddComponent(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = NewMaterial})
+    NewEntity:Add(Component.TRANSFORM, {Position = Vec3:new(X, Y, Z), Scale = Vec3:new(PlanetScale * PlanetDiameter)})
+    NewEntity:Add(Component.SCRIPT, {Script = Gravity, Mass = PlanetMass})
+    NewEntity:Add(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = NewMaterial})
 end
 
 Window:SetCursorMode(CursorMode.DISABLED)
 
-Camera:AddComponent(Component.SCRIPT, {Script = Controller})
+Camera:Add(Component.SCRIPT, {Script = Controller})

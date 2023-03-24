@@ -4,7 +4,7 @@ local Scale =
 }
 
 function Scale:OnCreate(TimeStep)
-    self.Transform = self.Entity:GetComponent(Component.TRANSFORM)
+    self.Transform = self.Entity:Get(Component.TRANSFORM)
 end
 
 function Scale:OnUpdate(TimeStep)

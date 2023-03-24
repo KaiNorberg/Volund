@@ -32,44 +32,44 @@ PillarMaterial:SetTexture("MetalTexture", Texture:new("Textures/column_01_Defaul
 PillarMaterial:SetTexture("RoughTexture", Texture:new("Textures/column_01_DefaultMaterial_Glossiness.jpg"))
 
 Pillar = Scene:CreateEntity();
-Pillar:AddComponent(Component.TRANSFORM, {Position = Vec3:new(10, 0.0, -10.0)})
-Pillar:AddComponent(Component.MESH_RENDERER, {Mesh = PillarMesh, Material = PillarMaterial})
+Pillar:Add(Component.TRANSFORM, {Position = Vec3:new(10, 0.0, -10.0)})
+Pillar:Add(Component.MESH_RENDERER, {Mesh = PillarMesh, Material = PillarMaterial})
 
 Ground = Scene:CreateEntity();
-Ground:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 0.0), Scale = Vec3:new(1000.0, 1.0, 1000.0)})
-Ground:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = GroundMaterial})
+Ground:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 0.0), Scale = Vec3:new(1000.0, 1.0, 1000.0)})
+Ground:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = GroundMaterial})
 
 Sphere = Scene:CreateEntity();
-Sphere:AddComponent(Component.TRANSFORM, {Position = Vec3:new(-10.0, 0.0, -10.0), Scale = Vec3:new(1.0, 1.0, 1.0)})
-Sphere:AddComponent(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = SphereMaterial})
-Sphere:AddComponent(Component.SCRIPT, {Script = HoverScript})
+Sphere:Add(Component.TRANSFORM, {Position = Vec3:new(-10.0, 0.0, -10.0), Scale = Vec3:new(1.0, 1.0, 1.0)})
+Sphere:Add(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = SphereMaterial})
+Sphere:Add(Component.SCRIPT, {Script = HoverScript})
 
 Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
-Camera:AddComponent(Component.CAMERA, {FOV = 80})
-Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
-Camera:AddComponent(Component.SCRIPT, {Script = PlayerMovement, Ground = Ground})
+Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
+Camera:Add(Component.CAMERA, {FOV = 80})
+Camera:Add(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
+Camera:Add(Component.SCRIPT, {Script = PlayerMovement, Ground = Ground})
 
 PointLight = Scene:CreateEntity()
-PointLight:AddComponent(Component.TRANSFORM, {Position = Vec3:new(3.0, 7.5, 3.0) * 50.0})
-PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 500000.0, Color = Vec3:new(1.0, 1.0, 1.0)})
+PointLight:Add(Component.TRANSFORM, {Position = Vec3:new(0, 7.5, 3.0) * 50.0})
+PointLight:Add(Component.POINT_LIGHT, {Brightness = 500000.0, Color = Vec3:new(1.0, 1.0, 1.0)})
 
 Window:SetCursorMode(CursorMode.DISABLED)
 
 function CreatePortal(Position)
     Arch = Scene:CreateEntity();
-    Arch:AddComponent(Component.TRANSFORM, {Position = Position, Rotation = Vec3:new(0.0, 180.0, 0.0)})
-    Arch:AddComponent(Component.MESH_RENDERER, {Mesh = ArchMesh, Material = ArchMaterial, Layer = 1})
+    Arch:Add(Component.TRANSFORM, {Position = Position, Rotation = Vec3:new(0.0, 180.0, 0.0)})
+    Arch:Add(Component.MESH_RENDERER, {Mesh = ArchMesh, Material = ArchMaterial, Layer = 1})
     
     Portal = Scene:CreateEntity();
-    Portal:AddComponent(Component.TRANSFORM, {Position = Position + Vec3:new(0.0, 2.0, -0.2), Scale = Vec3:new(4.5, 7.0, 0.7)})
-    Portal:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = Material:new(PortalShader), Layer = 2})
+    Portal:Add(Component.TRANSFORM, {Position = Position + Vec3:new(0.0, 2.0, -0.2), Scale = Vec3:new(4.5, 7.0, 0.7)})
+    Portal:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = Material:new(PortalShader), Layer = 2})
     return Portal
 end
 
 function ConnectPortals(Portal1, Portal2)
-    Portal1:AddComponent(Component.SCRIPT, {Script = PortalScript, TargetPortal = Portal2, Player = Camera})
-    Portal2:AddComponent(Component.SCRIPT, {Script = PortalScript, TargetPortal = Portal1, Player = Camera})
+    Portal1:Add(Component.SCRIPT, {Script = PortalScript, TargetPortal = Portal2, Player = Camera})
+    Portal2:Add(Component.SCRIPT, {Script = PortalScript, TargetPortal = Portal1, Player = Camera})
 end
 
 ConnectPortals(CreatePortal(Vec3:new(-10.0, 0.0, 0.0)), CreatePortal(Vec3:new(10.0, 0.0, 0.0)))

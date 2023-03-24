@@ -169,9 +169,9 @@ namespace Volund
 
 		this->_SolState.new_usertype<LuaEntity>("VOLUND_ENTITY", sol::no_constructor,
 			"Padding", &LuaEntity::Padding,
-			"AddComponent", &LuaEntity::AddComponent,
-			"DeleteComponent", &LuaEntity::DeleteComponent,
-			"GetComponent", &LuaEntity::GetComponent,
+			"Add", &LuaEntity::AddComponent,
+			"Delete", &LuaEntity::DeleteComponent,
+			"Get", &LuaEntity::GetComponent,
 			"GetScript", &LuaEntity::GetScript,
 			"HasComponent", &LuaEntity::HasComponent,
 			"ComponentAmount", &LuaEntity::ComponentAmount

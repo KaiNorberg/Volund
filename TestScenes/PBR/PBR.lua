@@ -5,14 +5,14 @@ PBRShader = Shader:new("PBR.vshader")
 SphereMesh = Mesh:new("Sphere.vobj")
 
 Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 20.0)})
-Camera:AddComponent(Component.CAMERA, {IsActive = true})
-Camera:AddComponent(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
-Camera:AddComponent(Component.SCRIPT, {Script = ShowFPS})
+Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 20.0)})
+Camera:Add(Component.CAMERA, {IsActive = true})
+Camera:Add(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
+Camera:Add(Component.SCRIPT, {Script = ShowFPS})
 
 PointLight = Scene:CreateEntity()
-PointLight:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0, 150.0)})
-PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 100000.0, Color = Vec3:new(1.0, 0.0, 0.0)})
+PointLight:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0, 150.0)})
+PointLight:Add(Component.POINT_LIGHT, {Brightness = 100000.0, Color = Vec3:new(1.0, 0.0, 0.0)})
 
 for x = 0,10 do
     for y = 0,10 do
@@ -22,8 +22,8 @@ for x = 0,10 do
         NewMaterial:SetFloat("Roughness", math.min(y * 0.1, 1.0))
         
         local NewEntity = Scene:CreateEntity()
-        NewEntity:AddComponent(Component.TRANSFORM, {Position = Vec3:new((x - 5) * 2.5, (y - 5) * 2.5, 0.0)})
-        NewEntity:AddComponent(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = NewMaterial})
+        NewEntity:Add(Component.TRANSFORM, {Position = Vec3:new((x - 5) * 2.5, (y - 5) * 2.5, 0.0)})
+        NewEntity:Add(Component.MESH_RENDERER, {Mesh = SphereMesh, Material = NewMaterial})
     end
 end
 
