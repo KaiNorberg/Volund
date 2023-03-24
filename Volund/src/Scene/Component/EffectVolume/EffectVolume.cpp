@@ -5,7 +5,7 @@ namespace Volund
 {
 	void EffectVolume::Procedure(const Event& E)
 	{
-		VOLUND_PROFILE_FUNCTION();
+		/*VOLUND_PROFILE_FUNCTION();
 
 		switch (E.Type)
 		{
@@ -30,6 +30,6 @@ namespace Volund
 
 		}
 		break;
-		}
+		}*/
 	}
 }
