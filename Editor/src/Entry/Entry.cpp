@@ -4,7 +4,7 @@
 
 void Volund::Entry()
 {
-	auto App = VL::Ref<Editor>(new Editor());
+	auto app = VL::Ref<Editor>(new Editor());
 
-	App->Run();
+	app->Run();
 }
