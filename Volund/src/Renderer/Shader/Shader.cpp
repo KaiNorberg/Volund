@@ -1,4 +1,3 @@
-#pragma once
 #include "PCH/PCH.h"
 
 #include "Shader.h"
@@ -11,70 +10,70 @@
 
 namespace Volund
 {
-	Ref<Shader> Shader::Create(const std::string& Filepath)
+	Ref<Shader> Shader::Create(const std::string& filepath)
 	{
-		VOLUND_INFO("Loading Shader (%s)...", Filepath.c_str());
+		VOLUND_INFO("Loading Shader (%s)...", filepath.c_str());
 
 		enum class ShaderType
 		{
-			NONE = -1,
-			VERTEX = 0,
-			FRAGMENT = 1,
-			GEOMETRY = 2
+			None = -1,
+			Vertex = 0,
+			Fragment = 1,
+			Geometry = 2
 		};
 
-		std::string Line;
-		std::stringstream SourceStrings[3];
-		ShaderType Type = ShaderType::NONE;
+		std::string line;
+		std::stringstream sourceStrings[3];
+		ShaderType type = ShaderType::None;
 
-		std::istringstream iss = std::istringstream(Filesystem::LoadFile(Filepath));
-		while (std::getline(iss, Line))
+		std::istringstream iss = std::istringstream(Filesystem::LoadFile(filepath));
+		while (std::getline(iss, line))
 		{
 			//Split into words
-			std::vector<std::string> Words;
-			std::istringstream ISS(Line);
-			std::copy(std::istream_iterator<std::string>(ISS), std::istream_iterator<std::string>(),
-				std::back_inserter(Words));
+			std::vector<std::string> words;
+			std::istringstream iss(line);
+			std::copy(std::istream_iterator<std::string>(iss), std::istream_iterator<std::string>(),
+				std::back_inserter(words));
 
-			if (Words.size() <= 0)
+			if (words.size() <= 0)
 			{
 				continue;
 			}
 
-			if (Words.size() >= 2 && Words[0] == "#VOLUND_SHADER_TYPE")
+			if (words.size() >= 2 && words[0] == "#VOLUND_SHADER_TYPE")
 			{
-				if (Words[1] == "VERTEX")
+				if (words[1] == "VERTEX")
 				{
-					Type = ShaderType::VERTEX;
+					type = ShaderType::Vertex;
 				}
-				else if (Words[1] == "FRAGMENT")
+				else if (words[1] == "FRAGMENT")
 				{
-					Type = ShaderType::FRAGMENT;
+					type = ShaderType::Fragment;
 				}
-				else if (Words[1] == "GEOMETRY")
+				else if (words[1] == "GEOMETRY")
 				{
-					Type = ShaderType::GEOMETRY;
+					type = ShaderType::Geometry;
 				}
 			}
-			else if ((int32_t)Type != -1)
+			else if ((int32_t)type != -1)
 			{
-				SourceStrings[(int32_t)Type] << Line << '\n';
+				sourceStrings[(int32_t)type] << line << '\n';
 			}
 		}
 
 		return Shader::Create(
-			SourceStrings[(uint32_t)ShaderType::VERTEX].str(),
-			SourceStrings[(uint32_t)ShaderType::FRAGMENT].str(),
-			SourceStrings[(uint32_t)ShaderType::GEOMETRY].str());
+			sourceStrings[(uint32_t)ShaderType::Vertex].str(),
+			sourceStrings[(uint32_t)ShaderType::Fragment].str(),
+			sourceStrings[(uint32_t)ShaderType::Geometry].str());
 	}
 
-	Ref<Shader> Shader::Create(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource)
+	Ref<Shader> Shader::Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLShader>(VertexSource, FragmentSource, GeometrySource);
+			return std::make_shared<OpenGLShader>(vertexSource, fragmentSource, geometrySource);
 		}
 		break;
 		default:

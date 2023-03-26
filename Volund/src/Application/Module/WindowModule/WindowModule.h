@@ -15,18 +15,18 @@ namespace Volund
 
 		Ref<Window> GetWindow();
 
-		void OnAttach(Application* App) override;
+		void OnAttach(Application* app) override;
 
 		void OnDetach() override;
 
-		void Procedure(const Event& E) override;
+		void Procedure(const Event& e) override;
 
-		WindowModule(GraphicsAPI API, Ref<RendererInstance> Instance);
+		WindowModule(GraphicsAPI api, Ref<RendererInstance> instance);
 
 	private:	
 
-		Ref<Window> _Window;
+		Ref<Window> m_Window;
 
-		Ref<RendererInstance> _RendererInstance;
+		Ref<RendererInstance> m_RendererInstance;
 	};
 }

@@ -9,20 +9,20 @@ namespace Volund
 {
 	Ref<Window> WindowModule::GetWindow()
 	{
-		return this->_Window;
+		return this->m_Window;
 	}
 
-	void WindowModule::OnAttach(Application* App)
+	void WindowModule::OnAttach(Application* app)
 	{
-		this->_Window = std::make_shared<Window>(App->GetEventDispatcher(), 1980, 1080, false);
+		this->m_Window = std::make_shared<Window>(app->GetEventDispatcher(), 1980, 1080, false);
 
-		this->_Window->SetTitle("Volund");
-		this->_Window->SetFocus();
+		this->m_Window->SetTitle("Volund");
+		this->m_Window->SetFocus();
 
-		this->_Window->Show();
+		this->m_Window->Show();
 
 		VL::RenderingAPI::Init();
-		VL::Renderer::Init(this->_RendererInstance);
+		VL::Renderer::Init(this->m_RendererInstance);
 
 		VOLUND_INFO("OpenGL Renderer: %s", glGetString(GL_RENDERER));
 		VOLUND_INFO("OpenGL Version: %s", glGetString(GL_VERSION));
@@ -33,16 +33,16 @@ namespace Volund
 	{
 	}
 
-	void WindowModule::Procedure(const Event& E)
+	void WindowModule::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::RENDER:
+		case EventType::Render:
 		{
-			this->_Window->Update();
-			this->_Window->Flush();
+			this->m_Window->Update();
+			this->m_Window->Flush();
 		}
 		break;
 		default:
@@ -53,9 +53,9 @@ namespace Volund
 		}
 	}
 
-	WindowModule::WindowModule(GraphicsAPI API, Ref<RendererInstance> Instance)
+	WindowModule::WindowModule(GraphicsAPI api, Ref<RendererInstance> instance)
 	{
-		VL::RenderingAPI::Select(VL::GraphicsAPI::OPENGL);
-		this->_RendererInstance = Instance;
+		VL::RenderingAPI::Select(api);
+		this->m_RendererInstance = instance;
 	}
 }

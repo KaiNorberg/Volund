@@ -6,8 +6,8 @@ namespace Volund
 {
 	enum class GraphicsAPI
 	{
-		NONE,
-		OPENGL
+		None,
+		OpenGL
 	};
 
 	class RenderingAPIInstance
@@ -16,11 +16,11 @@ namespace Volund
 
 		virtual IVec2 GetViewSize() = 0;
 
-		virtual void Clear(const RGBA Color) = 0;
+		virtual void Clear(const RGBA color) = 0;
 
-		virtual void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) = 0;
+		virtual void SetViewPort(int32_t x, int32_t y, int32_t width, int32_t height) = 0;
 
-		virtual void DrawIndexed(const Ref<Mesh>& VArray) = 0;
+		virtual void DrawIndexed(const Ref<Mesh>& mesh) = 0;
 
 		virtual ~RenderingAPIInstance() = default;
 	};
@@ -31,13 +31,13 @@ namespace Volund
 
 		static IVec2 GetViewSize();
 
-		static void Clear(const RGBA Color = RGBA(0.0f, 0.0f, 0.0f, 1.0f));
+		static void Clear(const RGBA color = RGBA(0.0f, 0.0f, 0.0f, 1.0f));
 
-		static void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height);
+		static void SetViewPort(int32_t x, int32_t y, int32_t width, int32_t height);
 
-		static void DrawIndexed(const Ref<Mesh>& VArray);
+		static void DrawIndexed(const Ref<Mesh>& mesh);
 
-		static void Select(GraphicsAPI API);
+		static void Select(GraphicsAPI api);
 			
 		static void Init();
 
@@ -45,8 +45,8 @@ namespace Volund
 
 	private:
 
-		static inline Ref<RenderingAPIInstance> _Instance;
+		static inline Ref<RenderingAPIInstance> m_Instance;
 
-		static inline GraphicsAPI _SelectedAPI;
+		static inline GraphicsAPI m_SelectedApi;
 	};
 }

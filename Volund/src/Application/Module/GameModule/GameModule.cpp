@@ -13,14 +13,14 @@ namespace Volund
 {
 	std::string GameModule::GetFilepath()
 	{
-		return this->_Filepath;
+		return this->m_Filepath;
 	}
 
 	Ref<Scene> GameModule::GetScene()
 	{
-		if (this->_GameState != nullptr)
+		if (this->m_GameState != nullptr)
 		{
-			return this->_GameState->GetScene();
+			return this->m_GameState->GetScene();
 		}
 		else
 		{
@@ -28,63 +28,63 @@ namespace Volund
 		}
 	}
 
-	void GameModule::NewState(const std::string& Filepath)
+	void GameModule::NewState(const std::string& filepath)
 	{
-		std::unique_lock Lock(this->_Mutex);
+		std::unique_lock lock(this->m_Mutex);
 
-		DelayedTaskHandler::DelayTask([this, Filepath]()
+		DelayedTaskHandler::DelayTask([this, filepath]()
 		{
-			if (!this->_Filepath.empty())
+			if (!this->m_Filepath.empty())
 			{
-				std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
-				Filesystem::RemoveRelativeFilepath(ParentPath);
+				const std::string parentPath = std::filesystem::path(this->m_Filepath).parent_path().string();
+				Filesystem::RemoveRelativeFilepath(parentPath);
 			}
 
-			this->_Filepath = Filepath;
+			this->m_Filepath = filepath;
 
-			std::string ParentPath = std::filesystem::path(Filepath).parent_path().string();
-			Filesystem::AddRelativeFilepath(ParentPath);
+			const std::string parentPath = std::filesystem::path(filepath).parent_path().string();
+			Filesystem::AddRelativeFilepath(parentPath);
 
-			this->_GameState.reset();
+			this->m_GameState.reset();
 
 			try
 			{
-				this->_GameState = std::make_shared<GameState>(this->_GameWindow);
-				this->_GameState->GetLuaState()->ScriptFile(this->_Filepath);
+				this->m_GameState = std::make_shared<GameState>(this->m_GameWindow);
+				this->m_GameState->GetLuaState()->ScriptFile(this->m_Filepath);
 			}
-			catch (sol::error E)
+			catch (sol::error e)
 			{
-				VOLUND_WARNING(E.what());
+				VOLUND_WARNING(e.what());
 			}
 		});
 	}
 
-	void GameModule::OnAttach(Application* App)
+	void GameModule::OnAttach(Application* app)
 	{
-		if (!App->HasModule<WindowModule>())
+		if (!app->HasModule<WindowModule>())
 		{
 			VOLUND_ERROR("Cant attach LuaModule to an app without a WindowModule!");
 		}
 
-		this->_GameWindow = App->GetModule<WindowModule>()->GetWindow();
+		this->m_GameWindow = app->GetModule<WindowModule>()->GetWindow();
 	}
 
 	void GameModule::OnDetach()
 	{
-		if (!this->_Filepath.empty())
+		if (!this->m_Filepath.empty())
 		{
-			std::string ParentPath = std::filesystem::path(this->_Filepath).parent_path().string();
-			Filesystem::RemoveRelativeFilepath(ParentPath);
+			const std::string parentPath = std::filesystem::path(this->m_Filepath).parent_path().string();
+			Filesystem::RemoveRelativeFilepath(parentPath);
 		}
 	}
 
-	void GameModule::Procedure(const Event& E)
+	void GameModule::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->_GameState != nullptr)
+		if (this->m_GameState != nullptr)
 		{
-			this->_GameState->Procedure(E);
+			this->m_GameState->Procedure(e);
 		}
 	}
 }

@@ -10,26 +10,26 @@ namespace Volund
 	{
 	public:
 
-		void OnAttach(Application* App) override;
+		void OnAttach(Application* app) override;
 
 		void OnDetach() override;
 
-		void Procedure(const Event& E) override;
+		void Procedure(const Event& e) override;
 
 		std::string GetFilepath();
 
 		Ref<Scene> GetScene();
 
-		void NewState(const std::string& Filepath);
+		void NewState(const std::string& filepath);
 
 	private:	
 
-		std::mutex _Mutex;
+		std::mutex m_Mutex;
 
-		Ref<GameState> _GameState;
+		Ref<GameState> m_GameState;
 
-		Ref<Window> _GameWindow;
+		Ref<Window> m_GameWindow;
 
-		std::string _Filepath;
+		std::string m_Filepath;
 	};
 }

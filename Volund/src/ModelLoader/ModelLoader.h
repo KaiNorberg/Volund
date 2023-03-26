@@ -16,121 +16,121 @@ namespace Volund
 		std::vector<V> Vertices;
 		std::vector<I> Indices;
 
-		ModelLoader(const std::string& Filepath);
+		ModelLoader(const std::string& filepath);
 
 	private:
 		
-		void LoadOBJ(const std::string& Filepath);
+		void LoadOBJ(const std::string& filepath);
 
 		struct ArrayHasher
 		{
-			std::uint64_t operator()(const std::array<V, 8>& Array) const
+			std::uint64_t operator()(const std::array<V, 8>& array) const
 			{
-				std::uint64_t H = 0;
+				std::uint64_t h = 0;
 
-				for (auto E : Array)
+				for (auto e : array)
 				{
-					H ^= std::hash<uint64_t>{}((uint64_t)(E)) + 0x9e3779b9 + (H << 6) + (H >> 2);
+					h ^= std::hash<uint64_t>{}((uint64_t)(e)) + 0x9e3779b9 + (h << 6) + (h >> 2);
 				}
 
-				return H;
+				return h;
 			}
 		};
 	};
 
 	template <typename V, typename I>
-	ModelLoader<V, I>::ModelLoader(const std::string& Filepath)
+	ModelLoader<V, I>::ModelLoader(const std::string& filepath)
 	{
-		VOLUND_INFO("Loading OBJ file (%s)...", Filepath.data());
+		VOLUND_INFO("Loading OBJ file (%s)...", filepath.data());
 
-		if (Filepath.ends_with(".obj") || Filepath.ends_with(".vobj"))
+		if (filepath.ends_with(".obj") || filepath.ends_with(".vobj"))
 		{
-			this->LoadOBJ(Filepath);
+			this->LoadOBJ(filepath);
 		}
 		else
 		{
-			VOLUND_WARNING("Unable to read unknown model file type (%s)!", Filepath.data());
+			VOLUND_WARNING("Unable to read unknown model file type (%s)!", filepath.data());
 		}
 
 		this->aabb = AABB(this->Vertices);
 	}
 
 	template <typename V, typename I>
-	void ModelLoader<V, I>::LoadOBJ(const std::string& Filepath)
+	void ModelLoader<V, I>::LoadOBJ(const std::string& filepath)
 	{
-		std::vector<V> Geometry;
-		std::vector<V> TextureCoords;
-		std::vector<V> Normals;
+		std::vector<V> geometry;
+		std::vector<V> textureCoords;
+		std::vector<V> normals;
 
-		std::unordered_map<std::array<V, 8>, I, ArrayHasher> VertexToIndexMap;
+		std::unordered_map<std::array<V, 8>, I, ArrayHasher> vertexToIndexMap;
 
-		std::stringstream Buffer = std::stringstream(VL::Filesystem::LoadFile(Filepath));
+		std::stringstream buffer = std::stringstream(VL::Filesystem::LoadFile(filepath));
 
-		std::string Line;
-		while (std::getline(Buffer, Line))
+		std::string line;
+		while (std::getline(buffer, line))
 		{
-			char LineHeader[16] = {};
-			LineHeader[15] = 0;
+			char lineHeader[16] = {};
+			lineHeader[15] = 0;
 
-			sscanf(Line.c_str(), "%15s", LineHeader);
+			sscanf(line.c_str(), "%15s", lineHeader);
 
-			if (strcmp(LineHeader, "v") == 0)
+			if (strcmp(lineHeader, "v") == 0)
 			{
-				float X, Y, Z = 0.0f;
-				VOLUND_ASSERT(sscanf(Line.c_str(), "v %f %f %f", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
+				float x, y, z = 0.0f;
+				VOLUND_ASSERT(sscanf(line.c_str(), "v %f %f %f", &x, &y, &z) == 3, "Unable to parse OBJ file (%s)!", filepath.data());
 
-				Geometry.push_back(X);
-				Geometry.push_back(Y);
-				Geometry.push_back(Z);
+				geometry.push_back(x);
+				geometry.push_back(y);
+				geometry.push_back(z);
 			}
-			else if (strcmp(LineHeader, "vt") == 0)
+			else if (strcmp(lineHeader, "vt") == 0)
 			{
-				float X, Y = 0.0f;
-				VOLUND_ASSERT(sscanf(Line.c_str(), "vt %f %f", &X, &Y) == 2, "Unable to parse OBJ file (%s)!", Filepath.data());
+				float x, y = 0.0f;
+				VOLUND_ASSERT(sscanf(line.c_str(), "vt %f %f", &x, &y) == 2, "Unable to parse OBJ file (%s)!", filepath.data());
 
-				TextureCoords.push_back(X);
-				TextureCoords.push_back(Y);
+				textureCoords.push_back(x);
+				textureCoords.push_back(y);
 			}
-			else if (strcmp(LineHeader, "vn") == 0)
+			else if (strcmp(lineHeader, "vn") == 0)
 			{
-				float X, Y, Z = 0.0f;
-				VOLUND_ASSERT(sscanf(Line.c_str(), "vn %f %f %f", &X, &Y, &Z) == 3, "Unable to parse OBJ file (%s)!", Filepath.data());
+				float x, y, z = 0.0f;
+				VOLUND_ASSERT(sscanf(line.c_str(), "vn %f %f %f", &x, &y, &z) == 3, "Unable to parse OBJ file (%s)!", filepath.data());
 
-				Normals.push_back(X);
-				Normals.push_back(Y);
-				Normals.push_back(Z);
+				normals.push_back(x);
+				normals.push_back(y);
+				normals.push_back(z);
 			}
-			else if (strcmp(LineHeader, "f") == 0)
+			else if (strcmp(lineHeader, "f") == 0)
 			{
-				uint32_t GeometryIndices[3];
-				uint32_t TextureCoordsIndices[3];
-				uint32_t NormalsIndices[3];
+				uint32_t geometryIndices[3];
+				uint32_t textureCoordsIndices[3];
+				uint32_t normalsIndices[3];
 
-				VOLUND_ASSERT(sscanf(Line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", 
-					&GeometryIndices[0], &TextureCoordsIndices[0], &NormalsIndices[0],
-					&GeometryIndices[1], &TextureCoordsIndices[1], &NormalsIndices[1],
-					&GeometryIndices[2], &TextureCoordsIndices[2], &NormalsIndices[2]) == 9, "Unable to parse OBJ file (%s)!", Filepath.data());
+				VOLUND_ASSERT(sscanf(line.c_str(), "f %d/%d/%d %d/%d/%d %d/%d/%d", 
+					&geometryIndices[0], &textureCoordsIndices[0], &normalsIndices[0],
+					&geometryIndices[1], &textureCoordsIndices[1], &normalsIndices[1],
+					&geometryIndices[2], &textureCoordsIndices[2], &normalsIndices[2]) == 9, "Unable to parse OBJ file (%s)!", filepath.data());
 
 				for (uint64_t i = 0; i < 3; i++)
 				{
-					std::array<V, 8> Vertex;
+					std::array<V, 8> vertex;
 
-					if (!Geometry.empty() && !TextureCoords.empty() && !Normals.empty())
+					if (!geometry.empty() && !textureCoords.empty() && !normals.empty())
 					{
-						uint32_t GeometryIndex = (GeometryIndices[i] - 1) * 3;
-						uint32_t TextureCoordsIndex = (TextureCoordsIndices[i] - 1) * 2;
-						uint32_t NormalsIndex = (NormalsIndices[i] - 1) * 3;
+						const uint32_t geometryIndex = (geometryIndices[i] - 1) * 3;
+						const uint32_t textureCoordsIndex = (textureCoordsIndices[i] - 1) * 2;
+						const uint32_t normalsIndex = (normalsIndices[i] - 1) * 3;
 
-						Vertex =
+						vertex =
 						{
-							Geometry[GeometryIndex + 0],
-							Geometry[GeometryIndex + 1],
-							Geometry[GeometryIndex + 2],
-							TextureCoords[TextureCoordsIndex + 0],
-							TextureCoords[TextureCoordsIndex + 1],
-							Normals[NormalsIndex + 0],
-							Normals[NormalsIndex + 1],
-							Normals[NormalsIndex + 2]
+							geometry[geometryIndex + 0],
+							geometry[geometryIndex + 1],
+							geometry[geometryIndex + 2],
+							textureCoords[textureCoordsIndex + 0],
+							textureCoords[textureCoordsIndex + 1],
+							normals[normalsIndex + 0],
+							normals[normalsIndex + 1],
+							normals[normalsIndex + 2]
 						};
 					}
 					/*else if (!Geometry.empty() && TextureCoords.empty() && Normals.empty())
@@ -153,12 +153,12 @@ namespace Volund
 					}*/
 					else
 					{
-						VOLUND_ERROR("Unable to parse OBJ file (%s)!", Filepath.data());
+						VOLUND_ERROR("Unable to parse OBJ file (%s)!", filepath.data());
 					}
 
-					if (VertexToIndexMap.contains(Vertex))
+					if (vertexToIndexMap.contains(vertex))
 					{
-						this->Indices.push_back(VertexToIndexMap[Vertex]);
+						this->Indices.push_back(vertexToIndexMap[vertex]);
 					}
 					else
 					{
@@ -166,7 +166,7 @@ namespace Volund
 
 						for (uint64_t j = 0; j < 8; j++)
 						{
-							this->Vertices.push_back(Vertex[j]);
+							this->Vertices.push_back(vertex[j]);
 						}
 					}
 				}

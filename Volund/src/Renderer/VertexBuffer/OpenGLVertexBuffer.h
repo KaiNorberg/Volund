@@ -11,17 +11,17 @@ namespace Volund
 
 		void Unbind() override;
 
-		void SetLayout(const VertexLayout& Layout) override;
+		void SetLayout(const VertexLayout& layout) override;
 
 		VertexLayout GetLayout() override;
 
-		OpenGLVertexbuffer(const float Vertices[], uint32_t Count);
+		OpenGLVertexbuffer(const float vertices[], uint32_t count);
 
 		~OpenGLVertexbuffer() override;
 
 	private:
-		VertexLayout _Layout;
+		VertexLayout m_Layout;
 
-		uint32_t _ID;
+		uint32_t m_ID;
 	};
 }

@@ -3,81 +3,81 @@
 
 namespace Volund
 {
-	bool Input::IsHeld(char KeyCode) const
+	bool Input::IsHeld(char keyCode) const
 	{
-		return (bool)this->_Keys[KeyCode];
+		return (bool)this->m_Keys[keyCode];
 	}
 
-	bool Input::IsPressed(char KeyCode)
+	bool Input::IsPressed(char keyCode)
 	{
-		bool IsDown = this->_Keys[KeyCode] == 1;
-		this->_Keys[KeyCode] += IsDown;
+		const bool isDown = this->m_Keys[keyCode] == 1;
+		this->m_Keys[keyCode] += isDown;
 
-		return IsDown;
+		return isDown;
 	}
 
-	bool Input::IsMouseButtonHeld(char Button) const
+	bool Input::IsMouseButtonHeld(char button) const
 	{
-		return (bool)this->_MouseButtons[Button];
+		return (bool)this->m_MouseButtons[button];
 	}
 
-	bool Input::IsMouseButtonPressed(char Button)
+	bool Input::IsMouseButtonPressed(char button)
 	{
-		bool IsDown = this->_MouseButtons[Button] == 1;
-		this->_MouseButtons[Button] += IsDown;
+		const bool isDown = this->m_MouseButtons[button] == 1;
+		this->m_MouseButtons[button] += isDown;
 
-		return IsDown;
+		return isDown;
 	}
 
 	uint32_t Input::GetScrollPosition() const
 	{
-		return this->_ScrollPosition;
+		return this->m_ScrollPosition;
 	}
 
 	IVec2 Input::GetMousePosition() const
 	{
-		return this->_MousePosition;
+		return this->m_MousePosition;
 	}
 
-	void Input::Procedure(const Event& E)
+	void Input::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::KEY:
+		case EventType::Key:
 		{
-			bool IsDown = (bool)VOLUND_EVENT_KEY_GET_ISDOWN(E);
-			uint64_t Key = VOLUND_EVENT_KEY_GET_KEY(E);
+			const bool isDown = (bool)VOLUND_EVENT_KEY_GET_ISDOWN(e);
+			const uint64_t key = VOLUND_EVENT_KEY_GET_KEY(e);
 
-			this->_Keys[Key] += IsDown;
-			this->_Keys[Key] *= IsDown;
-			this->_Keys[Key] = Utils::Min(this->_Keys[Key], (int8_t)100);
+			this->m_Keys[key] += isDown;
+			this->m_Keys[key] *= isDown;
+			this->m_Keys[key] = Utils::Min(this->m_Keys[key], (int8_t)100);
 		}
 		break;
-		case EventType::MOUSE_BUTTON:
-		{			
-			bool IsDown = (bool)VOLUND_EVENT_MOUSE_BUTTON_GET_ISDOWN(E);
-			uint64_t Button = VOLUND_EVENT_MOUSE_BUTTON_GET_BUTTON(E);
-
-			this->_MouseButtons[Button] += IsDown;
-			this->_MouseButtons[Button] *= IsDown;
-			this->_MouseButtons[Button] = Utils::Min(this->_MouseButtons[Button], (int8_t)100);
-		}
-		break;
-		case EventType::MOUSE_WHEEL:
+		case EventType::MouseButton:
 		{
-			uint64_t Delta = VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(E);
+			const bool isDown = (bool)VOLUND_EVENT_MOUSE_BUTTON_GET_ISDOWN(e);
+			const uint64_t button = VOLUND_EVENT_MOUSE_BUTTON_GET_BUTTON(e);
 
-			this->_ScrollPosition += Delta;
+			this->m_MouseButtons[button] += isDown;
+			this->m_MouseButtons[button] *= isDown;
+			this->m_MouseButtons[button] = Utils::Min(this->m_MouseButtons[button], (int8_t)100);
 		}
 		break;
-		case EventType::MOUSE_MOVE:
-		{			
-			uint64_t XPos = VOLUND_EVENT_MOUSE_MOVE_GET_XPOS(E);
-			uint64_t YPos = VOLUND_EVENT_MOUSE_MOVE_GET_YPOS(E);
+		case EventType::MouseWheel:
+		{
+			const uint64_t delta = VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(e);
 
-			this->_MousePosition = IVec2(XPos, YPos);
+			this->m_ScrollPosition += delta;
+		}
+		break;
+		case EventType::MouseMove:
+		{
+			const uint64_t xPos = VOLUND_EVENT_MOUSE_MOVE_GET_XPOS(e);
+			const uint64_t yPos = VOLUND_EVENT_MOUSE_MOVE_GET_YPOS(e);
+
+			this->m_MousePosition = IVec2(xPos, yPos);
 		}
 		break;
 		}
@@ -85,7 +85,7 @@ namespace Volund
 
 	Input::Input()
 	{
-		memset(this->_MouseButtons, 0, VOLUND_MOUSE_BUTTON_AMOUNT * sizeof(this->_MouseButtons[0]));
-		memset(this->_Keys, 0, VOLUND_KEY_AMOUNT * sizeof(this->_Keys[0]));
+		memset(this->m_MouseButtons, 0, VOLUND_MOUSE_BUTTON_AMOUNT * sizeof(this->m_MouseButtons[0]));
+		memset(this->m_Keys, 0, VOLUND_KEY_AMOUNT * sizeof(this->m_Keys[0]));
 	}
 }

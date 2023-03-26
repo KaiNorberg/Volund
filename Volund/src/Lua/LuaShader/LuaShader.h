@@ -12,10 +12,10 @@ namespace Volund
 
 		Ref<Shader> Get();
 
-		LuaShader(const std::string& ShaderPath);
+		LuaShader(const std::string& filepath);
 
 	private:
 
-		Ref<Shader> _Shader;
+		Ref<Shader> m_Shader;
 	};
 }

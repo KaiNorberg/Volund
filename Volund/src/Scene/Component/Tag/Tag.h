@@ -8,11 +8,11 @@ namespace Volund
 	{
 	public:
 
-		std::string String = "";
+		std::string String;
 
 		Tag() = default;
 
-		Tag(std::string String);
+		Tag(const std::string& string);
 
 	private:
 	};

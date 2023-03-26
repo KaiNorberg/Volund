@@ -16,26 +16,26 @@ namespace Volund
 
 		Ref<Material> Get();
 
-		void SetInt(const std::string& Name, int Value);
+		void SetInt(const std::string& name, int value);
 
-		void SetFloat(const std::string& Name, float Value);
+		void SetFloat(const std::string& name, float value);
 
-		void SetDouble(const std::string& Name, double Value);
+		void SetDouble(const std::string& name, double value);
 
-		void SetVec2(const std::string& Name, Vec2 Value);
+		void SetVec2(const std::string& name, Vec2 value);
 
-		void SetVec3(const std::string& Name, Vec3 Value);
+		void SetVec3(const std::string& name, Vec3 value);
 
-		void SetTexture(const std::string& Name, LuaTexture Value);
+		void SetTexture(const std::string& name, LuaTexture value);
 
-		void SetFramebuffer(const std::string& Name, LuaFramebuffer Value);
+		void SetFramebuffer(const std::string& name, LuaFramebuffer value);
 
-		LuaMaterial(Ref<Material> Material);
+		LuaMaterial(Ref<Material> material);
 
-		LuaMaterial(LuaShader MaterialShader);
+		LuaMaterial(LuaShader shader);
 
 	private:
 
-		Ref<Material> _Material;
+		Ref<Material> m_Material;
 	};
 }

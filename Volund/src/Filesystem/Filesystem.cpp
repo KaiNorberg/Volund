@@ -3,43 +3,43 @@
 
 namespace Volund
 {
-	std::string Filesystem::LoadFile(const std::string& Filepath)
+	std::string Filesystem::LoadFile(const std::string& filepath)
 	{
-		if (IsResource(Filepath))
+		if (IsResource(filepath))
 		{
-			return LoadResource(Filepath);
+			return LoadResource(filepath);
 		}
 
-		std::ifstream File(GetFinalPath(Filepath));
+		std::ifstream file(GetFinalPath(filepath));
 		
-		if (!File)
+		if (!file)
 		{
-			VOLUND_WARNING("Unable to load file (%s).", Filepath.c_str());
+			VOLUND_WARNING("Unable to load file (%s).", filepath.c_str());
 
 			return "";
 		}
 		
-		std::string Line;
-		std::string Output;
-		while (std::getline(File, Line))
+		std::string line;
+		std::string output;
+		while (std::getline(file, line))
 		{
-			Output += Line + '\n';
+			output += line + '\n';
 		}
-		return Output;
+		return output;
 	}
 
-	void Filesystem::WriteFile(const std::string& Filepath, const std::string& File)
+	void Filesystem::WriteFile(const std::string& filepath, const std::string& file)
 	{
-		std::ofstream Stream(GetFinalPath(Filepath));
+		std::ofstream stream(GetFinalPath(filepath));
 
-		Stream << File;
+		stream << file;
 	}
 
-	std::string Filesystem::LoadResource(const std::string& Filepath)
+	std::string Filesystem::LoadResource(const std::string& filepath)
 	{
-		if (IsResource(Filepath))
+		if (IsResource(filepath))
 		{
-			return _Resources[Filepath];
+			return m_Resources[filepath];
 		}
 		else
 		{
@@ -47,51 +47,51 @@ namespace Volund
 		}
 	}
 
-	bool Filesystem::IsResource(const std::string& Filepath)
+	bool Filesystem::IsResource(const std::string& filepath)
 	{
-		static Filesystem SingleTon;
+		static Filesystem singleTon;
 
-		return _Resources.contains(Filepath);
+		return m_Resources.contains(filepath);
 	}
 
-	void Filesystem::CreateResource(const std::string& Filepath, const char* Content)
+	void Filesystem::CreateResource(const std::string& filepath, const char* content)
 	{
-		_Resources[Filepath] = Content;
+		m_Resources[filepath] = content;
 	}
 
-	void Filesystem::AddRelativeFilepath(const std::string& Filepath)
+	void Filesystem::AddRelativeFilepath(const std::string& filepath)
 	{
-		_RelativeFilepaths.push_back(Filepath);
+		m_RelativeFilepaths.push_back(filepath);
 	}
 
-	void Filesystem::RemoveRelativeFilepath(const std::string& Filepath)
+	void Filesystem::RemoveRelativeFilepath(const std::string& filepath)
 	{
-		auto it = std::find(_RelativeFilepaths.begin(), _RelativeFilepaths.end(), Filepath);
+		auto it = std::find(m_RelativeFilepaths.begin(), m_RelativeFilepaths.end(), filepath);
 
-		if (it != _RelativeFilepaths.end())
+		if (it != m_RelativeFilepaths.end())
 		{
-			_RelativeFilepaths.erase(it);
+			m_RelativeFilepaths.erase(it);
 		}
 	}
 
-	std::string Filesystem::GetFinalPath(const std::string& Filepath)
+	std::string Filesystem::GetFinalPath(const std::string& filepath)
 	{
-		if (std::filesystem::exists(Filepath))
+		if (std::filesystem::exists(filepath))
 		{
-			return Filepath;
+			return filepath;
 		}
 
-		for (auto& RelativePath : _RelativeFilepaths)
+		for (auto& relativePath : m_RelativeFilepaths)
 		{
-			std::string NewPath = RelativePath + "\\" + Filepath;
+			std::string newPath = relativePath + "\\" + filepath;
 
-			if (std::filesystem::exists(NewPath))
+			if (std::filesystem::exists(newPath))
 			{
-				return NewPath;
+				return newPath;
 			}
 		}
 
-		return Filepath;
+		return filepath;
 	}
 
 	Filesystem::Filesystem()

@@ -11,7 +11,7 @@ namespace Volund
 {
 	void OpenGLMesh::Bind() const
 	{
-		glBindVertexArray(this->_ID);
+		glBindVertexArray(this->m_ID);
 	}
 
 	void OpenGLMesh::Unbind() const
@@ -19,51 +19,51 @@ namespace Volund
 		glBindVertexArray(0);
 	}
 
-	void OpenGLMesh::SetVertexbuffer(Ref<Vertexbuffer>& Buffer)
+	void OpenGLMesh::SetVertexbuffer(Ref<Vertexbuffer>& buffer)
 	{
-		this->_Vertexbuffer = Buffer;
+		this->m_Vertexbuffer = buffer;
 
-		glBindVertexArray(this->_ID);
-		Buffer->Bind();
+		glBindVertexArray(this->m_ID);
+		buffer->Bind();
 
-		VertexLayout Layout = Buffer->GetLayout();
-		uint32_t Stride = 0;
-		for (uint64_t i = 0; i < Layout.size(); i++)
+		const VertexLayout layout = buffer->GetLayout();
+		uint32_t stride = 0;
+		for (uint64_t i = 0; i < layout.size(); i++)
 		{
-			Stride += Layout[i].GetByteSize();
+			stride += layout[i].GetByteSize();
 		}
 
-		uint64_t Offset = 0;
-		for (uint64_t i = 0; i < Layout.size(); i++)
+		uint64_t offset = 0;
+		for (uint64_t i = 0; i < layout.size(); i++)
 		{
 			glEnableVertexAttribArray((GLuint)i);
-			glVertexAttribPointer((GLuint)i, Layout[i].GetElementCount(), Layout[i].GetDataType(), GL_FALSE, Stride, (const void*)Offset);
-			Offset += Layout[i].GetByteSize();
+			glVertexAttribPointer((GLuint)i, layout[i].GetElementCount(), layout[i].GetDataType(), GL_FALSE, stride, (const void*)offset);
+			offset += layout[i].GetByteSize();
 		}
 	}
 
-	void OpenGLMesh::SetIndexbuffer(Ref<Indexbuffer>& Buffer)
+	void OpenGLMesh::SetIndexbuffer(Ref<Indexbuffer>& buffer)
 	{
-		this->_Indexbuffer = Buffer;
+		this->m_Indexbuffer = buffer;
 
-		glBindVertexArray(this->_ID);
-		Buffer->Bind();
+		glBindVertexArray(this->m_ID);
+		buffer->Bind();
 	}
 
 	OpenGLMesh::OpenGLMesh()
 	{
-		glGenVertexArrays(1, &this->_ID);
+		glGenVertexArrays(1, &this->m_ID);
 	}
 
-	OpenGLMesh::OpenGLMesh(Ref<Vertexbuffer>& VBuffer, Ref<Indexbuffer>& IBuffer)
+	OpenGLMesh::OpenGLMesh(Ref<Vertexbuffer>& vertexBuffer, Ref<Indexbuffer>& indexBuffer)
 	{
-		glGenVertexArrays(1, &this->_ID);
-		this->SetVertexbuffer(VBuffer);
-		this->SetIndexbuffer(IBuffer);
+		glGenVertexArrays(1, &this->m_ID);
+		this->SetVertexbuffer(vertexBuffer);
+		this->SetIndexbuffer(indexBuffer);
 	}
 
 	OpenGLMesh::~OpenGLMesh()
 	{
-		glDeleteVertexArrays(1, &this->_ID);
+		glDeleteVertexArrays(1, &this->m_ID);
 	}
 }

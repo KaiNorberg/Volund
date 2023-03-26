@@ -26,22 +26,22 @@ namespace Volund
 		bool HasEntity(Entity entity);
 
 		template <typename T>
-		void DeleteComponent(Entity entity, uint64_t Index = 0);
-		template <typename T, class... ARGS>
-		Ref<T> CreateComponent(Entity entity, ARGS&&... Args);
+		void DeleteComponent(Entity entity, uint64_t index = 0);
+		template <typename T, typename... Args>
+		Ref<T> CreateComponent(Entity entity, Args&&... args);
 		template <typename T>
 		bool HasComponent(Entity entity);	
 		template <typename T>
 		uint64_t ComponentAmount(Entity entity);
 		template <typename T>
-		Ref<T> GetComponent(Entity entity, uint64_t Index = 0);
+		Ref<T> GetComponent(Entity entity, uint64_t index = 0);
 
 		template <typename T>
-		void View(std::vector<Ref<T>>& Output);
+		void View(std::vector<Ref<T>>& output);
 
-		void ResizeTarget(uint32_t Width, uint32_t Height);
+		void ResizeTarget(uint32_t width, uint32_t height);
 		
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		Registry::iterator begin();
 		Registry::iterator end();
@@ -54,26 +54,26 @@ namespace Volund
 
 		uint64_t FindEntity(Entity entity);
 
-		uint64_t _NewEntity = 1;
+		uint64_t m_NewEntity = 1;
 
-		Registry _Registry;
+		Registry m_Registry;
 
-		std::chrono::time_point<std::chrono::steady_clock> _StartTime;
+		std::chrono::time_point<std::chrono::steady_clock> m_StartTime;
 
-		Ref<Framebuffer> _TargetBuffer;
+		Ref<Framebuffer> m_TargetBuffer;
 	};
 
 	template<typename T>
-	inline void Scene::DeleteComponent(Entity entity, uint64_t Index)
+	inline void Scene::DeleteComponent(Entity entity, uint64_t index)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		uint64_t EntityIndex = FindEntity(entity);
+		const uint64_t entityIndex = FindEntity(entity);
 
-		if (EntityIndex != -1)
+		if (entityIndex != -1)
 		{
-			this->_Registry[EntityIndex].second.Get<T>(Index)->OnDestroy();
-			this->_Registry[EntityIndex].second.Erase<T>(Index);
+			this->m_Registry[entityIndex].second.Get<T>(index)->OnDestroy();
+			this->m_Registry[entityIndex].second.Erase<T>(index);
 		}
 		else
 		{
@@ -81,21 +81,21 @@ namespace Volund
 		}
 	}
 
-	template<typename T, class ...ARGS>
-	inline Ref<T> Scene::CreateComponent(Entity entity, ARGS && ...Args)
+	template<typename T, typename ...Args>
+	inline Ref<T> Scene::CreateComponent(Entity entity, Args && ...args)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		uint64_t Index = FindEntity(entity);
+		const uint64_t index = FindEntity(entity);
 
-		if (Index != -1)
+		if (index != -1)
 		{
-			Ref<T> NewComponent = std::make_shared<T>(Args...);
-			NewComponent->Init(entity, this);
-			NewComponent->OnCreate();
-			this->_Registry[Index].second.PushBack(NewComponent);
+			Ref<T> newComponent = std::make_shared<T>(args...);
+			newComponent->Init(entity, this);
+			newComponent->OnCreate();
+			this->m_Registry[index].second.PushBack(newComponent);
 
-			return NewComponent;
+			return newComponent;
 		}
 		else
 		{
@@ -109,9 +109,9 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		uint64_t EntityIndex = FindEntity(entity);
+		const uint64_t entityIndex = FindEntity(entity);
 
-		return EntityIndex != -1 && this->_Registry[EntityIndex].second.Contains<T>();
+		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>();
 	}
 
 	template<typename T>
@@ -119,33 +119,33 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		uint64_t EntityIndex = FindEntity(entity);
+		const uint64_t entityIndex = FindEntity(entity);
 
-		return EntityIndex != -1 && this->_Registry[EntityIndex].second.Contains<T>() ? this->_Registry[EntityIndex].second.Size<T>() : 0;
+		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>() ? this->m_Registry[entityIndex].second.Size<T>() : 0;
 	}
 
 	template<typename T>
-	inline Ref<T> Scene::GetComponent(Entity entity, uint64_t Index)
+	inline Ref<T> Scene::GetComponent(Entity entity, uint64_t index)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		uint64_t EntityIndex = FindEntity(entity);
+		const uint64_t entityIndex = FindEntity(entity);
 
-		return EntityIndex != -1 && this->_Registry[EntityIndex].second.Contains<T>() ? this->_Registry[EntityIndex].second.Get<T>(Index) : nullptr;
+		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>() ? this->m_Registry[entityIndex].second.Get<T>(index) : nullptr;
 	}
 
 	template<typename T>
-	inline void Scene::View(std::vector<Ref<T>>& Output)
+	inline void Scene::View(std::vector<Ref<T>>& output)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		Output.reserve(this->_Registry.size());
+		output.reserve(this->m_Registry.size());
 
-		for (auto& [entity, Container] : this->_Registry)
+		for (auto& [entity, Container] : this->m_Registry)
 		{
 			for (auto& component : Container.View<T>())
 			{
-				Output.push_back(std::dynamic_pointer_cast<T>(component));
+				output.push_back(std::dynamic_pointer_cast<T>(component));
 			}
 		}
 	}

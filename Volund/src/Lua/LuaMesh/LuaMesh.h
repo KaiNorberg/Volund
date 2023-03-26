@@ -12,12 +12,12 @@ namespace Volund
 
 		Ref<Mesh> Get();
 
-		LuaMesh(Ref<Mesh> Mesh);
+		LuaMesh(Ref<Mesh> mesh);
 
-		LuaMesh(const std::string& MeshPath);
+		LuaMesh(const std::string& filepath);
 
 	private:
 
-		Ref<Mesh> _Mesh;
+		Ref<Mesh> m_Mesh;
 	};
 }

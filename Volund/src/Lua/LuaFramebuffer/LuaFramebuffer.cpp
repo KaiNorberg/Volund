@@ -5,34 +5,34 @@ namespace Volund
 {
 	Ref<Framebuffer> LuaFramebuffer::Get()
 	{
-		return this->_Framebuffer;
+		return this->m_Framebuffer;
 	}
 
-	void LuaFramebuffer::Resize(LuaVec2 NewSize)
+	void LuaFramebuffer::Resize(LuaVec2 newSize)
 	{
-		auto Spec = this->_Framebuffer->GetSpec();
-		Spec.Width = NewSize.x;
-		Spec.Height = NewSize.y;
-		this->_Framebuffer->SetSpec(Spec);
+		auto spec = this->m_Framebuffer->GetSpec();
+		spec.Width = newSize.x;
+		spec.Height = newSize.y;
+		this->m_Framebuffer->SetSpec(spec);
 	}
 
 	LuaVec2 LuaFramebuffer::GetSize()
 	{
-		return LuaVec2(this->_Framebuffer->GetSpec().Width, this->_Framebuffer->GetSpec().Height);
+		return LuaVec2(this->m_Framebuffer->GetSpec().Width, this->m_Framebuffer->GetSpec().Height);
 	}
 
-	LuaFramebuffer::LuaFramebuffer(const LuaVec2& Size)
+	LuaFramebuffer::LuaFramebuffer(const LuaVec2& size)
 	{
-		VL::FramebufferSpec Spec;
-		Spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
-		Spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::DEPTH24STENCIL8);
-		Spec.Height = Size.x;
-		Spec.Width = Size.y;
-		this->_Framebuffer = Framebuffer::Create(Spec);
+		VL::FramebufferSpec spec;
+		spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
+		spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
+		spec.Height = size.x;
+		spec.Width = size.y;
+		this->m_Framebuffer = Framebuffer::Create(spec);
 	}
 
-	LuaFramebuffer::LuaFramebuffer(Ref<Framebuffer> RawFramebuffer)
+	LuaFramebuffer::LuaFramebuffer(Ref<Framebuffer> framebuffer)
 	{
-		this->_Framebuffer = RawFramebuffer;
+		this->m_Framebuffer = framebuffer;
 	}
 }

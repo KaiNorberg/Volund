@@ -8,9 +8,9 @@ namespace Volund
 	{
 	public:
 
-		void SetRotation(const Vec3& Rotation);
+		void SetRotation(const Vec3& rotation);
 		Vec3 GetRotation() const;
-		void AddRotation(const Vec3& Rotation);
+		void AddRotation(const Vec3& rotation);
 
 		Vec3 GetFront() const;
 		Vec3 GetRight() const;

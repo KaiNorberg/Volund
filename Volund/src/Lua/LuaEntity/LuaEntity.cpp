@@ -12,76 +12,76 @@ namespace Volund
 {
 	Entity LuaEntity::Get()
 	{
-		return this->_Entity;
+		return this->m_Entity;
 	}
 
-	void LuaEntity::AddComponent(sol::this_state S, LuaComponentID ComponentID, sol::table Table)
+	void LuaEntity::AddComponent(sol::this_state s, LuaComponentID ComponentID, sol::table table)
 	{
-		if (!this->_Scene->HasEntity(this->_Entity))
+		if (!this->m_Scene->HasEntity(this->m_Entity))
 		{
-			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->m_Entity);
 
 			return;
 		}
 
 		switch (ComponentID)
 		{
-		case LuaComponentID::CAMERA:
+		case LuaComponentID::Camera:
 		{
-			auto NewComponent = this->_Scene->CreateComponent<Camera>(this->_Entity);
+			auto newComponent = this->m_Scene->CreateComponent<Camera>(this->m_Entity);
 
-			if (Table["FOV"] != sol::lua_nil)
+			if (table["FOV"] != sol::lua_nil)
 			{
-				NewComponent->FOV = Table["FOV"];
+				newComponent->FOV = table["FOV"];
 			}
 
-			if (Table["NearPlane"] != sol::lua_nil)
+			if (table["NearPlane"] != sol::lua_nil)
 			{
-				NewComponent->NearPlane = Table["NearPlane"];
+				newComponent->NearPlane = table["NearPlane"];
 			}
 
-			if (Table["FarPlane"] != sol::lua_nil)
+			if (table["FarPlane"] != sol::lua_nil)
 			{
-				NewComponent->FarPlane = Table["FarPlane"];
+				newComponent->FarPlane = table["FarPlane"];
 			}
 
-			if (Table["TargetBuffer"] != sol::lua_nil)
+			if (table["TargetBuffer"] != sol::lua_nil)
 			{
-				NewComponent->SetTargetBuffer(((LuaFramebuffer)Table["TargetBuffer"]).Get());
+				newComponent->SetTargetBuffer(((LuaFramebuffer)table["TargetBuffer"]).Get());
 			}
 			else
 			{
-				NewComponent->SetTargetBuffer(this->_Scene->GetTargetBuffer());
+				newComponent->SetTargetBuffer(this->m_Scene->GetTargetBuffer());
 			}
 		}
 		break;
-		case LuaComponentID::CAMERA_MOVEMENT:
+		case LuaComponentID::CameraMovement:
 		{
-			auto NewComponent = this->_Scene->CreateComponent<CameraMovement>(this->_Entity);
+			auto newComponent = this->m_Scene->CreateComponent<CameraMovement>(this->m_Entity);
 
-			if (Table["Speed"] != sol::lua_nil)
+			if (table["Speed"] != sol::lua_nil)
 			{
-				NewComponent->Speed = Table["Speed"];
+				newComponent->Speed = table["Speed"];
 			}
 
-			if (Table["Sensitivity"] != sol::lua_nil)
+			if (table["Sensitivity"] != sol::lua_nil)
 			{
-				NewComponent->Sensitivity = Table["Sensitivity"];
+				newComponent->Sensitivity = table["Sensitivity"];
 			}
 		}
 		break;
-		case LuaComponentID::MESH_RENDERER:
+		case LuaComponentID::MeshRenderer:
 		{
-			if (Table["Mesh"] != sol::lua_nil && Table["Material"] != sol::lua_nil)
+			if (table["Mesh"] != sol::lua_nil && table["Material"] != sol::lua_nil)
 			{
-				LuaMesh MeshAsset = Table["Mesh"];
-				LuaMaterial MaterialAsset = Table["Material"];
+				LuaMesh meshAsset = table["Mesh"];
+				LuaMaterial materialAsset = table["Material"];
 
-				auto NewComponent = this->_Scene->CreateComponent<MeshRenderer>(this->_Entity, MeshAsset.Get(), MaterialAsset.Get());			
+				auto newComponent = this->m_Scene->CreateComponent<MeshRenderer>(this->m_Entity, meshAsset.Get(), materialAsset.Get());			
 				
-				if (Table["Layer"] != sol::lua_nil)
+				if (table["Layer"] != sol::lua_nil)
 				{
-					NewComponent->SetLayer(Table["Layer"]);
+					newComponent->SetLayer(table["Layer"]);
 				}
 			}
 			else
@@ -90,94 +90,94 @@ namespace Volund
 			}
 		}
 		break;
-		case LuaComponentID::POINT_LIGHT:
+		case LuaComponentID::PointLight:
 		{
-			auto NewComponent = this->_Scene->CreateComponent<PointLight>(this->_Entity);
+			auto newComponent = this->m_Scene->CreateComponent<PointLight>(this->m_Entity);
 
-			if (Table["Color"] != sol::lua_nil)
+			if (table["Color"] != sol::lua_nil)
 			{
-				Vec3 Color = Table["Color"];
-				NewComponent->Color = Color;
+				Vec3 color = table["Color"];
+				newComponent->Color = color;
 			}
 
-			if (Table["Brightness"] != sol::lua_nil)
+			if (table["Brightness"] != sol::lua_nil)
 			{
-				NewComponent->Brightness = Table["Brightness"];
+				newComponent->Brightness = table["Brightness"];
 			}
 		}
 		break;
-		case LuaComponentID::SCRIPT:
+		case LuaComponentID::Script:
 		{
-			auto NewComponent = this->_Scene->CreateComponent<Script>(this->_Entity, S, (*this), Table["Script"], Table);
+			auto newComponent = this->m_Scene->CreateComponent<Script>(this->m_Entity, s, (*this), table["Script"], table);
 		}
 		break;
-		case LuaComponentID::TAG:
+		case LuaComponentID::Tag:
 		{
-			std::string String = Table["String"];
+			std::string string = table["String"];
 
-			auto NewComponent = this->_Scene->CreateComponent<Tag>(this->_Entity, String);
+			auto newComponent = this->m_Scene->CreateComponent<Tag>(this->m_Entity, string);
 		}
 		break;
-		case LuaComponentID::TRANSFORM:
+		case LuaComponentID::Transform:
 		{
-			auto NewComponent = this->_Scene->CreateComponent<Transform>(this->_Entity);
+			auto newComponent = this->m_Scene->CreateComponent<Transform>(this->m_Entity);
 
-			if (Table["Position"] != sol::lua_nil)
+			if (table["Position"] != sol::lua_nil)
 			{
-				Vec3 Position = Table["Position"];
-				NewComponent->Position = Position;
+				Vec3 position = table["Position"];
+				newComponent->Position = position;
 			}
 
-			if (Table["Rotation"] != sol::lua_nil)
+			if (table["Rotation"] != sol::lua_nil)
 			{
-				Vec3 Rotation = Table["Rotation"];
-				NewComponent->SetRotation(Rotation);
+				Vec3 rotation = table["Rotation"];
+				newComponent->SetRotation(rotation);
 			}
 
-			if (Table["Scale"] != sol::lua_nil)
+			if (table["Scale"] != sol::lua_nil)
 			{
-				Vec3 Scale = Table["Scale"];
-				NewComponent->Scale = Scale;
-			}
-		}
-		break;
-		case LuaComponentID::SOUND_SOURCE:
-		{
-			auto NewComponent = this->_Scene->CreateComponent<SoundSource>(this->_Entity);
-
-			if (Table["Looping"] != sol::lua_nil)
-			{
-				bool Looping = Table["Looping"];
-				NewComponent->SetLooping(Looping);
-			}
-
-			if (Table["Pitch"] != sol::lua_nil)
-			{
-				float Pitch = Table["Pitch"];
-				NewComponent->SetPitch(Pitch);
-			}
-
-			if (Table["Gain"] != sol::lua_nil)
-			{
-				float Gain = Table["Gain"];
-				NewComponent->SetGain(Gain);
-			}
-
-			if (Table["Sound"] != sol::lua_nil)
-			{
-				LuaSound Sound = Table["Sound"];
-				NewComponent->SetBuffer(Sound.GetBuffer());
-			}
-
-			if (Table["Play"] != sol::lua_nil && Table["Play"] == true)
-			{
-				NewComponent->Play();
+				Vec3 scale = table["Scale"];
+				newComponent->Scale = scale;
 			}
 		}
 		break;
-		case LuaComponentID::SOUND_LISTENER:
+		case LuaComponentID::SoundSource:
 		{
-			auto NewComponent = this->_Scene->CreateComponent<SoundListener>(this->_Entity);
+			auto newComponent = this->m_Scene->CreateComponent<SoundSource>(this->m_Entity);
+
+			if (table["Looping"] != sol::lua_nil)
+			{
+				bool looping = table["Looping"];
+				newComponent->SetLooping(looping);
+			}
+
+			if (table["Pitch"] != sol::lua_nil)
+			{
+				float pitch = table["Pitch"];
+				newComponent->SetPitch(pitch);
+			}
+
+			if (table["Gain"] != sol::lua_nil)
+			{
+				float gain = table["Gain"];
+				newComponent->SetGain(gain);
+			}
+
+			if (table["Sound"] != sol::lua_nil)
+			{
+				LuaSound sound = table["Sound"];
+				newComponent->SetBuffer(sound.GetBuffer());
+			}
+
+			if (table["Play"] != sol::lua_nil && table["Play"] == true)
+			{
+				newComponent->Play();
+			}
+		}
+		break;
+		case LuaComponentID::SoundListener:
+		{
+			auto newComponent = this->m_Scene->CreateComponent<SoundListener>(this->m_Entity);
 		}
 		break;
 		default:
@@ -188,60 +188,60 @@ namespace Volund
 		}
 	}
 
-	void LuaEntity::DeleteComponent(sol::this_state S, LuaComponentID ComponentID, uint64_t I)
+	void LuaEntity::DeleteComponent(sol::this_state s, LuaComponentID ComponentID, uint64_t index)
 	{
-		if (!this->_Scene->HasEntity(this->_Entity))
+		if (!this->m_Scene->HasEntity(this->m_Entity))
 		{
-			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->m_Entity);
 
 			return;
 		}
 
 		switch (ComponentID)
 		{
-		case LuaComponentID::CAMERA:
+		case LuaComponentID::Camera:
 		{
-			this->_Scene->DeleteComponent<Camera>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<Camera>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::CAMERA_MOVEMENT:
+		case LuaComponentID::CameraMovement:
 		{
-			this->_Scene->DeleteComponent<CameraMovement>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<CameraMovement>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::MESH_RENDERER:
+		case LuaComponentID::MeshRenderer:
 		{
-			this->_Scene->DeleteComponent<MeshRenderer>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<MeshRenderer>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::POINT_LIGHT:
+		case LuaComponentID::PointLight:
 		{
-			this->_Scene->DeleteComponent<PointLight>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<PointLight>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::SCRIPT:
+		case LuaComponentID::Script:
 		{
-			this->_Scene->DeleteComponent<Script>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<Script>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::TAG:
+		case LuaComponentID::Tag:
 		{
-			this->_Scene->DeleteComponent<Tag>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<Tag>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::TRANSFORM:
+		case LuaComponentID::Transform:
 		{
-			this->_Scene->DeleteComponent<Transform>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<Transform>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::SOUND_SOURCE:
+		case LuaComponentID::SoundSource:
 		{
-			this->_Scene->DeleteComponent<SoundSource>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<SoundSource>(this->m_Entity, index);
 		}
 		break;
-		case LuaComponentID::SOUND_LISTENER:
+		case LuaComponentID::SoundListener:
 		{
-			this->_Scene->DeleteComponent<SoundListener>(this->_Entity, I);
+			this->m_Scene->DeleteComponent<SoundListener>(this->m_Entity, index);
 		}
 		break;
 		default:
@@ -252,60 +252,60 @@ namespace Volund
 		}
 	}
 
-	bool LuaEntity::HasComponent(sol::this_state S, LuaComponentID ComponentID)
+	bool LuaEntity::HasComponent(sol::this_state s, LuaComponentID ComponentID)
 	{
-		if (!this->_Scene->HasEntity(this->_Entity))
+		if (!this->m_Scene->HasEntity(this->m_Entity))
 		{
-			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->m_Entity);
 
 			return false;
 		}
 
 		switch (ComponentID)
 		{
-		case LuaComponentID::CAMERA:
+		case LuaComponentID::Camera:
 		{
-			return this->_Scene->HasComponent<Camera>(this->_Entity);
+			return this->m_Scene->HasComponent<Camera>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::CAMERA_MOVEMENT:
+		case LuaComponentID::CameraMovement:
 		{
-			return this->_Scene->HasComponent<CameraMovement>(this->_Entity);
+			return this->m_Scene->HasComponent<CameraMovement>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::MESH_RENDERER:
+		case LuaComponentID::MeshRenderer:
 		{
-			return this->_Scene->HasComponent<MeshRenderer>(this->_Entity);
+			return this->m_Scene->HasComponent<MeshRenderer>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::POINT_LIGHT:
+		case LuaComponentID::PointLight:
 		{
-			return this->_Scene->HasComponent<PointLight>(this->_Entity);
+			return this->m_Scene->HasComponent<PointLight>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::SCRIPT:
+		case LuaComponentID::Script:
 		{
-			return this->_Scene->HasComponent<Script>(this->_Entity);
+			return this->m_Scene->HasComponent<Script>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::TAG:
+		case LuaComponentID::Tag:
 		{
-			return this->_Scene->HasComponent<Tag>(this->_Entity);
+			return this->m_Scene->HasComponent<Tag>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::TRANSFORM:
+		case LuaComponentID::Transform:
 		{
-			return this->_Scene->HasComponent<Transform>(this->_Entity);
+			return this->m_Scene->HasComponent<Transform>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::SOUND_SOURCE:
+		case LuaComponentID::SoundSource:
 		{
-			return this->_Scene->HasComponent<SoundSource>(this->_Entity);
+			return this->m_Scene->HasComponent<SoundSource>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::SOUND_LISTENER:
+		case LuaComponentID::SoundListener:
 		{
-			return this->_Scene->HasComponent<SoundListener>(this->_Entity);
+			return this->m_Scene->HasComponent<SoundListener>(this->m_Entity);
 		}
 		break;
 		default:
@@ -318,60 +318,60 @@ namespace Volund
 		return false;
 	}
 
-	uint64_t LuaEntity::ComponentAmount(sol::this_state S, LuaComponentID ComponentID)
+	uint64_t LuaEntity::ComponentAmount(sol::this_state s, LuaComponentID ComponentID)
 	{
-		if (!this->_Scene->HasEntity(this->_Entity))
+		if (!this->m_Scene->HasEntity(this->m_Entity))
 		{
-			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->m_Entity);
 
 			return 0;
 		}
 
 		switch (ComponentID)
 		{
-		case LuaComponentID::CAMERA:
+		case LuaComponentID::Camera:
 		{
-			return this->_Scene->ComponentAmount<Camera>(this->_Entity);
+			return this->m_Scene->ComponentAmount<Camera>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::CAMERA_MOVEMENT:
+		case LuaComponentID::CameraMovement:
 		{
-			return this->_Scene->ComponentAmount<CameraMovement>(this->_Entity);
+			return this->m_Scene->ComponentAmount<CameraMovement>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::MESH_RENDERER:
+		case LuaComponentID::MeshRenderer:
 		{
-			return this->_Scene->ComponentAmount<MeshRenderer>(this->_Entity);
+			return this->m_Scene->ComponentAmount<MeshRenderer>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::POINT_LIGHT:
+		case LuaComponentID::PointLight:
 		{
-			return this->_Scene->ComponentAmount<PointLight>(this->_Entity);
+			return this->m_Scene->ComponentAmount<PointLight>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::SCRIPT:
+		case LuaComponentID::Script:
 		{
-			return this->_Scene->ComponentAmount<Script>(this->_Entity);
+			return this->m_Scene->ComponentAmount<Script>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::TAG:
+		case LuaComponentID::Tag:
 		{
-			return this->_Scene->ComponentAmount<Tag>(this->_Entity);
+			return this->m_Scene->ComponentAmount<Tag>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::TRANSFORM:
+		case LuaComponentID::Transform:
 		{
-			return this->_Scene->ComponentAmount<Transform>(this->_Entity);
+			return this->m_Scene->ComponentAmount<Transform>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::SOUND_SOURCE:
+		case LuaComponentID::SoundSource:
 		{
-			return this->_Scene->ComponentAmount<SoundSource>(this->_Entity);
+			return this->m_Scene->ComponentAmount<SoundSource>(this->m_Entity);
 		}
 		break;
-		case LuaComponentID::SOUND_LISTENER:
+		case LuaComponentID::SoundListener:
 		{
-			return this->_Scene->ComponentAmount<SoundListener>(this->_Entity);
+			return this->m_Scene->ComponentAmount<SoundListener>(this->m_Entity);
 		}
 		break;
 		default:
@@ -384,60 +384,60 @@ namespace Volund
 		return 0;
 	}
 
-	sol::table LuaEntity::GetComponent(sol::this_state S, LuaComponentID ComponentID, uint64_t I)
+	sol::table LuaEntity::GetComponent(sol::this_state s, LuaComponentID ComponentID, uint64_t index)
 	{
-		if (!this->_Scene->HasEntity(this->_Entity))
+		if (!this->m_Scene->HasEntity(this->m_Entity))
 		{
-			VOLUND_WARNING("Invalid this->_Entity %d!", this->_Entity);
+			VOLUND_WARNING("Invalid this->_Entity %d!", this->m_Entity);
 
 			return nullptr;
 		}
 
 		switch (ComponentID)
 		{
-		case LuaComponentID::CAMERA:
+		case LuaComponentID::Camera:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<Camera>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<Camera>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::CAMERA_MOVEMENT:
+		case LuaComponentID::CameraMovement:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<CameraMovement>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<CameraMovement>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::MESH_RENDERER:
+		case LuaComponentID::MeshRenderer:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<MeshRenderer>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<MeshRenderer>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::POINT_LIGHT:
+		case LuaComponentID::PointLight:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<PointLight>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<PointLight>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::SCRIPT:
+		case LuaComponentID::Script:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<Script>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<Script>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::TAG:
+		case LuaComponentID::Tag:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<Tag>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<Tag>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::TRANSFORM:
+		case LuaComponentID::Transform:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<Transform>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<Transform>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::SOUND_SOURCE:
+		case LuaComponentID::SoundSource:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<SoundSource>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<SoundSource>(this->m_Entity, index));
 		}
 		break;
-		case LuaComponentID::SOUND_LISTENER:
+		case LuaComponentID::SoundListener:
 		{
-			return GenerateComponentTable(S, (*this), this->_Scene->GetComponent<SoundListener>(this->_Entity, I));
+			return GenerateComponentTable(s, (*this), this->m_Scene->GetComponent<SoundListener>(this->m_Entity, index));
 		}
 		break;
 		default:
@@ -450,14 +450,14 @@ namespace Volund
 		return nullptr;
 	}
 
-	sol::table LuaEntity::GetScript(sol::this_state S, sol::table Table)
+	sol::table LuaEntity::GetScript(sol::this_state s, sol::table table)
 	{
-		for (int i = 0; i < this->_Scene->ComponentAmount<Script>(this->_Entity); i++)
+		for (int i = 0; i < this->m_Scene->ComponentAmount<Script>(this->m_Entity); i++)
 		{
-			auto EntityScript = this->_Scene->GetComponent<Script>(this->_Entity, i);
-			if (EntityScript->Compare(Table))
+			auto entityScript = this->m_Scene->GetComponent<Script>(this->m_Entity, i);
+			if (entityScript->Compare(table))
 			{
-				return EntityScript->Table;
+				return entityScript->Table;
 			}
 		}
 
@@ -466,9 +466,9 @@ namespace Volund
 		return nullptr;
 	}
 
-	LuaEntity::LuaEntity(Ref<Scene> ThisScene, Entity entity)
+	LuaEntity::LuaEntity(Ref<Scene> scene, Entity entity)
 	{
-		this->_Scene = ThisScene;
-		this->_Entity = entity;
+		this->m_Scene = scene;
+		this->m_Entity = entity;
 	}
 }

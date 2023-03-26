@@ -20,9 +20,9 @@ namespace Volund
 		bool CaptureMouse = false;
 		bool ShowMouse = true;
 
-		void* _Handle = nullptr;
-		void* _Instance = nullptr;
-		void* _DeviceContext = nullptr;
+		void* Handle = nullptr;
+		void* Instance = nullptr;
+		void* DeviceContext = nullptr;
 
 		ProcCatch ProcedureCatch = nullptr;
 
@@ -33,10 +33,10 @@ namespace Volund
 
 	enum class CursorMode
 	{
-		NORMAL,
-		HIDDEN,
-		DISABLED,
-		CAPTURED
+		Normal,
+		Hidden,
+		Disabled,
+		Captured
 	};
 
 	class Window
@@ -45,13 +45,13 @@ namespace Volund
 
 		void Update();
 
-		void SetProcedureCatch(ProcCatch ProcedureCatch);
+		void SetProcedureCatch(ProcCatch procedureCatch);
 
-		void SetCursorMode(CursorMode NewMode);
+		void SetCursorMode(CursorMode newMode);
 
-		void SetTitle(std::string_view Title);
+		void SetTitle(std::string_view title);
 
-		void SetVsync(bool Enabled);
+		void SetVsync(bool enabled);
 
 		void SetFocus();
 
@@ -71,13 +71,13 @@ namespace Volund
 
 		void Reset();
 
-		Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen);
+		Window(Ref<EventDispatcher> dispatcher, uint64_t width, uint64_t height, bool fullScreen);
 
 		~Window();
 
 	private:
 
-		WindowData _Data;
+		WindowData m_Data;
 	};
 
 }

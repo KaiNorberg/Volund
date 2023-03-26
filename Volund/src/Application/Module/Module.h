@@ -11,11 +11,11 @@ namespace Volund
 	{
 	public:
 
-		virtual void OnAttach(Application* App) = 0;
+		virtual void OnAttach(Application* app) = 0;
 
 		virtual void OnDetach() = 0;
 
-		virtual void Procedure(const Event& E) = 0;
+		virtual void Procedure(const Event& e) = 0;
 
 		Module();
 

@@ -24,30 +24,30 @@
 
 namespace Volund
 {
-	void LuaState::Procedure(const Event& E)
+	void LuaState::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::UPDATE:
+		case EventType::Update:
 		{
-			static float TotalTime = 0.0f;
-			TotalTime += VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
+			static float totalTime = 0.0f;
+			totalTime += VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-			if (TotalTime > 0.1f)
+			if (totalTime > 0.1f)
 			{
-				this->_SolState.collect_garbage();
-				TotalTime = 0.0f;
+				this->m_SolState.collect_garbage();
+				totalTime = 0.0f;
 			}
 		}
 		break;
 		}
 	}
 
-	void LuaState::ScriptFile(const std::string& Filepath)
+	void LuaState::ScriptFile(const std::string& filepath)
 	{
-		this->_SolState.safe_script_file(Filepath, [](lua_State*, sol::protected_function_result pfr)
+		this->m_SolState.safe_script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
 		{		
 			sol::error err = pfr;
 			VOLUND_WARNING(err.what());
@@ -56,66 +56,66 @@ namespace Volund
 		});
 	}
 
-	void LuaState::LuaPrint(sol::object Object)
+	void LuaState::LuaPrint(sol::object object)
 	{
-		VOLUND_INFO(Object.as<std::string>().c_str());
+		VOLUND_INFO(object.as<std::string>().c_str());
 	}
 
-	sol::object LuaState::LuaRequire(sol::this_state S, std::string Filepath)
+	sol::object LuaState::LuaRequire(sol::this_state s, std::string filepath)
 	{
-		std::string Source = Filesystem::LoadFile(Filepath);
+		std::string source = Filesystem::LoadFile(filepath);
 
-		sol::state_view State = S;
-		return State.require_script(Filepath, Source);
+		sol::state_view state = s;
+		return state.require_script(filepath, source);
 	}
 
-	sol::table LuaState::LuaComponentView(sol::this_state S, LuaComponentID ComponentID)
+	sol::table LuaState::LuaComponentView(sol::this_state s, LuaComponentID ComponentID)
 	{
 		switch (ComponentID)
 		{
-		case LuaComponentID::CAMERA:
+		case LuaComponentID::Camera:
 		{
-			return this->GenerateComponentView<Camera>(S);
+			return this->GenerateComponentView<Camera>(s);
 		}
 		break;
-		case LuaComponentID::CAMERA_MOVEMENT:
+		case LuaComponentID::CameraMovement:
 		{
-			return this->GenerateComponentView<CameraMovement>(S);
+			return this->GenerateComponentView<CameraMovement>(s);
 		}
 		break;
-		case LuaComponentID::MESH_RENDERER:
+		case LuaComponentID::MeshRenderer:
 		{
-			return this->GenerateComponentView<MeshRenderer>(S);
+			return this->GenerateComponentView<MeshRenderer>(s);
 		}
 		break;
-		case LuaComponentID::POINT_LIGHT:
+		case LuaComponentID::PointLight:
 		{
-			return this->GenerateComponentView<PointLight>(S);
+			return this->GenerateComponentView<PointLight>(s);
 		}
 		break;
-		case LuaComponentID::SCRIPT:
+		case LuaComponentID::Script:
 		{
-			return this->GenerateComponentView<Script>(S);
+			return this->GenerateComponentView<Script>(s);
 		}
 		break;
-		case LuaComponentID::TAG:
+		case LuaComponentID::Tag:
 		{
-			return this->GenerateComponentView<Tag>(S);
+			return this->GenerateComponentView<Tag>(s);
 		}
 		break;
-		case LuaComponentID::TRANSFORM:
+		case LuaComponentID::Transform:
 		{
-			return this->GenerateComponentView<Transform>(S);
+			return this->GenerateComponentView<Transform>(s);
 		}
 		break;
-		case LuaComponentID::SOUND_SOURCE:
+		case LuaComponentID::SoundSource:
 		{
-			return this->GenerateComponentView<SoundSource>(S);
+			return this->GenerateComponentView<SoundSource>(s);
 		}
 		break;
-		case LuaComponentID::SOUND_LISTENER:
+		case LuaComponentID::SoundListener:
 		{
-			return this->GenerateComponentView<SoundListener>(S);
+			return this->GenerateComponentView<SoundListener>(s);
 		}
 		break;
 		default:
@@ -128,46 +128,46 @@ namespace Volund
 		return 0;
 	}
 
-	sol::table LuaState::LuaScriptView(sol::this_state S, sol::table ScriptTable)
+	sol::table LuaState::LuaScriptView(sol::this_state s, sol::table scriptTable)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Output = StateView.create_table_with();
+		sol::table output = stateView.create_table_with();
 
-		std::vector<Ref<Script>> View;
-		this->_Scene->View(View);
+		std::vector<Ref<Script>> view;
+		this->m_Scene->View(view);
 
-		for (auto& Component : View)
+		for (auto& component : view)
 		{
-			if (Component->Compare(ScriptTable))
+			if (component->Compare(scriptTable))
 			{
-				Output.add(Component->Table);
+				output.add(component->Table);
 			}
 		}
 
-		return Output;
+		return output;
 	}
 
-	LuaState::LuaState(Ref<Scene> ThisScene, Ref<Input> ThisInput, Ref<Window> ThisWindow)
+	LuaState::LuaState(Ref<Scene> scene, Ref<Input> input, Ref<Window> window)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		ThisWindow->Reset();
+		window->Reset();
 
-		this->_Scene = ThisScene;
-		this->_Input = ThisInput;
-		this->_Window = ThisWindow;
+		this->m_Scene = scene;
+		this->m_Input = input;
+		this->m_Window = window;
 
-		this->_SolState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::utf8, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::package);
+		this->m_SolState.open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::utf8, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::package);
 
 		//Functions
 
-		this->_SolState["require"] = LuaRequire;
-		this->_SolState["print"] = LuaPrint;
+		this->m_SolState["require"] = LuaRequire;
+		this->m_SolState["print"] = LuaPrint;
 
 		//Usertypes
 
-		this->_SolState.new_usertype<LuaEntity>("VOLUND_ENTITY", sol::no_constructor,
+		this->m_SolState.new_usertype<LuaEntity>("VOLUND_ENTITY", sol::no_constructor,
 			"Padding", &LuaEntity::Padding,
 			"Add", &LuaEntity::AddComponent,
 			"Delete", &LuaEntity::DeleteComponent,
@@ -177,7 +177,7 @@ namespace Volund
 			"ComponentAmount", &LuaEntity::ComponentAmount
 		);
 
-		this->_SolState.new_usertype<LuaVec4>("Vec4", sol::constructors<void(LuaVec4), void(), void(float), void(float, float, float, float)>(),
+		this->m_SolState.new_usertype<LuaVec4>("Vec4", sol::constructors<void(LuaVec4), void(), void(float), void(float, float, float, float)>(),
 			"x", &LuaVec4::x,
 			"y", &LuaVec4::y,
 			"z", &LuaVec4::z,
@@ -192,7 +192,7 @@ namespace Volund
 			sol::meta_function::division, sol::overload(sol::resolve<LuaVec4(const LuaVec4&)>(&LuaVec4::operator/), sol::resolve<LuaVec4(float)>(&LuaVec4::operator/))
 		);
 
-		this->_SolState.new_usertype<LuaVec3>("Vec3", sol::constructors<void(LuaVec3), void(), void(float), void(float, float, float)>(),
+		this->m_SolState.new_usertype<LuaVec3>("Vec3", sol::constructors<void(LuaVec3), void(), void(float), void(float, float, float)>(),
 			"x", &LuaVec3::x,
 			"y", &LuaVec3::y,
 			"z", &LuaVec3::z,
@@ -207,7 +207,7 @@ namespace Volund
 			sol::meta_function::division, sol::overload(sol::resolve<LuaVec3(const LuaVec3&)>(&LuaVec3::operator/), sol::resolve<LuaVec3(float)>(&LuaVec3::operator/))
 		);
 
-		this->_SolState.new_usertype<LuaVec2>("Vec2", sol::constructors<void(LuaVec2), void(), void(float), void(float, float)>(),
+		this->m_SolState.new_usertype<LuaVec2>("Vec2", sol::constructors<void(LuaVec2), void(), void(float), void(float, float)>(),
 			"x", &LuaVec2::x,
 			"y", &LuaVec2::y,
 			"Length", &LuaVec2::Length,
@@ -220,24 +220,24 @@ namespace Volund
 			sol::meta_function::division, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator/), sol::resolve<LuaVec2(float)>(&LuaVec2::operator/))
 		);
 
-		this->_SolState.new_usertype<LuaTexture>("Texture", sol::constructors<void(const std::string&)>(),
+		this->m_SolState.new_usertype<LuaTexture>("Texture", sol::constructors<void(const std::string&)>(),
 			"Padding", &LuaTexture::Padding);
 
-		this->_SolState.new_usertype<LuaFramebuffer>("Framebuffer", sol::constructors<void(const LuaVec2&)>(),
+		this->m_SolState.new_usertype<LuaFramebuffer>("Framebuffer", sol::constructors<void(const LuaVec2&)>(),
 			"Padding", &LuaFramebuffer::Padding,
 			"Resize", &LuaFramebuffer::Resize,
 			"GetSize", &LuaFramebuffer::GetSize);
 
-		this->_SolState.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>(),
+		this->m_SolState.new_usertype<LuaMesh>("Mesh", sol::constructors<void(const std::string&)>(),
 			"Padding", &LuaMesh::Padding);
 
-		this->_SolState.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>(),
+		this->m_SolState.new_usertype<LuaShader>("Shader", sol::constructors<void(const std::string&)>(),
 			"Padding", &LuaShader::Padding);
 
-		this->_SolState.new_usertype<LuaSound>("Sound", sol::constructors<void(const std::string&)>(),
+		this->m_SolState.new_usertype<LuaSound>("Sound", sol::constructors<void(const std::string&)>(),
 			"Padding", &LuaSound::Padding);
 
-		this->_SolState.new_usertype<LuaMaterial>("Material", sol::constructors<void(LuaShader)>(),
+		this->m_SolState.new_usertype<LuaMaterial>("Material", sol::constructors<void(LuaShader)>(),
 			"Padding", &LuaMaterial::Padding,
 			"SetInt", &LuaMaterial::SetInt,
 			"SetFloat", &LuaMaterial::SetFloat,
@@ -250,54 +250,54 @@ namespace Volund
 
 		//Tables
 
-		this->_SolState.create_named_table("Scene",
-			"GetTargetBuffer", std::function([this](sol::table Self) { return LuaFramebuffer(this->_Scene->GetTargetBuffer()); }),
-			"TimeSinceStart", std::function([this](sol::table Self) { return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - this->_Scene->GetStartTime()).count(); }),
-			"CreateEntity", std::function([this](sol::table Self) { return LuaEntity(this->_Scene, this->_Scene->CreateEntity()); }),
-			"DeleteEntity", std::function([this](sol::table Self, LuaEntity& E) { return this->_Scene->DestroyEntity(E.Get()); }),
+		this->m_SolState.create_named_table("Scene",
+			"GetTargetBuffer", std::function([this](sol::table self) { return LuaFramebuffer(this->m_Scene->GetTargetBuffer()); }),
+			"TimeSinceStart", std::function([this](sol::table self) { return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - this->m_Scene->GetStartTime()).count(); }),
+			"CreateEntity", std::function([this](sol::table self) { return LuaEntity(this->m_Scene, this->m_Scene->CreateEntity()); }),
+			"DeleteEntity", std::function([this](sol::table self, LuaEntity& e) { return this->m_Scene->DestroyEntity(e.Get()); }),
 			"View", sol::overload(
-				std::function([this](sol::this_state S, sol::table Self, LuaComponentID ComponentID) { return this->LuaComponentView(S, ComponentID); }),
-				std::function([this](sol::this_state S, sol::table Self, sol::table ScriptTable) { return this->LuaScriptView(S, ScriptTable); }))
+				std::function([this](sol::this_state s, sol::table self, LuaComponentID ComponentID) { return this->LuaComponentView(s, ComponentID); }),
+				std::function([this](sol::this_state s, sol::table self, sol::table scriptTable) { return this->LuaScriptView(s, scriptTable); }))
 		);
 
-		this->_SolState.create_named_table("Input",
-			"IsHeld", std::function([this](sol::table Self, char KeyCode) { return this->_Input->IsHeld(KeyCode); }),
-			"IsPressed", std::function([this](sol::table Self, char KeyCode) { return this->_Input->IsPressed(KeyCode); }),
-			"IsMouseButtonHeld", std::function([this](sol::table Self, char Button) { return this->_Input->IsMouseButtonHeld(Button); }),
-			"IsMouseButtonPressed", std::function([this](sol::table Self, char Button) { return this->_Input->IsMouseButtonPressed(Button); }),
-			"GetScrollPosition", std::function([this](sol::table Self) { return this->_Input->GetScrollPosition(); }),
-			"GetMousePosition", std::function([this](sol::table Self) { return this->_Input->GetMousePosition(); })
+		this->m_SolState.create_named_table("Input",
+			"IsHeld", std::function([this](sol::table self, char keyCode) { return this->m_Input->IsHeld(keyCode); }),
+			"IsPressed", std::function([this](sol::table self, char keyCode) { return this->m_Input->IsPressed(keyCode); }),
+			"IsMouseButtonHeld", std::function([this](sol::table self, char button) { return this->m_Input->IsMouseButtonHeld(button); }),
+			"IsMouseButtonPressed", std::function([this](sol::table self, char button) { return this->m_Input->IsMouseButtonPressed(button); }),
+			"GetScrollPosition", std::function([this](sol::table self) { return this->m_Input->GetScrollPosition(); }),
+			"GetMousePosition", std::function([this](sol::table self) { return this->m_Input->GetMousePosition(); })
 		);
 
-		this->_SolState.create_named_table("Window",
-			"SetCursorMode", std::function([this](sol::table Self, CursorMode NewCursorMode) { return this->_Window->SetCursorMode(NewCursorMode); }),
-			"SetTitle", std::function([this](sol::table Self, const std::string& NewTitle) { return this->_Window->SetTitle(NewTitle); })
+		this->m_SolState.create_named_table("Window",
+			"SetCursorMode", std::function([this](sol::table self, CursorMode newCursorMode) { return this->m_Window->SetCursorMode(newCursorMode); }),
+			"SetTitle", std::function([this](sol::table self, const std::string& newTitle) { return this->m_Window->SetTitle(newTitle); })
 		);
 
 		//Enums
 
-		this->_SolState.new_enum("Component",
-			"CAMERA", LuaComponentID::CAMERA,
-			"CAMERA_MOVEMENT", LuaComponentID::CAMERA_MOVEMENT,
-			"MESH_RENDERER", LuaComponentID::MESH_RENDERER,
-			"POINT_LIGHT", LuaComponentID::POINT_LIGHT,
-			"SCRIPT", LuaComponentID::SCRIPT,
-			"TAG", LuaComponentID::TAG,
-			"TRANSFORM", LuaComponentID::TRANSFORM,
-			"SOUND_SOURCE", LuaComponentID::SOUND_SOURCE,
-			"SOUND_LISTENER", LuaComponentID::SOUND_LISTENER
+		this->m_SolState.new_enum("Component",
+			"CAMERA", LuaComponentID::Camera,
+			"CAMERA_MOVEMENT", LuaComponentID::CameraMovement,
+			"MESH_RENDERER", LuaComponentID::MeshRenderer,
+			"POINT_LIGHT", LuaComponentID::PointLight,
+			"SCRIPT", LuaComponentID::Script,
+			"TAG", LuaComponentID::Tag,
+			"TRANSFORM", LuaComponentID::Transform,
+			"SOUND_SOURCE", LuaComponentID::SoundSource,
+			"SOUND_LISTENER", LuaComponentID::SoundListener
 		);
 
-		this->_SolState.new_enum("CursorMode",
-			"NORMAL", CursorMode::NORMAL,
-			"HIDDEN", CursorMode::HIDDEN,
-			"DISABLED", CursorMode::DISABLED,
-			"CAPTURED", CursorMode::CAPTURED
+		this->m_SolState.new_enum("CursorMode",
+			"NORMAL", CursorMode::Normal,
+			"HIDDEN", CursorMode::Hidden,
+			"DISABLED", CursorMode::Disabled,
+			"CAPTURED", CursorMode::Captured
 		);
 	}
 
 	LuaState::~LuaState()
 	{
-		this->_SolState.collect_garbage();
+		this->m_SolState.collect_garbage();
 	}
 }

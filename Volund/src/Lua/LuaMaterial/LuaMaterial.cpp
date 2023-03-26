@@ -5,51 +5,51 @@ namespace Volund
 {
 	Ref<Material> LuaMaterial::Get()
 	{
-		return this->_Material;
+		return this->m_Material;
 	}
 
-	void LuaMaterial::SetInt(const std::string& Name, int Value)
+	void LuaMaterial::SetInt(const std::string& name, int value)
 	{
-		this->_Material->SetInt(Name, Value);
+		this->m_Material->SetInt(name, value);
 	}
 
-	void LuaMaterial::SetFloat(const std::string& Name, float Value)
+	void LuaMaterial::SetFloat(const std::string& name, float value)
 	{
-		this->_Material->SetFloat(Name, Value);
+		this->m_Material->SetFloat(name, value);
 	}
 
-	void LuaMaterial::SetDouble(const std::string& Name, double Value)
+	void LuaMaterial::SetDouble(const std::string& name, double value)
 	{
-		this->_Material->SetDouble(Name, Value);
+		this->m_Material->SetDouble(name, value);
 	}
 
-	void LuaMaterial::SetVec2(const std::string& Name, Vec2 Value)
+	void LuaMaterial::SetVec2(const std::string& name, Vec2 value)
 	{
-		this->_Material->SetVec2(Name, Value);
+		this->m_Material->SetVec2(name, value);
 	}
 
-	void LuaMaterial::SetVec3(const std::string& Name, Vec3 Value)
+	void LuaMaterial::SetVec3(const std::string& name, Vec3 value)
 	{
-		this->_Material->SetVec3(Name, Value);
+		this->m_Material->SetVec3(name, value);
 	}
 
-	void LuaMaterial::SetTexture(const std::string& Name, LuaTexture Value)
+	void LuaMaterial::SetTexture(const std::string& name, LuaTexture value)
 	{
-		this->_Material->SetTexture(Name, Value.Get());
+		this->m_Material->SetTexture(name, value.Get());
 	}
 
-	void LuaMaterial::SetFramebuffer(const std::string& Name, LuaFramebuffer Value)
+	void LuaMaterial::SetFramebuffer(const std::string& name, LuaFramebuffer value)
 	{
-		this->_Material->SetFramebuffer(Name, Value.Get());
+		this->m_Material->SetFramebuffer(name, value.Get());
 	}
 
-	LuaMaterial::LuaMaterial(Ref<Material> Material)
+	LuaMaterial::LuaMaterial(Ref<Material> material)
 	{
-		this->_Material = Material;
+		this->m_Material = material;
 	}
 
-	LuaMaterial::LuaMaterial(LuaShader MaterialShader)
+	LuaMaterial::LuaMaterial(LuaShader shader)
 	{
-		this->_Material = Material::Create(MaterialShader.Get());
+		this->m_Material = Material::Create(shader.Get());
 	}
 }

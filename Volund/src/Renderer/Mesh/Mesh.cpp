@@ -12,68 +12,68 @@
 
 namespace Volund
 {
-	AABB Mesh::GetAABB(const Mat4x4& ModelMatrix)
+	AABB Mesh::GetAABB(const Mat4x4& modelMatrix)
 	{
-		return this->_AABB.ToWorldSpace(ModelMatrix);
+		return this->m_Aabb.ToWorldSpace(modelMatrix);
 	}
 
 	std::string Mesh::GetFilepath()
 	{
-		return this->_Filepath;
+		return this->m_Filepath;
 	}
 
 	Ref<Vertexbuffer> Mesh::GetVertexbuffer()
 	{
-		return this->_Vertexbuffer;
+		return this->m_Vertexbuffer;
 	}
 
 	Ref<Indexbuffer> Mesh::GetIndexbuffer()
 	{
-		return this->_Indexbuffer;
+		return this->m_Indexbuffer;
 	}
 
 	const Ref<Vertexbuffer> Mesh::GetVertexbuffer() const
 	{
-		return this->_Vertexbuffer;
+		return this->m_Vertexbuffer;
 	}
 
 	const Ref<Indexbuffer> Mesh::GetIndexbuffer() const
 	{
-		return this->_Indexbuffer;
+		return this->m_Indexbuffer;
 	}
 
-	Ref<Mesh> Mesh::Create(const std::string& Filepath)
+	Ref<Mesh> Mesh::Create(const std::string& filepath)
 	{
-		Ref<Mesh> NewMesh = Mesh::Create();
+		Ref<Mesh> newMesh = Mesh::Create();
 
-		VOLUND_THREADPOOL_SUBMIT([Filepath, NewMesh]()
+		VOLUND_THREADPOOL_SUBMIT([filepath, newMesh]()
 		{
-			NewMesh->_Filepath = Filepath;
+			newMesh->m_Filepath = filepath;
 
-			ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(Filepath);
+			ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(filepath);
 
-			NewMesh->_AABB = Loader.aabb;
+			newMesh->m_Aabb = Loader.aabb;
 
-			DelayedTaskHandler::DelayTask([NewMesh, Loader]()
+			DelayedTaskHandler::DelayTask([newMesh, Loader]()
 			{
 				Ref<Vertexbuffer> VBuffer = Vertexbuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
-				VBuffer->SetLayout({ VertexAttributeType::FLOAT3, VertexAttributeType::FLOAT2, VertexAttributeType::FLOAT3 });
+				VBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
 
 				Ref<Indexbuffer> IBuffer = Indexbuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
 
-				NewMesh->SetVertexbuffer(VBuffer);
-				NewMesh->SetIndexbuffer(IBuffer);
+				newMesh->SetVertexbuffer(VBuffer);
+				newMesh->SetIndexbuffer(IBuffer);
 			});
 		});
 
-		return NewMesh;
+		return newMesh;
 	}
 
 	Ref<Mesh> Mesh::Create()
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
 			return std::make_shared<OpenGLMesh>();
 		}
@@ -87,13 +87,13 @@ namespace Volund
 		}
 	}
 
-	Ref<Mesh> Mesh::Create(Ref<Vertexbuffer>& VBuffer, Ref<Indexbuffer>& IBuffer)
+	Ref<Mesh> Mesh::Create(Ref<Vertexbuffer>& vertexbuffer, Ref<Indexbuffer>& indexbuffer)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLMesh>(VBuffer, IBuffer);
+			return std::make_shared<OpenGLMesh>(vertexbuffer, indexbuffer);
 		}
 		break;
 		default:

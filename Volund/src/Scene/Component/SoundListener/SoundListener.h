@@ -10,12 +10,12 @@ namespace Volund
 	{
 	public:
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		SoundListener() = default;
 
 	private:
 
-		AudioListener _Listener;
+		AudioListener m_Listener;
 	};
 }

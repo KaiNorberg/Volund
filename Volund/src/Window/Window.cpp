@@ -10,11 +10,11 @@ namespace Volund
 {
 	LRESULT CALLBACK WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
 	{
-		WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
+		WindowData* data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
-		if (Data != nullptr && Data->ProcedureCatch != nullptr)
+		if (data != nullptr && data->ProcedureCatch != nullptr)
 		{
-			if (Data->ProcedureCatch(hwnd, msg, wparam, lparam))
+			if (data->ProcedureCatch(hwnd, msg, wparam, lparam))
 			{
 				return true;
 			}
@@ -28,35 +28,35 @@ namespace Volund
 		break;
 		case WM_KEYDOWN:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::KEY);
-			VOLUND_EVENT_KEY_SET_KEY(E, (uint32_t)wparam);
-			VOLUND_EVENT_KEY_SET_ISDOWN(E, true);
+			Event e = Event(EventType::Key);
+			VOLUND_EVENT_KEY_SET_KEY(e, (uint32_t)wparam);
+			VOLUND_EVENT_KEY_SET_ISDOWN(e, true);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_KEYUP:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::KEY);
-			VOLUND_EVENT_KEY_SET_KEY(E, (uint32_t)wparam);
-			VOLUND_EVENT_KEY_SET_ISDOWN(E, false);
+			Event e = Event(EventType::Key);
+			VOLUND_EVENT_KEY_SET_KEY(e, (uint32_t)wparam);
+			VOLUND_EVENT_KEY_SET_ISDOWN(e, false);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_MOUSEMOVE:
 		{
-			if (Data == nullptr || GetFocus() != hwnd)
+			if (data == nullptr || GetFocus() != hwnd)
 			{
 				break;
 			}
@@ -64,166 +64,166 @@ namespace Volund
 			int32_t xPos = GET_X_LPARAM(lparam);
 			int32_t yPos = GET_Y_LPARAM(lparam);
 
-			if (Data->CaptureMouse)
+			if (data->CaptureMouse)
 			{
-				static int32_t VirtualXPos = 0;
-				static int32_t VirtualYPos = 0;
+				static int32_t virtualXPos = 0;
+				static int32_t virtualYPos = 0;
 
-				RECT ScreenSpaceRect;
-				GetWindowRect(hwnd, &ScreenSpaceRect);
-				ClipCursor(&ScreenSpaceRect);
+				RECT screenSpaceRect;
+				GetWindowRect(hwnd, &screenSpaceRect);
+				ClipCursor(&screenSpaceRect);
 
-				RECT WindowRect = {};
-				GetClientRect(hwnd, &WindowRect);
+				RECT windowRect = {};
+				GetClientRect(hwnd, &windowRect);
 
-				int32_t MiddleX = WindowRect.left + (WindowRect.right - WindowRect.left) / 2;
-				int32_t MiddleY = WindowRect.top + (WindowRect.bottom - WindowRect.top) / 2;
+				const int32_t middleX = windowRect.left + (windowRect.right - windowRect.left) / 2;
+				const int32_t middleY = windowRect.top + (windowRect.bottom - windowRect.top) / 2;
 
-				POINT WindowCenter = {MiddleX, MiddleY};
-				ClientToScreen(hwnd, &WindowCenter);
-				SetCursorPos(WindowCenter.x, WindowCenter.y);
+				POINT windowCenter = {middleX, middleY};
+				ClientToScreen(hwnd, &windowCenter);
+				SetCursorPos(windowCenter.x, windowCenter.y);
 
-				VirtualXPos += xPos - MiddleX;
-				VirtualYPos += yPos - MiddleY;
+				virtualXPos += xPos - middleX;
+				virtualYPos += yPos - middleY;
 
-				Event E = Event(EventType::MOUSE_MOVE);
-				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(E, VirtualXPos);
-				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(E, VirtualYPos);
+				Event e = Event(EventType::MouseMove);
+				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, virtualXPos);
+				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, virtualYPos);
 
-				Data->Dispatcher->Dispatch(E);
+				data->Dispatcher->Dispatch(e);
 			}
 			else
 			{
-				Event E = Event(EventType::MOUSE_MOVE);
-				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(E, xPos);
-				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(E, yPos);
+				Event e = Event(EventType::MouseMove);
+				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, xPos);
+				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, yPos);
 
-				Data->Dispatcher->Dispatch(E);
+				data->Dispatcher->Dispatch(e);
 			}
 		}
 		break;
 		case WM_LBUTTONDOWN:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::MOUSE_BUTTON);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_LEFT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, true);
+			Event e = Event(EventType::MouseButton);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_LBUTTONUP:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::MOUSE_BUTTON);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_LEFT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, false);
+			Event e = Event(EventType::MouseButton);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_MBUTTONDOWN:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::MOUSE_BUTTON);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_MIDDLE);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, true);
+			Event e = Event(EventType::MouseButton);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_MBUTTONUP:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::MOUSE_BUTTON);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_MIDDLE);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, false);
+			Event e = Event(EventType::MouseButton);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_RBUTTONDOWN:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::MOUSE_BUTTON);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_RIGHT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, true);
+			Event e = Event(EventType::MouseButton);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_RBUTTONUP:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			Event E = Event(EventType::MOUSE_BUTTON);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(E, VOLUND_MOUSE_BUTTON_RIGHT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(E, false);
+			Event e = Event(EventType::MouseButton);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
+			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_MOUSEWHEEL:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
 			int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
 
-			Event E = Event(EventType::MOUSE_WHEEL);
-			VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(E, zDelta);
+			Event e = Event(EventType::MouseWheel);
+			VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, zDelta);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_SIZE:
 		{
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
 
-			RECT WindowRect = {};
-			GetClientRect(hwnd, &WindowRect);
+			RECT windowRect = {};
+			GetClientRect(hwnd, &windowRect);
 
-			Data->Width = (uint64_t)WindowRect.right;
-			Data->Height = (uint64_t)WindowRect.bottom;
+			data->Width = (uint64_t)windowRect.right;
+			data->Height = (uint64_t)windowRect.bottom;
 
-			Event E = Event(EventType::WINDOW_SIZE);
-			VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(E, Data->Width);
-			VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(E, Data->Height);
+			Event e = Event(EventType::WindowSize);
+			VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(e, data->Width);
+			VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(e, data->Height);
 
-			Data->Dispatcher->Dispatch(E);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_SETFOCUS:
 		{
-			if (!Data->ShowMouse)
+			if (!data->ShowMouse)
 			{
 				while (ShowCursor(false) >= -1) {}
 			}
@@ -242,15 +242,12 @@ namespace Volund
 		break;
 		case WM_CLOSE:
 		{
-			WindowData* Data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-			if (Data == nullptr)
+			if (data == nullptr)
 			{
 				break;
 			}
-
-			Event E = Event(EventType::WINDOW_CLOSE);
-			Data->Dispatcher->Dispatch(E);
+				Event e = Event(EventType::WindowClose);
+			data->Dispatcher->Dispatch(e);
 		}
 		break;
 		case WM_DESTROY:
@@ -271,51 +268,51 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		MSG Message;
+		MSG message;
 
-		while (PeekMessageW(&Message, nullptr, 0, 0, PM_REMOVE) > 0)
+		while (PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE) > 0)
 		{
-			TranslateMessage(&Message);
-			DispatchMessage(&Message);
+			TranslateMessage(&message);
+			DispatchMessage(&message);
 		}
 	}
 
-	void Window::SetProcedureCatch(ProcCatch ProcedureCatch)
+	void Window::SetProcedureCatch(const ProcCatch procedureCatch)
 	{
-		this->_Data.ProcedureCatch = ProcedureCatch;
+		this->m_Data.ProcedureCatch = procedureCatch;
 	}
 
-	void Window::SetCursorMode(CursorMode NewMode)
+	void Window::SetCursorMode(const CursorMode newMode)
 	{
-		switch (NewMode)
+		switch (newMode)
 		{
-		case CursorMode::NORMAL:
+		case CursorMode::Normal:
 		{
-			this->_Data.CaptureMouse = false;
-			this->_Data.ShowMouse = true;
+			this->m_Data.CaptureMouse = false;
+			this->m_Data.ShowMouse = true;
 		}
 		break;
-		case CursorMode::HIDDEN:
+		case CursorMode::Hidden:
 		{
-			this->_Data.CaptureMouse = false;
-			this->_Data.ShowMouse = false;
+			this->m_Data.CaptureMouse = false;
+			this->m_Data.ShowMouse = false;
 		}
 		break;
-		case CursorMode::DISABLED:
+		case CursorMode::Disabled:
 		{
-			this->_Data.CaptureMouse = true;
-			this->_Data.ShowMouse = false;
+			this->m_Data.CaptureMouse = true;
+			this->m_Data.ShowMouse = false;
 		}
 		break;
-		case CursorMode::CAPTURED:
+		case CursorMode::Captured:
 		{
-			this->_Data.CaptureMouse = true;
-			this->_Data.ShowMouse = true;
+			this->m_Data.CaptureMouse = true;
+			this->m_Data.ShowMouse = true;
 		}
 		break;
 		}			
 		
-		if (!this->_Data.ShowMouse)
+		if (!this->m_Data.ShowMouse)
 		{
 			while (ShowCursor(false) >= -1) {}
 		}
@@ -327,55 +324,55 @@ namespace Volund
 
 	void Window::SetFocus()
 	{
-		::SetFocus((HWND)this->_Data._Handle);
-		SendMessage((HWND)this->_Data._Handle, WM_SETFOCUS, 0, 0);
+		::SetFocus((HWND)this->m_Data.Handle);
+		SendMessage((HWND)this->m_Data.Handle, WM_SETFOCUS, 0, 0);
 	}
 
-	void Window::SetTitle(std::string_view Title)
+	void Window::SetTitle(const std::string_view title)
 	{
-		SetWindowText((HWND)this->_Data._Handle, Utils::ConvertToWString(Title).c_str());
+		SetWindowText((HWND)this->m_Data.Handle, Utils::ConvertToWString(title).c_str());
 	}
 
-	void Window::SetVsync(bool Enabled)
+	void Window::SetVsync(const bool enabled)
 	{
-		this->_Data.Context->SetVSync(Enabled);
+		this->m_Data.Context->SetVSync(enabled);
 	}
 
 	Vec2 Window::GetSize()
 	{
-		return Vec2(this->_Data.Width, this->_Data.Height);
+		return Vec2(this->m_Data.Width, this->m_Data.Height);
 	}
 
 	float Window::GetAspectRatio()
 	{
-		if (this->_Data.Width == 0 || this->_Data.Height == 0)
+		if (this->m_Data.Width == 0 || this->m_Data.Height == 0)
 		{
 			return 0;
 		}
 		else
 		{
-			return (float)this->_Data.Width / (float)this->_Data.Height;
+			return (float)this->m_Data.Width / (float)this->m_Data.Height;
 		}
 	}
 
 	void* Window::GetInstance()
 	{
-		return this->_Data._Instance;
+		return this->m_Data.Instance;
 	}
 
 	void* Window::GetHandle()
 	{
-		return this->_Data._Handle;
+		return this->m_Data.Handle;
 	}
 
 	void* Window::GetDeviceContext()
 	{
-		return this->_Data._DeviceContext;
+		return this->m_Data.DeviceContext;
 	}
 
 	void Window::Show()
 	{	
-		ShowWindow((HWND)this->_Data._Handle, SW_SHOW);
+		ShowWindow((HWND)this->m_Data.Handle, SW_SHOW);
 		this->Update();
 	}
 
@@ -383,12 +380,12 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		::SwapBuffers((HDC)this->_Data._DeviceContext);
+		::SwapBuffers((HDC)this->m_Data.DeviceContext);
 	}
 
 	void Window::Reset()
 	{
-		this->SetCursorMode(CursorMode::NORMAL);
+		this->SetCursorMode(CursorMode::Normal);
 		this->SetVsync(true);
 	}
 
@@ -396,18 +393,18 @@ namespace Volund
 	{
 		VOLUND_INFO("Creating window...");
 		
-		this->_Data.Dispatcher = Dispatcher;
-		this->_Data.FullScreen = FullScreen;
+		this->m_Data.Dispatcher = Dispatcher;
+		this->m_Data.FullScreen = FullScreen;
 
-		this->_Data._Instance = GetModuleHandle(nullptr);
+		this->m_Data.Instance = GetModuleHandle(nullptr);
 
 		DWORD dwExStyle;
 		DWORD dwStyle;
 
 		if (FullScreen)
 		{
-			this->_Data.Width = (uint64_t)GetSystemMetrics(SM_CXSCREEN);
-			this->_Data.Height = (uint64_t)GetSystemMetrics(SM_CYSCREEN);
+			this->m_Data.Width = (uint64_t)GetSystemMetrics(SM_CXSCREEN);
+			this->m_Data.Height = (uint64_t)GetSystemMetrics(SM_CYSCREEN);
 
 			DEVMODE ScreenSettings;
 			memset(&ScreenSettings, 0, sizeof(ScreenSettings));
@@ -424,8 +421,8 @@ namespace Volund
 		}
 		else
 		{
-			this->_Data.Width = Width;
-			this->_Data.Height = Height;
+			this->m_Data.Width = Width;
+			this->m_Data.Height = Height;
 
 			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
 			dwStyle = WS_OVERLAPPEDWINDOW;
@@ -433,14 +430,14 @@ namespace Volund
 
 		WNDCLASS Temp;
 
-		if (GetClassInfo((HINSTANCE)this->_Data._Instance, L"VolundWindow", &Temp) == 0)
+		if (GetClassInfo((HINSTANCE)this->m_Data.Instance, L"VolundWindow", &Temp) == 0)
 		{
 			WNDCLASS WindowClass = {};
 			WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
 			WindowClass.lpfnWndProc = (WNDPROC)WindowProcedure;
 			WindowClass.cbClsExtra = 0;
 			WindowClass.cbWndExtra = 0;
-			WindowClass.hInstance = (HINSTANCE)this->_Data._Instance;
+			WindowClass.hInstance = (HINSTANCE)this->m_Data.Instance;
 			WindowClass.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
 			WindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
 			WindowClass.hbrBackground = nullptr;
@@ -450,14 +447,14 @@ namespace Volund
 			VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
 		}
 
-		RECT WindowRect = { 0, 0, (LONG)this->_Data.Width, (LONG)this->_Data.Height };
+		RECT WindowRect = { 0, 0, (LONG)this->m_Data.Width, (LONG)this->m_Data.Height };
 		AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);
 
-		this->_Data._Handle = CreateWindowEx(dwExStyle, L"VolundWindow", L"", WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0,
+		this->m_Data.Handle = CreateWindowEx(dwExStyle, L"VolundWindow", L"", WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0,
 			0, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
-			nullptr, nullptr, (HINSTANCE)this->_Data._Instance, nullptr);
+			nullptr, nullptr, (HINSTANCE)this->m_Data.Instance, nullptr);
 
-		VOLUND_ASSERT(this->_Data._Handle, "Failed to create Window!");
+		VOLUND_ASSERT(this->m_Data.Handle, "Failed to create Window!");
 
 		PIXELFORMATDESCRIPTOR PFD =
 		{
@@ -481,38 +478,38 @@ namespace Volund
 			0, 0, 0
 		};
 
-		this->_Data._DeviceContext = GetDC((HWND)this->_Data._Handle);
+		this->m_Data.DeviceContext = GetDC((HWND)this->m_Data.Handle);
 
-		VOLUND_ASSERT(this->_Data._DeviceContext, "Failed to create a Window Device Context!");
+		VOLUND_ASSERT(this->m_Data.DeviceContext, "Failed to create a Window Device Context!");
 
-		int32_t PixelFormat = ChoosePixelFormat((HDC)this->_Data._DeviceContext, &PFD);
+		int32_t PixelFormat = ChoosePixelFormat((HDC)this->m_Data.DeviceContext, &PFD);
 
 		VOLUND_ASSERT(PixelFormat, "Unable to find a suitable Pixel Format!");
 
-		VOLUND_ASSERT(SetPixelFormat((HDC)this->_Data._DeviceContext, PixelFormat, &PFD), "Unable to set Pixel Format!");
+		VOLUND_ASSERT(SetPixelFormat((HDC)this->m_Data.DeviceContext, PixelFormat, &PFD), "Unable to set Pixel Format!");
 
-		SetWindowLongPtr((HWND)this->_Data._Handle, GWLP_USERDATA, (LONG_PTR)&this->_Data);
+		SetWindowLongPtr((HWND)this->m_Data.Handle, GWLP_USERDATA, (LONG_PTR)&this->m_Data);
 
-		this->_Data.Context = VL::RenderingContext::Create(Window::GetDeviceContext());
-		this->_Data.Context->MakeCurrent();
+		this->m_Data.Context = VL::RenderingContext::Create(Window::GetDeviceContext());
+		this->m_Data.Context->MakeCurrent();
 
 		this->Reset();
 	}
 
 	Window::~Window()
 	{
-		if (this->_Data.FullScreen)
+		if (this->m_Data.FullScreen)
 		{
 			ChangeDisplaySettings(nullptr, 0);
 		}
 
 		ShowCursor(true);
 
-		ReleaseDC((HWND)this->_Data._Handle, (HDC)this->_Data._DeviceContext);
+		ReleaseDC((HWND)this->m_Data.Handle, (HDC)this->m_Data.DeviceContext);
 
-		DestroyWindow((HWND)this->_Data._Handle);
+		DestroyWindow((HWND)this->m_Data.Handle);
 
-		UnregisterClass(L"VolundWindow", (HINSTANCE)this->_Data._Instance);
+		UnregisterClass(L"VolundWindow", (HINSTANCE)this->m_Data.Instance);
 	}
 
 } //namespace Volund

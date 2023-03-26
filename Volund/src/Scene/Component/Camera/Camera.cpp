@@ -10,34 +10,34 @@
 
 namespace Volund
 {
-	void Camera::SetLayerMask(uint8_t Index, bool Enabled)
+	void Camera::SetLayerMask(const uint8_t index, const bool enabled)
 	{
-		if (Index > 0 && Index <= 16)
+		if (index > 0 && index <= 16)
 		{
-			if (Enabled)
+			if (enabled)
 			{
-				this->_LayerMask |= 1UL << (Index - 1);
+				this->m_LayerMask |= 1UL << (index - 1);
 			}
 			else
 			{
-				this->_LayerMask &= ~(1UL << (Index - 1));
+				this->m_LayerMask &= ~(1UL << (index - 1));
 			}
 		}
 	}
 
-	void Camera::SetTargetBuffer(Ref<Framebuffer> NewTargetBuffer)
+	void Camera::SetTargetBuffer(const Ref<Framebuffer> newTargetBuffer)
 	{
-		this->_TargetBuffer = NewTargetBuffer;
+		this->m_TargetBuffer = newTargetBuffer;
 	}
 
 	Mat4x4 Camera::GetViewMatrix() const
 	{
-		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-		if (EntityTransform != nullptr)
+		if (entityTransform != nullptr)
 		{
-			return lookAt(EntityTransform->Position, EntityTransform->Position + EntityTransform->GetFront(),
-				EntityTransform->GetUp());
+			return lookAt(entityTransform->Position, entityTransform->Position + entityTransform->GetFront(),
+				entityTransform->GetUp());
 		}
 		else
 		{
@@ -48,11 +48,11 @@ namespace Volund
 
 	Mat4x4 Camera::GetOriginViewMatrix() const
 	{
-		Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-		if (EntityTransform != nullptr)
+		if (entityTransform != nullptr)
 		{
-			return lookAt(Vec3(0.0f), EntityTransform->GetFront(), EntityTransform->GetUp());
+			return lookAt(Vec3(0.0f), entityTransform->GetFront(), entityTransform->GetUp());
 		}
 		else
 		{
@@ -61,11 +61,11 @@ namespace Volund
 		}
 	}
 
-	Mat4x4 Camera::GetProjectionMatrix(float AspectRatio) const
+	Mat4x4 Camera::GetProjectionMatrix(const float aspectRatio) const
 	{
-		if (abs(AspectRatio - std::numeric_limits<float>::epsilon()) > 0.0f)
+		if (abs(aspectRatio - std::numeric_limits<float>::epsilon()) > 0.0f)
 		{
-			return glm::perspective(glm::radians(this->FOV), AspectRatio, this->NearPlane, this->FarPlane);
+			return glm::perspective(glm::radians(this->FOV), aspectRatio, this->NearPlane, this->FarPlane);
 		}
 		else
 		{
@@ -73,26 +73,26 @@ namespace Volund
 		}
 	}
 
-	void Camera::Procedure(const Event& E)
+	void Camera::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::RENDER:
-		{		
-			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		case EventType::Render:
+		{
+			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			auto Spec = this->_TargetBuffer->GetSpec();
+			const auto spec = this->m_TargetBuffer->GetSpec();
 
-			RendererEye Eye;
-			Eye.Target = this->_TargetBuffer;
-			Eye.ProjectionMatrix = this->GetProjectionMatrix((float)Spec.Width / (float)Spec.Height);
-			Eye.ViewMatrix = this->GetViewMatrix();
-			Eye.Position = EntityTransform->Position;
-			Eye.LayerMask = this->_LayerMask;
+			RendererEye eye;
+			eye.Target = this->m_TargetBuffer;
+			eye.ProjectionMatrix = this->GetProjectionMatrix((float)spec.Width / (float)spec.Height);
+			eye.ViewMatrix = this->GetViewMatrix();
+			eye.Position = entityTransform->Position;
+			eye.LayerMask = this->m_LayerMask;
 
-			Renderer::Submit(Eye);
+			Renderer::Submit(eye);
 		}
 		break;
 		default:
@@ -105,6 +105,6 @@ namespace Volund
 
 	void Camera::OnCreate()
 	{
-		this->_TargetBuffer = this->GetScene()->GetTargetBuffer();
+		this->m_TargetBuffer = this->GetScene()->GetTargetBuffer();
 	}
 }

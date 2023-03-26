@@ -5,11 +5,11 @@ namespace Volund
 {
 	Ref<AudioBuffer> LuaSound::GetBuffer()
 	{
-		return this->_Buffer;
+		return this->m_Buffer;
 	}
 
-	LuaSound::LuaSound(const std::string& Filepath)
+	LuaSound::LuaSound(const std::string& filepath)
 	{
-		this->_Buffer = std::make_shared<AudioBuffer>(Filepath);
+		this->m_Buffer = std::make_shared<AudioBuffer>(filepath);
 	}
 }

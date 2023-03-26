@@ -1,5 +1,3 @@
-#pragma once
-
 #include "PCH/PCH.h"
 #include "Logger.h"
 
@@ -9,145 +7,145 @@
 
 namespace Volund
 {
-	Logger Logger::_CoreLogger = Logger("VOLUND");
-	Logger Logger::_ClientLogger = Logger("CLIENT");
+	Logger Logger::m_CoreLogger = Logger("VOLUND");
+	Logger Logger::m_ClientLogger = Logger("CLIENT");
 
 	Logger& Logger::GetCoreLogger()
 	{
-		return _CoreLogger;
+		return m_CoreLogger;
 	}
 
 	Logger& Logger::GetClientLogger()
 	{
-		return _ClientLogger;
+		return m_ClientLogger;
 	}
 
-	void Logger::Info(const char* Format, ...)
+	void Logger::Info(const char* format, ...)
 	{
-		std::unique_lock Lock(this->_Mutex);
+		std::unique_lock lock(this->m_Mutex);
 
-		std::va_list Args;
-		va_start(Args, Format);
+		std::va_list args;
+		va_start(args, format);
 
-		std::string FormatedString = this->FormatString(LoggerColor::GREEN, Format, Args);
-		if (this->_Callback != nullptr)
+		std::string formatedString = this->FormatString(LoggerColor::Green, format, args);
+		if (this->m_Callback != nullptr)
 		{
-			this->_Callback(FormatedString);
+			this->m_Callback(formatedString);
 		}
-		std::cout << FormatedString << '\n';
+		std::cout << formatedString << '\n';
 
-		va_end(Args);
+		va_end(args);
 	}
 
-	void Logger::Warning(const char* Format, ...)
+	void Logger::Warning(const char* format, ...)
 	{
-		std::unique_lock Lock(this->_Mutex);
+		std::unique_lock lock(this->m_Mutex);
 
-		std::va_list Args;
-		va_start(Args, Format);
+		std::va_list args;
+		va_start(args, format);
 
-		std::string FormatedString = this->FormatString(LoggerColor::YELLOW, Format, Args);
-		if (this->_Callback != nullptr)
+		const std::string formatedString = this->FormatString(LoggerColor::Yellow, format, args);
+		if (this->m_Callback != nullptr)
 		{
-			this->_Callback(FormatedString);
+			this->m_Callback(formatedString);
 		}
-		std::cout << FormatedString << '\n';
+		std::cout << formatedString << '\n';
 
-		va_end(Args);
+		va_end(args);
 	}
 
-	void Logger::Error(const char* Format, ...)
+	void Logger::Error(const char* format, ...)
 	{
-		std::unique_lock Lock(this->_Mutex);
+		std::unique_lock Lock(this->m_Mutex);
 
-		std::va_list Args;
-		va_start(Args, Format);
+		std::va_list args;
+		va_start(args, format);
 
-		std::string FormatedString = this->FormatString(LoggerColor::RED, Format, Args);
-		if (this->_Callback != nullptr)
+		const std::string formatedString = this->FormatString(LoggerColor::Red, format, args);
+		if (this->m_Callback != nullptr)
 		{
-			this->_Callback(FormatedString);
+			this->m_Callback(formatedString);
 		}
 		#ifdef VOLUND_DIST		
-		std::string MessageString = this->FormatString(Format, Args);
+		std::string MessageString = this->FormatString(Format, args);
 		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
 		#else		
-		std::cout << FormatedString << '\n';
+		std::cout << formatedString << '\n';
 		#endif
 
-		va_end(Args);
+		va_end(args);
 
 		abort();
 	}
 
-	void Logger::SetCallback(LoggerCallback NewCallback)
+	void Logger::SetCallback(const LoggerCallback newCallback)
 	{
-		this->_Callback = NewCallback;
+		this->m_Callback = newCallback;
 	}
 
-	Logger::Logger(std::string_view Name)
+	Logger::Logger(std::string_view name)
 	{
-		this->_Name = Name;
-		this->_Callback = nullptr;
+		this->m_Name = name;
+		this->m_Callback = nullptr;
 	}
 
-	std::string Logger::FormatString(LoggerColor Color, const char* Format, std::va_list Args) const
+	std::string Logger::FormatString(LoggerColor color, const char* format, std::va_list args) const
 	{
-		std::string Output = VOLUND_LOGGERCOLOR_RED;
-		Output += std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " + this->_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
+		std::string output = VOLUND_LOGGERCOLOR_RED;
+		output += std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " + this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 
-		switch (Color)
+		switch (color)
 		{
-		case LoggerColor::BLACK:
+		case LoggerColor::Black:
 		{
-			Output += VOLUND_LOGGERCOLOR_BLACK;
+			output += VOLUND_LOGGERCOLOR_BLACK;
 		}
 		break;
-		case LoggerColor::RED:
+		case LoggerColor::Red:
 		{
-			Output += VOLUND_LOGGERCOLOR_RED;
+			output += VOLUND_LOGGERCOLOR_RED;
 		}
 		break;
-		case LoggerColor::GREEN:
+		case LoggerColor::Green:
 		{
-			Output += VOLUND_LOGGERCOLOR_GREEN;
+			output += VOLUND_LOGGERCOLOR_GREEN;
 		}
 		break;
-		case LoggerColor::YELLOW:
+		case LoggerColor::Yellow:
 		{
-			Output += VOLUND_LOGGERCOLOR_YELLOW;
+			output += VOLUND_LOGGERCOLOR_YELLOW;
 		}
 		break;
-		case LoggerColor::BLUE:
+		case LoggerColor::Blue:
 		{
-			Output += VOLUND_LOGGERCOLOR_BLUE;
+			output += VOLUND_LOGGERCOLOR_BLUE;
 		}
 		break;
-		case LoggerColor::MAGENTA:
+		case LoggerColor::Magenta:
 		{
-			Output += VOLUND_LOGGERCOLOR_MAGENTA;
+			output += VOLUND_LOGGERCOLOR_MAGENTA;
 		}
 		break;
-		case LoggerColor::WHITE:
+		case LoggerColor::White:
 		{
-			Output += VOLUND_LOGGERCOLOR_WHITE;
+			output += VOLUND_LOGGERCOLOR_WHITE;
 		}
 		break;
 		}
 
-		Output += FormatString(Format, Args);
+		output += FormatString(format, args);
 
-		return Output;
+		return output;
 	}
 
-	std::string Logger::FormatString(const char* Format, std::va_list Args) const
+	std::string Logger::FormatString(const char* format, std::va_list args) const
 	{
-		size_t Size = std::vsnprintf(nullptr, 0, Format, Args) + 1;
-		std::string FormatedString;
-		FormatedString.resize(Size);
-		std::vsnprintf(FormatedString.data(), Size, Format, Args);
+		size_t size = std::vsnprintf(nullptr, 0, format, args) + 1;
+		std::string formatedString;
+		formatedString.resize(size);
+		std::vsnprintf(formatedString.data(), size, format, args);
 
-		return FormatedString;
+		return formatedString;
 	}
 
 } //namespace Volund

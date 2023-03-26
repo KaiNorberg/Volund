@@ -10,16 +10,16 @@ namespace Volund
 {
 	uint32_t Indexbuffer::GetCount() const
 	{
-		return this->_Count;
+		return this->m_Count;
 	}
 
-	Ref<Indexbuffer> Indexbuffer::Create(const uint32_t Indices[], uint32_t Size)
+	Ref<Indexbuffer> Indexbuffer::Create(const uint32_t indices[], uint32_t size)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLIndexbuffer>(Indices, Size);
+			return std::make_shared<OpenGLIndexbuffer>(indices, size);
 		}
 		break;
 		default:

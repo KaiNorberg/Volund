@@ -20,10 +20,10 @@ namespace Volund
 		Ref<EventDispatcher> GetEventDispatcher();
 
 		template<typename T>
-		void AttachModule(T* NewModule);
+		void AttachModule(T* newModule);
 
 		template<typename T>
-		void AttachModule(Ref<T> NewModule);
+		void AttachModule(Ref<T> newModule);
 
 		template<typename T>
 		Ref<T> GetModule();
@@ -33,7 +33,7 @@ namespace Volund
 
 		virtual void OnRun() = 0;
 		virtual void OnTerminate() = 0;
-		virtual void Procedure(const Event& E) = 0;
+		virtual void Procedure(const Event& e) = 0;
 
 		Application();
 
@@ -45,52 +45,52 @@ namespace Volund
 
 		void Loop();
 
-		bool _ShouldRun = true;
+		bool m_ShouldRun = true;
 
-		Ref<EventDispatcher> _EventDispatcher;
+		Ref<EventDispatcher> m_EventDispatcher;
 
 	protected:
 
 		void Terminate();
 
- 		ThreadPool _ThreadPool;
+ 		ThreadPool m_ThreadPool;
 
-		Container<Module> _Modules;
+		Container<Module> m_Modules;
 	};
 
 	template<typename T>
-	void Application::AttachModule(T* NewModule)
+	void Application::AttachModule(T* newModule)
 	{
 		if (this->HasModule<T>())
 		{
 			VOLUND_ERROR("Module of specifed type already attached!");
 		}
 
-		this->_Modules.PushBack(NewModule);
-		NewModule->OnAttach(this);
+		this->m_Modules.PushBack(newModule);
+		newModule->OnAttach(this);
 	}
 
 	template<typename T>
-	void Application::AttachModule(Ref<T> NewModule)
+	void Application::AttachModule(Ref<T> newModule)
 	{
 		if (this->HasModule<T>())
 		{
 			VOLUND_ERROR("Module of specifed type already attached!");
 		}
 
-		this->_Modules.PushBack(NewModule);
-		NewModule->OnAttach(this);
+		this->m_Modules.PushBack(newModule);
+		newModule->OnAttach(this);
 	}
 
 	template<typename T>
 	inline Ref<T> Application::GetModule()
 	{
-		return this->_Modules.Get<T>();
+		return this->m_Modules.Get<T>();
 	}
 
 	template<typename T>
 	inline bool Application::HasModule()
 	{
-		return this->_Modules.Contains<T>();
+		return this->m_Modules.Contains<T>();
 	}
 }

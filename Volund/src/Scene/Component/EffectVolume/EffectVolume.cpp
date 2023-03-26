@@ -3,7 +3,7 @@
 
 namespace Volund
 {
-	void EffectVolume::Procedure(const Event& E)
+	void EffectVolume::Procedure(const Event& e)
 	{
 		/*VOLUND_PROFILE_FUNCTION();
 

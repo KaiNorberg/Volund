@@ -5,11 +5,11 @@ namespace Volund
 {
 	Ref<Texture> LuaTexture::Get()
 	{
-		return this->_Texture;
+		return this->m_Texture;
 	}
 
-	LuaTexture::LuaTexture(const std::string& Filepath)
+	LuaTexture::LuaTexture(const std::string& filepath)
 	{
-		this->_Texture = Texture::Create(Filepath);
+		this->m_Texture = Texture::Create(filepath);
 	}
 }

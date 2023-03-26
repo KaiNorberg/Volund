@@ -13,11 +13,11 @@ namespace Volund
 
 		IVec2 GetViewSize() override;
 
-		void SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height) override;
+		void SetViewPort(int32_t x, int32_t y, int32_t width, int32_t height) override;
 
-		void Clear(const RGBA Color) override;
+		void Clear(const RGBA color) override;
 
-		void DrawIndexed(const Ref<Mesh>& VArray) override;
+		void DrawIndexed(const Ref<Mesh>& mesh) override;
 
 		OpenGLRenderingAPI();
 

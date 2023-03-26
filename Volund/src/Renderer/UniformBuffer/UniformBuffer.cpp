@@ -11,7 +11,7 @@ namespace Volund
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
 			return std::make_shared<OpenGLUniformBuffer>();
 		}

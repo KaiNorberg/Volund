@@ -10,48 +10,48 @@ namespace Volund
 {
 	uint32_t AudioBuffer::GetBuffer() const
 	{
-		return this->_Buffer;
+		return this->m_Buffer;
 	}
 
-	AudioBuffer::AudioBuffer(const std::string& Filepath)
+	AudioBuffer::AudioBuffer(const std::string& filepath)
 	{
-		AudioFile<float> File;
-		std::vector<uint8_t> PCMDataBytes;
+		AudioFile<float> file;
+		std::vector<uint8_t> pcmDataBytes;
 
-		if (!File.load(Filesystem::GetFinalPath(Filepath)))
+		if (!file.load(Filesystem::GetFinalPath(filepath)))
 		{
-			VOLUND_WARNING("Failed to load sound (%s)!", Filepath.c_str());
+			VOLUND_WARNING("Failed to load sound (%s)!", filepath.c_str());
 		}
-		File.writePCMToBuffer(PCMDataBytes);
+		file.writePCMToBuffer(pcmDataBytes);
 
-		int AudioFormat = 0;
-		if (File.getBitDepth() == 32)
+		int audioFormat = 0;
+		if (file.getBitDepth() == 32)
 		{
-			AudioFormat = File.isStereo() ? AL_FORMAT_STEREO_FLOAT32 : AL_FORMAT_MONO_FLOAT32;
+			audioFormat = file.isStereo() ? AL_FORMAT_STEREO_FLOAT32 : AL_FORMAT_MONO_FLOAT32;
 		}
-		else if (File.getBitDepth() == 16)
+		else if (file.getBitDepth() == 16)
 		{
-			AudioFormat = File.isStereo() ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
+			audioFormat = file.isStereo() ? AL_FORMAT_STEREO16 : AL_FORMAT_MONO16;
 		}
-		else if (File.getBitDepth() == 8)
+		else if (file.getBitDepth() == 8)
 		{
-			AudioFormat = File.isStereo() ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8;
+			audioFormat = file.isStereo() ? AL_FORMAT_STEREO8 : AL_FORMAT_MONO8;
 		}
 		else
 		{
-			VOLUND_WARNING("Invalid bit depth of %d in sound file (%s)!", File.getBitDepth(), Filepath.c_str());
+			VOLUND_WARNING("Invalid bit depth of %d in sound file (%s)!", file.getBitDepth(), filepath.c_str());
 		}
 
-		alCall(alGenBuffers, 1, &this->_Buffer);
-		alCall(alBufferData, this->_Buffer, AudioFormat, PCMDataBytes.data(), PCMDataBytes.size(), File.getSampleRate());
+		AL_CALL(alGenBuffers, 1, &this->m_Buffer);
+		AL_CALL(alBufferData, this->m_Buffer, audioFormat, pcmDataBytes.data(), pcmDataBytes.size(), file.getSampleRate());
 	}
 
 	AudioBuffer::~AudioBuffer()
 	{
-		if (this->_Buffer != NULL && alIsBuffer(this->_Buffer))
+		if (this->m_Buffer != NULL && alIsBuffer(this->m_Buffer))
 		{
-			alCall(alDeleteBuffers, 1, &this->_Buffer);
-			this->_Buffer = NULL;
+			AL_CALL(alDeleteBuffers, 1, &this->m_Buffer);
+			this->m_Buffer = NULL;
 		}
 	}
 }

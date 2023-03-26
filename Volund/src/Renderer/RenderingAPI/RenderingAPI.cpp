@@ -7,42 +7,42 @@ namespace Volund
 {
 	IVec2 RenderingAPI::GetViewSize()
 	{
-		return _Instance->GetViewSize();
+		return m_Instance->GetViewSize();
 	}
 
-	void RenderingAPI::Clear(const RGBA Color)
+	void RenderingAPI::Clear(const RGBA color)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		_Instance->Clear(Color);
+		m_Instance->Clear(color);
 	}
 	
-	void RenderingAPI::SetViewPort(int32_t X, int32_t Y, int32_t Width, int32_t Height)
+	void RenderingAPI::SetViewPort(const int32_t x, const int32_t y, const int32_t width, const int32_t height)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		_Instance->SetViewPort(X, Y, Width, Height);
+		m_Instance->SetViewPort(x, y, width, height);
 	}
 
-	void RenderingAPI::DrawIndexed(const Ref<Mesh>& VArray)
+	void RenderingAPI::DrawIndexed(const Ref<Mesh>& mesh)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		_Instance->DrawIndexed(VArray);
+		m_Instance->DrawIndexed(mesh);
 	}
 
-	void RenderingAPI::Select(GraphicsAPI API)
+	void RenderingAPI::Select(GraphicsAPI api)
 	{
-		_SelectedAPI = API;
+		m_SelectedApi = api;
 	}
 
 	void RenderingAPI::Init()
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
-			_Instance = std::make_shared<OpenGLRenderingAPI>();
+			m_Instance = std::make_shared<OpenGLRenderingAPI>();
 		}
 		break;
 		default:
@@ -55,6 +55,6 @@ namespace Volund
 
 	GraphicsAPI RenderingAPI::GetSelectedAPI()
 	{
-		return _SelectedAPI;
+		return m_SelectedApi;
 	}
 }

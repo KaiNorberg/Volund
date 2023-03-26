@@ -8,49 +8,49 @@
 
 namespace Volund
 {
-	void CameraMovement::Procedure(const Event& E)
+	void CameraMovement::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->_Input.Procedure(E);
+		this->m_Input.Procedure(e);
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::UPDATE:
+		case EventType::Update:
 		{
 			VOLUND_PROFILE_FUNCTION();
 
-			float TS = VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
+			const float ts = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			if (_Input.IsHeld('W'))
+			if (m_Input.IsHeld('W'))
 			{
-				EntityTransform->Position += EntityTransform->GetFront() * float(TS) * this->Speed;
+				entityTransform->Position += entityTransform->GetFront() * float(ts) * this->Speed;
 			}
-			if (_Input.IsHeld('S'))
+			if (m_Input.IsHeld('S'))
 			{
-				EntityTransform->Position -= EntityTransform->GetFront() * float(TS) * this->Speed;
+				entityTransform->Position -= entityTransform->GetFront() * float(ts) * this->Speed;
 			}
-			if (_Input.IsHeld('A'))
+			if (m_Input.IsHeld('A'))
 			{
-				EntityTransform->Position -= EntityTransform->GetRight() * float(TS) * this->Speed;
+				entityTransform->Position -= entityTransform->GetRight() * float(ts) * this->Speed;
 			}
-			if (_Input.IsHeld('D'))
+			if (m_Input.IsHeld('D'))
 			{
-				EntityTransform->Position += EntityTransform->GetRight() * float(TS) * this->Speed;
+				entityTransform->Position += entityTransform->GetRight() * float(ts) * this->Speed;
 			}
 
-			Vec2 Delta = _Input.GetMousePosition() - this->_OldMousePosition;
+			Vec2 delta = m_Input.GetMousePosition() - this->m_OldMousePosition;
 
-			Delta.x = ((float)Utils::Clamp(Delta.x, -10.0f, 10.0f) * this->Sensitivity);
-			Delta.y = ((float)Utils::Clamp(Delta.y, -10.0f, 10.0f) * this->Sensitivity);
+			delta.x = ((float)Utils::Clamp(delta.x, -10.0f, 10.0f) * this->Sensitivity);
+			delta.y = ((float)Utils::Clamp(delta.y, -10.0f, 10.0f) * this->Sensitivity);
 
-			_Rotation -= Vec3(Delta.y, Delta.x, 0.0f) * this->Sensitivity;
-			_Rotation.x = Utils::Clamp(_Rotation.x, -89.0f, 89.0f);
+			m_Rotation -= Vec3(delta.y, delta.x, 0.0f) * this->Sensitivity;
+			m_Rotation.x = Utils::Clamp(m_Rotation.x, -89.0f, 89.0f);
 
-			EntityTransform->SetRotation(_Rotation);
-			this->_OldMousePosition = _Input.GetMousePosition();
+			entityTransform->SetRotation(m_Rotation);
+			this->m_OldMousePosition = m_Input.GetMousePosition();
 		}
 		break;
 		default:
@@ -63,6 +63,6 @@ namespace Volund
 
 	void CameraMovement::OnCreate()
 	{
-		this->_OldMousePosition = _Input.GetMousePosition();
+		this->m_OldMousePosition = m_Input.GetMousePosition();
 	}
 }

@@ -5,6 +5,6 @@ namespace Volund
 {
 	std::string BaseMaterialValue::GetName()
 	{
-		return this->_Name;
+		return this->m_Name;
 	}
 }

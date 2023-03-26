@@ -10,19 +10,19 @@ namespace Volund
 
 		void Play();
 
-		void SetBuffer(Ref<AudioBuffer> Buffer);
+		void SetBuffer(Ref<AudioBuffer> buffer);
 
-		void SetPitch(float Pitch);
+		void SetPitch(float pitch);
 
-		void SetPosition(const Vec3& Position);
+		void SetPosition(const Vec3& position);
 
-		void SetDirection(const Vec3& Direction);
+		void SetDirection(const Vec3& direction);
 
-		void SetVelocity(const Vec3& Velocity);
+		void SetVelocity(const Vec3& velocity);
 
-		void SetLooping(bool Looping);
+		void SetLooping(bool looping);
 
-		void SetGain(float Gain);
+		void SetGain(float gain);
 
 		AudioSource();
 
@@ -30,8 +30,8 @@ namespace Volund
 
 	private:
 
-		Ref<AudioBuffer> _Buffer;
+		Ref<AudioBuffer> m_Buffer;
 
-		uint32_t _Source;
+		uint32_t m_Source;
 	};
 }

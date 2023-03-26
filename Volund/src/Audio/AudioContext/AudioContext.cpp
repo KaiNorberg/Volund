@@ -7,33 +7,33 @@ namespace Volund
 {
 	ALCcontext* AudioContext::GetContext() const
 	{
-		return this->_Context;
+		return this->m_Context;
 	}
 
 	void AudioContext::MakeCurrent()
 	{
-		ALCboolean Successful = false;
-		if (!alcCall(alcMakeContextCurrent, Successful, this->_Device, this->_Context) || Successful != ALC_TRUE)
+		ALCboolean successful = false;
+		if (!ALC_CALL(alcMakeContextCurrent, successful, this->m_Device, this->m_Context) || successful != ALC_TRUE)
 		{
 			VOLUND_ERROR("Unable to make alc context current!");
 		}
 	}
 
-	AudioContext::AudioContext(const AudioDevice& Device)
+	AudioContext::AudioContext(const AudioDevice& device)
 	{
-		this->_Device = Device.GetDevice();
+		this->m_Device = device.GetDevice();
 
-		if (!alcCall(alcCreateContext, this->_Context, this->_Device, this->_Device, nullptr) || !this->_Context)
+		if (!ALC_CALL(alcCreateContext, this->m_Context, this->m_Device, this->m_Device, nullptr) || !this->m_Context)
 		{
 			VOLUND_ERROR("Unable to create alc context!");
 		}
 	}
 
-	AudioContext::AudioContext(Ref<AudioDevice> Device)
+	AudioContext::AudioContext(Ref<AudioDevice> device)
 	{
-		this->_Device = Device->GetDevice();
+		this->m_Device = device->GetDevice();
 
-		if (!alcCall(alcCreateContext, this->_Context, this->_Device, this->_Device, nullptr) || !this->_Context)
+		if (!ALC_CALL(alcCreateContext, this->m_Context, this->m_Device, this->m_Device, nullptr) || !this->m_Context)
 		{
 			VOLUND_ERROR("Unable to create alc context!");
 		}
@@ -43,7 +43,7 @@ namespace Volund
 	{
 		this->MakeCurrent();
 
-		if (!alcCall(alcDestroyContext, this->_Device, this->_Context))
+		if (!ALC_CALL(alcDestroyContext, this->m_Device, this->m_Context))
 		{
 			VOLUND_ERROR("Unable to destroy alc context!");
 		}

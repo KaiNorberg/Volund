@@ -54,11 +54,11 @@ namespace Volund
 
 		virtual void Begin() = 0;
 
-		void Submit(const RendererModel& Model);
+		void Submit(const RendererModel& model);
 
-		void Submit(const RendererLight& Light);
+		void Submit(const RendererLight& light);
 
-		void Submit(const RendererEye& Eye);
+		void Submit(const RendererEye& eye);
 
 		virtual void End() = 0;
 
@@ -71,42 +71,42 @@ namespace Volund
 
 		void UpdateLightUniforms();
 
-		void UpdateCameraUniforms(const RendererEye& Eye);
+		void UpdateCameraUniforms(const RendererEye& eye);
 
 		struct Data
 		{
 			void Sort();
 
-			void Discriminate(const RendererEye& Eye);
+			void Discriminate(const RendererEye& eye);
 
 			std::vector<RendererModel> Models;
 			std::vector<RendererLight> Lights;
 			std::vector<RendererEye> Eyes;
-		} _Data;
+		} m_Data;
 
-		Ref<RenderingAPI> _API;
+		Ref<RenderingAPI> m_Api;
 
 	private:
 
-		Ref<UniformBuffer> _CameraUniforms;
-		Ref<UniformBuffer> _LightsUniforms;
+		Ref<UniformBuffer> m_CameraUniforms;
+		Ref<UniformBuffer> m_LightsUniforms;
 	};
 
 	class Renderer
 	{
 	public:
 		
-		static void Init(Ref<RendererInstance> Instance);
+		static void Init(Ref<RendererInstance> instance);
 
 		static void Reset();
 
 		static void Begin();
 
-		static void Submit(const RendererModel& Model);
+		static void Submit(const RendererModel& model);
 
-		static void Submit(const RendererLight& Light);
+		static void Submit(const RendererLight& light);
 
-		static void Submit(const RendererEye& Eye);
+		static void Submit(const RendererEye& eye);
 
 		static void End();
 
@@ -114,7 +114,7 @@ namespace Volund
 
 	private:
 
-		static inline Ref<RendererInstance> _Instance;
+		static inline Ref<RendererInstance> m_Instance;
 	};
 }
 

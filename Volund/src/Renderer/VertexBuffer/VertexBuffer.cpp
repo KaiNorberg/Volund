@@ -12,16 +12,16 @@ namespace Volund
 {
 	uint32_t Vertexbuffer::GetCount() const
 	{
-		return this->_Count;
+		return this->m_Count;
 	}
 
-	Ref<Vertexbuffer> Vertexbuffer::Create(const float Vertices[], uint32_t Count)
+	Ref<Vertexbuffer> Vertexbuffer::Create(const float vertices[], uint32_t count)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLVertexbuffer>(Vertices, Count);
+			return std::make_shared<OpenGLVertexbuffer>(vertices, count);
 		}
 		break;
 		default:

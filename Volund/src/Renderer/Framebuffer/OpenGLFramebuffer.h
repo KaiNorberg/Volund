@@ -14,9 +14,9 @@ namespace Volund
 
 		void Invalidate() override;
 
-		void BlitTo(const Ref<Framebuffer>& DrawFramebuffer) override;
+		void BlitTo(const Ref<Framebuffer>& drawFramebuffer) override;
 
-		OpenGLFramebuffer(const FramebufferSpec& Spec);
+		OpenGLFramebuffer(const FramebufferSpec& spec);
 
 		~OpenGLFramebuffer();
 

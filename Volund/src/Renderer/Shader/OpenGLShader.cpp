@@ -7,98 +7,98 @@
 
 namespace Volund
 {
-	bool OpenGLShader::HasUniform(const std::string& Name)
+	bool OpenGLShader::HasUniform(const std::string& name)
 	{
 		VOLUND_PROFILE_FUNCTION();
-		return UniformLocations.contains(Name.data()) || glGetUniformLocation(this->ID, Name.data()) != -1;
+		return m_UniformLocations.contains(name.data()) || glGetUniformLocation(this->m_ID, name.data()) != -1;
 	}
 
 	void OpenGLShader::Bind()
 	{
 		VOLUND_PROFILE_FUNCTION();
-		glUseProgram(this->ID);
+		glUseProgram(this->m_ID);
 	}
 
-	void OpenGLShader::SetInt(const std::string& Name, int32_t Value)
+	void OpenGLShader::SetInt(const std::string& name, int32_t value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform1i(this->GetUniformLocation(Name), Value);
+		glUniform1i(this->GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetFloat(const std::string& Name, float Value)
+	void OpenGLShader::SetFloat(const std::string& name, float value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform1f(this->GetUniformLocation(Name), Value);
+		glUniform1f(this->GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetDouble(const std::string& Name, double Value)
+	void OpenGLShader::SetDouble(const std::string& name, double value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform1d(this->GetUniformLocation(Name), Value);
+		glUniform1d(this->GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetVec2(const std::string& Name, const Vec2& Value)
+	void OpenGLShader::SetVec2(const std::string& name, const Vec2& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform2fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
+		glUniform2fv(this->GetUniformLocation(name), 1, value_ptr(value));
 	}
 
-	void OpenGLShader::SetVec3(const std::string& Name, const Vec3& Value)
+	void OpenGLShader::SetVec3(const std::string& name, const Vec3& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform3fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
+		glUniform3fv(this->GetUniformLocation(name), 1, value_ptr(value));
 	}
 
-	void OpenGLShader::SetVec4(const std::string& Name, const Vec4& Value)
+	void OpenGLShader::SetVec4(const std::string& name, const Vec4& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform4fv(this->GetUniformLocation(Name), 1, value_ptr(Value));
+		glUniform4fv(this->GetUniformLocation(name), 1, value_ptr(value));
 	}
 
-	void OpenGLShader::SetMat3x3(const std::string& Name, const Mat3x3& Value, bool Transpose)
+	void OpenGLShader::SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniformMatrix3fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
+		glUniformMatrix3fv(this->GetUniformLocation(name), 1, transpose, value_ptr(value));
 	}
 
-	void OpenGLShader::SetMat4x4(const std::string& Name, const Mat4x4& Value, bool Transpose)
+	void OpenGLShader::SetMat4x4(const std::string& name, const Mat4x4& value, bool transpose)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniformMatrix4fv(this->GetUniformLocation(Name), 1, Transpose, value_ptr(Value));
+		glUniformMatrix4fv(this->GetUniformLocation(name), 1, transpose, value_ptr(value));
 	}
 
-	void OpenGLShader::SetTexture(const std::string& Name, const Ref<Texture>& Value, uint32_t TextureUnit)
+	void OpenGLShader::SetTexture(const std::string& name, const Ref<Texture>& value, uint32_t textureUnit)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		glActiveTexture(GL_TEXTURE0 + TextureUnit);
-		glBindTexture(GL_TEXTURE_2D, Value->GetID());
-		this->SetInt(Name, TextureUnit);
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, value->GetID());
+		this->SetInt(name, textureUnit);
 	}
 
-	void OpenGLShader::SetFramebuffer(const std::string& Name, const Ref<Framebuffer>& Value, uint32_t TextureUnit)
+	void OpenGLShader::SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		glActiveTexture(GL_TEXTURE0 + TextureUnit);
-		glBindTexture(GL_TEXTURE_2D, Value->GetAttachment(0));
-		this->SetInt(Name, TextureUnit);
+		glActiveTexture(GL_TEXTURE0 + textureUnit);
+		glBindTexture(GL_TEXTURE_2D, value->GetAttachment(0));
+		this->SetInt(name, textureUnit);
 	}
 
 	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
@@ -125,45 +125,45 @@ namespace Volund
 		return id;
 	}
 
-	uint32_t OpenGLShader::GetUniformLocation(const std::string& Name)
+	uint32_t OpenGLShader::GetUniformLocation(const std::string& name)
 	{
-		if (UniformLocations.contains(Name.data()))
+		if (m_UniformLocations.contains(name.data()))
 		{
-			return UniformLocations[Name.data()];
+			return m_UniformLocations[name.data()];
 		}
-		int32_t UniformLocation = glGetUniformLocation(this->ID, Name.data());
+		int32_t uniformLocation = glGetUniformLocation(this->m_ID, name.data());
 
-		if (UniformLocation == -1)
+		if (uniformLocation == -1)
 		{
-			VOLUND_WARNING("Unknown Uniform specified (%s)", Name.data());
+			VOLUND_WARNING("Unknown Uniform specified (%s)", name.data());
 		}
 
-		UniformLocations[Name.data()] = UniformLocation;
-		return UniformLocation;
+		m_UniformLocations[name.data()] = uniformLocation;
+		return uniformLocation;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& VertexSource, const std::string& FragmentSource, const std::string& GeometrySource)
+	OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource)
 	{
 		uint32_t program = glCreateProgram();
 
 		uint32_t vs = NULL;
-		if (VertexSource.length() > 1)
+		if (vertexSource.length() > 1)
 		{
-			vs = CompileShader(GL_VERTEX_SHADER, VertexSource.data());
+			vs = CompileShader(GL_VERTEX_SHADER, vertexSource.data());
 			glAttachShader(program, vs);
 		}
 
 		uint32_t fs = NULL;
-		if (FragmentSource.length() > 1)
+		if (fragmentSource.length() > 1)
 		{
-			fs = CompileShader(GL_FRAGMENT_SHADER, FragmentSource.data());
+			fs = CompileShader(GL_FRAGMENT_SHADER, fragmentSource.data());
 			glAttachShader(program, fs);
 		}
 
 		uint32_t gs = NULL;
-		if (GeometrySource.length() > 1)
+		if (geometrySource.length() > 1)
 		{
-			gs = CompileShader(GL_GEOMETRY_SHADER, GeometrySource.data());
+			gs = CompileShader(GL_GEOMETRY_SHADER, geometrySource.data());
 			glAttachShader(program, gs);
 		}
 
@@ -185,14 +185,14 @@ namespace Volund
 			glDeleteShader(gs);
 		}
 
-		this->ID = program;
+		this->m_ID = program;
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
-		if (this->ID != 0)
+		if (this->m_ID != 0)
 		{
-			glDeleteProgram(this->ID);
+			glDeleteProgram(this->m_ID);
 		}
 	}
 } //namespace Volund

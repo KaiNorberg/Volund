@@ -20,50 +20,50 @@ namespace Volund
 	{
 	public:
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
-		void ScriptFile(const std::string& Filepath);
+		void ScriptFile(const std::string& filepath);
 
-		LuaState(Ref<Scene> ThisScene, Ref<Input> ThisInput, Ref<Window> ThisWindow);
+		LuaState(Ref<Scene> scene, Ref<Input> input, Ref<Window> window);
 
 		~LuaState();
 
 	private:
 
-		static void LuaPrint(sol::object Object);
+		static void LuaPrint(sol::object object);
 
-		static sol::object LuaRequire(sol::this_state S, std::string Filepath);
+		static sol::object LuaRequire(sol::this_state s, std::string filepath);
 
-		sol::table LuaComponentView(sol::this_state S, LuaComponentID ComponentID);
+		sol::table LuaComponentView(sol::this_state s, LuaComponentID ComponentID);
 
-		sol::table LuaScriptView(sol::this_state S, sol::table ScriptTable);
+		sol::table LuaScriptView(sol::this_state s, sol::table scriptTable);
 
 		template<typename T>
-		sol::table GenerateComponentView(sol::this_state S);
+		sol::table GenerateComponentView(sol::this_state s);
 
-		sol::state _SolState;
+		sol::state m_SolState;
 
-		Ref<Scene> _Scene;
-		Ref<Input> _Input;
-		Ref<Window> _Window;
+		Ref<Scene> m_Scene;
+		Ref<Input> m_Input;
+		Ref<Window> m_Window;
 	};
 
 	template<typename T>
-	inline sol::table LuaState::GenerateComponentView(sol::this_state S)
+	inline sol::table LuaState::GenerateComponentView(sol::this_state s)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Output = StateView.create_table_with();
+		sol::table output = stateView.create_table_with();
 
-		std::vector<Ref<T>> View;
-		this->_Scene->View(View);
+		std::vector<Ref<T>> view;
+		this->m_Scene->View(view);
 
-		for (auto& Component : View)
+		for (auto& component : view)
 		{
-			Output.add(GenerateComponentTable(S, LuaEntity(this->_Scene, Component->GetEntity()), Component));
+			output.add(GenerateComponentTable(s, LuaEntity(this->m_Scene, component->GetEntity()), component));
 		}
 
-		return Output;
+		return output;
 	}
 }
 

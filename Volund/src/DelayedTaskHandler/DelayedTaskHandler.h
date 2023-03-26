@@ -6,14 +6,14 @@ namespace Volund
 	{
 	public:
 
-		static void DelayTask(std::function<void()> Task);
+		static void DelayTask(std::function<void()> task);
 
 		static void Execute();
 
 	private:
 
-		static inline std::mutex _Mutex;
+		static inline std::mutex m_Mutex;
 
-		static inline std::vector<std::function<void()>> _Tasks;
+		static inline std::vector<std::function<void()>> m_Tasks;
 	};
 }

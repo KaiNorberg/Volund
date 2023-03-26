@@ -32,52 +32,52 @@ namespace Volund
 
 namespace Volund::Utils
 {
-	static inline const Vec3 Up = Vec3(0, 1, 0);
-	static inline const Vec3 Down = Vec3(0, -1, 0);
-	static inline const Vec3 Forward = Vec3(0, 0, 1);
-	static inline const Vec3 Back = Vec3(0, 0, -1);
-	static inline const Vec3 Left = Vec3(-1, 0, 0);
-	static inline const Vec3 Right = Vec3(1, 0, 0);
-	static inline const Vec3 One = Vec3(1, 1, 1);
-	static inline const Vec3 Zero = Vec3(0, 0, 0);
+	static inline const Vec3 UP = Vec3(0, 1, 0);
+	static inline const Vec3 DOWN = Vec3(0, -1, 0);
+	static inline const Vec3 FORWARD = Vec3(0, 0, 1);
+	static inline const Vec3 BACK = Vec3(0, 0, -1);
+	static inline const Vec3 LEFT = Vec3(-1, 0, 0);
+	static inline const Vec3 RIGHT = Vec3(1, 0, 0);
+	static inline const Vec3 ONE = Vec3(1, 1, 1);
+	static inline const Vec3 ZERO = Vec3(0, 0, 0);
 
-	uint32_t CastFloatToInt(float Value);
+	uint32_t CastFloatToInt(float value);
 
-	float CastIntToFloat(int Value);
+	float CastIntToFloat(int value);
 
-    std::string ReplaceAll(std::string Str, const std::string& From, const std::string& To);
+    std::string ReplaceAll(std::string str, const std::string& from, const std::string& to);
 
-    std::wstring ConvertToWString(std::string_view String);		
+    std::wstring ConvertToWString(std::string_view string);		
 
-	int RoundUp(int N, int M);
+	int RoundUp(int n, int m);
 
 	template <class T>
-	T ToRadians(const T& V)
+	T ToRadians(const T& v)
 	{
-		return (PI / 180.0f) * V;
+		return (PI / 180.0f) * v;
 	}
 
 	template <class T>
-	T ToDegrees(const T& V)
+	T ToDegrees(const T& v)
 	{
-		return (180.0f / PI) * V;
+		return (180.0f / PI) * v;
 	}
 
 	template <class T>
-	T Min(T N1, T N2)
+	T Min(T n1, T n2)
 	{
-		return (N1 < N2) ? N1 : N2;
+		return (n1 < n2) ? n1 : n2;
 	}
 
 	template <class T>
-	T Max(T N1, T N2)
+	T Max(T n1, T n2)
 	{
-		return (N1 > N2) ? N1 : N2;
+		return (n1 > n2) ? n1 : n2;
 	}
 
 	template <class T>
-	T Clamp(T N, T Lower, T Upper)
+	T Clamp(T n, T lower, T upper)
 	{
-		return Max(Lower, Min(N, Upper));
+		return Max(lower, Min(n, upper));
 	}
 }

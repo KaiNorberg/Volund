@@ -12,10 +12,10 @@ namespace Volund
 
 		Ref<AudioBuffer> GetBuffer();
 
-		LuaSound(const std::string& Filepath);
+		LuaSound(const std::string& filepath);
 
 	private:
 
-		Ref<AudioBuffer> _Buffer;
+		Ref<AudioBuffer> m_Buffer;
 	};
 }

@@ -9,36 +9,36 @@ namespace Volund
 {
 	int32_t ImageLoader::GetWidth() const
 	{
-		return this->_Width;
+		return this->m_Width;
 	}
 
 	int32_t ImageLoader::GetHeight() const
 	{
-		return this->_Height;
+		return this->m_Height;
 	}
 
 	int32_t ImageLoader::GetChannels() const
 	{
-		return this->_Channels;
+		return this->m_Channels;
 	}
 
 	unsigned char* ImageLoader::GetData() const
 	{
-		return this->_Data;
+		return this->m_Data;
 	}
 
-	ImageLoader::ImageLoader(const std::string& Filepath, int32_t DesiredChannels)
+	ImageLoader::ImageLoader(const std::string& filepath, int32_t desiredChannels)
 	{
-		std::string FinalPath = VL::Filesystem::GetFinalPath(Filepath);
+		std::string finalPath = VL::Filesystem::GetFinalPath(filepath);
 
 		stbi_set_flip_vertically_on_load(true);
-		this->_Data = stbi_load(FinalPath.c_str(), &this->_Width, &this->_Height, &this->_Channels, DesiredChannels);
+		this->m_Data = stbi_load(finalPath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, desiredChannels);
 
-		VOLUND_ASSERT(this->_Data, "Failed to load image (%s)!", FinalPath.c_str());
+		VOLUND_ASSERT(this->m_Data, "Failed to load image (%s)!", finalPath.c_str());
 	}
 
 	ImageLoader::~ImageLoader()
 	{
-		stbi_image_free(this->_Data);
+		stbi_image_free(this->m_Data);
 	}
 }

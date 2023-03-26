@@ -5,7 +5,7 @@
 
 #include "Container/Container.h"
 
-#include "MaterialValue.h"
+#include "Materialvalue.h"
 
 namespace Volund
 {
@@ -15,45 +15,45 @@ namespace Volund
 
 		std::string GetFilepath();
 
-		void SetInt(const std::string& Name, int Value);
+		void SetInt(const std::string& name, int value);
 
-		void SetFloat(const std::string& Name, float Value);
+		void SetFloat(const std::string& name, float value);
 
-		void SetDouble(const std::string& Name, double Value);
+		void SetDouble(const std::string& name, double value);
 
-		void SetVec2(const std::string& Name, const Vec2& Value);
+		void SetVec2(const std::string& name, const Vec2& value);
 
-		void SetVec3(const std::string& Name, const Vec3& Value);
+		void SetVec3(const std::string& name, const Vec3& value);
 
-		void SetTexture(const std::string& Name, Ref<Texture> Value);
+		void SetTexture(const std::string& name, Ref<Texture> value);
 
-		void SetFramebuffer(const std::string& Name, Ref<Framebuffer> Value);
+		void SetFramebuffer(const std::string& name, Ref<Framebuffer> value);
 
 		void UpdateShader();
 		Ref<Shader> GetShader();
 
-		static Ref<Material> Create(Ref<Shader> ObjectShader);
+		static Ref<Material> Create(Ref<Shader> shader);
 
-		Material(Ref<Shader> ObjectShader);
+		Material(Ref<Shader> shader);
 
 	private:
 
-		std::unordered_map<std::string, int> _IntUniforms;
+		std::unordered_map<std::string, int> m_IntUniforms;
 
-		std::unordered_map<std::string, float> _FloatUniforms;
+		std::unordered_map<std::string, float> m_FloatUniforms;
 
-		std::unordered_map<std::string, double> _DoubleUniforms;
+		std::unordered_map<std::string, double> m_DoubleUniforms;
 
-		std::unordered_map<std::string, Vec2> _Vec2Uniforms;
+		std::unordered_map<std::string, Vec2> m_Vec2Uniforms;
 
-		std::unordered_map<std::string, Vec3> _Vec3Uniforms;
+		std::unordered_map<std::string, Vec3> m_Vec3Uniforms;
 
-		std::unordered_map<std::string, Ref<Texture>> _TextureUniforms;
+		std::unordered_map<std::string, Ref<Texture>> m_TextureUniforms;
 
-		std::unordered_map<std::string, Ref<Framebuffer>> _FramebufferUniforms;
+		std::unordered_map<std::string, Ref<Framebuffer>> m_FramebufferUniforms;
 
-		Ref<Shader> _Shader;
+		Ref<Shader> m_Shader;
 
-		std::string _Filepath;
+		std::string m_Filepath;
 	};
 }

@@ -18,7 +18,7 @@ namespace Volund
 		
 		virtual void OnDestroy() {}
 
-		virtual void Procedure(const Event& E) {}
+		virtual void Procedure(const Event& e) {}
 
 		Entity GetEntity() const;
 
@@ -33,8 +33,8 @@ namespace Volund
 
 		void Init(Entity entity, Scene* scene);
 
-		Entity _Entity = NULL;
+		Entity m_Entity = NULL;
 
-		Scene* _Scene = nullptr;
+		Scene* m_Scene = nullptr;
 	};
 }

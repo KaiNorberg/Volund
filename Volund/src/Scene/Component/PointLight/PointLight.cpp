@@ -9,22 +9,22 @@
 
 namespace Volund
 {
-	void PointLight::Procedure(const Event& E)
+	void PointLight::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::RENDER:
+		case EventType::Render:
 		{
-			Ref<Transform> EntityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			RendererLight Light;
-			Light.Position = EntityTransform->Position;
-			Light.Brightness = this->Brightness;
-			Light.Color = this->Color;
+			RendererLight light;
+			light.Position = entityTransform->Position;
+			light.Brightness = this->Brightness;
+			light.Color = this->Color;
 
-			Renderer::Submit(Light);
+			Renderer::Submit(light);
 		}
 		break;
 		default:

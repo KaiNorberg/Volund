@@ -4,15 +4,15 @@ namespace Volund
 {
 	enum class TextureFormat
 	{
-		NONE,
+		None,
 
 		RGBA8,
 		RGBA16F,
-		RED_INTEGER,
+		RedInteger,
 
-		DEPTH24STENCIL8,
+		Depth24Stencil8,
 
-		DEPTH = DEPTH24STENCIL8
+		Depth = Depth24Stencil8
 	};
 
 	struct TextureSpec
@@ -20,9 +20,9 @@ namespace Volund
 		TextureFormat Format;
 	
 		TextureSpec() = default;
-		TextureSpec(TextureFormat Format)
+		TextureSpec(const TextureFormat format)
 		{
-			this->Format = Format;
+			this->Format = format;
 		}
 	};
 

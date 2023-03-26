@@ -12,20 +12,20 @@ namespace Volund
 
 		void Play();
 
-		void SetBuffer(Ref<AudioBuffer> Buffer);
+		void SetBuffer(Ref<AudioBuffer> buffer);
 
-		void SetPitch(float Pitch);
+		void SetPitch(float pitch);
 
-		void SetLooping(bool Looping);
+		void SetLooping(bool looping);
 
-		void SetGain(float Gain);
+		void SetGain(float gain);
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		SoundSource() = default;
 
 	private:
 
-		AudioSource _Source;
+		AudioSource m_Source;
 	};
 }

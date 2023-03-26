@@ -4,14 +4,14 @@ namespace Volund
 {
 	enum class LuaComponentID
 	{
-		CAMERA = 1,
-		CAMERA_MOVEMENT = 2,
-		MESH_RENDERER = 3,
-		POINT_LIGHT = 4,
-		SCRIPT = 5,
-		TAG = 6,
-		TRANSFORM = 7,
-		SOUND_SOURCE = 8,
-		SOUND_LISTENER = 9
+		Camera = 1,
+		CameraMovement = 2,
+		MeshRenderer = 3,
+		PointLight = 4,
+		Script = 5,
+		Tag = 6,
+		Transform = 7,
+		SoundSource = 8,
+		SoundListener = 9
 	};
 }

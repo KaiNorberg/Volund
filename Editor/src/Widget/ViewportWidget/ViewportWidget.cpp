@@ -7,28 +7,28 @@ const char* ViewportWidget::GetName()
 	return "Viewport";
 }
 
-void ViewportWidget::OnKey(const VL::Event& E)
+void ViewportWidget::OnKey(const VL::Event& e)
 {
-	auto GameModule = this->_App->GetModule<VL::GameModule>();
+	const auto gameModule = this->m_App->GetModule<VL::GameModule>();
 
-	this->_Input.Procedure(E);
+	this->m_Input.Procedure(e);
 
-	if (this->_Input.IsHeld(VOLUND_KEY_SHIFT))
+	if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
-		if (this->_Input.IsPressed('R'))
+		if (this->m_Input.IsPressed('R'))
 		{
-			auto Scene = GameModule->GetScene();
-			if (Scene != nullptr)
+			const auto scene = gameModule->GetScene();
+			if (scene != nullptr)
 			{
-				GameModule->NewState(GameModule->GetFilepath());
+				gameModule->NewState(gameModule->GetFilepath());
 			}
 		}		
-		else if (this->_Input.IsPressed('E'))
+		else if (this->m_Input.IsPressed('E'))
 		{
-			std::string Filepath = VL::FileDialog::OpenFile();
-			if (!Filepath.empty())
+			const std::string filepath = VL::FileDialog::OpenFile();
+			if (!filepath.empty())
 			{
-				GameModule->NewState(Filepath);
+				gameModule->NewState(filepath);
 			}
 		}
 	}
@@ -36,40 +36,40 @@ void ViewportWidget::OnKey(const VL::Event& E)
 
 void ViewportWidget::OnRender()
 {
-	auto GameModule = this->_App->GetModule<VL::GameModule>();
+	const auto gameModule = this->m_App->GetModule<VL::GameModule>();
 
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
 		if (ImGui::Button("Load Scene (Shift + E)"))
 		{
-			std::string Filepath = VL::FileDialog::OpenFile();
-			if (!Filepath.empty())
+			const std::string filepath = VL::FileDialog::OpenFile();
+			if (!filepath.empty())
 			{
-				GameModule->NewState(Filepath);
+				gameModule->NewState(filepath);
 				ImGui::End();
 				return;
 			}
 		}
 
-		auto Scene = GameModule->GetScene();
-		if (Scene != nullptr)
+		auto scene = gameModule->GetScene();
+		if (scene != nullptr)
 		{
 			ImGui::SameLine();
 
 			if (ImGui::Button("Reload (Shift + R)"))
 			{
-				GameModule->NewState(GameModule->GetFilepath());
+				gameModule->NewState(gameModule->GetFilepath());
 				ImGui::End();
 				return;
 			}
 
 			if (ImGui::BeginChild("ViewPort"))
 			{
-				auto ViewportSize = ImGui::GetContentRegionAvail();
+				const auto viewportSize = ImGui::GetContentRegionAvail();
 
-				Scene->ResizeTarget(ViewportSize.x, ViewportSize.y);
+				scene->ResizeTarget(viewportSize.x, viewportSize.y);
 
-				ImGui::Image(reinterpret_cast<void*>(Scene->GetTargetBuffer()->GetAttachment(0)), ViewportSize, ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>(scene->GetTargetBuffer()->GetAttachment(0)), viewportSize, ImVec2(0, 1), ImVec2(1, 0));
 
 				ImGui::EndChild();
 			}
@@ -82,8 +82,8 @@ void ViewportWidget::OnRender()
 	ImGui::End();
 }
 
-ViewportWidget::ViewportWidget(VL::Application* App)
+ViewportWidget::ViewportWidget(VL::Application* app)
 {
-	this->_App = App;
+	this->m_App = app;
 }
 	

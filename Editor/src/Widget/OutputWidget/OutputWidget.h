@@ -6,22 +6,22 @@ class OutputWidget : public Widget
 {
 public:
 
-	const char* GetName();
+	const char* GetName() override;
 
-	void OnUpdate(VL::TimeStep TS) override;
+	void OnUpdate(VL::TimeStep ts) override;
 
 	void OnRender() override;
 
-	static void LoggerCallback(const std::string& String);
+	static void LoggerCallback(const std::string& string);
 
-	OutputWidget(VL::Application* App);
+	OutputWidget(VL::Application* app);
 
 private:
 
-	float TotalTime = 0.0f;
+	float m_TotalTime = 0.0f;
 
-	static inline std::mutex _Mutex;
+	static inline std::mutex m_Mutex;
 
-	static inline std::vector<std::string> _Output;
+	static inline std::vector<std::string> m_Output;
 };
 

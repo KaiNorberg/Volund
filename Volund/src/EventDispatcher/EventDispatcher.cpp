@@ -7,23 +7,23 @@
 
 namespace Volund
 {
-	void EventDispatcher::Dispatch(const Event& E)
+	void EventDispatcher::Dispatch(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		for (const auto& [TypeID, View] : this->_App->_Modules)
+		for (const auto& [TypeID, View] : this->m_App->m_Modules)
 		{
-			for (const auto& Module : View)
+			for (const auto& module : View)
 			{
-				Module->Procedure(E);
+				module->Procedure(e);
 			}
 		}
 
-		this->_App->Procedure(E);
+		this->m_App->Procedure(e);
 	}
 
-	EventDispatcher::EventDispatcher(Application* App)
+	EventDispatcher::EventDispatcher(Application* app)
 	{
-		this->_App = App;
+		this->m_App = app;
 	}
 }

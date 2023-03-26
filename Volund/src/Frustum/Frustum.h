@@ -10,10 +10,10 @@ namespace Volund
 
 		bool ContainsAABB(const AABB& aabb) const;
 
-        Frustum(Mat4x4 ViewProjMatrix);
+        Frustum(Mat4x4 viewProjMatrix);
 
     private:
 
-        Vec4 _FrustumPlanes[6];
+        Vec4 m_FrustumPlanes[6];
     }; 
 }

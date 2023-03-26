@@ -16,30 +16,30 @@ extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg
 
 namespace Volund
 {
-	void ImGuiModule::OnAttach(Application* App)
+	void ImGuiModule::OnAttach(Application* app)
 	{
-		if (!App->HasModule<WindowModule>())
+		if (!app->HasModule<WindowModule>())
 		{
 			VOLUND_ERROR("Cant attach ImGuiModule to an app without a WindowModule!");
 		}
 
-		static std::string IniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
+		static std::string iniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
 
 		ImGuiIO& io = ImGui::GetIO();
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-		io.IniFilename = IniFilename.c_str();
+		io.IniFilename = iniFilename.c_str();
 
-		auto AppWindow = App->GetModule<WindowModule>()->GetWindow();
+		const auto appWindow = app->GetModule<WindowModule>()->GetWindow();
 
 		SetupImGuiStyle();
 
-		ImGui_ImplWin32_Init(AppWindow->GetHandle());
+		ImGui_ImplWin32_Init(appWindow->GetHandle());
 		ImGui_ImplOpenGL3_Init();
 
-		AppWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+		appWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 	}
 
 	void ImGuiModule::OnDetach()
@@ -47,35 +47,35 @@ namespace Volund
 
 	}
 
-	void ImGuiModule::Procedure(const Event& E)
+	void ImGuiModule::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 	}
 
 	bool ImGuiModule::BeginDockSpace()
 	{
-		static bool Open = true;
+		static bool open = true;
 
-		static ImGuiDockNodeFlags DockspaceFlags;
-		static ImGuiWindowFlags WindowFlags =
+		static ImGuiDockNodeFlags dockspaceFlags;
+		static ImGuiWindowFlags windowFlags =
 			ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDocking | ImGuiWindowFlags_NoBackground |
 			ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoResize |
 			ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoBringToFrontOnFocus | ImGuiWindowFlags_NoNavFocus;
 
-		const ImGuiViewport* ViewPort = ImGui::GetMainViewport();
-		ImGui::SetNextWindowPos(ViewPort->WorkPos);
-		ImGui::SetNextWindowSize(ViewPort->WorkSize);
-		ImGui::SetNextWindowViewport(ViewPort->ID);
+		const ImGuiViewport* viewPort = ImGui::GetMainViewport();
+		ImGui::SetNextWindowPos(viewPort->WorkPos);
+		ImGui::SetNextWindowSize(viewPort->WorkSize);
+		ImGui::SetNextWindowViewport(viewPort->ID);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		if (ImGui::Begin("DockSpace Demo", &Open, WindowFlags))
+		if (ImGui::Begin("DockSpace Demo", &open, windowFlags))
 		{
 			ImGui::PopStyleVar(3);
 
-			ImGuiID DockspaceID = ImGui::GetID("MyDockSpace");
-			ImGui::DockSpace(DockspaceID, ImVec2(0.0f, 0.0f), DockspaceFlags);
+			const ImGuiID dockspaceId = ImGui::GetID("MyDockSpace");
+			ImGui::DockSpace(dockspaceId, ImVec2(0.0f, 0.0f), dockspaceFlags);
 
 			return true;
 		}

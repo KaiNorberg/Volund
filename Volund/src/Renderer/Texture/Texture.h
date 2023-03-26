@@ -14,20 +14,20 @@ namespace Volund
 
 		uint32_t GetHeight() const;
 
-		virtual void Bind(uint32_t Unit = 0) = 0;
+		virtual void Bind(uint32_t unit = 0) = 0;
 
-		static Ref<Texture> Create(const std::string& Filepath);
+		static Ref<Texture> Create(const std::string& filepath);
 
 		virtual ~Texture() = default;
 
 	protected:
 
-		uint32_t _Height = 0;
+		uint32_t m_Height = 0;
 
-		uint32_t _Width = 0;
+		uint32_t m_Width = 0;
 
-		std::string _Filepath;
+		std::string m_Filepath;
 
-		uint32_t _ID = 0;
+		uint32_t m_ID = 0;
 	};
 }

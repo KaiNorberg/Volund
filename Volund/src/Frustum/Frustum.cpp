@@ -12,7 +12,7 @@ namespace Volund
 		for (int32_t y = 0; y < 6; y++)
 		{
 			// x-axis
-			if (_FrustumPlanes[y].x < 0.0f)
+			if (m_FrustumPlanes[y].x < 0.0f)
 			{
 				axisVert.x = aabb.Min.x;
 			}
@@ -22,7 +22,7 @@ namespace Volund
 			}
 			
 			// y-axis
-			if (_FrustumPlanes[y].y < 0.0f)
+			if (m_FrustumPlanes[y].y < 0.0f)
 			{
 				axisVert.y = aabb.Min.y;
 			}
@@ -32,7 +32,7 @@ namespace Volund
 			}
 
 			// z-axis
-			if (_FrustumPlanes[y].z < 0.0f)
+			if (m_FrustumPlanes[y].z < 0.0f)
 			{
 				axisVert.z = aabb.Min.z;
 			}
@@ -41,7 +41,7 @@ namespace Volund
 				axisVert.z = aabb.Max.z;
 			}
 
-			if (glm::dot(_FrustumPlanes[y], axisVert) < 0.0f)
+			if (glm::dot(m_FrustumPlanes[y], axisVert) < 0.0f)
 			{
 				return false;
 			}
@@ -50,44 +50,44 @@ namespace Volund
 		return true;
 	}
 
-	Frustum::Frustum(Mat4x4 ViewProjMatrix)
+	Frustum::Frustum(Mat4x4 viewProjMatrix)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		// Left clipping plane
-		_FrustumPlanes[0].x = ViewProjMatrix[0][3] + ViewProjMatrix[0][0];
-		_FrustumPlanes[0].y = ViewProjMatrix[1][3] + ViewProjMatrix[1][0];
-		_FrustumPlanes[0].z = ViewProjMatrix[2][3] + ViewProjMatrix[2][0];
-		_FrustumPlanes[0].w = ViewProjMatrix[3][3] + ViewProjMatrix[3][0];
+		m_FrustumPlanes[0].x = viewProjMatrix[0][3] + viewProjMatrix[0][0];
+		m_FrustumPlanes[0].y = viewProjMatrix[1][3] + viewProjMatrix[1][0];
+		m_FrustumPlanes[0].z = viewProjMatrix[2][3] + viewProjMatrix[2][0];
+		m_FrustumPlanes[0].w = viewProjMatrix[3][3] + viewProjMatrix[3][0];
 		// Right clipping plane
-		_FrustumPlanes[1].x = ViewProjMatrix[0][3] - ViewProjMatrix[0][0];
-		_FrustumPlanes[1].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][0];
-		_FrustumPlanes[1].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][0];
-		_FrustumPlanes[1].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][0];
+		m_FrustumPlanes[1].x = viewProjMatrix[0][3] - viewProjMatrix[0][0];
+		m_FrustumPlanes[1].y = viewProjMatrix[1][3] - viewProjMatrix[1][0];
+		m_FrustumPlanes[1].z = viewProjMatrix[2][3] - viewProjMatrix[2][0];
+		m_FrustumPlanes[1].w = viewProjMatrix[3][3] - viewProjMatrix[3][0];
 		// Top clipping plane
-		_FrustumPlanes[2].x = ViewProjMatrix[0][3] - ViewProjMatrix[0][1];
-		_FrustumPlanes[2].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][1];
-		_FrustumPlanes[2].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][1];
-		_FrustumPlanes[2].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][1];
+		m_FrustumPlanes[2].x = viewProjMatrix[0][3] - viewProjMatrix[0][1];
+		m_FrustumPlanes[2].y = viewProjMatrix[1][3] - viewProjMatrix[1][1];
+		m_FrustumPlanes[2].z = viewProjMatrix[2][3] - viewProjMatrix[2][1];
+		m_FrustumPlanes[2].w = viewProjMatrix[3][3] - viewProjMatrix[3][1];
 		// Bottom clipping plane
-		_FrustumPlanes[3].x = ViewProjMatrix[0][3] + ViewProjMatrix[0][1];
-		_FrustumPlanes[3].y = ViewProjMatrix[1][3] + ViewProjMatrix[1][1];
-		_FrustumPlanes[3].z = ViewProjMatrix[2][3] + ViewProjMatrix[2][1];
-		_FrustumPlanes[3].w = ViewProjMatrix[3][3] + ViewProjMatrix[3][1];
+		m_FrustumPlanes[3].x = viewProjMatrix[0][3] + viewProjMatrix[0][1];
+		m_FrustumPlanes[3].y = viewProjMatrix[1][3] + viewProjMatrix[1][1];
+		m_FrustumPlanes[3].z = viewProjMatrix[2][3] + viewProjMatrix[2][1];
+		m_FrustumPlanes[3].w = viewProjMatrix[3][3] + viewProjMatrix[3][1];
 		// Near clipping plane
-		_FrustumPlanes[4].x = ViewProjMatrix[0][2];
-		_FrustumPlanes[4].y = ViewProjMatrix[1][2];
-		_FrustumPlanes[4].z = ViewProjMatrix[2][2];
-		_FrustumPlanes[4].w = ViewProjMatrix[3][2];
+		m_FrustumPlanes[4].x = viewProjMatrix[0][2];
+		m_FrustumPlanes[4].y = viewProjMatrix[1][2];
+		m_FrustumPlanes[4].z = viewProjMatrix[2][2];
+		m_FrustumPlanes[4].w = viewProjMatrix[3][2];
 		// Far clipping plane
-		_FrustumPlanes[5].x = ViewProjMatrix[0][3] - ViewProjMatrix[0][2];
-		_FrustumPlanes[5].y = ViewProjMatrix[1][3] - ViewProjMatrix[1][2];
-		_FrustumPlanes[5].z = ViewProjMatrix[2][3] - ViewProjMatrix[2][2];
-		_FrustumPlanes[5].w = ViewProjMatrix[3][3] - ViewProjMatrix[3][2];
+		m_FrustumPlanes[5].x = viewProjMatrix[0][3] - viewProjMatrix[0][2];
+		m_FrustumPlanes[5].y = viewProjMatrix[1][3] - viewProjMatrix[1][2];
+		m_FrustumPlanes[5].z = viewProjMatrix[2][3] - viewProjMatrix[2][2];
+		m_FrustumPlanes[5].w = viewProjMatrix[3][3] - viewProjMatrix[3][2];
 
 		for (int i = 0; i < 6; i++)
 		{
-			_FrustumPlanes[i] = glm::normalize(_FrustumPlanes[i]);
+			m_FrustumPlanes[i] = glm::normalize(m_FrustumPlanes[i]);
 		}
 	}
 }

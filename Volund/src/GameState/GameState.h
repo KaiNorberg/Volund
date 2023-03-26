@@ -14,17 +14,17 @@ namespace Volund
 
 		Ref<LuaState> GetLuaState();
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
-		GameState(Ref<Window> GameWindow);
+		GameState(Ref<Window> window);
 
 		~GameState();
 
 	private:
 
-		Ref<Input> _Input;
-		Ref<Scene> _Scene;
-		Ref<LuaState> _LuaState;
+		Ref<Input> m_Input;
+		Ref<Scene> m_Scene;
+		Ref<LuaState> m_LuaState;
 	};
 }
 

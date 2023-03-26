@@ -12,13 +12,13 @@ namespace Volund
 
 		~Timer();
 	private:
-		std::chrono::time_point<std::chrono::steady_clock> Start;
+		std::chrono::time_point<std::chrono::steady_clock> m_Start;
 	};
 
 	class TimeStep
 	{
 	public:
-		TimeStep(double Step = 0.0);
+		TimeStep(double step = 0.0);
 
 		operator double() const;
 
@@ -27,6 +27,6 @@ namespace Volund
 		double GetMilliseconds() const;
 
 	private:
-		double Step = 0.0f;
+		double m_Step = 0.0f;
 	};
 }

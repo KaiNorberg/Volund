@@ -11,16 +11,16 @@ namespace Volund
 	public:
 
 		template<typename D>
-		void PushBack(Ref<D> Entry);
+		void PushBack(Ref<D> entry);
 
 		template<typename D>
-		void PushBack(D* Entry);
+		void PushBack(D* entry);
 
 		template<typename D>
-		void Erase(uint64_t Index = 0);
+		void Erase(uint64_t index = 0);
 
 		template<typename D>
-		Ref<D> Get(uint64_t Index = 0);
+		Ref<D> Get(uint64_t index = 0);
 
 		template<typename D>
 		bool Contains();
@@ -39,96 +39,96 @@ namespace Volund
 
 	private:
 
-		std::unordered_map<uint64_t, std::vector<Ref<T>>> _Data;
+		std::unordered_map<uint64_t, std::vector<Ref<T>>> m_Data;
 	};
 
 	template<typename T>
 	template<typename D>
-	inline void Container<T>::PushBack(Ref<D> Entry)
+	inline void Container<T>::PushBack(Ref<D> entry)
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		this->_Data[TypeID].push_back(Entry);
+		this->m_Data[typeId].push_back(entry);
 	}
 
 	template<typename T>
 	template<typename D>
-	inline void Container<T>::PushBack(D* Entry)
+	inline void Container<T>::PushBack(D* entry)
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		this->_Data[TypeID].push_back(Ref<D>(Entry));
+		this->m_Data[typeId].push_back(Ref<D>(entry));
 	}
 
 	template<typename T>
 	template<typename D>
-	inline void Container<T>::Erase(uint64_t Index)
+	inline void Container<T>::Erase(uint64_t index)
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		if (this->_Data.contains(TypeID) && this->_Data[TypeID].size() > Index)
+		if (this->m_Data.contains(typeId) && this->m_Data[typeId].size() > index)
 		{
-			this->_Data[TypeID].erase(this->_Data[TypeID].begin() + Index);
+			this->m_Data[typeId].erase(this->m_Data[typeId].begin() + index);
 		}
 	}
 
 	template<typename T>
 	template<typename D>
-	inline Ref<D> Container<T>::Get(uint64_t Index)
+	inline Ref<D> Container<T>::Get(uint64_t index)
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		return std::dynamic_pointer_cast<D>(this->_Data[TypeID][Index]);
+		return std::dynamic_pointer_cast<D>(this->m_Data[typeId][index]);
 	}
 
 	template<typename T>
 	template<typename D>
 	inline bool Container<T>::Contains()
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		return this->_Data.contains(TypeID);
+		return this->m_Data.contains(typeId);
 	}
 
 	template<typename T>
 	template<typename D>
 	inline uint64_t Container<T>::Size()
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		return this->_Data[TypeID].size();
+		return this->m_Data[typeId].size();
 	}
 
 	template<typename T>
 	template<typename D>
 	inline const std::vector<Ref<T>>& Container<T>::View()
 	{
-		static uint64_t TypeID = typeid(D).hash_code();
+		static uint64_t typeId = typeid(D).hash_code();
 
-		return this->_Data[TypeID];
+		return this->m_Data[typeId];
 	}
 
 	template<typename T>
 	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator Container<T>::begin()
 	{
-		return this->_Data.begin();
+		return this->m_Data.begin();
 	}
 
 	template<typename T>
 	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator Container<T>::end()
 	{
-		return this->_Data.end();
+		return this->m_Data.end();
 	}
 
 	template<typename T>
 	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator Container<T>::begin() const
 	{
-		return this->_Data.begin();
+		return this->m_Data.begin();
 	}
 
 	template<typename T>
 	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator Container<T>::end() const
 	{
-		return this->_Data.end();
+		return this->m_Data.end();
 	}
 }

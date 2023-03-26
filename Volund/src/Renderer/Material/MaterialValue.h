@@ -12,7 +12,7 @@ namespace Volund
 
 	protected:
 
-		std::string _Name;
+		std::string m_Name;
 
 	};
 
@@ -25,29 +25,29 @@ namespace Volund
 
 		T GetValue();
 
-		MaterialValue(std::string_view Name, T Value);
+		MaterialValue(std::string_view name, T value);
 
 	private:
 
-		T _Value;
+		T m_Value;
 	};
 
 	template<typename T>
 	inline MaterialValue<T>::operator T()
 	{
-		return this->_Value;
+		return this->m_Value;
 	}
 
 	template<typename T>
 	inline T MaterialValue<T>::GetValue()
 	{
-		return this->_Value;
+		return this->m_Value;
 	}
 
 	template<typename T>
-	inline MaterialValue<T>::MaterialValue(std::string_view Name, T Value)
+	inline MaterialValue<T>::MaterialValue(std::string_view name, T value)
 	{
-		this->_Name = Name;
-		this->_Value = Value;
+		this->m_Name = name;
+		this->m_Value = value;
 	}
 }

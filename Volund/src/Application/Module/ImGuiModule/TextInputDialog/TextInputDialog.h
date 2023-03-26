@@ -8,7 +8,7 @@ namespace Volund
 	{
 	public:
 
-		static void Start(std::function<void(void)> Catch, const std::string& Message);
+		static void Start(std::function<void(void)> Catch, const std::string& message);
 
 		static std::string GetText();
 
@@ -16,12 +16,12 @@ namespace Volund
 
 	private:
 
-		static inline bool _ShouldDraw = false;
+		static inline bool m_ShouldDraw = false;
 
-		static inline std::string _Text;
+		static inline std::string m_Text;
 
-		static inline std::string _Message;
+		static inline std::string m_Message;
 
-		static inline std::function<void(void)> _Catch;
+		static inline std::function<void(void)> m_Catch;
 	};
 }

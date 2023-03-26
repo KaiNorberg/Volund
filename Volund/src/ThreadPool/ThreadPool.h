@@ -8,7 +8,7 @@ namespace Volund
 	{
 	public:
 
-		void Submit(ThreadJob Job);
+		void Submit(ThreadJob job);
 		
 		bool Busy();
 
@@ -20,18 +20,18 @@ namespace Volund
 
 	private:
 
-		static ThreadPool _GlobalPool;
+		static ThreadPool m_GlobalPool;
 
-		bool _ShouldTerminate = false;
+		bool m_ShouldTerminate = false;
 
-		int _ActiveThreads = 0;
+		int m_ActiveThreads = 0;
 
-		std::queue<ThreadJob> _JobQueue;
+		std::queue<ThreadJob> m_JobQueue;
 
-		std::vector<std::thread> _Threads;
+		std::vector<std::thread> m_Threads;
 
-		std::condition_variable _Condition;
-		std::mutex _Mutex;
+		std::condition_variable m_Condition;
+		std::mutex m_Mutex;
 
 		void Loop();
 	};

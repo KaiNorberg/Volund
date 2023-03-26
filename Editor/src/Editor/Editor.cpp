@@ -7,7 +7,7 @@
 
 void Editor::OnRun()
 {
-	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OPENGL, std::make_shared<VL::ForwardRenderer>()));
+	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OpenGL, std::make_shared<VL::ForwardRenderer>()));
 	this->AttachModule(new VL::ImGuiModule());
 	this->AttachModule(new VL::GameModule());
 	this->AttachModule(new VL::AudioModule());
@@ -15,8 +15,8 @@ void Editor::OnRun()
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
-	this->_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this)));
-	this->_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this)));
+	this->m_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this)));
+	this->m_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this)));
 }
 
 void Editor::OnTerminate()
@@ -24,16 +24,16 @@ void Editor::OnTerminate()
 
 }
 
-void Editor::Procedure(const VL::Event& E)
+void Editor::Procedure(const VL::Event& e)
 {
 	VOLUND_PROFILE_FUNCTION();
 
-	this->_Input.Procedure(E);
+	this->m_Input.Procedure(e);
 
-	switch (E.Type)
+	switch (e.Type)
 	{
-	case VL::EventType::RENDER:
-	{
+	case VL::EventType::Render:
+	{ 
 		this->GetModule<VL::WindowModule>()->GetWindow()->SetVsync(true);
 
 		VL::ImGuiModule::BeginFrame();
@@ -44,11 +44,11 @@ void Editor::Procedure(const VL::Event& E)
 			{
 				if (ImGui::BeginMenu("Widget"))
 				{
-					for (auto& Widget : this->_Widgets)
+					for (const auto& widget : this->m_Widgets)
 					{
-						if (ImGui::MenuItem(Widget->GetName()))
+						if (ImGui::MenuItem(widget->GetName()))
 						{
-							Widget->IsActive = true;
+							widget->IsActive = true;
 						}
 					}
 
@@ -58,11 +58,11 @@ void Editor::Procedure(const VL::Event& E)
 				ImGui::EndMenuBar();
 			}
 
-			for (auto& Widget : this->_Widgets)
+			for (const auto& widget : this->m_Widgets)
 			{
-				if (Widget->IsActive)
+				if (widget->IsActive)
 				{
-					Widget->OnRender();
+					widget->OnRender();
 				}
 			}
 		}
@@ -72,31 +72,31 @@ void Editor::Procedure(const VL::Event& E)
 		VL::ImGuiModule::EndFrame();
 	}
 	break;	
-	case VL::EventType::UPDATE:
-	{			
-		float TS = VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
-
-		for (auto& Widget : this->_Widgets)
-		{
-			if (Widget->IsActive)
-			{
-				Widget->OnUpdate(TS);
-			}
-		}
-	}
-	break;
-	case VL::EventType::KEY:
+	case VL::EventType::Update:
 	{
-		for (auto& Widget : this->_Widgets)
+		const float ts = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
+
+		for (const auto& widget : this->m_Widgets)
 		{
-			if (Widget->IsActive)
+			if (widget->IsActive)
 			{
-				Widget->OnKey(E);
+				widget->OnUpdate(ts);
 			}
 		}
 	}
 	break;
-	case VL::EventType::WINDOW_CLOSE:
+	case VL::EventType::Key:
+	{
+		for (const auto& widget : this->m_Widgets)
+		{
+			if (widget->IsActive)
+			{
+				widget->OnKey(e);
+			}
+		}
+	}
+	break;
+	case VL::EventType::WindowClose:
 	{
 		this->Terminate();
 	}

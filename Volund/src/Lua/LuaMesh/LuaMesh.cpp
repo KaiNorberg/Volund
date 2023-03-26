@@ -5,16 +5,16 @@ namespace Volund
 {
 	Ref<Mesh> LuaMesh::Get()
 	{
-		return this->_Mesh;
+		return this->m_Mesh;
 	}
 
-	LuaMesh::LuaMesh(Ref<Mesh> Mesh)
+	LuaMesh::LuaMesh(Ref<Mesh> mesh)
 	{
-		this->_Mesh = Mesh;
+		this->m_Mesh = mesh;
 	}
 
-	LuaMesh::LuaMesh(const std::string& MeshPath)
+	LuaMesh::LuaMesh(const std::string& filepath)
 	{
-		this->_Mesh = Mesh::Create(MeshPath);
+		this->m_Mesh = Mesh::Create(filepath);
 	}	
 }

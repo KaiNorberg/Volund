@@ -12,12 +12,12 @@ namespace Volund
 	{
 	public:
 
-		void Dispatch(const Event& E);
+		void Dispatch(const Event& e);
 
-		EventDispatcher(Application* App);
+		EventDispatcher(Application* app);
 
 	private:
 
-		Application* _App = nullptr;
+		Application* m_App = nullptr;
 	};
 }

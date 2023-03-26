@@ -6,17 +6,17 @@ namespace Volund
 {
 	Entity Component::GetEntity() const
 	{
-		return this->_Entity;
+		return this->m_Entity;
 	}
 
 	Scene* Component::GetScene() const
 	{
-		return this->_Scene;
+		return this->m_Scene;
 	}
 
 	void Component::Init(Entity entity, Scene* scene)
 	{
-		this->_Entity = entity;
-		this->_Scene = scene;
+		this->m_Entity = entity;
+		this->m_Scene = scene;
 	}
 }

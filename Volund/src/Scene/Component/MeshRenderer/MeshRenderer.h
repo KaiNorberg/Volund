@@ -11,27 +11,27 @@ namespace Volund
 	{
 	public:
 
-		void SetLayer(uint8_t Layer);
+		void SetLayer(uint8_t layer);
 
-		void SetMesh(Ref<Mesh> NewMesh);
+		void SetMesh(Ref<Mesh> newMesh);
 
-		void SetMaterial(Ref<Material> NewMaterial);
+		void SetMaterial(Ref<Material> newMaterial);
 
 		Ref<Mesh> GetMesh();
 
 		Ref<Material> GetMaterial();
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		MeshRenderer() = default;
 
-		MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef);
+		MeshRenderer(Ref<Mesh> mesh, Ref<Material> material);
 
 	private:
 
-		uint16_t _LayerMask = 1;
+		uint16_t m_LayerMask = 1;
 
-		Ref<Mesh> _Mesh;
-		Ref<Material> _Material;
+		Ref<Mesh> m_Mesh;
+		Ref<Material> m_Material;
 	};
 }

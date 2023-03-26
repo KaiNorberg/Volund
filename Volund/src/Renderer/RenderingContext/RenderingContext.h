@@ -10,9 +10,9 @@ namespace Volund
 
 		virtual void MakeCurrent() = 0;
 
-		virtual void SetVSync(bool Enabled) = 0;
+		virtual void SetVSync(bool enabled) = 0;
 
-		static Ref<RenderingContext> Create(void* DeviceContext);
+		static Ref<RenderingContext> Create(void* deviceContext);
 
 		virtual ~RenderingContext() = default;
 

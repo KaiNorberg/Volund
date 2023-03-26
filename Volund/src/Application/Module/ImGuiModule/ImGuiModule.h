@@ -11,11 +11,11 @@ namespace Volund
     {
     public:
 
-        void OnAttach(Application* App) override;
+        void OnAttach(Application* app) override;
 
         void OnDetach() override;
 
-        void Procedure(const Event& E) override;
+        void Procedure(const Event& e) override;
 
         static bool BeginDockSpace();
 

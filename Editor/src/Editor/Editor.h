@@ -10,11 +10,11 @@ public:
 
 	void OnTerminate() override;
 
-	void Procedure(const VL::Event& E) override;
+	void Procedure(const VL::Event& e) override;
 
 private:
 	
-	std::vector<VL::Ref<Widget>> _Widgets;
+	std::vector<VL::Ref<Widget>> m_Widgets;
 
-	VL::Input _Input;
+	VL::Input m_Input;
 };

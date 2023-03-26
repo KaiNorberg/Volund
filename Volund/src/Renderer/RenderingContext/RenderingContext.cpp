@@ -7,13 +7,13 @@
 
 namespace Volund
 {
-	Ref<RenderingContext> RenderingContext::Create(void* DeviceContext)
+	Ref<RenderingContext> RenderingContext::Create(void* deviceContext)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-		case GraphicsAPI::OPENGL:
+		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLContext>(DeviceContext);
+			return std::make_shared<OpenGLContext>(deviceContext);
 		}
 		break;
 		default:

@@ -10,15 +10,15 @@ namespace Volund
 
 		Vec3 Max;
 
-		AABB ToWorldSpace(const Mat4x4& ModelMatrix);
+		AABB ToWorldSpace(const Mat4x4& modelMatrix);
 
 		AABB() = default;
 
-		AABB(const std::vector<float>& Points);
+		AABB(const std::vector<float>& points);
 
-		AABB(const std::vector<Vec3>& Points);
+		AABB(const std::vector<Vec3>& points);
 
-		AABB(Vec3 Min, Vec3 Max);
+		AABB(Vec3 min, Vec3 max);
 
 	private:
 	};

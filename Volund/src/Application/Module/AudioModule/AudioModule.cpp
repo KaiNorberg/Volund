@@ -5,13 +5,13 @@
 
 namespace Volund
 {
-	void AudioModule::OnAttach(Application* App)
+	void AudioModule::OnAttach(Application* app)
 	{
-		const char* AL_DefaultDeviceString = alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER);
+		const char* alDefaultDeviceString = alcGetString(nullptr, ALC_DEFAULT_DEVICE_SPECIFIER);
 
-		this->_Device = std::make_shared<AudioDevice>(AL_DefaultDeviceString);
-		this->_Context = std::make_shared<AudioContext>(this->_Device);
-		this->_Context->MakeCurrent();
+		this->m_Device = std::make_shared<AudioDevice>(alDefaultDeviceString);
+		this->m_Context = std::make_shared<AudioContext>(this->m_Device);
+		this->m_Context->MakeCurrent();
 
 		VOLUND_INFO("OpenAL Renderer: %s", alGetString(AL_RENDERER));
 		VOLUND_INFO("OpenAL Version: %s", alGetString(AL_VERSION));
@@ -23,7 +23,7 @@ namespace Volund
 
 	}
 
-	void AudioModule::Procedure(const Event& E)
+	void AudioModule::Procedure(const Event& e)
 	{
 
 	}

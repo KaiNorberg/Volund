@@ -12,10 +12,10 @@ namespace Volund
 
 		Ref<Texture> Get();
 
-		LuaTexture(const std::string& Filepath);
+		LuaTexture(const std::string& filepath);
 
 	private:
 
-		Ref<Texture> _Texture;
+		Ref<Texture> m_Texture;
 	};
 }

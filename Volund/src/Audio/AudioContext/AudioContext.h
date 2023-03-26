@@ -14,15 +14,15 @@ namespace Volund
 
 		void MakeCurrent();
 
-		AudioContext(const AudioDevice& Device);
+		AudioContext(const AudioDevice& device);
 
-		AudioContext(Ref<AudioDevice> Device);
+		AudioContext(Ref<AudioDevice> device);
 
 		~AudioContext();
 
 	private:
 
-		ALCdevice* _Device;
-		ALCcontext* _Context;
+		ALCdevice* m_Device;
+		ALCcontext* m_Context;
 	};
 }

@@ -6,9 +6,9 @@ namespace Volund
 	{
 	public:
 
-		static void SetMessage(const std::string& Text);
+		static void SetMessage(const std::string& text);
 
-		static void Start(std::function<void(void)> Catch, const std::string& Text);
+		static void Start(std::function<void(void)> Catch, const std::string& text);
 
 		static bool Draw();
 
@@ -18,10 +18,10 @@ namespace Volund
 
 		static bool Spinner(const char* label, float radius, int thickness, const uint32_t& color);
 
-		static inline bool _ShouldDraw = false;
+		static inline bool m_ShouldDraw = false;
 
-		static inline std::future<void> _CatchFuture;
+		static inline std::future<void> m_CatchFuture;
 
-		static inline std::string _CatchMessage;
+		static inline std::string m_CatchMessage;
 	};
 }

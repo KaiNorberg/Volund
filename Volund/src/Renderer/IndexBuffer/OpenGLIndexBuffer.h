@@ -11,11 +11,11 @@ namespace Volund
 
 		void Unbind() override;
 
-		OpenGLIndexbuffer(const uint32_t Indices[], uint32_t Count);
+		OpenGLIndexbuffer(const uint32_t indices[], uint32_t count);
 
 		~OpenGLIndexbuffer() override;
 
 	private:
-		uint32_t _ID;
+		uint32_t m_ID;
 	};
 }

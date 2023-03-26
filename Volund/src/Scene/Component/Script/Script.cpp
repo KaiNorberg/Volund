@@ -5,45 +5,45 @@
 
 namespace Volund
 {
-	bool Script::Compare(sol::table Other)
+	bool Script::Compare(const sol::table other)
 	{
-		return this->_ID == Other.pointer();
+		return this->m_ID == other.pointer();
 	}
 
-	void Script::Procedure(const Event& E)
+	void Script::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::UPDATE:
+		case EventType::Update:
 		{			
-			float TS = VOLUND_EVENT_UPDATE_GET_TIMESTEP(E);
+			float ts = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-			if (this->_LuaOnUpdate.valid())
+			if (this->m_LuaOnUpdate.valid())
 			{
 				try
 				{		
-					this->_LuaOnUpdate(this->Table, TS);
+					this->m_LuaOnUpdate(this->Table, ts);
 				}
-				catch (sol::error E)
+				catch (sol::error e)
 				{
-					VOLUND_WARNING(E.what());
+					VOLUND_WARNING(e.what());
 				}
 			}
 		}
 		break;
-		case EventType::RENDER:
+		case EventType::Render:
 		{
-			if (this->_LuaOnRender.valid())
+			if (this->m_LuaOnRender.valid())
 			{
 				try
 				{
-					this->_LuaOnRender(this->Table);
+					this->m_LuaOnRender(this->Table);
 				}
-				catch (sol::error E)
+				catch (sol::error e)
 				{
-					VOLUND_WARNING(E.what());
+					VOLUND_WARNING(e.what());
 				}
 			}
 		}
@@ -58,54 +58,54 @@ namespace Volund
 
 	void Script::OnCreate()
 	{
-		if (this->_LuaOnCreate.valid())
+		if (this->m_LuaOnCreate.valid())
 		{
 			try
 			{
-				this->_LuaOnCreate(this->Table, this->_Args);
+				this->m_LuaOnCreate(this->Table, this->m_Args);
 			}
-			catch (sol::error E)
+			catch (sol::error e)
 			{
-				VOLUND_WARNING(E.what());
+				VOLUND_WARNING(e.what());
 			}
 		}
 	
-		this->_Args.reset();
+		this->m_Args.reset();
 	}
 
 	void Script::OnDestroy()
 	{
-		if (this->_LuaOnDestroy.valid())
+		if (this->m_LuaOnDestroy.valid())
 		{
 			try
 			{
-				this->_LuaOnDestroy(this->Table);
+				this->m_LuaOnDestroy(this->Table);
 			}
-			catch (sol::error E)
+			catch (sol::error e)
 			{
-				VOLUND_WARNING(E.what());
+				VOLUND_WARNING(e.what());
 			}
 		}
 	}
 
-	Script::Script(const sol::this_state& S, LuaEntity ThisEntity, sol::table ScriptTable, sol::table Args)
+	Script::Script(const sol::this_state& s, LuaEntity entity, sol::table scriptTable, const sol::table args)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		this->_Args = Args;
-		this->_ID = (void*)ScriptTable.pointer();
+		this->m_Args = args;
+		this->m_ID = (void*)scriptTable.pointer();
 
-		this->_LuaOnCreate = ScriptTable["OnCreate"];
-		this->_LuaOnRender = ScriptTable["OnRender"];
-		this->_LuaOnUpdate = ScriptTable["OnUpdate"];
-		this->_LuaOnDestroy = ScriptTable["OnDestroy"];
+		this->m_LuaOnCreate = scriptTable["OnCreate"];
+		this->m_LuaOnRender = scriptTable["OnRender"];
+		this->m_LuaOnUpdate = scriptTable["OnUpdate"];
+		this->m_LuaOnDestroy = scriptTable["OnDestroy"];
 
-		this->Table = StateView.create_table_with();
-		for (auto& [Key, Value] : ScriptTable)
+		this->Table = stateView.create_table_with();
+		for (auto& [Key, Value] : scriptTable)
 		{
 			this->Table[Key] = Value;
 		}
 
-		this->Table["Entity"] = ThisEntity;
+		this->Table["Entity"] = entity;
 	}
 }

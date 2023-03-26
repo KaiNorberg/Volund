@@ -5,11 +5,11 @@ namespace Volund
 {
 	Ref<Shader> LuaShader::Get()
 	{
-		return this->_Shader;
+		return this->m_Shader;
 	}
 
-	LuaShader::LuaShader(const std::string& ShaderPath)
+	LuaShader::LuaShader(const std::string& filepath)
 	{
-		this->_Shader = Shader::Create(ShaderPath);
+		this->m_Shader = Shader::Create(filepath);
 	}
 }

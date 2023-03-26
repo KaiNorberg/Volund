@@ -8,54 +8,54 @@
 
 namespace Volund
 {
-	void MeshRenderer::SetLayer(uint8_t Layer)
+	void MeshRenderer::SetLayer(const uint8_t layer)
 	{
-		this->_LayerMask = 0;
-		if (Layer > 0 && Layer <= 16)
+		this->m_LayerMask = 0;
+		if (layer > 0 && layer <= 16)
 		{
-			this->_LayerMask |= 1UL << (Layer - 1);
+			this->m_LayerMask |= 1UL << (layer - 1);
 		}
 	}
 
-	void MeshRenderer::SetMesh(Ref<Mesh> NewMesh)
+	void MeshRenderer::SetMesh(const Ref<Mesh> newMesh)
 	{
-		this->_Mesh = NewMesh;
+		this->m_Mesh = newMesh;
 	}
 
-	void MeshRenderer::SetMaterial(Ref<Material> NewMaterial)
+	void MeshRenderer::SetMaterial(const Ref<Material> newMaterial)
 	{
-		this->_Material = NewMaterial;
+		this->m_Material = newMaterial;
 	}
 
 	Ref<Mesh> MeshRenderer::GetMesh()
 	{
-		return this->_Mesh;
+		return this->m_Mesh;
 	}
 
 	Ref<Material> MeshRenderer::GetMaterial()
 	{
-		return this->_Material;
+		return this->m_Material;
 	}
 
-	void MeshRenderer::Procedure(const Event& E)
+	void MeshRenderer::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (E.Type)
+		switch (e.Type)
 		{
-		case EventType::RENDER:
+		case EventType::Render:
 		{
-			if (this->_Mesh != nullptr && this->_Material != nullptr)
+			if (this->m_Mesh != nullptr && this->m_Material != nullptr)
 			{
-				RendererModel Model;
-				Model.mesh = this->_Mesh;
-				Model.material = this->_Material;
-				Model.LayerMask = this->_LayerMask;
+				RendererModel model;
+				model.mesh = this->m_Mesh;
+				model.material = this->m_Material;
+				model.LayerMask = this->m_LayerMask;
 
-				auto TransformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
-				Model.ModelMatrix = TransformComponent != nullptr ? TransformComponent->GetModelMatrix() : Mat4x4(1.0f);
+				const auto transformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+				model.ModelMatrix = transformComponent != nullptr ? transformComponent->GetModelMatrix() : Mat4x4(1.0f);
 
-				Renderer::Submit(Model);
+				Renderer::Submit(model);
 			}
 		}
 		break;
@@ -67,9 +67,9 @@ namespace Volund
 		}
 	}
 
-	MeshRenderer::MeshRenderer(Ref<Mesh> MeshRef, Ref<Material> MaterialRef)
+	MeshRenderer::MeshRenderer(Ref<Mesh> mesh, Ref<Material> material)
 	{
-		this->_Mesh = MeshRef;
-		this->_Material = MaterialRef;
+		this->m_Mesh = mesh;
+		this->m_Material = material;
 	}
 }

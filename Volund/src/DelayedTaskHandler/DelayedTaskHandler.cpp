@@ -3,25 +3,25 @@
 
 namespace Volund
 {
-	void DelayedTaskHandler::DelayTask(std::function<void()> Task)
+	void DelayedTaskHandler::DelayTask(std::function<void()> task)
 	{
 #ifdef VOLUND_ENABLE_PROFILING
 		Task();
 #else
-		std::unique_lock Lock(_Mutex);
+		std::unique_lock lock(m_Mutex);
 
-		_Tasks.push_back(Task);
+		m_Tasks.push_back(task);
 #endif
 	}
 
 	void DelayedTaskHandler::Execute()
 	{
-		std::unique_lock Lock(_Mutex);
+		std::unique_lock lock(m_Mutex);
 
-		for (auto& Task : _Tasks)
+		for (auto& task : m_Tasks)
 		{
-			Task();
+			task();
 		}
-		_Tasks.clear();
+		m_Tasks.clear();
 	}
 }

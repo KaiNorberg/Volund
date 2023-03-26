@@ -7,16 +7,16 @@ namespace Volund
 {
 	enum class VertexAttributeType
 	{
-		FLOAT = VOLUND_ATTRIBUTE_FLOAT + (1 << 2),
-		FLOAT2 = VOLUND_ATTRIBUTE_FLOAT + (2 << 2),
-		FLOAT3 = VOLUND_ATTRIBUTE_FLOAT + (3 << 2),
-		FLOAT4 = VOLUND_ATTRIBUTE_FLOAT + (4 << 2),
-		MAT3 = VOLUND_ATTRIBUTE_FLOAT + (9 << 2),
-		MAT4 = VOLUND_ATTRIBUTE_FLOAT + (12 << 2),
-		INT = VOLUND_ATTRIBUTE_INT + (1 << 2),
-		INT2 = VOLUND_ATTRIBUTE_INT + (2 << 2),
-		INT3 = VOLUND_ATTRIBUTE_INT + (3 << 2),
-		INT4 = VOLUND_ATTRIBUTE_INT + (4 << 2)
+		Float = VOLUND_ATTRIBUTE_FLOAT + (1 << 2),
+		Float2 = VOLUND_ATTRIBUTE_FLOAT + (2 << 2),
+		Float3 = VOLUND_ATTRIBUTE_FLOAT + (3 << 2),
+		Float4 = VOLUND_ATTRIBUTE_FLOAT + (4 << 2),
+		Mat3 = VOLUND_ATTRIBUTE_FLOAT + (9 << 2),
+		Mat4 = VOLUND_ATTRIBUTE_FLOAT + (12 << 2),
+		Int = VOLUND_ATTRIBUTE_INT + (1 << 2),
+		Int2 = VOLUND_ATTRIBUTE_INT + (2 << 2),
+		Int3 = VOLUND_ATTRIBUTE_INT + (3 << 2),
+		Int4 = VOLUND_ATTRIBUTE_INT + (4 << 2)
 	};
 
 	class VertexAttribute
@@ -31,13 +31,13 @@ namespace Volund
 
 		std::string GetName() const;
 
-		VertexAttribute(VertexAttributeType Type, std::string Name = "");
+		VertexAttribute(VertexAttributeType type, std::string name = "");
 
 	private:
 
-		std::string _Name;
+		std::string m_Name;
 
-		VertexAttributeType _Type;
+		VertexAttributeType m_Type;
 	};
 
 	using VertexLayout = std::vector<VertexAttribute>;

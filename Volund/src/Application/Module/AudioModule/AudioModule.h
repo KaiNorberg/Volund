@@ -11,15 +11,15 @@ namespace Volund
 	{
 	public:
 
-		void OnAttach(Application* App) override;
+		void OnAttach(Application* app) override;
 
 		void OnDetach() override;
 
-		void Procedure(const Event& E) override;
+		void Procedure(const Event& e) override;
 
 	private:	
 
-		Ref<AudioDevice> _Device;
-		Ref<AudioContext> _Context;
+		Ref<AudioDevice> m_Device;
+		Ref<AudioContext> m_Context;
 	};
 }

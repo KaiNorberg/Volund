@@ -26,30 +26,30 @@ namespace Volund
 
 		virtual void Invalidate() = 0;
 
-		virtual void BlitTo(const Ref<Framebuffer>& DrawFramebuffer) = 0;
+		virtual void BlitTo(const Ref<Framebuffer>& drawFramebuffer) = 0;
 
-		uint32_t GetID();
+		uint32_t GetID() const;
 
-		uint32_t GetAttachment(uint32_t Index);
+		uint32_t GetAttachment(uint32_t index);
 
 		uint32_t GetDepthAttachment();
 
-		void SetSpec(const FramebufferSpec& Spec);
+		void SetSpec(const FramebufferSpec& spec);
 
 		const FramebufferSpec GetSpec() const;
 
-		static Ref<Framebuffer> Create(const FramebufferSpec& Spec);
+		static Ref<Framebuffer> Create(const FramebufferSpec& spec);
 
 		virtual ~Framebuffer() = default;
 
 	protected:
 
-		uint32_t _ID;
+		uint32_t m_ID;
 
-		FramebufferSpec _Spec;		
+		FramebufferSpec m_Spec;		
 		
-		std::vector<uint32_t> _ColorAttachments;
+		std::vector<uint32_t> m_ColorAttachments;
 
-		uint32_t _DepthAttachment = NULL;
+		uint32_t m_DepthAttachment = NULL;
 	};
 }

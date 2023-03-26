@@ -14,6 +14,6 @@ namespace Volund
 
 	private:
 
-		static std::string OpenDialog(FILEOPENDIALOGOPTIONS Options = NULL);
+		static std::string OpenDialog(FILEOPENDIALOGOPTIONS options = NULL);
 	};
 }

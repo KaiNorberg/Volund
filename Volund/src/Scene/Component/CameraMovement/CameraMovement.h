@@ -14,7 +14,7 @@ namespace Volund
 
 		float Sensitivity = 1.0f;
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		virtual void OnCreate();
 
@@ -22,10 +22,10 @@ namespace Volund
 
 	private:
 
-		Input _Input;
+		Input m_Input;
 
-		Vec3 _Rotation = Vec3(0.0f);
+		Vec3 m_Rotation = Vec3(0.0f);
 
-		IVec2 _OldMousePosition = Vec2(0.0f);
+		IVec2 m_OldMousePosition = Vec2(0.0f);
 	};
 } //namespace Volund

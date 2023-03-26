@@ -17,15 +17,15 @@ namespace Volund
         return FileDialog();
     }
 
-    std::string Dialog::FileDialog(FILEOPENDIALOGOPTIONS Options)
+    std::string Dialog::FileDialog(const FILEOPENDIALOGOPTIONS options)
     {
-        std::string Output;
+        std::string output;
 
         HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
 
         if (SUCCEEDED(hr))
         {
-            IFileOpenDialog* pFileOpen = NULL;
+            IFileOpenDialog* pFileOpen = nullptr;
 
             // Create the FileOpenDialog object.
             hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
@@ -33,7 +33,7 @@ namespace Volund
             if (SUCCEEDED(hr))
             {
                 // Show the Open dialog box.
-                pFileOpen->SetOptions(Options);
+                pFileOpen->SetOptions(options);
                 //pFileOpen->SetFileTypes(numTypes, cdfs);   //  choose file types to be displayed
                 pFileOpen->SetTitle(L"Open File");         //  heading of dialog box
                 hr = pFileOpen->Show(NULL);
@@ -47,8 +47,8 @@ namespace Volund
                     {
                         LPWSTR pTemp;
                         hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pTemp);
-                        std::wstring Temp = pTemp;
-                        Output = std::string(Temp.begin(), Temp.end());
+                        std::wstring temp = pTemp;
+                        output = std::string(temp.begin(), temp.end());
                         if (SUCCEEDED(hr)) 
                         {
                             CoTaskMemFree(pTemp);
@@ -61,6 +61,6 @@ namespace Volund
             CoUninitialize();
         }
 
-        return Output;
+        return output;
     }
 }

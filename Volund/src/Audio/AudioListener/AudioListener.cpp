@@ -5,29 +5,29 @@
 
 namespace Volund
 {
-    void AudioListener::SetPosition(const Vec3& Position)
+    void AudioListener::SetPosition(const Vec3& position)
     {
-        alCall(alListener3f, AL_POSITION,
-            Position.x, Position.y, Position.z);
+        AL_CALL(alListener3f, AL_POSITION,
+            position.x, position.y, position.z);
     }
 
-    void AudioListener::SetOrientation(const Vec3& Front, const Vec3& Up)
+    void AudioListener::SetOrientation(const Vec3& front, const Vec3& up)
     {
-        ALfloat Orientation[] = { Front.x, Front.y, Front.z,
-            Up.x, Up.y, Up.z };
-        alCall(alListenerfv, AL_ORIENTATION, Orientation);
+        ALfloat orientation[] = { front.x, front.y, front.z,
+            up.x, up.y, up.z };
+        AL_CALL(alListenerfv, AL_ORIENTATION, orientation);
     }
 
-    void AudioListener::SetVelocity(const Vec3& Velocity)
+    void AudioListener::SetVelocity(const Vec3& velocity)
     {
-        alCall(alListener3f, AL_VELOCITY, 
-            Velocity.x, Velocity.y, Velocity.z);
+        AL_CALL(alListener3f, AL_VELOCITY, 
+            velocity.x, velocity.y, velocity.z);
     }
 
     AudioListener::AudioListener()
 	{
-        AudioListenerCount++;
-        if (AudioListenerCount >= 2)
+        m_AudioListenerCount++;
+        if (m_AudioListenerCount >= 2)
         {
             VOLUND_ERROR("Unable to create multiple AudioListeners!");
         }
@@ -35,6 +35,6 @@ namespace Volund
 
     AudioListener::~AudioListener()
     {
-        AudioListenerCount--;
+        m_AudioListenerCount--;
     }
 }

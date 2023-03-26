@@ -9,12 +9,12 @@ namespace Volund
 	{
 	public:
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 	private:
 
-		std::vector<Shader> _PostEffects;
-		std::vector<Shader> _PreEffects;
+		std::vector<Shader> m_PostEffects;
+		std::vector<Shader> m_PreEffects;
 
 	};
 }

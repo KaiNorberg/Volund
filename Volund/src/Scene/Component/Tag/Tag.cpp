@@ -4,8 +4,8 @@
 
 namespace Volund
 {
-	Tag::Tag(std::string String)
+	Tag::Tag(const std::string& string)
 	{
-		this->String = String;
+		this->String = string;
 	}
 }

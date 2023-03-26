@@ -17,17 +17,17 @@ namespace Volund
 
 		float FarPlane = 100.0f;
 
-		void SetLayerMask(uint8_t Index, bool Enabled);
+		void SetLayerMask(uint8_t index, bool enabled);
 
-		void SetTargetBuffer(Ref<Framebuffer> NewTargetBuffer);
+		void SetTargetBuffer(Ref<Framebuffer> newTargetBuffer);
 
 		Mat4x4 GetViewMatrix() const;
 
 		Mat4x4 GetOriginViewMatrix() const;
 
-		Mat4x4 GetProjectionMatrix(float AspectRatio) const;
+		Mat4x4 GetProjectionMatrix(float aspectRatio) const;
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		void OnCreate() override;
 
@@ -35,8 +35,8 @@ namespace Volund
 
 	private:
 
-		uint16_t _LayerMask = std::numeric_limits<uint16_t>::max();
+		uint16_t m_LayerMask = std::numeric_limits<uint16_t>::max();
 
-		Ref<Framebuffer> _TargetBuffer;
+		Ref<Framebuffer> m_TargetBuffer;
 	};
 }

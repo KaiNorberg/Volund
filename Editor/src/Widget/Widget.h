@@ -6,9 +6,9 @@ public:
 
 	virtual const char* GetName() = 0;
 
-	virtual void OnKey(const VL::Event& E) {}
+	virtual void OnKey(const VL::Event& e) {}
 
-	virtual void OnUpdate(VL::TimeStep TS) {}
+	virtual void OnUpdate(VL::TimeStep ts) {}
 
 	virtual void OnRender() {}
 
@@ -16,7 +16,7 @@ public:
 
 protected:
 	
-	void DrawText(const std::string& String);
+	void DrawText(const std::string& string);
 
-	VL::Application* _App = nullptr;
+	VL::Application* m_App = nullptr;
 };

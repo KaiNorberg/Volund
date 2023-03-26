@@ -11,27 +11,27 @@ namespace Volund
 
 		sol::table Table;
 
-		bool Compare(sol::table Other);
+		bool Compare(sol::table other);
 
-		void Procedure(const Event& E);
+		void Procedure(const Event& e);
 
 		void OnCreate() override;
 
 		void OnDestroy() override;
 
-		Script(const sol::this_state& S, LuaEntity ThisEntity, sol::table ScriptTable, sol::table Args);
+		Script(const sol::this_state& s, LuaEntity entity, sol::table scriptTable, sol::table args);
 
 	private:
 
-		sol::table _Args;
+		sol::table m_Args;
 
-		sol::object _ThisEntity;
+		sol::object m_ThisEntity;
 
-		sol::safe_function _LuaOnCreate;
-		sol::safe_function _LuaOnUpdate;
-		sol::safe_function _LuaOnRender;
-		sol::safe_function _LuaOnDestroy;
+		sol::safe_function m_LuaOnCreate;
+		sol::safe_function m_LuaOnUpdate;
+		sol::safe_function m_LuaOnRender;
+		sol::safe_function m_LuaOnDestroy;
 
-		void* _ID;
+		void* m_ID;
 	};
 }

@@ -13,14 +13,14 @@ namespace Volund
 {
 	enum class LoggerColor
 	{
-		BLACK,
-		RED,
-		GREEN,
-		YELLOW,
-		BLUE,
-		MAGENTA,
-		CYAN,
-		WHITE
+		Black,
+		Red,
+		Green,
+		Yellow,
+		Blue,
+		Magenta,
+		Cyan,
+		White
 	};
 
 	using LoggerCallback = void(*)(const std::string&);
@@ -33,30 +33,30 @@ namespace Volund
 
 		static Logger& GetClientLogger();
 
-		void Info(const char* Format, ...);
+		void Info(const char* format, ...);
 
-		void Warning(const char* Format, ...);
+		void Warning(const char* format, ...);
 
-		void Error(const char* Format, ...);
+		void Error(const char* format, ...);
 
-		void SetCallback(LoggerCallback NewCallback);
+		void SetCallback(LoggerCallback newCallback);
 
-		Logger(std::string_view Name);
+		Logger(std::string_view name);
 
 	private:
 
-		static Logger _CoreLogger;
-		static Logger _ClientLogger;
+		static Logger m_CoreLogger;
+		static Logger m_ClientLogger;
 
-		std::mutex _Mutex;
+		std::mutex m_Mutex;
 
-		std::string FormatString(LoggerColor Color, const char* Format, std::va_list Args) const;
+		std::string FormatString(LoggerColor color, const char* format, std::va_list args) const;
 
-		std::string FormatString(const char* Format, std::va_list Args) const;
+		std::string FormatString(const char* format, std::va_list args) const;
 
-		LoggerCallback _Callback;
+		LoggerCallback m_Callback;
 
-		std::string _Name;
+		std::string m_Name;
 	};
 }
 

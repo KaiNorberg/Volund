@@ -7,55 +7,55 @@ namespace Volund
 {
 	void ForwardRenderer::Begin()
 	{
-		uint64_t OldCommandSize = this->_Data.Models.size();
+		const uint64_t oldCommandSize = this->m_Data.Models.size();
 
-		this->_Data = Data();
-		this->_Data.Models.reserve(OldCommandSize);
+		this->m_Data = Data();
+		this->m_Data.Models.reserve(oldCommandSize);
 	}
 
 	void ForwardRenderer::End()
 	{
-		this->_Data.Sort();
+		this->m_Data.Sort();
 
 		this->UpdateLightUniforms();
 
-		for (const auto& Eye : this->_Data.Eyes)
+		for (const auto& eye : this->m_Data.Eyes)
 		{
-			this->_Data.Discriminate(Eye);
+			this->m_Data.Discriminate(eye);
 
-			this->UpdateCameraUniforms(Eye);
+			this->UpdateCameraUniforms(eye);
 
-			Eye.Target->Bind();
+			eye.Target->Bind();
 
-			auto& TargetSpec = Eye.Target->GetSpec();
+			auto& targetSpec = eye.Target->GetSpec();
 
 			VL::RenderingAPI::Clear();						
-			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)TargetSpec.Width, (int32_t)TargetSpec.Height);
+			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
 
-			Ref<Material> PrevMaterial = nullptr;
-			for (const auto& Model : this->_Data.Models)
+			Ref<Material> prevMaterial = nullptr;
+			for (const auto& model : this->m_Data.Models)
 			{
-				if (!Model.Discriminated)
+				if (!model.Discriminated)
 				{
-					if (Model.material != PrevMaterial)
+					if (model.material != prevMaterial)
 					{
-						Model.material->UpdateShader();
-						PrevMaterial = Model.material;
+						model.material->UpdateShader();
+						prevMaterial = model.material;
 					}
 
-					Ref<Shader> MaterialShader = Model.material->GetShader();
+					Ref<Shader> materialShader = model.material->GetShader();
 
-					if (MaterialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
+					if (materialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
 					{
-						MaterialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, Model.ModelMatrix);
+						materialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}
 
-					Model.mesh->Bind();
-					this->_API->DrawIndexed(Model.mesh);
+					model.mesh->Bind();
+					this->m_Api->DrawIndexed(model.mesh);
 				}
 			}
 
-			Eye.Target->Unbind();
+			eye.Target->Unbind();
 		}
 	}
 }

@@ -21,45 +21,45 @@ namespace Volund
 
 	bool Application::ShouldRun() const
 	{
-		return this->_ShouldRun;
+		return this->m_ShouldRun;
 	}
 
 	Ref<EventDispatcher> Application::GetEventDispatcher()
 	{
-		return this->_EventDispatcher;
+		return this->m_EventDispatcher;
 	}
 
 	void Application::Terminate()
 	{
 		this->OnTerminate();
-		this->_ShouldRun = false;
+		this->m_ShouldRun = false;
 	}
 
 	void Application::Loop()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		std::chrono::time_point<std::chrono::steady_clock> StartTime = std::chrono::high_resolution_clock::now();
+		std::chrono::time_point<std::chrono::steady_clock> startTime = std::chrono::high_resolution_clock::now();
 
-		while (this->_ShouldRun)
+		while (this->m_ShouldRun)
 		{
 			VOLUND_PROFILE_SCOPE("MainLoop");
 
-			TimeStep TS = TimeStep(std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - StartTime).count());
-			StartTime = std::chrono::high_resolution_clock::now();
+			TimeStep ts = TimeStep(std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - startTime).count());
+			startTime = std::chrono::high_resolution_clock::now();
 
-			this->_ThreadPool.Submit([this, TS]()
+			this->m_ThreadPool.Submit([this, ts]()
 			{
-				Event UpdateEvent = Event(EventType::UPDATE);
-				VOLUND_EVENT_UPDATE_SET_TIMESTEP(UpdateEvent, float(TS));
-				this->_EventDispatcher->Dispatch(UpdateEvent);
+				Event updateEvent = Event(EventType::Update);
+				VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
+				this->m_EventDispatcher->Dispatch(updateEvent);
 			});
 
 			Renderer::Begin();
-			this->_EventDispatcher->Dispatch(Event(EventType::RENDER));
+			this->m_EventDispatcher->Dispatch(Event(EventType::Render));
 			Renderer::End();
 
-			while (this->_ThreadPool.Busy());
+			while (this->m_ThreadPool.Busy());
 
 			DelayedTaskHandler::Execute();
 		}
@@ -77,16 +77,16 @@ namespace Volund
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif	
 
-		this->_EventDispatcher = std::make_shared<EventDispatcher>(this);
+		this->m_EventDispatcher = std::make_shared<EventDispatcher>(this);
 	}
 
 	Application::~Application()
 	{
-		for (const auto& [TypeID, View] : this->_Modules)
+		for (const auto& [TypeID, View] : this->m_Modules)
 		{
-			for (const auto& Module : View)
+			for (const auto& module : View)
 			{
-				Module->OnDetach();
+				module->OnDetach();
 			}
 		}
 	}

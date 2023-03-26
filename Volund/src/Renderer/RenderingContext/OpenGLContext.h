@@ -11,19 +11,19 @@ namespace Volund
 
 		void MakeCurrent() override;
 
-		void SetVSync(bool Enabled) override;
+		void SetVSync(bool enabled) override;
 
-		OpenGLContext(void* DeviceContext);
+		OpenGLContext(void* deviceContext);
 		
 		~OpenGLContext();
 
 	private:
 
-		bool WGLExtensionSupported(std::string_view Name) const;
+		bool WGLExtensionSupported(std::string_view name) const;
 
-		void* _DeviceContext = nullptr;
+		void* m_DeviceContext = nullptr;
 
-		void* _RenderingContext = nullptr;
+		void* m_RenderingContext = nullptr;
 	};
 }
 

@@ -4,51 +4,51 @@
 
 namespace Volund::Utils
 {
-	uint32_t CastFloatToInt(float Value)
+	uint32_t CastFloatToInt(const float value)
 	{
 		union { float f; int i; } u;
-		u.f = Value;
+		u.f = value;
 		return u.i;
 	}
 
-	float CastIntToFloat(int Value)
+	float CastIntToFloat(const int value)
 	{
 		union { float f; int i; } u;
-		u.i = Value;
+		u.i = value;
 		return u.f;
 	}
 
-    std::string ReplaceAll(std::string Str, const std::string& From, const std::string& To) 
+    std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) 
     {
-        size_t start_pos = 0;
+        size_t startPos = 0;
 
-        while ((start_pos = Str.find(From, start_pos)) != std::string::npos) 
+        while ((startPos = str.find(from, startPos)) != std::string::npos) 
         {
-            Str.replace(start_pos, From.length(), To);
-            start_pos += To.length();
+            str.replace(startPos, from.length(), to);
+            startPos += to.length();
         }
 
-        return Str;
+        return str;
     }
 
-    std::wstring ConvertToWString(std::string_view String)
+    std::wstring ConvertToWString(std::string_view string)
     {
-        return std::wstring(String.begin(), String.end());
+        return std::wstring(string.begin(), string.end());
     }	
 
-	int RoundUp(int N, int M)
+	int RoundUp(const int n, const int m)
 	{
-		if (M == 0)
+		if (m == 0)
 		{
-			return N;
+			return n;
 		}
 
-		int R = N % M;
-		if (R == 0)
+		int r = n % m;
+		if (r == 0)
 		{
-			return N;
+			return n;
 		}
 
-		return N + M - R;
+		return n + m - r;
 	}
 }

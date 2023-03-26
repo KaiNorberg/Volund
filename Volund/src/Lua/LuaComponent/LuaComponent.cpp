@@ -12,152 +12,152 @@
 namespace Volund
 {
 	template<>
-	sol::table GenerateComponentTable<Camera>(sol::this_state S, const LuaEntity& E, Ref<Camera> C)
+	sol::table GenerateComponentTable<Camera>(sol::this_state s, const LuaEntity& e, Ref<Camera> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
 			//FOV
-			"GetFOV", std::function([C](sol::table Self) { return C->FOV; }),
-			"SetFOV", std::function([C](sol::table Self, float FOV) { C->FOV = FOV; }),
+			"GetFOV", std::function([c](sol::table self) { return c->FOV; }),
+			"SetFOV", std::function([c](sol::table self, float fov) { c->FOV = fov; }),
 			//NearPlane
-			"GetNearPlane", std::function([C](sol::table Self) { return C->NearPlane; }),
-			"SetNearPlane", std::function([C](sol::table Self, float NearPlane) { C->NearPlane = NearPlane; }),
+			"GetNearPlane", std::function([c](sol::table self) { return c->NearPlane; }),
+			"SetNearPlane", std::function([c](sol::table self, float nearPlane) { c->NearPlane = nearPlane; }),
 			//FarPlane
-			"GetFarPlane", std::function([C](sol::table Self) { return C->FarPlane; }),
-			"SetFarPlane", std::function([C](sol::table Self, float FarPlane) { C->FarPlane = FarPlane; }),
+			"GetFarPlane", std::function([c](sol::table self) { return c->FarPlane; }),
+			"SetFarPlane", std::function([c](sol::table self, float farPlane) { c->FarPlane = farPlane; }),
 			//TargetBuffer
-			"SetTargetBuffer", std::function([C](sol::table Self, LuaFramebuffer TargetBuffer) { C->SetTargetBuffer(TargetBuffer.Get()); }),
+			"SetTargetBuffer", std::function([c](sol::table self, LuaFramebuffer targetBuffer) { c->SetTargetBuffer(targetBuffer.Get()); }),
 			//LayerMask
-			"SetLayerMask", std::function([C](sol::table Self, uint8_t Index, bool Enabled) { C->SetLayerMask(Index, Enabled); })
+			"SetLayerMask", std::function([c](sol::table self, uint8_t index, bool enabled) { c->SetLayerMask(index, enabled); })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<CameraMovement>(sol::this_state S, const LuaEntity& E, Ref<CameraMovement> C)
+	sol::table GenerateComponentTable<CameraMovement>(sol::this_state s, const LuaEntity& e, Ref<CameraMovement> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
 			//Speed
-			"GetSpeed", std::function([C](sol::table Self) { return C->Speed; }),
-			"SetSpeed", std::function([C](sol::table Self, float Speed) { C->Speed = Speed; }),
+			"GetSpeed", std::function([c](sol::table self) { return c->Speed; }),
+			"SetSpeed", std::function([c](sol::table self, float speed) { c->Speed = speed; }),
 			//Sensitivity
-			"GetSensitivity", std::function([C](sol::table Self) { return C->Sensitivity; }),
-			"SetSensitivity", std::function([C](sol::table Self, float Sensitivity) { C->Sensitivity = Sensitivity; })
+			"GetSensitivity", std::function([c](sol::table self) { return c->Sensitivity; }),
+			"SetSensitivity", std::function([c](sol::table self, float sensitivity) { c->Sensitivity = sensitivity; })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<MeshRenderer>(sol::this_state S, const LuaEntity& E, Ref<MeshRenderer> C)
+	sol::table GenerateComponentTable<MeshRenderer>(sol::this_state s, const LuaEntity& e, Ref<MeshRenderer> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
 			//Mesh
-			"GetMesh", std::function([C](sol::table Self) { return LuaMesh(C->GetMesh()); }),
-			"SetMesh", std::function([C](sol::table Self, LuaMesh Mesh) { C->SetMesh(Mesh.Get()); }),
+			"GetMesh", std::function([c](sol::table self) { return LuaMesh(c->GetMesh()); }),
+			"SetMesh", std::function([c](sol::table self, LuaMesh mesh) { c->SetMesh(mesh.Get()); }),
 			//Material
-			"GetMaterial", std::function([C](sol::table Self) { return LuaMaterial(C->GetMaterial()); }),
-			"Material", std::function([C](sol::table Self, LuaMaterial Material) { C->SetMaterial(Material.Get()); }),
+			"GetMaterial", std::function([c](sol::table self) { return LuaMaterial(c->GetMaterial()); }),
+			"Material", std::function([c](sol::table self, LuaMaterial material) { c->SetMaterial(material.Get()); }),
 			//LayerMask
-			"SetLayer", std::function([C](sol::table Self, uint8_t Layer) { C->SetLayer(Layer); })
+			"SetLayer", std::function([c](sol::table self, uint8_t layer) { c->SetLayer(layer); })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<PointLight>(sol::this_state S, const LuaEntity& E, Ref<PointLight> C)
+	sol::table GenerateComponentTable<PointLight>(sol::this_state s, const LuaEntity& e, Ref<PointLight> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
 			//Color
-			"GetColor", std::function([C](sol::table Self) { return C->Color; }),
-			"SetColor", std::function([C](sol::table Self, const LuaVec3& Color) { C->Color = Color; }),
+			"GetColor", std::function([c](sol::table self) { return c->Color; }),
+			"SetColor", std::function([c](sol::table self, const LuaVec3& color) { c->Color = color; }),
 			//Brightness
-			"GetBrightness", std::function([C](sol::table Self) { return C->Brightness; }),
-			"SetBrightness", std::function([C](sol::table Self, float Brightness) { C->Brightness = Brightness; })
+			"GetBrightness", std::function([c](sol::table self) { return c->Brightness; }),
+			"SetBrightness", std::function([c](sol::table self, float brightness) { c->Brightness = brightness; })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<Script>(sol::this_state S, const LuaEntity& E, Ref<Script> C)
+	sol::table GenerateComponentTable<Script>(sol::this_state s, const LuaEntity& e, Ref<Script> c)
 	{
-		return C->Table;
+		return c->Table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<Tag>(sol::this_state S, const LuaEntity& E, Ref<Tag> C)
+	sol::table GenerateComponentTable<Tag>(sol::this_state s, const LuaEntity& e, Ref<Tag> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
 			//String
-			"Get", std::function([C](sol::table Self) { return C->String; }),
-			"Set", std::function([C](sol::table Self, std::string String) { C->String = String; })
+			"Get", std::function([c](sol::table self) { return c->String; }),
+			"Set", std::function([c](sol::table self, const std::string string) { c->String = string; })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<Transform>(sol::this_state S, const LuaEntity& E, Ref<Transform> C)
+	sol::table GenerateComponentTable<Transform>(sol::this_state s, const LuaEntity& e, Ref<Transform> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
 			//Position
-			"GetPosition", std::function([C](sol::table Self) { return LuaVec3(C->Position); }),
-			"SetPosition", std::function([C](sol::table Self, const LuaVec3& Position) { C->Position = Position.GLM(); }),
-			"AddPosition", std::function([C](sol::table Self, const LuaVec3& Position) { C->Position += Position.GLM(); }),
+			"GetPosition", std::function([c](sol::table self) { return LuaVec3(c->Position); }),
+			"SetPosition", std::function([c](sol::table self, const LuaVec3& position) { c->Position = position.GLM(); }),
+			"AddPosition", std::function([c](sol::table self, const LuaVec3& position) { c->Position += position.GLM(); }),
 			//Rotation
-			"GetRotation", std::function([C](sol::table Self) { return LuaVec3(C->GetRotation()); }),
-			"SetRotation", std::function([C](sol::table Self, const LuaVec3& Rotation) { C->SetRotation(Rotation.GLM()); }),
-			"AddRotation", std::function([C](sol::table Self, const LuaVec3& Rotation) { C->AddRotation(Rotation.GLM()); }),
+			"GetRotation", std::function([c](sol::table self) { return LuaVec3(c->GetRotation()); }),
+			"SetRotation", std::function([c](sol::table self, const LuaVec3& rotation) { c->SetRotation(rotation.GLM()); }),
+			"AddRotation", std::function([c](sol::table self, const LuaVec3& rotation) { c->AddRotation(rotation.GLM()); }),
 			//Scale
-			"GetScale", std::function([C](sol::table Self) { return LuaVec3(C->Scale); }),
-			"SetScale", std::function([C](sol::table Self, const LuaVec3& Scale) { C->Scale = Scale.GLM(); }),
-			"AddScale", std::function([C](sol::table Self, const LuaVec3& Scale) { C->Scale += Scale.GLM(); }),
+			"GetScale", std::function([c](sol::table self) { return LuaVec3(c->Scale); }),
+			"SetScale", std::function([c](sol::table self, const LuaVec3& scale) { c->Scale = scale.GLM(); }),
+			"AddScale", std::function([c](sol::table self, const LuaVec3& scale) { c->Scale += scale.GLM(); }),
 			//Directions
-			"GetFront", std::function([C](sol::table Self) { return LuaVec3(C->GetFront()); }),
-			"GetRight", std::function([C](sol::table Self) { return LuaVec3(C->GetRight()); }),
-			"GetUp", std::function([C](sol::table Self) { return LuaVec3(C->GetUp()); })
+			"GetFront", std::function([c](sol::table self) { return LuaVec3(c->GetFront()); }),
+			"GetRight", std::function([c](sol::table self) { return LuaVec3(c->GetRight()); }),
+			"GetUp", std::function([c](sol::table self) { return LuaVec3(c->GetUp()); })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<SoundSource>(sol::this_state S, const LuaEntity& E, Ref<SoundSource> C)
+	sol::table GenerateComponentTable<SoundSource>(sol::this_state s, const LuaEntity& e, Ref<SoundSource> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E),
-			"Play", std::function([C](sol::table Self) { C->Play(); }),
-			"SetSound", std::function([C](sol::table Self, LuaSound Sound) { C->SetBuffer(Sound.GetBuffer()); }),
-			"SetPitch", std::function([C](sol::table Self, float Pitch) { C->SetPitch(Pitch); }),
-			"SetLooping", std::function([C](sol::table Self, bool Looping) { C->SetLooping(Looping); }),
-			"SetGain", std::function([C](sol::table Self, float Gain) { C->SetGain(Gain); })
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e),
+			"Play", std::function([c](sol::table self) { c->Play(); }),
+			"SetSound", std::function([c](sol::table self, LuaSound sound) { c->SetBuffer(sound.GetBuffer()); }),
+			"SetPitch", std::function([c](sol::table self, float pitch) { c->SetPitch(pitch); }),
+			"SetLooping", std::function([c](sol::table self, bool looping) { c->SetLooping(looping); }),
+			"SetGain", std::function([c](sol::table self, float gain) { c->SetGain(gain); })
 		);
 
-		return Table;
+		return table;
 	}
 
 	template<>
-	sol::table GenerateComponentTable<SoundListener>(sol::this_state S, const LuaEntity& E, Ref<SoundListener> C)
+	sol::table GenerateComponentTable<SoundListener>(sol::this_state s, const LuaEntity& e, Ref<SoundListener> c)
 	{
-		sol::state_view StateView = S;
+		sol::state_view stateView = s;
 
-		sol::table Table = StateView.create_table_with(VOLUND_BASE_TABLE(E));
+		sol::table table = stateView.create_table_with(VOLUND_BASE_TABLE(e));
 
-		return Table;
+		return table;
 	}
 }

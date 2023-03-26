@@ -4,11 +4,11 @@
 
 namespace Volund
 {
-	void Transform::SetRotation(const Vec3& Rotation)
+	void Transform::SetRotation(const Vec3& rotation)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->Quaternion = Quat(Utils::ToRadians(Rotation));
+		this->Quaternion = Quat(Utils::ToRadians(rotation));
 	}
 
 	Vec3 Transform::GetRotation() const
@@ -18,45 +18,45 @@ namespace Volund
 		return Utils::ToDegrees(eulerAngles(this->Quaternion));
 	}
 
-	void Transform::AddRotation(const Vec3& Rotation)
+	void Transform::AddRotation(const Vec3& rotation)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->Quaternion *= Quat(Utils::ToRadians(Rotation));
+		this->Quaternion *= Quat(Utils::ToRadians(rotation));
 	}
 
 	Vec3 Transform::GetFront() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return this->Quaternion * Utils::Back;
+		return this->Quaternion * Utils::BACK;
 	}
 
 	Vec3 Transform::GetRight() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return this->Quaternion * Utils::Right;
+		return this->Quaternion * Utils::RIGHT;
 	}
 
 	Vec3 Transform::GetUp() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return this->Quaternion * Utils::Up;
+		return this->Quaternion * Utils::UP;
 	}
 
 	Mat4x4 Transform::GetModelMatrix() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		Mat4x4 ModelMatrix = Mat4x4(1.0f);
+		Mat4x4 modelMatrix = Mat4x4(1.0f);
 
-		ModelMatrix = translate(ModelMatrix, this->Position);
-		ModelMatrix *= Mat4x4(this->Quaternion);
-		ModelMatrix = scale(ModelMatrix, this->Scale);
+		modelMatrix = translate(modelMatrix, this->Position);
+		modelMatrix *= Mat4x4(this->Quaternion);
+		modelMatrix = scale(modelMatrix, this->Scale);
 
-		return ModelMatrix;
+		return modelMatrix;
 	}
 
 

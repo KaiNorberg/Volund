@@ -14,16 +14,16 @@ namespace Volund
 
 		Ref<Framebuffer> Get();
 
-		void Resize(LuaVec2 NewSize);
+		void Resize(LuaVec2 newSize);
 
 		LuaVec2 GetSize();
 
-		LuaFramebuffer(const LuaVec2& Size);
+		LuaFramebuffer(const LuaVec2& size);
 
-		LuaFramebuffer(Ref<Framebuffer> RawFramebuffer);
+		LuaFramebuffer(Ref<Framebuffer> framebuffer);
 
 	private:
 
-		Ref<Framebuffer> _Framebuffer;
+		Ref<Framebuffer> m_Framebuffer;
 	};
 }

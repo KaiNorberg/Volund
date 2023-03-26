@@ -5,98 +5,98 @@ namespace Volund
 {
 	std::string Material::GetFilepath()
 	{
-		return this->_Filepath;
+		return this->m_Filepath;
 	}
 
-	void Material::SetInt(const std::string& Name, int Value)
+	void Material::SetInt(const std::string& name, int value)
 	{
-		this->_IntUniforms[Name] = Value;
+		this->m_IntUniforms[name] = value;
 	}
 
-	void Material::SetFloat(const std::string& Name, float Value)
+	void Material::SetFloat(const std::string& name, float value)
 	{
-		this->_FloatUniforms[Name] = Value;
+		this->m_FloatUniforms[name] = value;
 	}
 
-	void Material::SetDouble(const std::string& Name, double Value)
+	void Material::SetDouble(const std::string& name, double value)
 	{
-		this->_DoubleUniforms[Name] = Value;
+		this->m_DoubleUniforms[name] = value;
 	}
 
-	void Material::SetVec2(const std::string& Name, const Vec2& Value)
+	void Material::SetVec2(const std::string& name, const Vec2& value)
 	{
-		this->_Vec2Uniforms[Name] = Value;
+		this->m_Vec2Uniforms[name] = value;
 	}
 
-	void Material::SetVec3(const std::string& Name, const Vec3& Value)
+	void Material::SetVec3(const std::string& name, const Vec3& value)
 	{
-		this->_Vec3Uniforms[Name] = Value;
+		this->m_Vec3Uniforms[name] = value;
 	}
 
-	void Material::SetTexture(const std::string& Name, Ref<Texture> Value)
+	void Material::SetTexture(const std::string& name, Ref<Texture> value)
 	{
-		this->_TextureUniforms[Name] = Value;
+		this->m_TextureUniforms[name] = value;
 	}
 
-	void Material::SetFramebuffer(const std::string& Name, Ref<Framebuffer> Value)
+	void Material::SetFramebuffer(const std::string& name, Ref<Framebuffer> value)
 	{
-		this->_FramebufferUniforms[Name] = Value;
+		this->m_FramebufferUniforms[name] = value;
 	}
 
 	void Material::UpdateShader()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		for (auto& [Name, Value] : this->_IntUniforms)
+		for (auto& [name, value] : this->m_IntUniforms)
 		{
-			this->_Shader->SetInt(Name, Value);
+			this->m_Shader->SetInt(name, value);
 		}
 
-		for (auto& [Name, Value] : this->_FloatUniforms)
+		for (auto& [name, value] : this->m_FloatUniforms)
 		{
-			this->_Shader->SetFloat(Name, Value);
+			this->m_Shader->SetFloat(name, value);
 		}
 
-		for (auto& [Name, Value] : this->_DoubleUniforms)
+		for (auto& [name, value] : this->m_DoubleUniforms)
 		{
-			this->_Shader->SetDouble(Name, Value);
+			this->m_Shader->SetDouble(name, value);
 		}
 
-		for (auto& [Name, Value] : this->_Vec2Uniforms)
+		for (auto& [name, value] : this->m_Vec2Uniforms)
 		{
-			this->_Shader->SetVec2(Name, Value);
+			this->m_Shader->SetVec2(name, value);
 		}
 
-		for (auto& [Name, Value] : this->_Vec3Uniforms)
+		for (auto& [name, value] : this->m_Vec3Uniforms)
 		{
-			this->_Shader->SetVec3(Name, Value);
+			this->m_Shader->SetVec3(name, value);
 		}
 
-		int TextureUnit = 0;
-		for (auto& [Name, Value] : this->_TextureUniforms)
+		int textureUnit = 0;
+		for (auto& [name, value] : this->m_TextureUniforms)
 		{
-			this->_Shader->SetTexture(Name, Value, TextureUnit);
-			TextureUnit++;
+			this->m_Shader->SetTexture(name, value, textureUnit);
+			textureUnit++;
 		}
-		for (auto& [Name, Value] : this->_FramebufferUniforms)
+		for (auto& [name, value] : this->m_FramebufferUniforms)
 		{
-			this->_Shader->SetFramebuffer(Name, Value, TextureUnit);
-			TextureUnit++;
+			this->m_Shader->SetFramebuffer(name, value, textureUnit);
+			textureUnit++;
 		}
 	}
 
 	Ref<Shader> Material::GetShader()
 	{
-		return this->_Shader;
+		return this->m_Shader;
 	}
 
-	Ref<Material> Material::Create(Ref<Shader> ObjectShader)
+	Ref<Material> Material::Create(Ref<Shader> shader)
 	{
-		return std::make_shared<Material>(ObjectShader);
+		return std::make_shared<Material>(shader);
 	}
 
-	Material::Material(Ref<Shader> DrawShader)
+	Material::Material(Ref<Shader> shader)
 	{
-		this->_Shader = DrawShader;
+		this->m_Shader = shader;
 	}
 }

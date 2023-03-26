@@ -1,5 +1,3 @@
-#pragma once
-
 #include "PCH/PCH.h"
 #include "Time.h"
 
@@ -7,32 +5,32 @@ namespace Volund
 {
 	Timer::Timer()
 	{
-		Start = std::chrono::high_resolution_clock::now();
+		m_Start = std::chrono::high_resolution_clock::now();
 	}
 
 	Timer::~Timer()
 	{
-		std::chrono::duration<double> Duration = std::chrono::high_resolution_clock::now() - Start;
-		VOLUND_INFO("Timer destroyed! Time passed: %f | Iterations per second: %f", Duration.count(), 1 / Duration.count());
+		const std::chrono::duration<double> duration = std::chrono::high_resolution_clock::now() - m_Start;
+		VOLUND_INFO("Timer destroyed! Time passed: %f | Iterations per second: %f", duration.count(), 1 / duration.count());
 	}
 
-	TimeStep::TimeStep(double Step)
+	TimeStep::TimeStep(const double step)
 	{
-		this->Step = Step;
+		this->m_Step = step;
 	}
 
 	TimeStep::operator double() const
 	{
-		return this->Step;
+		return this->m_Step;
 	}
 
 	double TimeStep::GetSeconds() const
 	{
-		return this->Step;
+		return this->m_Step;
 	}
 
 	double TimeStep::GetMilliseconds() const
 	{
-		return this->Step * 1000.0f;
+		return this->m_Step * 1000.0f;
 	}
 }

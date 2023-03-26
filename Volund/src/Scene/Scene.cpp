@@ -14,31 +14,31 @@ namespace Volund
 {
 	std::chrono::time_point<std::chrono::steady_clock> Scene::GetStartTime()
 	{
-		return this->_StartTime;
+		return this->m_StartTime;
 	}
 
 	Ref<Framebuffer> Scene::GetTargetBuffer()
 	{
-		return this->_TargetBuffer;
+		return this->m_TargetBuffer;
 	}
 
 	Entity Scene::CreateEntity()
 	{
-		Entity NewEntity = this->_NewEntity;
+		Entity newEntity = this->m_NewEntity;
 
-		this->_Registry.push_back(std::pair<Entity, Container<Component>>(NewEntity, Container<Component>()));
+		this->m_Registry.push_back(std::pair<Entity, Container<Component>>(newEntity, Container<Component>()));
 
-		this->_NewEntity++;
-		return NewEntity;
+		this->m_NewEntity++;
+		return newEntity;
 	}
 
 	void Scene::DestroyEntity(Entity entity)
 	{
-		uint64_t Index = FindEntity(entity);
+		const uint64_t index = FindEntity(entity);
 
-		if (Index != -1)
+		if (index != -1)
 		{
-			this->_Registry.erase(this->_Registry.begin() + Index);
+			this->m_Registry.erase(this->m_Registry.begin() + index);
 		}
 		else
 		{
@@ -51,28 +51,28 @@ namespace Volund
 		return FindEntity(entity) != -1;
 	}
 
-	void Scene::ResizeTarget(uint32_t Width, uint32_t Height)
+	void Scene::ResizeTarget(const uint32_t width, const uint32_t height)
 	{
-		auto Spec = this->_TargetBuffer->GetSpec();
+		auto spec = this->m_TargetBuffer->GetSpec();
 
-		if (this->_TargetBuffer != nullptr && (Width != Spec.Width || Height != Spec.Height))
+		if (this->m_TargetBuffer != nullptr && (width != spec.Width || height != spec.Height))
 		{
-			Spec.Width = Width;
-			Spec.Height = Height;
+			spec.Width = width;
+			spec.Height = height;
 
-			this->_TargetBuffer->SetSpec(Spec);
+			this->m_TargetBuffer->SetSpec(spec);
 		}
 	}
 
-	void Scene::Procedure(const Event& E)
+	void Scene::Procedure(const Event& e)
 	{
-		for (const auto& [entity, Container] : this->_Registry)
+		for (const auto& [entity, Container] : this->m_Registry)
 		{
 			for (auto& [TypeID, Components] : Container)
 			{
 				for (const auto& component : Components)
 				{
-					component->Procedure(E);
+					component->Procedure(e);
 				}
 			}
 		}
@@ -80,38 +80,38 @@ namespace Volund
 
 	Registry::iterator Scene::begin()
 	{
-		return this->_Registry.begin();
+		return this->m_Registry.begin();
 	}
 
 	Registry::iterator Scene::end()
 	{
-		return this->_Registry.end();
+		return this->m_Registry.end();
 	}
 
 	Scene::Scene()
 	{
-		VL::FramebufferSpec Spec;
-		Spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
-		Spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::DEPTH24STENCIL8);
-		Spec.Height = 1080;
-		Spec.Width = 1920;					
-		this->_TargetBuffer = VL::Framebuffer::Create(Spec);
+		VL::FramebufferSpec spec;
+		spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
+		spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
+		spec.Height = 1080;
+		spec.Width = 1920;					
+		this->m_TargetBuffer = VL::Framebuffer::Create(spec);
 
-		this->_StartTime = std::chrono::high_resolution_clock::now();
+		this->m_StartTime = std::chrono::high_resolution_clock::now();
 	}
 
 	uint64_t Scene::FindEntity(Entity entity)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		auto it = std::lower_bound(this->_Registry.begin(), this->_Registry.end(), entity, [](const std::pair<Entity, Container<Component>>& A, Entity entity)
+		auto it = std::lower_bound(this->m_Registry.begin(), this->m_Registry.end(), entity, [](const std::pair<Entity, Container<Component>>& a, Entity entity)
 		{
-			return A.first < entity;
+			return a.first < entity;
 		});
 
-		if (it != this->_Registry.end())
+		if (it != this->m_Registry.end())
 		{
-			return it - this->_Registry.begin();
+			return it - this->m_Registry.begin();
 		}
 		else
 		{
@@ -121,7 +121,7 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (const auto& [entity, Container] : this->_Registry)
+		for (const auto& [entity, Container] : this->m_Registry)
 		{
 			for (auto& [TypeID, Components] : Container)
 			{

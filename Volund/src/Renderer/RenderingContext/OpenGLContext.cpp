@@ -14,19 +14,19 @@ namespace Volund
 {
 	void OpenGLContext::MakeCurrent()
 	{
-		if (wglGetCurrentContext() != this->_RenderingContext)
+		if (wglGetCurrentContext() != this->m_RenderingContext)
 		{
-			VOLUND_ASSERT(wglMakeCurrent((HDC)this->_DeviceContext, (HGLRC)this->_RenderingContext), "Failed to make OpenGL Context current");
+			VOLUND_ASSERT(wglMakeCurrent((HDC)this->m_DeviceContext, (HGLRC)this->m_RenderingContext), "Failed to make OpenGL Context current");
 		}
 	}
 
-	void OpenGLContext::SetVSync(bool Enabled)
+	void OpenGLContext::SetVSync(bool enabled)
 	{
 		if (WGLExtensionSupported("WGL_EXT_swap_control"))
 		{
 			auto wglSwapIntervalEXT = (PFNWGLSWAPINTERVALEXTPROC)wglGetProcAddress("wglSwapIntervalEXT");
 
-			wglSwapIntervalEXT(Enabled);
+			wglSwapIntervalEXT(enabled);
 		}
 		else
 		{
@@ -34,35 +34,35 @@ namespace Volund
 		}
 	}
 
-	bool OpenGLContext::WGLExtensionSupported(std::string_view Name) const
+	bool OpenGLContext::WGLExtensionSupported(std::string_view name) const
 	{
 		auto _wglGetExtensionsStringEXT = (PFNWGLGETEXTENSIONSSTRINGEXTPROC)wglGetProcAddress("wglGetExtensionsStringEXT");
 
-		return strstr(_wglGetExtensionsStringEXT(), Name.data()) != nullptr;
+		return strstr(_wglGetExtensionsStringEXT(), name.data()) != nullptr;
 	}
 
-	OpenGLContext::OpenGLContext(void* DeviceContext)
+	OpenGLContext::OpenGLContext(void* deviceContext)
 	{
-		this->_DeviceContext = DeviceContext;
+		this->m_DeviceContext = deviceContext;
 
 		VOLUND_INFO("Creating OpenGL context...");
 
-		this->_RenderingContext = wglCreateContext((HDC)DeviceContext);
-		VOLUND_ASSERT(this->_RenderingContext, "Failed to create OpenGL context");
+		this->m_RenderingContext = wglCreateContext((HDC)deviceContext);
+		VOLUND_ASSERT(this->m_RenderingContext, "Failed to create OpenGL context");
 
 		this->MakeCurrent();
 	}
 
 	OpenGLContext::~OpenGLContext()
 	{
-		if (this->_RenderingContext)
+		if (this->m_RenderingContext)
 		{
-			if (wglGetCurrentContext() == this->_RenderingContext)
+			if (wglGetCurrentContext() == this->m_RenderingContext)
 			{
 				wglMakeCurrent(nullptr, nullptr);
 			}
 
-			wglDeleteContext((HGLRC)this->_RenderingContext);
+			wglDeleteContext((HGLRC)this->m_RenderingContext);
 		}
 	}
 }

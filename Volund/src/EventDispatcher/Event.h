@@ -54,7 +54,7 @@ namespace Volund
 
 		uint32_t Args[2] = {0, 0};
 
-		Event(EventType T) { Type = T; }
+		Event(EventType t) { Type = t; }
 	};
 
 	using Proc = void(const Event&);

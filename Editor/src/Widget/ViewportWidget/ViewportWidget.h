@@ -6,16 +6,16 @@ class ViewportWidget : public Widget
 {
 public:
 
-	const char* GetName();
+	const char* GetName() override;
 
-	void OnKey(const VL::Event& E) override;
+	void OnKey(const VL::Event& e) override;
 
 	void OnRender() override;
 
-	ViewportWidget(VL::Application* App);
+	ViewportWidget(VL::Application* app);
 
 private:
 
-	VL::Input _Input;
+	VL::Input m_Input;
 };
 

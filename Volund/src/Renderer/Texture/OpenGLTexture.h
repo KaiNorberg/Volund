@@ -8,9 +8,9 @@ namespace Volund
 	{
 	public:
 
-		void Bind(uint32_t Unit) override;
+		void Bind(uint32_t unit) override;
 
-		OpenGLTexture(const std::string& Filepath);
+		OpenGLTexture(const std::string& filepath);
 
 		~OpenGLTexture() override;
 

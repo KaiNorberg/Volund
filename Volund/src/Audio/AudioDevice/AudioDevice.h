@@ -10,12 +10,12 @@ namespace Volund
 
 		ALCdevice* GetDevice() const;
 
-		AudioDevice(const char* Device);
+		AudioDevice(const char* device);
 		
 		~AudioDevice();
 
 	private:
 		
-		ALCdevice* _Device;
+		ALCdevice* m_Device;
 	};
 }

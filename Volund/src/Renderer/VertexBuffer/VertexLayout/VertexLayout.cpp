@@ -10,15 +10,15 @@ namespace Volund
 {
 	uint32_t VertexAttribute::GetDataType() const
 	{	
-		uint32_t FloatID;
-		uint32_t IntID;
+		uint32_t floatId;
+		uint32_t intId;
 
 		switch (RenderingAPI::GetSelectedAPI())
 		{
-			case GraphicsAPI::OPENGL:
+			case GraphicsAPI::OpenGL:
 			{
-				FloatID = GL_FLOAT;
-				IntID = GL_INT;
+				floatId = GL_FLOAT;
+				intId = GL_INT;
 			}
 			break;
 			default:
@@ -28,7 +28,7 @@ namespace Volund
 			break;
 		}
 
-		return FloatID * (((uint32_t)this->_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + IntID * ((uint32_t)this->_Type &
+		return floatId * (((uint32_t)this->m_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + intId * ((uint32_t)this->m_Type &
 			VOLUND_ATTRIBUTE_INT);
 	}
 
@@ -39,17 +39,17 @@ namespace Volund
 
 	uint32_t VertexAttribute::GetElementCount() const
 	{
-		return ((uint32_t)this->_Type >> 2);
+		return ((uint32_t)this->m_Type >> 2);
 	}
 
 	std::string VertexAttribute::GetName() const
 	{
-		return this->_Name;
+		return this->m_Name;
 	}
 
-	VertexAttribute::VertexAttribute(VertexAttributeType Type, std::string Name)
+	VertexAttribute::VertexAttribute(const VertexAttributeType type, const std::string name)
 	{
-		this->_Type = Type;
-		this->_Name = Name;
+		this->m_Type = type;
+		this->m_Name = name;
 	}
 }
