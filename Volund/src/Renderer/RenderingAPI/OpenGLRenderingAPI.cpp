@@ -9,68 +9,68 @@ namespace Volund
 	void APIENTRY ErrorCallback(GLenum source, GLenum type, GLuint id, GLenum severity,
 	                            GLsizei length, const GLchar* message, const void* userParam)
 	{
-		std::string source;
-		std::string type;
+		std::string sourceString;
+		std::string typeString;
 
 		switch (source)
 		{
 		case GL_DEBUG_SOURCE_API:
-			source = "API";
+			sourceString = "API";
 			break;
 
 		case GL_DEBUG_SOURCE_WINDOW_SYSTEM:
-			source = "WINDOW SYSTEM";
+			sourceString = "WINDOW SYSTEM";
 			break;
 
 		case GL_DEBUG_SOURCE_SHADER_COMPILER:
-			source = "SHADER COMPILER";
+			sourceString = "SHADER COMPILER";
 			break;
 
 		case GL_DEBUG_SOURCE_THIRD_PARTY:
-			source = "THIRD PARTY";
+			sourceString = "THIRD PARTY";
 			break;
 
 		case GL_DEBUG_SOURCE_APPLICATION:
-			source = "APPLICATION";
+			sourceString = "APPLICATION";
 			break;
 
 		default:
-			source = "UNKNOWN";
+			sourceString = "UNKNOWN";
 			break;
 		}
 
 		switch (type)
 		{
 		case GL_DEBUG_TYPE_DEPRECATED_BEHAVIOR:
-			type = "DEPRECATED BEHAVIOR: ";
+			typeString = "DEPRECATED BEHAVIOR: ";
 			break;
 
 		case GL_DEBUG_TYPE_UNDEFINED_BEHAVIOR:
-			type = "UDEFINED BEHAVIOR: ";
+			typeString = "UDEFINED BEHAVIOR: ";
 			break;
 
 		case GL_DEBUG_TYPE_PORTABILITY:
-			type = "PORTABILITY: ";
+			typeString = "PORTABILITY: ";
 			break;
 
 		case GL_DEBUG_TYPE_PERFORMANCE:
-			type = "PERFORMANCE: ";
+			typeString = "PERFORMANCE: ";
 			break;
 
 		case GL_DEBUG_TYPE_MARKER:
-			type = "MARKER: ";
+			typeString = "MARKER: ";
 			break;
 
 		case GL_DEBUG_TYPE_OTHER:
-			type = "OTHER: ";
+			typeString = "OTHER: ";
 			break;
 
 		default:
-			type = "";
+			typeString = "";
 			break;
 		}
 
-		std::string output = type + std::to_string(id) + ", raised from " + source + ": " + message;
+		std::string output = typeString + std::to_string(id) + ", raised from " + sourceString + ": " + message;
 
 		switch (severity)
 		{
