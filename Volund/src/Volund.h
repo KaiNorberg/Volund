@@ -2,6 +2,8 @@
 
 #include "PCH/PCH.h"
 
+#include "Core/Core.h"
+
 #include "ThreadPool/ThreadPool.h"
 
 #include "Application/Application.h"

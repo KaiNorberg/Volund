@@ -17,7 +17,7 @@ namespace Volund
 	{
 	public:
 
-		std::chrono::_V2::system_clock::time_point GetStartTime();
+		CHRONO_TIME_POINT GetStartTime();
 
 		Ref<Framebuffer> GetTargetBuffer();
 
@@ -58,7 +58,7 @@ namespace Volund
 
 		Registry m_Registry;
 
-		std::chrono::_V2::system_clock::time_point m_StartTime;
+		CHRONO_TIME_POINT m_StartTime;
 
 		Ref<Framebuffer> m_TargetBuffer;
 	};

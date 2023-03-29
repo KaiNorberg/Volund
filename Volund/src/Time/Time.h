@@ -12,7 +12,7 @@ namespace Volund
 
 		~Timer();
 	private:
-		std::chrono::_V2::system_clock::time_point m_Start;
+		CHRONO_TIME_POINT m_Start;
 	};
 
 	class TimeStep

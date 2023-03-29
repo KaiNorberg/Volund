@@ -12,7 +12,7 @@
 
 namespace Volund
 {
-	std::chrono::_V2::system_clock::time_point Scene::GetStartTime()
+	CHRONO_TIME_POINT Scene::GetStartTime()
 	{
 		return this->m_StartTime;
 	}
