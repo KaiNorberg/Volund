@@ -47,7 +47,7 @@ namespace Volund
 
 	void LuaState::ScriptFile(const std::string& filepath)
 	{
-		this->m_SolState.safe_script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
+		this->m_SolState.script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
 		{		
 			sol::error err = pfr;
 			VOLUND_WARNING(err.what());
@@ -251,7 +251,7 @@ namespace Volund
 		//Tables
 
 		this->m_SolState.create_named_table("Scene",
-			"GetTargetBuffer", std::function([this](sol::table self) { return LuaFramebuffer(this->m_Scene->GetTargetBuffer()); }),
+			"GetTargetBuffer", std::function([this](sol::table self) {  return 0;}),
 			"TimeSinceStart", std::function([this](sol::table self) { return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - this->m_Scene->GetStartTime()).count(); }),
 			"CreateEntity", std::function([this](sol::table self) { return LuaEntity(this->m_Scene, this->m_Scene->CreateEntity()); }),
 			"DeleteEntity", std::function([this](sol::table self, LuaEntity& e) { return this->m_Scene->DestroyEntity(e.Get()); }),

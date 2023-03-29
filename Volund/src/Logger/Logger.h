@@ -9,9 +9,11 @@
 #define VOLUND_LOGGERCOLOR_CYAN    "\033[36m"
 #define VOLUND_LOGGERCOLOR_WHITE   "\033[37m"
 
+#include "Dialog/Dialog.h"
+
 namespace Volund
 {
-	enum class LoggerColor
+	enum class LogColor
 	{
 		Black,
 		Red,
@@ -21,6 +23,13 @@ namespace Volund
 		Magenta,
 		Cyan,
 		White
+	};
+	
+	enum class LogSeverity
+	{
+		Info,
+		Warning,
+		Error
 	};
 
 	using LoggerCallback = void(*)(const std::string&);
@@ -33,11 +42,22 @@ namespace Volund
 
 		static Logger& GetClientLogger();
 
-		void Info(const char* format, ...);
+		template<typename... Args>
+		void Info(const char* format, Args&&... args);
 
-		void Warning(const char* format, ...);
+		template<typename... Args>
+		void Warning(const char* format, Args&&... args);
 
-		void Error(const char* format, ...);
+		template<typename... Args>
+		void Error(const char* format, Args&&... args);
+		
+		void Info(const char* format);
+
+		void Warning(const char* format);
+
+		void Error(const char* format);
+
+		void Print(LogSeverity severity, const std::string& string);
 
 		void SetCallback(LoggerCallback newCallback);
 
@@ -50,14 +70,49 @@ namespace Volund
 
 		std::mutex m_Mutex;
 
-		std::string FormatString(LoggerColor color, const char* format, std::va_list args) const;
+		template<typename... Args>
+		std::string FormatString(const char* format, Args&&... args)
+		{
+			int size_s = std::snprintf( nullptr, 0, format, args... ) + 1;
+			if( size_s <= 0 )
+			{ 
+				throw std::runtime_error( "Error during formatting." ); 
+			}
 
-		std::string FormatString(const char* format, std::va_list args) const;
+			auto size = static_cast<size_t>( size_s );
+			std::unique_ptr<char[]> buf( new char[ size ] );
+
+			std::snprintf( buf.get(), size, format, args ... );
+			return std::string( buf.get(), buf.get() + size - 1 );
+		}
 
 		LoggerCallback m_Callback;
 
 		std::string m_Name;
 	};
+
+	template<typename... Args>
+	inline void Logger::Info(const char* format, Args&&... args)
+	{
+		std::string formatedString = this->FormatString(format, std::forward<Args>(args)...);
+		this->Print(LogSeverity::Info, formatedString);
+	}
+
+	template<typename... Args>
+	inline void Logger::Warning(const char* format, Args&&... args)
+	{
+		std::string formatedString = this->FormatString(format, std::forward<Args>(args)...);
+		this->Print(LogSeverity::Warning, formatedString);
+	}
+
+	template<typename... Args>
+	inline void Logger::Error(const char* format, Args&&... args)
+	{
+		std::string formatedString = this->FormatString(format, std::forward<Args>(args)...);
+		this->Print(LogSeverity::Error, formatedString);
+
+		abort();
+	}
 }
 
 #ifdef VOLUND_CORE

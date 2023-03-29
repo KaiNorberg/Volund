@@ -49,6 +49,6 @@ layout(location = 0) out vec4 FragColor;
 void main()
 {
     vec2 ScreenPos = ((gl_FragCoord.xy) / ScreenSize);
-    FragColor = texture2D(ColorTexture, (ScreenPos));
-    //FragColor = vec4(ScreenPos, 0.0, 1.0);
+    //FragColor = texture(ColorTexture, (ScreenPos));
+    FragColor = vec4(ScreenPos, 0.0, 1.0);
 }

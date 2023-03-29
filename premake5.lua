@@ -180,7 +180,7 @@ project "Editor"
 		}
 	filter "system:linux" 
 		postbuildcommands {
-			"cp -R data/* ../bin/%{cfg.buildcfg}_x64/data"
+			"cp -R data ../bin/%{cfg.buildcfg}_x64"
 		}
 		links
 		{
