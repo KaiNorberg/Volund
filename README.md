@@ -17,7 +17,11 @@ To clone (download) this repository, you can use the ```Code``` button at the to
 
 <ins>**2. Building Volund**</ins>
 
-Building Volund is as simple as running the [premake.bat](https://github.com/Kaj9296/Volund-2/blob/main/premake.bat) file in the CMD with an argument specifying what toolset you wish to use. For example, if you wish to use Visual Studio 2022 then you would type ```premake.bat vs2022```.
+Building Volund is slightly diffrent depending on if your on Windows or linux. 
+
+If your on Windows run the [premake.bat](https://github.com/Kaj9296/Volund-2/blob/main/premake.bat) file in the CMD with an argument specifying what toolset you wish to use. For example, if you wish to use Visual Studio 2022 then you would type ```premake.bat vs2022```.
+
+If your on Linux run the [premake.sh](https://github.com/Kaj9296/Volund-2/blob/main/premake.sh) file in the terminal with an argument specifying what toolset you wish to use. For example, if you wish to use gmake then you would type ```sh premake.sh gmake```.
 
 After that, you can simply compile the generated project with your chosen tool set.
 
