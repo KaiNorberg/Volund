@@ -12,7 +12,7 @@
 
 namespace Volund
 {
-	std::chrono::time_point<std::chrono::steady_clock> Scene::GetStartTime()
+	std::chrono::_V2::system_clock::time_point Scene::GetStartTime()
 	{
 		return this->m_StartTime;
 	}
@@ -96,7 +96,7 @@ namespace Volund
 		spec.Height = 1080;
 		spec.Width = 1920;					
 		this->m_TargetBuffer = VL::Framebuffer::Create(spec);
-
+	
 		this->m_StartTime = std::chrono::high_resolution_clock::now();
 	}
 

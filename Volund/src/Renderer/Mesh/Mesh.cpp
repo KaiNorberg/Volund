@@ -22,24 +22,24 @@ namespace Volund
 		return this->m_Filepath;
 	}
 
-	Ref<Vertexbuffer> Mesh::GetVertexbuffer()
+	Ref<VertexBuffer> Mesh::GetVertexBuffer()
 	{
-		return this->m_Vertexbuffer;
+		return this->m_VertexBuffer;
 	}
 
-	Ref<Indexbuffer> Mesh::GetIndexbuffer()
+	Ref<IndexBuffer> Mesh::GetIndexBuffer()
 	{
-		return this->m_Indexbuffer;
+		return this->m_IndexBuffer;
 	}
 
-	const Ref<Vertexbuffer> Mesh::GetVertexbuffer() const
+	const Ref<VertexBuffer> Mesh::GetVertexBuffer() const
 	{
-		return this->m_Vertexbuffer;
+		return this->m_VertexBuffer;
 	}
 
-	const Ref<Indexbuffer> Mesh::GetIndexbuffer() const
+	const Ref<IndexBuffer> Mesh::GetIndexBuffer() const
 	{
-		return this->m_Indexbuffer;
+		return this->m_IndexBuffer;
 	}
 
 	Ref<Mesh> Mesh::Create(const std::string& filepath)
@@ -56,13 +56,13 @@ namespace Volund
 
 			DelayedTaskHandler::DelayTask([newMesh, Loader]()
 			{
-				Ref<Vertexbuffer> VBuffer = Vertexbuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
+				Ref<VertexBuffer> VBuffer = VertexBuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
 				VBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
 
-				Ref<Indexbuffer> IBuffer = Indexbuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
+				Ref<IndexBuffer> IBuffer = IndexBuffer::Create(Loader.Indices.data(), (uint32_t)Loader.Indices.size());
 
-				newMesh->SetVertexbuffer(VBuffer);
-				newMesh->SetIndexbuffer(IBuffer);
+				newMesh->SetVertexBuffer(VBuffer);
+				newMesh->SetIndexBuffer(IBuffer);
 			});
 		});
 
@@ -87,13 +87,13 @@ namespace Volund
 		}
 	}
 
-	Ref<Mesh> Mesh::Create(Ref<Vertexbuffer>& vertexbuffer, Ref<Indexbuffer>& indexbuffer)
+	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& VertexBuffer, Ref<IndexBuffer>& IndexBuffer)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLMesh>(vertexbuffer, indexbuffer);
+			return std::make_shared<OpenGLMesh>(VertexBuffer, IndexBuffer);
 		}
 		break;
 		default:

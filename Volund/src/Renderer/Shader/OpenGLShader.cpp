@@ -115,9 +115,10 @@ namespace Volund
 		{
 			int32_t length;
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
-			char* message = (char*)_malloca(length * (sizeof(char)));
+			char* message = new char[length];
 			glGetShaderInfoLog(id, length, &length, message);
 			VOLUND_WARNING("Failed to compile shader: %s", message);
+			delete message;
 			glDeleteShader(id);
 			return 0;
 		}

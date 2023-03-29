@@ -11,12 +11,12 @@ namespace Volund
 
 		void Unbind() const override;
 
-		void SetVertexbuffer(Ref<Vertexbuffer>& buffer) override;
-		void SetIndexbuffer(Ref<Indexbuffer>& buffer) override;
+		void SetVertexBuffer(Ref<VertexBuffer>& buffer) override;
+		void SetIndexBuffer(Ref<IndexBuffer>& buffer) override;
 
 		OpenGLMesh();
 
-		OpenGLMesh(Ref<Vertexbuffer>& vertexBuffer, Ref<Indexbuffer>& indexBuffer);
+		OpenGLMesh(Ref<VertexBuffer>& VertexBuffer, Ref<IndexBuffer>& IndexBuffer);
 
 		~OpenGLMesh() override;
 

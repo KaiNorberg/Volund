@@ -15,8 +15,8 @@ namespace Volund
 
 	void GameState::Procedure(const Event& e)
 	{
-		this->m_Input->Procedure(e);
-		this->m_Scene->Procedure(e);
+		//this->m_Input->Procedure(e);
+		//this->m_Scene->Procedure(e);
 	}
 
 	GameState::GameState(Ref<Window> window)

@@ -31,9 +31,11 @@ namespace Volund
 		template<typename T>
 		bool HasModule();
 
-		virtual void OnRun() = 0;
-		virtual void OnTerminate() = 0;
-		virtual void Procedure(const Event& e) = 0;
+		void Connect(Ref<EventDispatcher> dispatcher);
+
+		virtual void OnRun() {}
+		virtual void OnTerminate() {}
+		virtual void Procedure(const Event& e) {}
 
 		Application();
 

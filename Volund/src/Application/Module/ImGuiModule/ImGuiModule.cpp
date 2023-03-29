@@ -3,16 +3,16 @@
 
 #include <imgui.h>
 #include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_win32.h>
+#include <backends/imgui_impl_glfw.h>
 
 #include "ImGuiStyle.h"
 
 #include "Application/Application.h"
 #include "Application/Module/WindowModule/WindowModule.h"
 
-#include <windows.h>
+//#include <windows.h>
 
-extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 namespace Volund
 {
@@ -36,10 +36,10 @@ namespace Volund
 
 		SetupImGuiStyle();
 
-		ImGui_ImplWin32_Init(appWindow->GetHandle());
+		ImGui_ImplGlfw_InitForOpenGL(appWindow->GetGlfwWindow(), false);
 		ImGui_ImplOpenGL3_Init();
 
-		appWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+		//appWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
 	}
 
 	void ImGuiModule::OnDetach()
@@ -90,7 +90,7 @@ namespace Volund
 	void ImGuiModule::BeginFrame()
 	{
 		ImGui_ImplOpenGL3_NewFrame();
-		ImGui_ImplWin32_NewFrame();
+		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 	}
 

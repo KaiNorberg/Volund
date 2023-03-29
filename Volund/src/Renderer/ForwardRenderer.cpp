@@ -30,7 +30,7 @@ namespace Volund
 			auto& targetSpec = eye.Target->GetSpec();
 
 			VL::RenderingAPI::Clear();						
-			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
+			//VL::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
 
 			Ref<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)

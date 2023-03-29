@@ -14,10 +14,12 @@ namespace Volund
 
 		void Dispatch(const Event& e);
 
-		EventDispatcher(Application* app);
+		void Connect(Ref<Application> app);
+
+		EventDispatcher();
 
 	private:
 
-		Application* m_App = nullptr;
+		Ref<Application> m_App;
 	};
 }

@@ -19,15 +19,11 @@ project "Volund"
 	systemversion "latest"
 	staticruntime "on"
 
-	buildoptions 
-	{ 
-		"/bigobj" 
-	}
-
 	dependson 
 	{
 		"ImGui",
-		"Glad"
+		"Glad",
+		"GLFW"
 	}
 
 	targetdir (TargetDir)
@@ -43,7 +39,8 @@ project "Volund"
 	{
 		"%{prj.name}/src",
 		"vendor",
-		"vendor/GLAD/include",
+		"vendor/glfw/include",
+		"vendor/glad/include",
 		"vendor/imgui",
 		"vendor/lua"
 	}
@@ -53,18 +50,6 @@ project "Volund"
 		TargetDir,
 		"vendor/lua",
 		"vendor/OpenAL_Soft/lib"
-	}
-	
-	links
-	{
-		"OpenGL32.lib",
-		"OpenAL32.lib",
-		"common.lib",
-		"ex-common.lib",
-		"Glad.lib",
-		"ImGui",
-		"lua54",
-		"winmm"
 	}
 	
 	defines
@@ -89,6 +74,32 @@ project "Volund"
 		defines "VOLUND_DIST"
 		optimize "Speed"
 		runtime "Release"	
+
+	filter "system:windows" 
+		links
+		{
+			"OpenGL32",
+			"Glad",
+			"GLFW",
+			"OpenAL32",
+			"common",
+			"ex-common",
+			"ImGui",
+			"lua54",
+			"winmm"
+		}
+	filter "system:linux" 
+		links
+		{
+			"dl",
+			"Glad",
+			"GLFW",
+			"openal",
+			"common",
+			"ex-common",
+			"ImGui",
+			"lua54",
+		}
 		
 project "Editor"
 	location "Editor"
@@ -116,21 +127,19 @@ project "Editor"
 		"%{prj.name}/src",
 		"vendor",
 		"vendor/imgui",
-		"Volund/src"
+		"Volund/src",
+		"vendor/glfw/include",
+		"vendor/glad/include",
+		"vendor/lua"
 	}
 
 	libdirs
 	{
-		TargetDir
+		TargetDir,
+		"vendor/lua",
+		"vendor/OpenAL_Soft/lib"
 	}
 
-	links
-	{
-		"Volund",
-		"OpenGL32.lib",
-		"Glad.lib"
-	}
-		
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
 
@@ -151,9 +160,39 @@ project "Editor"
 		optimize "Speed"
 		runtime "Release"	
 		kind "WindowedApp"		
-		targetdir (TargetDir .. "\\Editor")
+
+	filter "system:windows" 
 		postbuildcommands {
-			"xcopy data\\* ..\\" .. TargetDir .. "\\Editor\\data /Q /E /Y /I /S"
+			"xcopy data\\* ..\\" .. TargetDir .. "\\data /Q /E /Y /I /S"
+		}
+		links
+		{
+			"Volund",
+			"OpenGL32",
+			"Glad",
+			"GLFW",
+			"OpenAL32",
+			"common",
+			"ex-common",
+			"ImGui",
+			"lua54",
+			"winmm"
+		}
+	filter "system:linux" 
+		postbuildcommands {
+			"cp -R data/* ../bin/%{cfg.buildcfg}_x64/data"
+		}
+		links
+		{
+			"Volund",
+			"dl",
+			"Glad",
+			"GLFW",
+			"openal",
+			"common",
+			"ex-common",
+			"ImGui",
+			"lua54",
 		}
 		
 project "Glad"
@@ -167,14 +206,14 @@ project "Glad"
 
 	includedirs
 	{
-		"vendor/GLAD/include"
+		"vendor/glad/include"
 	}
 
 	files
 	{
-		"vendor/GLAD/include/glad/glad.h",
-		"vendor/GLAD/include/KHR/khrplatform.h",
-		"vendor/GLAD/src/glad.c"
+		"vendor/glad/include/glad/glad.h",
+		"vendor/glad/include/KHR/khrplatform.h",
+		"vendor/glad/src/glad.c"
 	}
 	
 	systemversion "latest"
@@ -201,7 +240,8 @@ project "ImGui"
 
 	includedirs
 	{
-		"vendor/imgui"
+		"vendor/imgui",
+		"vendor/glfw/include"
 	}
 
 	files
@@ -217,8 +257,8 @@ project "ImGui"
 		"vendor/imgui/imstb_textedit.h",
 		"vendor/imgui/backends/imgui_impl_opengl3.cpp",
 		"vendor/imgui/backends/imgui_impl_opengl3.h",
-		"vendor/imgui/backends/imgui_impl_win32.cpp",
-		"vendor/imgui/backends/imgui_impl_win32.h",
+		"vendor/imgui/backends/imgui_impl_glfw.cpp",
+		"vendor/imgui/backends/imgui_impl_glfw.h",
 		"vendor/imgui/misc/cpp/imgui_stdlib.cpp",
 		"vendor/imgui/misc/cpp/imgui_stdlib.h"
 	}
@@ -242,3 +282,109 @@ project "ImGui"
 		runtime "Release"
 		optimize "Speed"
         symbols "off"
+
+project "GLFW"
+	kind "StaticLib"
+	language "C"
+	location "vendor/glfw"
+
+	targetdir (TargetDir)
+	objdir (ObjDir)
+	
+	systemversion "latest"
+	staticruntime "on"
+
+	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		runtime "Release"
+		optimize "Speed"
+		symbols "off"
+
+	filter "system:windows" 
+		defines 
+		{ 
+			"GLFW_VULKAN_STATIC",
+			"_GLFW_WIN32",
+			"_CRT_SECURE_NO_WARNINGS"
+		}
+
+		files
+		{
+			"vendor/glfw/include/GLFW/glfw3.h",
+			"vendor/glfw/include/GLFW/glfw3native.h",
+			"vendor/glfw/src/glfw_config.h",
+			"vendor/glfw/src/context.c",
+			"vendor/glfw/src/init.c",
+			"vendor/glfw/src/input.c",
+			"vendor/glfw/src/monitor.c",
+	
+			"vendor/glfw/src/null_init.c",
+			"vendor/glfw/src/null_joystick.c",
+			"vendor/glfw/src/null_monitor.c",
+			"vendor/glfw/src/null_window.c",
+	
+			"vendor/glfw/src/platform.c",
+			"vendor/glfw/src/vulkan.c",
+			"vendor/glfw/src/window.c",
+			"vendor/glfw/src/win32_init.c",
+			"vendor/glfw/src/win32_joystick.c",
+			"vendor/glfw/src/win32_module.c",
+			"vendor/glfw/src/win32_monitor.c",
+			"vendor/glfw/src/win32_time.c",
+			"vendor/glfw/src/win32_thread.c",
+			"vendor/glfw/src/win32_window.c",
+			"vendor/glfw/src/wgl_context.c",
+			"vendor/glfw/src/egl_context.c",
+			"vendor/glfw/src/osmesa_context.c"
+		}
+
+	filter "system:linux" 
+		defines 
+		{ 
+			"GLFW_VULKAN_STATIC",
+			"_GLFW_X11",
+			"_CRT_SECURE_NO_WARNINGS"
+		}
+
+		files
+		{
+			"vendor/glfw/include/GLFW/glfw3.h",
+			"vendor/glfw/include/GLFW/glfw3native.h",
+			"vendor/glfw/src/glfw_config.h",
+			"vendor/glfw/src/context.c",
+			"vendor/glfw/src/init.c",
+			"vendor/glfw/src/input.c",
+			"vendor/glfw/src/monitor.c",
+	
+			"vendor/glfw/src/null_init.c",
+			"vendor/glfw/src/null_joystick.c",
+			"vendor/glfw/src/null_monitor.c",
+			"vendor/glfw/src/null_window.c",
+	
+			"vendor/glfw/src/platform.c",
+			"vendor/glfw/src/vulkan.c",
+			"vendor/glfw/src/window.c",
+
+			"vendor/glfw/src/posix_module.c",
+			"vendor/glfw/src/posix_poll.c",
+			"vendor/glfw/src/posix_thread.c",
+			"vendor/glfw/src/posix_time.c",
+
+			"vendor/glfw/src/linux_joystick.c",
+
+			"vendor/glfw/src/x11_init.c",
+			"vendor/glfw/src/x11_monitor.c",
+			"vendor/glfw/src/x11_window.c",
+
+			"vendor/glfw/src/glx_context.c",
+			"vendor/glfw/src/egl_context.c",
+			"vendor/glfw/src/xkb_unicode.c",
+			"vendor/glfw/src/osmesa_context.c"
+		}

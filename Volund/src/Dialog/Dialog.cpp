@@ -2,65 +2,42 @@
 
 #include "Dialog.h"
 
-#include <windows.h>
-#include <shobjidl_core.h>
+#include "tinyfiledialogs/tinyfiledialogs.c"
+#include "tinyfiledialogs/tinyfiledialogs.h"
 
 namespace Volund
 {
     std::string Dialog::OpenFolder()
     {
-        return FileDialog(FOS_PICKFOLDERS);
+        const char* ret = tinyfd_selectFolderDialog("", "");
+
+        if (ret != nullptr)
+        {
+            return ret;
+        }
+        else
+        {
+            return "";
+        }
     }
 
     std::string Dialog::OpenFile()
     {
-        return FileDialog();
-    }
+        const char* ret = tinyfd_openFileDialog("", "", 0, NULL, "", NULL);
 
-    std::string Dialog::FileDialog(const FILEOPENDIALOGOPTIONS options)
-    {
-        std::string output;
-
-        HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
-
-        if (SUCCEEDED(hr))
+        if (ret != nullptr)
         {
-            IFileOpenDialog* pFileOpen = nullptr;
-
-            // Create the FileOpenDialog object.
-            hr = CoCreateInstance(CLSID_FileOpenDialog, NULL, CLSCTX_ALL, IID_IFileOpenDialog, reinterpret_cast<void**>(&pFileOpen));
-
-            if (SUCCEEDED(hr))
-            {
-                // Show the Open dialog box.
-                pFileOpen->SetOptions(options);
-                //pFileOpen->SetFileTypes(numTypes, cdfs);   //  choose file types to be displayed
-                pFileOpen->SetTitle(L"Open File");         //  heading of dialog box
-                hr = pFileOpen->Show(NULL);
-
-                // Get the file name from the dialog box.
-                if (SUCCEEDED(hr))
-                {
-                    IShellItem* pItem;
-                    hr = pFileOpen->GetResult(&pItem);
-                    if (SUCCEEDED(hr))
-                    {
-                        LPWSTR pTemp;
-                        hr = pItem->GetDisplayName(SIGDN_FILESYSPATH, &pTemp);
-                        std::wstring temp = pTemp;
-                        output = std::string(temp.begin(), temp.end());
-                        if (SUCCEEDED(hr)) 
-                        {
-                            CoTaskMemFree(pTemp);
-                        }
-                        pItem->Release();
-                    }
-                }
-                pFileOpen->Release();
-            }
-            CoUninitialize();
+            return ret;
         }
-
-        return output;
+        else
+        {
+            return "";
+        }
+    }		
+    
+    void Dialog::MessageBox(const std::string& title, const std::string& message,  const std::string& dialogType, const std::string& iconType)
+    {
+        tinyfd_messageBox(title.c_str(), message.c_str(), dialogType.c_str(), iconType.c_str(), 1);
     }
+
 }

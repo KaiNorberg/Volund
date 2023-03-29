@@ -291,8 +291,7 @@ namespace Volund
 		this->m_SolState.new_enum("CursorMode",
 			"NORMAL", CursorMode::Normal,
 			"HIDDEN", CursorMode::Hidden,
-			"DISABLED", CursorMode::Disabled,
-			"CAPTURED", CursorMode::Captured
+			"DISABLED", CursorMode::Disabled
 		);
 	}
 

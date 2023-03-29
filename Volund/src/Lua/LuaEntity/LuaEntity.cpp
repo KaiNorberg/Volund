@@ -7,6 +7,7 @@
 #include "Lua/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaMesh/LuaMesh.h"
 #include "Lua/LuaSound/LuaSound.h"
+#include "Lua/LuaFramebuffer/LuaFramebuffer.h"
 
 namespace Volund
 {
@@ -47,7 +48,7 @@ namespace Volund
 
 			if (table["TargetBuffer"] != sol::lua_nil)
 			{
-				newComponent->SetTargetBuffer(((LuaFramebuffer)table["TargetBuffer"]).Get());
+				newComponent->SetTargetBuffer(table["TargetBuffer"].get<LuaFramebuffer>().Get());
 			}
 			else
 			{

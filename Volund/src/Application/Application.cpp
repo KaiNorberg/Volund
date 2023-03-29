@@ -11,10 +11,18 @@
 
 #include "DelayedTaskHandler/DelayedTaskHandler.h"
 
+#include <glad/glad.h>
+
 namespace Volund
 {
 	void Application::Run()
 	{
+		if (this->m_EventDispatcher == nullptr)
+		{
+			VOLUND_ERROR("App not connected!");
+			return;
+		}
+
 		this->OnRun();
 		this->Loop();
 	}
@@ -39,7 +47,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		std::chrono::time_point<std::chrono::steady_clock> startTime = std::chrono::high_resolution_clock::now();
+		auto startTime = std::chrono::high_resolution_clock::now();
 
 		while (this->m_ShouldRun)
 		{
@@ -48,12 +56,12 @@ namespace Volund
 			TimeStep ts = TimeStep(std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - startTime).count());
 			startTime = std::chrono::high_resolution_clock::now();
 
-			this->m_ThreadPool.Submit([this, ts]()
-			{
+			//this->m_ThreadPool.Submit([this, ts]()
+			//{
 				Event updateEvent = Event(EventType::Update);
 				VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 				this->m_EventDispatcher->Dispatch(updateEvent);
-			});
+			//});
 
 			Renderer::Begin();
 			this->m_EventDispatcher->Dispatch(Event(EventType::Render));
@@ -63,6 +71,11 @@ namespace Volund
 
 			DelayedTaskHandler::Execute();
 		}
+	}
+
+	void Application::Connect(Ref<EventDispatcher> dispatcher)
+	{
+		this->m_EventDispatcher = dispatcher;
 	}
 
 	Application::Application()
@@ -76,8 +89,6 @@ namespace Volund
 #else
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif	
-
-		this->m_EventDispatcher = std::make_shared<EventDispatcher>(this);
 	}
 
 	Application::~Application()

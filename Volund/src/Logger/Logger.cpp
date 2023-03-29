@@ -1,9 +1,7 @@
 #include "PCH/PCH.h"
 #include "Logger.h"
 
-#ifdef VOLUND_DIST
-#include <Windows.h>
-#endif
+#include "Dialog/Dialog.h"
 
 namespace Volund
 {
@@ -67,8 +65,7 @@ namespace Volund
 			this->m_Callback(formatedString);
 		}
 		#ifdef VOLUND_DIST		
-		std::string MessageString = this->FormatString(Format, args);
-		MessageBox(NULL, std::wstring(FormatedString.begin(), FormatedString.end()).c_str(), L"ERROR!", MB_ICONERROR | MB_OK);
+		Dialog::MessageBox("ERROR!", formatedString, "ok", "error");
 		#else		
 		std::cout << formatedString << '\n';
 		#endif
@@ -92,7 +89,7 @@ namespace Volund
 	std::string Logger::FormatString(LoggerColor color, const char* format, std::va_list args) const
 	{
 		std::string output = VOLUND_LOGGERCOLOR_RED;
-		output += std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " + this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
+		output += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now())*/ + " " + this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 
 		switch (color)
 		{

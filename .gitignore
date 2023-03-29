@@ -6,3 +6,4 @@
 *.vcxproj.filters
 bin/
 Editor/data/vendor
+Makefile

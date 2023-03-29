@@ -1,14 +1,11 @@
 #include "PCH/PCH.h"
 #include "Window.h"
 
-#define WIN32_LEAN_AND_MEAN
-
-#include <Windows.h>
-#include <WindowsX.h>
+#include <backends/imgui_impl_glfw.h>
 
 namespace Volund
 {
-	LRESULT CALLBACK WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
+	/*LRESULT CALLBACK WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
 	{
 		WindowData* data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
 
@@ -259,8 +256,160 @@ namespace Volund
 		}
 
 		return NULL;
+	}*/
+
+	Ref<WindowData> windowData;
+
+	void FocusCallback(GLFWwindow* window, int focused)
+	{
+		ImGui_ImplGlfw_WindowFocusCallback(window, focused);
 	}
 
+	void CursorEnterCallback(GLFWwindow* window, int entered)
+	{
+		ImGui_ImplGlfw_CursorEnterCallback(window, entered);
+	}
+
+	void CloseCallback(GLFWwindow *window)
+	{
+		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+		glfwSetWindowShouldClose(window, true);
+
+		Event e = Event(EventType::WindowClose);
+		windowData->Dispatcher->Dispatch(e);
+	}
+
+	void WindowSizeCallback(GLFWwindow *window, int width, int height)
+	{
+		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+		Event e = Event(EventType::WindowSize);
+		VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(e, windowData->Width);
+		VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(e, windowData->Height);
+		windowData->Dispatcher->Dispatch(e);
+	}
+
+	void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+	{
+		ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
+
+		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+		Event e = Event(EventType::Key);
+		VOLUND_EVENT_KEY_SET_KEY(e, (uint32_t)key);
+
+		if (action == GLFW_PRESS)
+		{
+			VOLUND_EVENT_KEY_SET_ISDOWN(e, true);
+		}
+		else if (action == GLFW_RELEASE)
+		{
+			VOLUND_EVENT_KEY_SET_ISDOWN(e, false);
+		}
+
+		windowData->Dispatcher->Dispatch(e);
+	}
+
+	void CursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
+	{
+		ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
+
+		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+		Event e = Event(EventType::MouseMove);
+		VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, xpos);
+		VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, ypos);
+
+		windowData->Dispatcher->Dispatch(e);
+	}
+
+	void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+	{
+		ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
+
+		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+		{
+			if (action == GLFW_PRESS)
+			{
+				Event e = Event(EventType::MouseButton);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
+
+				windowData->Dispatcher->Dispatch(e);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				Event e = Event(EventType::MouseButton);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
+
+				windowData->Dispatcher->Dispatch(e);
+			}
+		}
+		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+		{
+			if (action == GLFW_PRESS)
+			{
+				Event e = Event(EventType::MouseButton);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
+
+				windowData->Dispatcher->Dispatch(e);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				Event e = Event(EventType::MouseButton);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
+
+				windowData->Dispatcher->Dispatch(e);
+			}
+		}
+		else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
+		{
+			if (action == GLFW_PRESS)
+			{
+				Event e = Event(EventType::MouseButton);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
+
+				windowData->Dispatcher->Dispatch(e);
+			}
+			else if (action == GLFW_RELEASE)
+			{
+				Event e = Event(EventType::MouseButton);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
+				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
+
+				windowData->Dispatcher->Dispatch(e);
+			}
+		}
+	}
+
+	void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+	{
+		ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
+
+		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
+
+		Event e = Event(EventType::MouseWheel);
+		VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, yoffset);
+
+		windowData->Dispatcher->Dispatch(e);
+	}
+
+	void CharCallback(GLFWwindow *window, unsigned int c)
+	{
+		ImGui_ImplGlfw_CharCallback(window, c);
+	}
+
+	void MonitorCallback(GLFWmonitor* monitor, int event)
+	{
+		ImGui_ImplGlfw_MonitorCallback(monitor, event);
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -268,119 +417,57 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		MSG message;
-
-		while (PeekMessageW(&message, nullptr, 0, 0, PM_REMOVE) > 0)
-		{
-			TranslateMessage(&message);
-			DispatchMessage(&message);
-		}
+		glfwPollEvents();
 	}
 
-	void Window::SetProcedureCatch(const ProcCatch procedureCatch)
+	GLFWwindow* Window::GetGlfwWindow()
 	{
-		this->m_Data.ProcedureCatch = procedureCatch;
+		return this->m_WindowData->GlfwWindow;
 	}
 
 	void Window::SetCursorMode(const CursorMode newMode)
 	{
-		switch (newMode)
-		{
-		case CursorMode::Normal:
-		{
-			this->m_Data.CaptureMouse = false;
-			this->m_Data.ShowMouse = true;
-		}
-		break;
-		case CursorMode::Hidden:
-		{
-			this->m_Data.CaptureMouse = false;
-			this->m_Data.ShowMouse = false;
-		}
-		break;
-		case CursorMode::Disabled:
-		{
-			this->m_Data.CaptureMouse = true;
-			this->m_Data.ShowMouse = false;
-		}
-		break;
-		case CursorMode::Captured:
-		{
-			this->m_Data.CaptureMouse = true;
-			this->m_Data.ShowMouse = true;
-		}
-		break;
-		}			
-		
-		if (!this->m_Data.ShowMouse)
-		{
-			while (ShowCursor(false) >= -1) {}
-		}
-		else
-		{
-			while (ShowCursor(true) < 0) {}
-		}
+		glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, (int32_t)newMode);
 	}
 
-	void Window::SetFocus()
+	void Window::SetTitle(const std::string &title)
 	{
-		::SetFocus((HWND)this->m_Data.Handle);
-		SendMessage((HWND)this->m_Data.Handle, WM_SETFOCUS, 0, 0);
-	}
-
-	void Window::SetTitle(const std::string_view title)
-	{
-		SetWindowText((HWND)this->m_Data.Handle, Utils::ConvertToWString(title).c_str());
+		glfwSetWindowTitle(this->m_WindowData->GlfwWindow, title.c_str());
 	}
 
 	void Window::SetVsync(const bool enabled)
 	{
-		this->m_Data.Context->SetVSync(enabled);
+		glfwSwapInterval(enabled);
 	}
 
 	Vec2 Window::GetSize()
 	{
-		return Vec2(this->m_Data.Width, this->m_Data.Height);
+		return Vec2(this->m_WindowData->Width, this->m_WindowData->Height);
 	}
 
 	float Window::GetAspectRatio()
 	{
-		if (this->m_Data.Width == 0 || this->m_Data.Height == 0)
+		if (this->m_WindowData->Width == 0 || this->m_WindowData->Height == 0)
 		{
 			return 0;
 		}
 		else
 		{
-			return (float)this->m_Data.Width / (float)this->m_Data.Height;
+			return (float)this->m_WindowData->Width / (float)this->m_WindowData->Height;
 		}
 	}
 
-	void* Window::GetInstance()
-	{
-		return this->m_Data.Instance;
-	}
-
-	void* Window::GetHandle()
-	{
-		return this->m_Data.Handle;
-	}
-
-	void* Window::GetDeviceContext()
-	{
-		return this->m_Data.DeviceContext;
-	}
-
 	void Window::Show()
-	{	
-		ShowWindow((HWND)this->m_Data.Handle, SW_SHOW);
+	{
 		this->Update();
+		glfwShowWindow(this->m_WindowData->GlfwWindow);
 	}
 
 	void Window::Flush()
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		::SwapBuffers((HDC)this->m_Data.DeviceContext);
+		glfwSwapBuffers(this->m_WindowData->GlfwWindow);
 	}
 
 	void Window::Reset()
@@ -392,124 +479,67 @@ namespace Volund
 	Window::Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
 	{
 		VOLUND_INFO("Creating window...");
-		
-		this->m_Data.Dispatcher = Dispatcher;
-		this->m_Data.FullScreen = FullScreen;
 
-		this->m_Data.Instance = GetModuleHandle(nullptr);
+		this->m_WindowData = std::make_shared<WindowData>();
 
-		DWORD dwExStyle;
-		DWORD dwStyle;
+		windowData = this->m_WindowData;
+		windowData->Dispatcher = Dispatcher;
+
+		if (!glfwInit())
+		{
+		}
 
 		if (FullScreen)
 		{
-			this->m_Data.Width = (uint64_t)GetSystemMetrics(SM_CXSCREEN);
-			this->m_Data.Height = (uint64_t)GetSystemMetrics(SM_CYSCREEN);
+			GLFWmonitor* monitor = glfwGetPrimaryMonitor();
 
-			DEVMODE ScreenSettings;
-			memset(&ScreenSettings, 0, sizeof(ScreenSettings));
-			ScreenSettings.dmSize = sizeof(ScreenSettings);
-			ScreenSettings.dmPelsWidth = (DWORD)Width;
-			ScreenSettings.dmPelsHeight = (DWORD)Height;
-			ScreenSettings.dmBitsPerPel = 16;
-			ScreenSettings.dmFields = DM_BITSPERPEL | DM_PELSWIDTH | DM_PELSHEIGHT;
+			const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
-			ChangeDisplaySettings(&ScreenSettings, CDS_FULLSCREEN);
+			glfwWindowHint(GLFW_RED_BITS, mode->redBits);
+			glfwWindowHint(GLFW_GREEN_BITS, mode->greenBits);
+			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
+			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-			dwExStyle = WS_EX_APPWINDOW;
-			dwStyle = WS_POPUP;
+			GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Volund", monitor, NULL);
+			m_WindowData->Height = mode->height;
+			m_WindowData->Width = mode->width;
 		}
 		else
 		{
-			this->m_Data.Width = Width;
-			this->m_Data.Height = Height;
+			this->m_WindowData->GlfwWindow = glfwCreateWindow(Width, Height, "Volund", NULL, NULL);
 
-			dwExStyle = WS_EX_APPWINDOW | WS_EX_WINDOWEDGE;
-			dwStyle = WS_OVERLAPPEDWINDOW;
+			m_WindowData->Height = Height;
+			m_WindowData->Width = Width;
 		}
 
-		WNDCLASS Temp;
-
-		if (GetClassInfo((HINSTANCE)this->m_Data.Instance, L"VolundWindow", &Temp) == 0)
+		if (!this->m_WindowData->GlfwWindow)
 		{
-			WNDCLASS WindowClass = {};
-			WindowClass.style = CS_HREDRAW | CS_VREDRAW | CS_OWNDC;
-			WindowClass.lpfnWndProc = (WNDPROC)WindowProcedure;
-			WindowClass.cbClsExtra = 0;
-			WindowClass.cbWndExtra = 0;
-			WindowClass.hInstance = (HINSTANCE)this->m_Data.Instance;
-			WindowClass.hIcon = LoadIcon(nullptr, IDI_WINLOGO);
-			WindowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
-			WindowClass.hbrBackground = nullptr;
-			WindowClass.lpszMenuName = nullptr;
-			WindowClass.lpszClassName = L"VolundWindow";
-
-			VOLUND_ASSERT(RegisterClass(&WindowClass), "Failed to register Window class!");
+			glfwTerminate();
+			return;
 		}
+		
+		glfwMakeContextCurrent(this->m_WindowData->GlfwWindow);
 
-		RECT WindowRect = { 0, 0, (LONG)this->m_Data.Width, (LONG)this->m_Data.Height };
-		AdjustWindowRectEx(&WindowRect, dwStyle, false, dwExStyle);
+		glfwSetWindowUserPointer(this->m_WindowData->GlfwWindow, this->m_WindowData.get());
 
-		this->m_Data.Handle = CreateWindowEx(dwExStyle, L"VolundWindow", L"", WS_CLIPSIBLINGS | WS_CLIPCHILDREN | dwStyle, 0,
-			0, WindowRect.right - WindowRect.left, WindowRect.bottom - WindowRect.top,
-			nullptr, nullptr, (HINSTANCE)this->m_Data.Instance, nullptr);
+		glfwSetWindowFocusCallback(this->m_WindowData->GlfwWindow, FocusCallback);
+		glfwSetCursorEnterCallback(this->m_WindowData->GlfwWindow, CursorEnterCallback);
+		glfwSetWindowCloseCallback(this->m_WindowData->GlfwWindow, CloseCallback);
+		glfwSetWindowSizeCallback(this->m_WindowData->GlfwWindow, WindowSizeCallback);
+		glfwSetKeyCallback(this->m_WindowData->GlfwWindow, KeyCallback);
+		glfwSetCursorPosCallback(this->m_WindowData->GlfwWindow, CursorPositionCallback);
+		glfwSetMouseButtonCallback(this->m_WindowData->GlfwWindow, MouseButtonCallback);
+		glfwSetScrollCallback(this->m_WindowData->GlfwWindow, ScrollCallback);
+		glfwSetCharCallback(this->m_WindowData->GlfwWindow, CharCallback);
+		glfwSetMonitorCallback(MonitorCallback);
 
-		VOLUND_ASSERT(this->m_Data.Handle, "Failed to create Window!");
-
-		PIXELFORMATDESCRIPTOR PFD =
-		{
-			sizeof(PIXELFORMATDESCRIPTOR),
-			1,
-			PFD_DRAW_TO_WINDOW |
-			PFD_SUPPORT_OPENGL |
-			PFD_DOUBLEBUFFER,
-			PFD_TYPE_RGBA,
-			16,
-			0, 0, 0, 0, 0, 0,
-			0,
-			0,
-			0,
-			0, 0, 0, 0,
-			16,
-			0,
-			0,
-			PFD_MAIN_PLANE,
-			0,
-			0, 0, 0
-		};
-
-		this->m_Data.DeviceContext = GetDC((HWND)this->m_Data.Handle);
-
-		VOLUND_ASSERT(this->m_Data.DeviceContext, "Failed to create a Window Device Context!");
-
-		int32_t PixelFormat = ChoosePixelFormat((HDC)this->m_Data.DeviceContext, &PFD);
-
-		VOLUND_ASSERT(PixelFormat, "Unable to find a suitable Pixel Format!");
-
-		VOLUND_ASSERT(SetPixelFormat((HDC)this->m_Data.DeviceContext, PixelFormat, &PFD), "Unable to set Pixel Format!");
-
-		SetWindowLongPtr((HWND)this->m_Data.Handle, GWLP_USERDATA, (LONG_PTR)&this->m_Data);
-
-		this->m_Data.Context = VL::RenderingContext::Create(Window::GetDeviceContext());
-		this->m_Data.Context->MakeCurrent();
-
-		this->Reset();
+		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 	}
 
 	Window::~Window()
 	{
-		if (this->m_Data.FullScreen)
-		{
-			ChangeDisplaySettings(nullptr, 0);
-		}
-
-		ShowCursor(true);
-
-		ReleaseDC((HWND)this->m_Data.Handle, (HDC)this->m_Data.DeviceContext);
-
-		DestroyWindow((HWND)this->m_Data.Handle);
-
-		UnregisterClass(L"VolundWindow", (HINSTANCE)this->m_Data.Instance);
+		glfwDestroyWindow(this->m_WindowData->GlfwWindow);
+		glfwTerminate();
 	}
 
-} //namespace Volund
+} // namespace Volund
