@@ -1,4 +1,4 @@
---[[
+
 Rotate = require("Scripts/Rotate.lua")
 
 SimpleShader = Shader:new("Simple.vshader")
@@ -20,13 +20,12 @@ BlueMaterial:SetVec3("Color", Vec3:new(0.0, 0.0, 1.0))
 
 WhiteMaterial = Material:new(SimpleShader)
 WhiteMaterial:SetVec3("Color", Vec3:new(1.0, 1.0, 1.0))
---]]
 
 Camera = Scene:CreateEntity()
 Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 2.0, 10.0)})
 Camera:Add(Component.CAMERA, {IsActive = true})
 Camera:Add(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
---[[
+
 TextureCube = Scene:CreateEntity()
 TextureCube:Add(Component.TRANSFORM, {Position = Vec3:new(-3.0, 0.0, 0.0)})
 TextureCube:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = TextureMaterial})
@@ -49,4 +48,3 @@ Ground:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, -10.0, 0.0), Scale = V
 Ground:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = WhiteMaterial})
 
 Window:SetCursorMode(CursorMode.DISABLED)
-]]--

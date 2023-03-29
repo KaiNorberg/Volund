@@ -35,7 +35,7 @@ namespace Volund
         }
     }		
     
-    void Dialog::MessageBox(const std::string& title, const std::string& message,  const std::string& dialogType, const std::string& iconType)
+    void Dialog::Message(const std::string& title, const std::string& message,  const std::string& dialogType, const std::string& iconType)
     {
         tinyfd_messageBox(title.c_str(), message.c_str(), dialogType.c_str(), iconType.c_str(), 1);
     }

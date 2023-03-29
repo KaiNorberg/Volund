@@ -10,8 +10,8 @@ namespace Volund
 
 	bool Input::IsPressed(char keyCode)
 	{
-		const bool isDown = this->m_Keys[keyCode] == 1;
-		this->m_Keys[keyCode] += isDown;
+		const bool isDown = this->m_Keys[keyCode];
+		this->m_Keys[keyCode] = false;
 
 		return isDown;
 	}
@@ -46,13 +46,11 @@ namespace Volund
 		switch (e.Type)
 		{
 		case EventType::Key:
-		{
+		{		
 			const bool isDown = (bool)VOLUND_EVENT_KEY_GET_ISDOWN(e);
 			const uint64_t key = VOLUND_EVENT_KEY_GET_KEY(e);
 
-			this->m_Keys[key] += isDown;
-			this->m_Keys[key] *= isDown;
-			this->m_Keys[key] = Utils::Min(this->m_Keys[key], (int8_t)100);
+			this->m_Keys[key] = isDown;	
 		}
 		break;
 		case EventType::MouseButton:
@@ -60,9 +58,7 @@ namespace Volund
 			const bool isDown = (bool)VOLUND_EVENT_MOUSE_BUTTON_GET_ISDOWN(e);
 			const uint64_t button = VOLUND_EVENT_MOUSE_BUTTON_GET_BUTTON(e);
 
-			this->m_MouseButtons[button] += isDown;
-			this->m_MouseButtons[button] *= isDown;
-			this->m_MouseButtons[button] = Utils::Min(this->m_MouseButtons[button], (int8_t)100);
+			this->m_MouseButtons[button] = isDown;
 		}
 		break;
 		case EventType::MouseWheel:

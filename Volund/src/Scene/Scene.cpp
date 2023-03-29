@@ -55,7 +55,7 @@ namespace Volund
 	{
 		auto spec = this->m_TargetBuffer->GetSpec();
 
-		if (this->m_TargetBuffer != nullptr && (width != spec.Width || height != spec.Height))
+		if (width != spec.Width || height != spec.Height)
 		{
 			spec.Width = width;
 			spec.Height = height;

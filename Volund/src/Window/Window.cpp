@@ -307,6 +307,10 @@ namespace Volund
 		{
 			VOLUND_EVENT_KEY_SET_ISDOWN(e, false);
 		}
+		else
+		{
+			return;
+		}
 
 		windowData->Dispatcher->Dispatch(e);
 	}
@@ -455,12 +459,6 @@ namespace Volund
 		{
 			return (float)this->m_WindowData->Width / (float)this->m_WindowData->Height;
 		}
-	}
-
-	void Window::Show()
-	{
-		this->Update();
-		glfwShowWindow(this->m_WindowData->GlfwWindow);
 	}
 
 	void Window::Flush()

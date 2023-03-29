@@ -32,8 +32,8 @@ namespace Volund
 	{
 		std::unique_lock lock(this->m_Mutex);
 
-		//DelayedTaskHandler::DelayTask([this, filepath]()
-		//{
+		DelayedTaskHandler::DelayTask([this, filepath]()
+		{
 			if (!this->m_Filepath.empty())
 			{
 				const std::string parentPath = std::filesystem::path(this->m_Filepath).parent_path().string();
@@ -56,7 +56,7 @@ namespace Volund
 			{
 				VOLUND_WARNING(e.what());
 			}
-		//});
+		});
 	}
 
 	void GameModule::OnAttach(Application* app)
@@ -84,7 +84,7 @@ namespace Volund
 
 		if (this->m_GameState != nullptr)
 		{
-			//this->m_GameState->Procedure(e);
+			this->m_GameState->Procedure(e);
 		}
 	}
 }

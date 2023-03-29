@@ -10,7 +10,7 @@ namespace Volund
 
 		static std::string OpenFile();
 
-		static void MessageBox(const std::string& title, const std::string& message, const std::string& dialogType, const std::string& iconType);
+		static void Message(const std::string& title, const std::string& message, const std::string& dialogType, const std::string& iconType);
 
 	private:
 	};

@@ -21,7 +21,7 @@ int Main()
 	return EXIT_SUCCESS;
 }
 
-#if defined(VOLUND_DIST) && defined(WIN32)
+#if defined(VOLUND_DIST) && defined(_WIN32)
 
 #include <Windows.h>
 

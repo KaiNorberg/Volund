@@ -26,7 +26,7 @@ namespace Volund
 
 		uint32_t m_ScrollPosition;
 
-		int8_t m_MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
-		int8_t m_Keys[VOLUND_KEY_AMOUNT];
+		bool m_MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
+		bool m_Keys[VOLUND_KEY_AMOUNT];
 	};
 }

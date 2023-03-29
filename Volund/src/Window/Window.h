@@ -43,8 +43,6 @@ namespace Volund
 
 		float GetAspectRatio();
 
-		void Show();
-
 		void Flush();
 
 		void Reset();

@@ -65,7 +65,7 @@ namespace Volund
 			this->m_Callback(formatedString);
 		}
 		#ifdef VOLUND_DIST		
-		Dialog::MessageBox("ERROR!", formatedString, "ok", "error");
+		Dialog::Message("ERROR!", formatedString, "ok", "error");
 		#else		
 		std::cout << formatedString << '\n';
 		#endif

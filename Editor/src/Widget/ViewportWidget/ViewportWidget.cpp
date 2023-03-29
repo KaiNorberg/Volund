@@ -13,7 +13,7 @@ void ViewportWidget::OnKey(const VL::Event& e)
 
 	this->m_Input.Procedure(e);
 
-	if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
+	//if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
 		if (this->m_Input.IsPressed('R'))
 		{
@@ -42,7 +42,7 @@ void ViewportWidget::OnRender()
 	{
 		if (ImGui::Button("Load Scene (Shift + E)"))
 		{
-			std::string filepath = "../../TestScenes/Simple/Simple.lua";
+			const std::string filepath = VL::Dialog::OpenFile();
 			if (!filepath.empty())
 			{
 				gameModule->NewState(filepath);
@@ -65,7 +65,10 @@ void ViewportWidget::OnRender()
 
 			if (ImGui::BeginChild("ViewPort"))
 			{
-				const auto viewportSize = ImGui::GetContentRegionAvail();
+				ImVec2 vMin = ImGui::GetWindowContentRegionMin();
+				ImVec2 vMax = ImGui::GetWindowContentRegionMax();
+
+				ImVec2 viewportSize = ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
 
 				scene->ResizeTarget(viewportSize.x, viewportSize.y);
 
