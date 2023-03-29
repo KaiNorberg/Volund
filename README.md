@@ -1,7 +1,7 @@
 # Volund [![License](https://img.shields.io/badge/licence-MIT-green)](https://github.com/Kaj9296/Volund/blob/main/LICENSE)
 
 
-Volund is a game engine written in C++ with Lua scripting for the Windows 10/11 operating system.
+Volund is a game engine written in C++ with Lua scripting for Windows and Linux.
 
 ***
 
@@ -9,7 +9,7 @@ Volund is a game engine written in C++ with Lua scripting for the Windows 10/11 
 
 ## Getting Started
 
-To get started with Volund, it is recommended to use Visual Studio 2019 or 2022. Other tool sets may work, but are not officially tested. You will need to be using Windows 10/11 to build Volund.
+To get started with Volund, it is recommended to use Visual Studio 2022 or gmake. Other tool sets may work, but are not officially tested. You will need to be using Windows or Linux to build Volund.
 
 <ins>**1. Cloning (downloading) this repository**</ins>
 
@@ -19,11 +19,11 @@ To clone (download) this repository, you can use the ```Code``` button at the to
 
 Building Volund is as simple as running the [premake.bat](https://github.com/Kaj9296/Volund-2/blob/main/premake.bat) file in the CMD with an argument specifying what toolset you wish to use. For example, if you wish to use Visual Studio 2022 then you would type ```premake.bat vs2022```.
 
-After that, you can simply compile the generated project with your chosen tool set!
+After that, you can simply compile the generated project with your chosen tool set.
 
 ## Running a Scene
 
-In Volund a scene is simply any .lua file. Currently the only way to run a scene is to open the Editor and click the ```Load Scene``` button within the ```Viewport``` Widget, after that simply select the .lua file you wish to run.
+In Volund a scene is simply any .lua file. Currently the only way to run a scene is to open the Editor (the executable that was generated using your chosen toolset in the previous step) and click the ```Load Scene``` button within the ```Viewport``` Widget, after that simply select the .lua file you wish to run. Some example files can be found in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder.
 
 ## Example Scene
 
@@ -60,10 +60,8 @@ Volund is open to contributions. There are currently no strict guidelines for co
 The main goal of the project is to create a game engine that allows for low level experimentation without the complexity of working on a low level.
 
 - PBR 3D rendering
-- 3rd party 3D physics engine
-- Audio system
 - Lua scripting
 - C++ scripting
-- A feature-complete Entity Component system.
+- Windows and Linux Compatibility
 - Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan.
 - Tools for training and using deep learning/neural networks.
