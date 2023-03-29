@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Renderer/Indexbuffer/Indexbuffer.h"
-#include "Renderer/Vertexbuffer/Vertexbuffer.h"
+#include "Renderer/IndexBuffer/IndexBuffer.h"
+#include "Renderer/VertexBuffer/VertexBuffer.h"
 
 #include "AABB/AABB.h"
 
@@ -18,19 +18,19 @@ namespace Volund
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual void SetVertexbuffer(Ref<Vertexbuffer>& buffer) = 0;
-		virtual void SetIndexbuffer(Ref<Indexbuffer>& buffer) = 0;
+		virtual void SetVertexBuffer(Ref<VertexBuffer>& buffer) = 0;
+		virtual void SetIndexBuffer(Ref<IndexBuffer>& buffer) = 0;
 
-		Ref<Vertexbuffer> GetVertexbuffer();
-		Ref<Indexbuffer> GetIndexbuffer();
-		const Ref<Vertexbuffer> GetVertexbuffer() const;
-		const Ref<Indexbuffer> GetIndexbuffer() const;
+		Ref<VertexBuffer> GetVertexBuffer();
+		Ref<IndexBuffer> GetIndexBuffer();
+		const Ref<VertexBuffer> GetVertexBuffer() const;
+		const Ref<IndexBuffer> GetIndexBuffer() const;
 
 		static Ref<Mesh> Create(const std::string& filepath);
 
 		static Ref<Mesh> Create();
 
-		static Ref<Mesh> Create(Ref<Vertexbuffer>& vertexbuffer, Ref<Indexbuffer>& indexbuffer);
+		static Ref<Mesh> Create(Ref<VertexBuffer>& VertexBuffer, Ref<IndexBuffer>& IndexBuffer);
 
 		virtual ~Mesh() = default;
 
@@ -40,7 +40,7 @@ namespace Volund
 
 		std::string m_Filepath;
 
-		Ref<Vertexbuffer> m_Vertexbuffer;
-		Ref<Indexbuffer> m_Indexbuffer;
+		Ref<VertexBuffer> m_VertexBuffer;
+		Ref<IndexBuffer> m_IndexBuffer;
 	};
 }

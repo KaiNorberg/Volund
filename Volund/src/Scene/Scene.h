@@ -17,7 +17,7 @@ namespace Volund
 	{
 	public:
 
-		std::chrono::time_point<std::chrono::steady_clock> GetStartTime();
+		CHRONO_TIME_POINT GetStartTime();
 
 		Ref<Framebuffer> GetTargetBuffer();
 
@@ -58,7 +58,7 @@ namespace Volund
 
 		Registry m_Registry;
 
-		std::chrono::time_point<std::chrono::steady_clock> m_StartTime;
+		CHRONO_TIME_POINT m_StartTime;
 
 		Ref<Framebuffer> m_TargetBuffer;
 	};
@@ -143,7 +143,7 @@ namespace Volund
 
 		for (auto& [entity, Container] : this->m_Registry)
 		{
-			for (auto& component : Container.View<T>())
+			for (auto& component : Container.template View<T>())
 			{
 				output.push_back(std::dynamic_pointer_cast<T>(component));
 			}

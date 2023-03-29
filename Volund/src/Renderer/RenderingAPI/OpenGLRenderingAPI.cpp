@@ -119,9 +119,9 @@ namespace Volund
 
 	void OpenGLRenderingAPI::DrawIndexed(const Ref<Mesh>& mesh)
 	{
-		if (mesh->GetIndexbuffer() != nullptr)
+		if (mesh->GetIndexBuffer() != nullptr)
 		{
-			glDrawElements(GL_TRIANGLES, mesh->GetIndexbuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
+			glDrawElements(GL_TRIANGLES, mesh->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 		}
 	}
 

@@ -5,8 +5,6 @@
 
 #include "Container/Container.h"
 
-#include "Materialvalue.h"
-
 namespace Volund
 {
 	class Material

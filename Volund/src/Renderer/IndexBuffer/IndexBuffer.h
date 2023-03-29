@@ -2,7 +2,7 @@
 
 namespace Volund
 {
-	class Indexbuffer
+	class IndexBuffer
 	{
 	public:
 		virtual void Bind() = 0;
@@ -11,9 +11,9 @@ namespace Volund
 
 		uint32_t GetCount() const;
 
-		static Ref<Indexbuffer> Create(const uint32_t indices[], uint32_t size);
+		static Ref<IndexBuffer> Create(const uint32_t indices[], uint32_t size);
 
-		virtual ~Indexbuffer() = default;
+		virtual ~IndexBuffer() = default;
 
 	protected:
 		uint32_t m_Count = 0;

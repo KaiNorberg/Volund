@@ -2,41 +2,27 @@
 
 #include "EventDispatcher/EventDispatcher.h"
 
-#include "Renderer/RenderingContext/RenderingContext.h"
-
 #include "Renderer/Framebuffer/Framebuffer.h"
+
+#include "GLFW/glfw3.h"
 
 namespace Volund
 {
-	using ProcCatch = void*(*)(void*, uint32_t, uint64_t, uint64_t);
-
 	struct WindowData
 	{
 		uint64_t Width = 0;
 		uint64_t Height = 0;
 
-		bool FullScreen = false;
-
-		bool CaptureMouse = false;
-		bool ShowMouse = true;
-
-		void* Handle = nullptr;
-		void* Instance = nullptr;
-		void* DeviceContext = nullptr;
-
-		ProcCatch ProcedureCatch = nullptr;
+		GLFWwindow* GlfwWindow;
 
 		Ref<EventDispatcher> Dispatcher;
-
-		Ref<RenderingContext> Context;
 	};
 
 	enum class CursorMode
 	{
-		Normal,
-		Hidden,
-		Disabled,
-		Captured
+		Normal = GLFW_CURSOR_NORMAL,
+		Hidden = GLFW_CURSOR_HIDDEN,
+		Disabled = GLFW_CURSOR_DISABLED
 	};
 
 	class Window
@@ -45,25 +31,17 @@ namespace Volund
 
 		void Update();
 
-		void SetProcedureCatch(ProcCatch procedureCatch);
+		GLFWwindow* GetGlfwWindow();
 
 		void SetCursorMode(CursorMode newMode);
 
-		void SetTitle(std::string_view title);
+		void SetTitle(const std::string& title);
 
 		void SetVsync(bool enabled);
-
-		void SetFocus();
 
 		Vec2 GetSize();
 
 		float GetAspectRatio();
-
-		void* GetInstance();
-
-		void* GetHandle();
-
-		void* GetDeviceContext();
 
 		void Show();
 
@@ -77,7 +55,8 @@ namespace Volund
 
 	private:
 
-		WindowData m_Data;
+		Ref<WindowData> m_WindowData;
+
 	};
 
 }

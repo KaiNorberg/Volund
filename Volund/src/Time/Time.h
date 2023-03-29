@@ -12,7 +12,7 @@ namespace Volund
 
 		~Timer();
 	private:
-		std::chrono::time_point<std::chrono::steady_clock> m_Start;
+		CHRONO_TIME_POINT m_Start;
 	};
 
 	class TimeStep

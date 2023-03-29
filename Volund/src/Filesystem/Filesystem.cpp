@@ -9,12 +9,12 @@ namespace Volund
 		{
 			return LoadResource(filepath);
 		}
-
+		
 		std::ifstream file(GetFinalPath(filepath));
 		
 		if (!file)
-		{
-			VOLUND_WARNING("Unable to load file (%s).", filepath.c_str());
+		{		
+			VOLUND_WARNING("Unable to load file %s.", filepath.c_str());
 
 			return "";
 		}
@@ -83,10 +83,10 @@ namespace Volund
 
 		for (auto& relativePath : m_RelativeFilepaths)
 		{
-			std::string newPath = relativePath + "\\" + filepath;
+			std::string newPath = relativePath + "/" + filepath;
 
 			if (std::filesystem::exists(newPath))
-			{
+			{			
 				return newPath;
 			}
 		}

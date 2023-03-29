@@ -11,11 +11,7 @@
 #include <vector>
 #include <array>
 #include <map>
-#if defined(_MSC_VER)
 #include <unordered_map>
-#else
-#include <tr/unordered_map>
-#endif
 #include <queue>
 #include <cstdarg>
 #include <filesystem>

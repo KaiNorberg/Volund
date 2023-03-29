@@ -1,19 +1,19 @@
 #pragma once
 
-#include "Indexbuffer.h"
+#include "IndexBuffer.h"
 
 namespace Volund
 {
-	class OpenGLIndexbuffer : public Indexbuffer
+	class OpenGLIndexBuffer : public IndexBuffer
 	{
 	public:
 		void Bind() override;
 
 		void Unbind() override;
 
-		OpenGLIndexbuffer(const uint32_t indices[], uint32_t count);
+		OpenGLIndexBuffer(const uint32_t indices[], uint32_t count);
 
-		~OpenGLIndexbuffer() override;
+		~OpenGLIndexBuffer() override;
 
 	private:
 		uint32_t m_ID;

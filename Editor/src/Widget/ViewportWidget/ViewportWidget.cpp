@@ -25,7 +25,7 @@ void ViewportWidget::OnKey(const VL::Event& e)
 		}		
 		else if (this->m_Input.IsPressed('E'))
 		{
-			const std::string filepath = VL::FileDialog::OpenFile();
+			const std::string filepath = VL::Dialog::OpenFile();
 			if (!filepath.empty())
 			{
 				gameModule->NewState(filepath);
@@ -42,7 +42,7 @@ void ViewportWidget::OnRender()
 	{
 		if (ImGui::Button("Load Scene (Shift + E)"))
 		{
-			const std::string filepath = VL::FileDialog::OpenFile();
+			std::string filepath = "../../TestScenes/Simple/Simple.lua";
 			if (!filepath.empty())
 			{
 				gameModule->NewState(filepath);

@@ -17,6 +17,12 @@
 
 //#define VOLUND_ENABLE_PROFILING
 
+#ifdef _WIN32
+#define CHRONO_TIME_POINT std::chrono::time_point<std::chrono::steady_clock>
+#else
+#define CHRONO_TIME_POINT std::chrono::_V2::system_clock::time_point
+#endif
+
 namespace Volund
 {
 	/// <summary>

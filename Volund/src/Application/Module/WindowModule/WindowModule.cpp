@@ -3,8 +3,6 @@
 
 #include "Application/Application.h"
 
-#include "glad/glad.h"
-
 namespace Volund
 {
 	Ref<Window> WindowModule::GetWindow()
@@ -17,16 +15,16 @@ namespace Volund
 		this->m_Window = std::make_shared<Window>(app->GetEventDispatcher(), 1980, 1080, false);
 
 		this->m_Window->SetTitle("Volund");
-		this->m_Window->SetFocus();
+		//this->m_Window->SetFocus();
 
 		this->m_Window->Show();
 
 		VL::RenderingAPI::Init();
 		VL::Renderer::Init(this->m_RendererInstance);
 
-		VOLUND_INFO("OpenGL Renderer: %s", glGetString(GL_RENDERER));
-		VOLUND_INFO("OpenGL Version: %s", glGetString(GL_VERSION));
-		VOLUND_INFO("OpenGL Vendor: %s", glGetString(GL_VENDOR));		
+		//VOLUND_INFO("OpenGL Renderer: %s", glGetString(GL_RENDERER));
+		//VOLUND_INFO("OpenGL Version: %s", glGetString(GL_VERSION));
+		//VOLUND_INFO("OpenGL Vendor: %s", glGetString(GL_VENDOR));		
 	}
 
 	void WindowModule::OnDetach()

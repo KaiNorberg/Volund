@@ -1,7 +1,5 @@
 #pragma once
 
-typedef unsigned long FILEOPENDIALOGOPTIONS;
-
 namespace Volund
 {
 	class Dialog
@@ -12,8 +10,8 @@ namespace Volund
 
 		static std::string OpenFile();
 
-	private:
+		static void MessageBox(const std::string& title, const std::string& message, const std::string& dialogType, const std::string& iconType);
 
-		static std::string FileDialog(FILEOPENDIALOGOPTIONS options = NULL);
+	private:
 	};
 }

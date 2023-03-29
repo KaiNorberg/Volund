@@ -2,6 +2,8 @@
 #include "Framebuffer.h"
 #include "OpenGLFramebuffer.h"
 
+#include "Renderer/RenderingAPI/RenderingAPI.h"
+
 #include <glad/glad.h>
 
 namespace Volund
@@ -124,6 +126,10 @@ namespace Volund
 	{
 		this->m_Spec = spec;
 		this->Invalidate();
+
+		this->Bind();
+		RenderingAPI::Clear();
+		this->Unbind();
 	}
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()

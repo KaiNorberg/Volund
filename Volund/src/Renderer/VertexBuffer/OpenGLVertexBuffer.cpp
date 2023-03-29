@@ -1,39 +1,39 @@
 #include "PCH/PCH.h"
 
-#include "OpenGLVertexbuffer.h"
+#include "OpenGLVertexBuffer.h"
 
 #include <glad/include/glad/glad.h>
 
 namespace Volund
 {
-	void OpenGLVertexbuffer::Bind()
+	void OpenGLVertexBuffer::Bind()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
 	}
 
-	void OpenGLVertexbuffer::Unbind()
+	void OpenGLVertexBuffer::Unbind()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 	}
 
-	void OpenGLVertexbuffer::SetLayout(const VertexLayout& layout)
+	void OpenGLVertexBuffer::SetLayout(const VertexLayout& layout)
 	{
 		this->m_Layout = layout;
 	}
 
-	VertexLayout OpenGLVertexbuffer::GetLayout()
+	VertexLayout OpenGLVertexBuffer::GetLayout()
 	{
 		return this->m_Layout;
 	}
 
-	OpenGLVertexbuffer::OpenGLVertexbuffer(const float vertices[], const uint32_t count)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const float vertices[], const uint32_t count)
 	{
 		glCreateBuffers(1, &this->m_ID);
 		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), vertices, GL_STATIC_DRAW);
 	}
 
-	OpenGLVertexbuffer::~OpenGLVertexbuffer()
+	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
 		glDeleteBuffers(1, &this->m_ID);
 	}
