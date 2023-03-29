@@ -36,8 +36,8 @@ namespace Volund
 		{
 		case EventType::Render:
 		{
-			this->m_Window->Update();
 			this->m_Window->Flush();
+			this->m_Window->Update();
 		}
 		break;
 		default:

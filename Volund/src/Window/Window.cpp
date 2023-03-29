@@ -274,8 +274,6 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		glfwSetWindowShouldClose(window, true);
-
 		Event e = Event(EventType::WindowClose);
 		windowData->Dispatcher->Dispatch(e);
 	}

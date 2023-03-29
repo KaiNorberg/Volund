@@ -13,9 +13,9 @@ namespace Volund
 		this->m_Context = std::make_shared<AudioContext>(this->m_Device);
 		this->m_Context->MakeCurrent();
 
-		//VOLUND_INFO("OpenAL Renderer: %s", alGetString(AL_RENDERER));
-		//VOLUND_INFO("OpenAL Version: %s", alGetString(AL_VERSION));
-		//VOLUND_INFO("OpenAL Vendor: %s", alGetString(AL_VENDOR));
+		VOLUND_INFO("OpenAL Renderer: %s", alGetString(AL_RENDERER));
+		VOLUND_INFO("OpenAL Version: %s", alGetString(AL_VERSION));
+		VOLUND_INFO("OpenAL Vendor: %s", alGetString(AL_VENDOR));
 	}
 
 	void AudioModule::OnDetach()
