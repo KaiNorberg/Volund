@@ -251,7 +251,7 @@ namespace Volund
 		//Tables
 
 		this->m_SolState.create_named_table("Scene",
-			"GetTargetBuffer", std::function([this](sol::table self) {  return 0;}),
+			"GetTargetBuffer", std::function([this](sol::table self) {  return LuaFramebuffer(this->m_Scene->GetTargetBuffer());}),
 			"TimeSinceStart", std::function([this](sol::table self) { return std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - this->m_Scene->GetStartTime()).count(); }),
 			"CreateEntity", std::function([this](sol::table self) { return LuaEntity(this->m_Scene, this->m_Scene->CreateEntity()); }),
 			"DeleteEntity", std::function([this](sol::table self, LuaEntity& e) { return this->m_Scene->DestroyEntity(e.Get()); }),
