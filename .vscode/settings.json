@@ -70,5 +70,14 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "*.vshader": "cpp"
-    }
+    },
+    "makefile.launchConfigurations": [
+        {
+           "cwd": "/home/kai/Documents/GitHub/Volund/bin/Dist_x64",
+           "binaryPath": "/home/kai/Documents/GitHub/Volund/bin/Dist_x64/Editor",
+           "binaryArgs": [],
+           "stopAtEntry": false
+        }
+    ],
+    "C_Cpp.errorSquiggles": "disabled"
 }

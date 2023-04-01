@@ -3,6 +3,9 @@
 
 #include "Audio/Audio.h"
 
+#include "OpenAL_Soft/include/al.h"
+#include "OpenAL_Soft/include/alext.h"
+
 namespace Volund
 {
 	ALCcontext* AudioContext::GetContext() const
@@ -37,6 +40,12 @@ namespace Volund
 		{
 			VOLUND_ERROR("Unable to create alc context!");
 		}
+		
+		this->MakeCurrent();
+
+		VOLUND_INFO("OpenAL Renderer: %s", alGetString(AL_RENDERER));
+		VOLUND_INFO("OpenAL Version: %s", alGetString(AL_VERSION));
+		VOLUND_INFO("OpenAL Vendor: %s", alGetString(AL_VENDOR));
 	}
 
 	AudioContext::~AudioContext()

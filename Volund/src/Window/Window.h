@@ -8,6 +8,13 @@
 
 namespace Volund
 {
+	enum class CursorMode
+	{
+		Normal = GLFW_CURSOR_NORMAL,
+		Hidden = GLFW_CURSOR_HIDDEN,
+		Disabled = GLFW_CURSOR_DISABLED
+	};
+
 	struct WindowData
 	{
 		uint64_t Width = 0;
@@ -15,14 +22,9 @@ namespace Volund
 
 		GLFWwindow* GlfwWindow;
 
-		Ref<EventDispatcher> Dispatcher;
-	};
+		CursorMode CurrentCursorMode;
 
-	enum class CursorMode
-	{
-		Normal = GLFW_CURSOR_NORMAL,
-		Hidden = GLFW_CURSOR_HIDDEN,
-		Disabled = GLFW_CURSOR_DISABLED
+		Ref<EventDispatcher> Dispatcher;
 	};
 
 	class Window
@@ -34,6 +36,8 @@ namespace Volund
 		GLFWwindow* GetGlfwWindow();
 
 		void SetCursorMode(CursorMode newMode);
+
+		CursorMode GetCursorMode();
 
 		void SetTitle(const std::string& title);
 

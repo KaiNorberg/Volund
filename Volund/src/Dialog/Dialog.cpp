@@ -7,9 +7,13 @@
 
 namespace Volund
 {
-    std::string Dialog::OpenFolder()
-    {
+    std::string Dialog::OpenFolder(Ref<Window> window)
+    {        
+        CursorMode oldMode = window->GetCursorMode();
+
+        window->SetCursorMode(CursorMode::Normal);
         const char* ret = tinyfd_selectFolderDialog("", "");
+        window->SetCursorMode(oldMode);
 
         if (ret != nullptr)
         {
@@ -21,9 +25,13 @@ namespace Volund
         }
     }
 
-    std::string Dialog::OpenFile()
+    std::string Dialog::OpenFile(Ref<Window> window)
     {
+        CursorMode oldMode = window->GetCursorMode();
+
+        window->SetCursorMode(CursorMode::Normal);
         const char* ret = tinyfd_openFileDialog("", "", 0, NULL, "", NULL);
+        window->SetCursorMode(oldMode);
 
         if (ret != nullptr)
         {

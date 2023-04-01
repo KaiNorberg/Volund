@@ -1,6 +1,8 @@
 #include "PCH/PCH.h"
 #include "Logger.h"
 
+#include "Dialog/Dialog.h"
+
 namespace Volund
 {
 	Logger Logger::m_CoreLogger = Logger("VOLUND");

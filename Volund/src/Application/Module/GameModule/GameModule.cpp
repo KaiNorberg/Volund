@@ -28,7 +28,7 @@ namespace Volund
 		}
 	}
 
-	void GameModule::NewState(const std::string& filepath)
+	void GameModule::LoadNewState(const std::string& filepath)
 	{
 		std::unique_lock lock(this->m_Mutex);
 

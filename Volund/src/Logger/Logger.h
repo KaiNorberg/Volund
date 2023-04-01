@@ -9,8 +9,6 @@
 #define VOLUND_LOGGERCOLOR_CYAN    "\033[36m"
 #define VOLUND_LOGGERCOLOR_WHITE   "\033[37m"
 
-#include "Dialog/Dialog.h"
-
 namespace Volund
 {
 	enum class LogColor

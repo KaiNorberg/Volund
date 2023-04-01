@@ -2,6 +2,9 @@
 
 #include "Audio.h"
 
+#include "OpenAL_Soft/include/al.h"
+#include "OpenAL_Soft/include/alext.h"
+
 namespace Volund
 {
     bool CheckAlcErrors(const std::string& fileName, const std::uint_fast32_t line, ALCdevice* device)

@@ -3,6 +3,9 @@
 
 #include "Audio/Audio.h"
 
+#include "OpenAL_Soft/include/al.h"
+#include "OpenAL_Soft/include/alext.h"
+
 namespace Volund
 {
     void AudioSource::Play()

@@ -2,11 +2,10 @@
 
 #define AL_LIBTYPE_STATIC
 
-#include "OpenAL_Soft/include/al.h"
-#include "OpenAL_Soft/include/alext.h"
-
 #define ALC_CALL(function, device, ...) alcCallImpl(__FILE__, __LINE__, function, device, __VA_ARGS__)
 #define AL_CALL(function, ...) alCallImpl(__FILE__, __LINE__, function, __VA_ARGS__)
+
+struct ALCdevice;
 
 namespace Volund
 {

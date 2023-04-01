@@ -429,7 +429,13 @@ namespace Volund
 
 	void Window::SetCursorMode(const CursorMode newMode)
 	{
+		this->m_WindowData->CurrentCursorMode = newMode;
 		glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, (int32_t)newMode);
+	}
+
+	CursorMode Window::GetCursorMode()
+	{
+		return this->m_WindowData->CurrentCursorMode;
 	}
 
 	void Window::SetTitle(const std::string &title)

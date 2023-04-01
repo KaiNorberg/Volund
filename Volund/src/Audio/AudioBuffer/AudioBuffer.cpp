@@ -6,6 +6,9 @@
 
 #include "Filesystem/Filesystem.h"
 
+#include "OpenAL_Soft/include/al.h"
+#include "OpenAL_Soft/include/alext.h"
+
 namespace Volund
 {
 	uint32_t AudioBuffer::GetBuffer() const
