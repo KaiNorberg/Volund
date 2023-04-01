@@ -10,10 +10,6 @@
 #include "Application/Application.h"
 #include "Application/Module/WindowModule/WindowModule.h"
 
-//#include <windows.h>
-
-//extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
-
 namespace Volund
 {
 	void ImGuiModule::OnAttach(Application* app)
@@ -39,7 +35,13 @@ namespace Volund
 		ImGui_ImplGlfw_InitForOpenGL(appWindow->GetGlfwWindow(), false);
 		ImGui_ImplOpenGL3_Init();
 
-		//appWindow->SetProcedureCatch((VL::ProcCatch)ImGui_ImplWin32_WndProcHandler);
+		appWindow->ConnectWindowFocusCallback(ImGui_ImplGlfw_WindowFocusCallback);
+		appWindow->ConnectCursorEnterCallback(ImGui_ImplGlfw_CursorEnterCallback);
+		appWindow->ConnectCursorPositionCallback(ImGui_ImplGlfw_CursorPosCallback);
+		appWindow->ConnectMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
+		appWindow->ConnectScrollCallback(ImGui_ImplGlfw_ScrollCallback);
+		appWindow->ConnectKeyCallback(ImGui_ImplGlfw_KeyCallback);
+		appWindow->ConnectCharCallback(ImGui_ImplGlfw_CharCallback);
 	}
 
 	void ImGuiModule::OnDetach()

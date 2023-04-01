@@ -1,276 +1,9 @@
 #include "PCH/PCH.h"
 #include "Window.h"
 
-#include <backends/imgui_impl_glfw.h>
-
 namespace Volund
 {
-	/*LRESULT CALLBACK WindowProcedure(HWND hwnd, uint32_t msg, WPARAM wparam, LPARAM lparam)
-	{
-		WindowData* data = (WindowData*)GetWindowLongPtr(hwnd, GWLP_USERDATA);
-
-		if (data != nullptr && data->ProcedureCatch != nullptr)
-		{
-			if (data->ProcedureCatch(hwnd, msg, wparam, lparam))
-			{
-				return true;
-			}
-		}
-
-		switch (msg)
-		{
-		case WM_CREATE:
-		{
-		}
-		break;
-		case WM_KEYDOWN:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::Key);
-			VOLUND_EVENT_KEY_SET_KEY(e, (uint32_t)wparam);
-			VOLUND_EVENT_KEY_SET_ISDOWN(e, true);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_KEYUP:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::Key);
-			VOLUND_EVENT_KEY_SET_KEY(e, (uint32_t)wparam);
-			VOLUND_EVENT_KEY_SET_ISDOWN(e, false);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_MOUSEMOVE:
-		{
-			if (data == nullptr || GetFocus() != hwnd)
-			{
-				break;
-			}
-
-			int32_t xPos = GET_X_LPARAM(lparam);
-			int32_t yPos = GET_Y_LPARAM(lparam);
-
-			if (data->CaptureMouse)
-			{
-				static int32_t virtualXPos = 0;
-				static int32_t virtualYPos = 0;
-
-				RECT screenSpaceRect;
-				GetWindowRect(hwnd, &screenSpaceRect);
-				ClipCursor(&screenSpaceRect);
-
-				RECT windowRect = {};
-				GetClientRect(hwnd, &windowRect);
-
-				const int32_t middleX = windowRect.left + (windowRect.right - windowRect.left) / 2;
-				const int32_t middleY = windowRect.top + (windowRect.bottom - windowRect.top) / 2;
-
-				POINT windowCenter = {middleX, middleY};
-				ClientToScreen(hwnd, &windowCenter);
-				SetCursorPos(windowCenter.x, windowCenter.y);
-
-				virtualXPos += xPos - middleX;
-				virtualYPos += yPos - middleY;
-
-				Event e = Event(EventType::MouseMove);
-				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, virtualXPos);
-				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, virtualYPos);
-
-				data->Dispatcher->Dispatch(e);
-			}
-			else
-			{
-				Event e = Event(EventType::MouseMove);
-				VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, xPos);
-				VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, yPos);
-
-				data->Dispatcher->Dispatch(e);
-			}
-		}
-		break;
-		case WM_LBUTTONDOWN:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::MouseButton);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_LBUTTONUP:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::MouseButton);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_MBUTTONDOWN:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::MouseButton);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_MBUTTONUP:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::MouseButton);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_RBUTTONDOWN:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::MouseButton);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_RBUTTONUP:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			Event e = Event(EventType::MouseButton);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
-			VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_MOUSEWHEEL:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			int16_t zDelta = GET_WHEEL_DELTA_WPARAM(wparam);
-
-			Event e = Event(EventType::MouseWheel);
-			VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, zDelta);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_SIZE:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-
-			RECT windowRect = {};
-			GetClientRect(hwnd, &windowRect);
-
-			data->Width = (uint64_t)windowRect.right;
-			data->Height = (uint64_t)windowRect.bottom;
-
-			Event e = Event(EventType::WindowSize);
-			VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(e, data->Width);
-			VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(e, data->Height);
-
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_SETFOCUS:
-		{
-			if (!data->ShowMouse)
-			{
-				while (ShowCursor(false) >= -1) {}
-			}
-		}
-		break;
-		case WM_KILLFOCUS:
-		{
-			ClipCursor(nullptr);
-
-			while (ShowCursor(true) < 0) {}
-		}
-		break;
-		case WM_MOVE:
-		{
-		}
-		break;
-		case WM_CLOSE:
-		{
-			if (data == nullptr)
-			{
-				break;
-			}
-				Event e = Event(EventType::WindowClose);
-			data->Dispatcher->Dispatch(e);
-		}
-		break;
-		case WM_DESTROY:
-		{
-		}
-		break;
-		default:
-			return DefWindowProc(hwnd, msg, wparam, lparam);
-		}
-
-		return NULL;
-	}*/
-
-	Ref<WindowData> windowData;
-
-	void FocusCallback(GLFWwindow* window, int focused)
-	{
-		ImGui_ImplGlfw_WindowFocusCallback(window, focused);
-	}
-
-	void CursorEnterCallback(GLFWwindow* window, int entered)
-	{
-		ImGui_ImplGlfw_CursorEnterCallback(window, entered);
-	}
-
-	void CloseCallback(GLFWwindow *window)
+	void DefaultWindowCloseCallback(GLFWwindow *window)
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
@@ -278,7 +11,7 @@ namespace Volund
 		windowData->Dispatcher->Dispatch(e);
 	}
 
-	void WindowSizeCallback(GLFWwindow *window, int width, int height)
+	void DefaultWindowSizeCallback(GLFWwindow *window, int width, int height)
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
@@ -288,10 +21,8 @@ namespace Volund
 		windowData->Dispatcher->Dispatch(e);
 	}
 
-	void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+	void DefaultKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 	{
-		ImGui_ImplGlfw_KeyCallback(window, key, scancode, action, mods);
-
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 		Event e = Event(EventType::Key);
@@ -313,10 +44,8 @@ namespace Volund
 		windowData->Dispatcher->Dispatch(e);
 	}
 
-	void CursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
+	void DefaultCursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
 	{
-		ImGui_ImplGlfw_CursorPosCallback(window, xpos, ypos);
-
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 		Event e = Event(EventType::MouseMove);
@@ -326,10 +55,8 @@ namespace Volund
 		windowData->Dispatcher->Dispatch(e);
 	}
 
-	void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
+	void DefaultMouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
 	{
-		ImGui_ImplGlfw_MouseButtonCallback(window, button, action, mods);
-
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
@@ -391,10 +118,8 @@ namespace Volund
 		}
 	}
 
-	void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
+	void DefaultScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
 	{
-		ImGui_ImplGlfw_ScrollCallback(window, xoffset, yoffset);
-
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 		Event e = Event(EventType::MouseWheel);
@@ -403,14 +128,123 @@ namespace Volund
 		windowData->Dispatcher->Dispatch(e);
 	}
 
-	void CharCallback(GLFWwindow *window, unsigned int c)
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	void WindowFocusDispatcher(GLFWwindow* window, int focused)
 	{
-		ImGui_ImplGlfw_CharCallback(window, c);
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->WindowFocusCallbacks)
+			{
+				callback(window, focused);
+			}
+		}
 	}
 
-	void MonitorCallback(GLFWmonitor* monitor, int event)
+	void CursorEnterDispatcher(GLFWwindow* window, int entered)
 	{
-		ImGui_ImplGlfw_MonitorCallback(monitor, event);
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->CursorEnterCallbacks)
+			{
+				callback(window, entered);
+			}
+		}
+	}
+
+	void WindowCloseDispatcher(GLFWwindow *window)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->WindowCloseCallbacks)
+			{
+				callback(window);
+			}
+		}
+	}
+
+	void WindowSizeDispatcher(GLFWwindow *window, int width, int height)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->WindowSizeCallbacks)
+			{
+				callback(window, width, height);
+			}
+		}
+	}
+
+	void KeyDispatcher(GLFWwindow *window, int key, int scancode, int action, int mods)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->KeyCallbacks)
+			{
+				callback(window, key, scancode, action, mods);
+			}
+		}
+	}
+
+	void CursorPositionDispatcher(GLFWwindow *window, double xpos, double ypos)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->CursorPositionCallbacks)
+			{
+				callback(window, xpos, ypos);
+			}
+		}
+	}
+
+	void MouseButtonDispatcher(GLFWwindow *window, int button, int action, int mods)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->MouseButtonCallbacks)
+			{
+				callback(window, button, action, mods);
+			}
+		}
+	}
+
+	void ScrollDispatcher(GLFWwindow *window, double xoffset, double yoffset)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->ScrollCallbacks)
+			{
+				callback(window, xoffset, yoffset);
+			}
+		}
+	}
+
+	void CharDispatcher(GLFWwindow *window, unsigned int c)
+	{
+		WindowData* windowData = static_cast<WindowData*>(glfwGetWindowUserPointer(window));
+
+		if (windowData != nullptr)
+		{
+			for (auto& callback : windowData->CharCallbacks)
+			{
+				callback(window, c);
+			}
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -478,15 +312,58 @@ namespace Volund
 		this->SetVsync(true);
 	}
 
-	Window::Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
+    void Window::ConnectWindowFocusCallback(GLFWwindowfocusfun callback)
+    {
+		this->m_WindowData->WindowFocusCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectCursorEnterCallback(GLFWcursorenterfun callback)
+    {
+		this->m_WindowData->CursorEnterCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectWindowCloseCallback(GLFWwindowclosefun callback)
+    {
+		this->m_WindowData->WindowCloseCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectWindowSizeCallback(GLFWwindowsizefun callback)
+    {
+		this->m_WindowData->WindowSizeCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectKeyCallback(GLFWkeyfun callback)
+    {
+		this->m_WindowData->KeyCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectCursorPositionCallback(GLFWcursorposfun callback)
+    {
+		this->m_WindowData->CursorPositionCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectMouseButtonCallback(GLFWmousebuttonfun callback)
+    {
+		this->m_WindowData->MouseButtonCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectScrollCallback(GLFWscrollfun callback)
+    {
+		this->m_WindowData->ScrollCallbacks.push_back(callback);
+    }
+
+    void Window::ConnectCharCallback(GLFWcharfun callback)
+    {
+		this->m_WindowData->CharCallbacks.push_back(callback);
+    }
+
+    Window::Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
 	{
 		VOLUND_INFO("Creating window...");
 
 		this->m_WindowData = std::make_shared<WindowData>();
-
-		windowData = this->m_WindowData;
-		windowData->Dispatcher = Dispatcher;
-
+		this->m_WindowData->Dispatcher = Dispatcher;
+		
 		if (!glfwInit())
 		{
 		}
@@ -524,16 +401,22 @@ namespace Volund
 
 		glfwSetWindowUserPointer(this->m_WindowData->GlfwWindow, this->m_WindowData.get());
 
-		glfwSetWindowFocusCallback(this->m_WindowData->GlfwWindow, FocusCallback);
-		glfwSetCursorEnterCallback(this->m_WindowData->GlfwWindow, CursorEnterCallback);
-		glfwSetWindowCloseCallback(this->m_WindowData->GlfwWindow, CloseCallback);
-		glfwSetWindowSizeCallback(this->m_WindowData->GlfwWindow, WindowSizeCallback);
-		glfwSetKeyCallback(this->m_WindowData->GlfwWindow, KeyCallback);
-		glfwSetCursorPosCallback(this->m_WindowData->GlfwWindow, CursorPositionCallback);
-		glfwSetMouseButtonCallback(this->m_WindowData->GlfwWindow, MouseButtonCallback);
-		glfwSetScrollCallback(this->m_WindowData->GlfwWindow, ScrollCallback);
-		glfwSetCharCallback(this->m_WindowData->GlfwWindow, CharCallback);
-		glfwSetMonitorCallback(MonitorCallback);
+		glfwSetWindowFocusCallback(this->m_WindowData->GlfwWindow, WindowFocusDispatcher);
+		glfwSetCursorEnterCallback(this->m_WindowData->GlfwWindow, CursorEnterDispatcher);
+		glfwSetWindowCloseCallback(this->m_WindowData->GlfwWindow, WindowCloseDispatcher);
+		glfwSetWindowSizeCallback(this->m_WindowData->GlfwWindow, WindowSizeDispatcher);
+		glfwSetKeyCallback(this->m_WindowData->GlfwWindow, KeyDispatcher);
+		glfwSetCursorPosCallback(this->m_WindowData->GlfwWindow, CursorPositionDispatcher);
+		glfwSetMouseButtonCallback(this->m_WindowData->GlfwWindow, MouseButtonDispatcher);
+		glfwSetScrollCallback(this->m_WindowData->GlfwWindow, ScrollDispatcher);
+		glfwSetCharCallback(this->m_WindowData->GlfwWindow, CharDispatcher);
+
+		this->ConnectWindowCloseCallback(DefaultWindowCloseCallback);
+		this->ConnectWindowSizeCallback(DefaultWindowSizeCallback);
+		this->ConnectKeyCallback(DefaultKeyCallback);
+		this->ConnectCursorPositionCallback(DefaultCursorPositionCallback);
+		this->ConnectMouseButtonCallback(DefaultMouseButtonCallback);
+		this->ConnectScrollCallback(DefaultScrollCallback);
 
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
 	}
