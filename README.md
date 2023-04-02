@@ -86,6 +86,7 @@ The main goal of the project is to create a game engine that allows for low leve
 - PBR 3D rendering
 - Lua scripting
 - C++ scripting
+- Tools for shader development
 - Windows and Linux Compatibility
 - Feature complete editor
 - Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan.
