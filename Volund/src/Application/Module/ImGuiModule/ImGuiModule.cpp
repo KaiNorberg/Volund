@@ -19,7 +19,7 @@ namespace Volund
 			VOLUND_ERROR("Cant attach ImGuiModule to an app without a WindowModule!");
 		}
 
-		static std::string iniFilename = std::filesystem::current_path().string() + "\\imgui.ini";
+		static std::string iniFilename = std::filesystem::current_path().string() + "/imgui.ini";
 
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();

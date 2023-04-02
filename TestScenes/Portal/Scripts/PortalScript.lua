@@ -25,9 +25,7 @@ function PortalScript:OnRender()
     if (ScreenSize.x ~= self.RenderTexture:GetSize().x) then
         self.RenderTexture:Resize(ScreenSize)
     end
-end
 
-function PortalScript:OnUpdate(TS)
     SelfPosition = self.Entity:Get(Component.TRANSFORM):GetPosition()
     RelativePosition = self.Player:Get(Component.TRANSFORM):GetPosition() - SelfPosition
     
@@ -36,8 +34,6 @@ function PortalScript:OnUpdate(TS)
     self.OtherCamera:Get(Component.TRANSFORM):SetPosition(NewCameraPos)
     self.OtherCamera:Get(Component.TRANSFORM):SetRotation(self.Player:Get(Component.TRANSFORM):GetRotation())
     
-    ScreenSize = Scene:GetTargetBuffer():GetSize()
-
     self.Entity:Get(Component.MESH_RENDERER, 0):GetMaterial():SetVec2("ScreenSize", ScreenSize)
 end
 

@@ -63,6 +63,16 @@ PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:n
 
 There are more examples provided in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder, you may also go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation on the lua API.
 
+## Test Scenes
+
+**Mandelbrot.lua**
+
+![Alt text](Resources/Mandelbrot_Screenshot.png "Mandelbrot")
+
+**SolarSystem.lua**
+
+![Alt text](Resources/SolarSystem_Screenshot.png "SolarSystem")
+
 ## Contributing
 
 Volund is open to contributions. There are currently no strict guidelines for contributing, so feel free to submit pull requests that you think are appropriate. If the project grows significantly in the future, a more standardized process for contributions may be implemented.

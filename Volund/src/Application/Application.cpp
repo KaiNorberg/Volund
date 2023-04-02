@@ -56,12 +56,12 @@ namespace Volund
 			TimeStep ts = TimeStep(std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - startTime).count());
 			startTime = std::chrono::high_resolution_clock::now();
 
-			//this->m_ThreadPool.Submit([this, ts]()
-			//{
+			this->m_ThreadPool.Submit([this, ts]()
+			{
 				Event updateEvent = Event(EventType::Update);
 				VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 				this->m_EventDispatcher->Dispatch(updateEvent);
-			//});
+			});
 
 			Renderer::Begin();
 			this->m_EventDispatcher->Dispatch(Event(EventType::Render));
