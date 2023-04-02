@@ -65,6 +65,8 @@ There are more examples provided in the [TestScenes](https://github.com/Kaj9296/
 
 ## Test Scenes
 
+The following are two of the scenes that can be found in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder.
+
 **Mandelbrot.lua**
 
 ![Alt text](Resources/Mandelbrot_Screenshot.png "Mandelbrot")
