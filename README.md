@@ -73,7 +73,7 @@ The following are two of the scenes that can be found in the [TestScenes](https:
 
 **PBR.lua [WIP]**
 
-![Alt text](Resources/PBR_Screenshot.png "PBR")
+![Alt text](Resources/Screenshot_PBR.png "PBR")
 
 ## Contributing
 
