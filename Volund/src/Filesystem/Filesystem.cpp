@@ -8,7 +8,7 @@ namespace Volund
         auto newLink = std::make_shared<FilesystemLink>();
 		newLink->m_RelativeFilepath = relativeFilepath;
 
-		Filesystem::AddLink(newLink);
+		Filesystem::AddLink(relativeFilepath);
 
 		return newLink;
     }
@@ -20,7 +20,7 @@ namespace Volund
 
     FilesystemLink::~FilesystemLink()
     {
-		Filesystem::RemoveLink(this);
+		Filesystem::RemoveLink(this->m_RelativeFilepath);
     }
 
 	std::string Filesystem::GetFinalPath(const std::string& filepath)
@@ -32,14 +32,14 @@ namespace Volund
 
 		for (auto& link : m_FilesystemLinks)
 		{
-			std::string newPath = link->GetRelativeFilepath() + "/" + filepath;
-			
+			std::string newPath = link + "/" + filepath;
+
 			if (std::filesystem::exists(newPath))
 			{			
 				return newPath;
 			}
 		}
-
+		
 		return filepath;
 	}
     
@@ -95,16 +95,16 @@ namespace Volund
 		m_Resources[filepath] = content;
 	}
 
-    void Filesystem::AddLink(Ref<FilesystemLink> newLink)
+    void Filesystem::AddLink(const std::string& filepath)
     {
-		m_FilesystemLinks.push_back(newLink.get());
+		m_FilesystemLinks.push_back(filepath);
     }
 
-    void Filesystem::RemoveLink(FilesystemLink* oldLink)
+    void Filesystem::RemoveLink(const std::string& filepath)
     {
 		for (int i = 0; i < m_FilesystemLinks.size(); i++)
 		{				
-			if (m_FilesystemLinks[i] == oldLink)
+			if (m_FilesystemLinks[i] == filepath)
 			{
 				m_FilesystemLinks.erase(m_FilesystemLinks.begin() + i);
 				return;

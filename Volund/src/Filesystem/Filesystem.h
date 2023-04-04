@@ -45,11 +45,11 @@ namespace Volund
 
 		static void CreateResource(const std::string& filepath, const char* content);
 
-		static void AddLink(Ref<FilesystemLink> newLink);
+		static void AddLink(const std::string& filepath);
 
-		static void RemoveLink(FilesystemLink* oldLink);
+		static void RemoveLink(const std::string& filepath);
 
-		static inline std::vector<FilesystemLink*> m_FilesystemLinks;
+		static inline std::vector<std::string> m_FilesystemLinks;
 
 		static inline std::unordered_map<std::string, const char*> m_Resources;
 	};
