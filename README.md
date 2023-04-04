@@ -71,9 +71,9 @@ The following are two of the scenes that can be found in the [TestScenes](https:
 
 ![Alt text](Resources/Mandelbrot_Screenshot.png "Mandelbrot")
 
-**SolarSystem.lua**
+**PBR.lua [WIP]**
 
-![Alt text](Resources/SolarSystem_Screenshot.png "SolarSystem")
+![Alt text](Resources/Screenshot_PBR.png "PBR")
 
 ## Contributing
 
