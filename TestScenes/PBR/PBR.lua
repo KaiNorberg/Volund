@@ -7,12 +7,12 @@ SphereMesh = Mesh:new("Sphere.vobj")
 Camera = Scene:CreateEntity()
 Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 20.0)})
 Camera:Add(Component.CAMERA, {IsActive = true})
-Camera:Add(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
+--Camera:Add(Component.CAMERA_MOVEMENT, {Sensitivity = 0.5, Speed = 8})
 Camera:Add(Component.SCRIPT, {Script = ShowFPS})
 
 PointLight = Scene:CreateEntity()
 PointLight:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0, 150.0)})
-PointLight:Add(Component.POINT_LIGHT, {Brightness = 100000.0, Color = Vec3:new(1.0, 0.0, 0.0)})
+PointLight:Add(Component.POINT_LIGHT, {Brightness = 70000.0, Color = Vec3:new(1.0, 0.0, 0.0)})
 
 for x = 0,10 do
     for y = 0,10 do
