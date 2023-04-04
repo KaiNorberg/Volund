@@ -49,16 +49,16 @@ RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
 CubeMesh = Mesh:new("Cube.vobj")
 
 Camera = Scene:CreateEntity()
-Camera:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 4.0)})
-Camera:AddComponent(Component.CAMERA, {IsActive = true})
+Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 4.0)})
+Camera:Add(Component.CAMERA, {IsActive = true})
 
 RedCube = Scene:CreateEntity()
-RedCube:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 0.0)})
-RedCube:AddComponent(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = RedMaterial})
+RedCube:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 0.0)})
+RedCube:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = RedMaterial})
 
 PointLight = Scene:CreateEntity()
-PointLight:AddComponent(Component.TRANSFORM, {Position = Vec3:new(0.0, 5.0, 5.0)})
-PointLight:AddComponent(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:new(1.0, 1.0, 1.0)})
+PointLight:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 5.0, 5.0)})
+PointLight:Add(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:new(1.0, 1.0, 1.0)})
 ```
 
 There are more examples provided in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder, you may also go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation on the lua API.
