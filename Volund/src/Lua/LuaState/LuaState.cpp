@@ -63,7 +63,7 @@ namespace Volund
 
 	sol::object LuaState::LuaRequire(sol::this_state s, std::string filepath)
 	{
-		std::string source = Filesystem::LoadFile(filepath);
+		auto source = Filesystem::Load(filepath);
 
 		sol::state_view state = s;
 		return state.require_script(filepath, source);

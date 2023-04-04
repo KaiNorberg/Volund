@@ -57,11 +57,11 @@ PointLight:Add(Component.POINT_LIGHT, {Brightness = 500000.0, Color = Vec3:new(1
 Window:SetCursorMode(CursorMode.DISABLED)
 
 function CreatePortal(Position)
-    Arch = Scene:CreateEntity();
+    Arch = Scene:CreateEntity()
     Arch:Add(Component.TRANSFORM, {Position = Position, Rotation = Vec3:new(0.0, 180.0, 0.0)})
     Arch:Add(Component.MESH_RENDERER, {Mesh = ArchMesh, Material = ArchMaterial, Layer = 1})
     
-    Portal = Scene:CreateEntity();
+    Portal = Scene:CreateEntity()
     Portal:Add(Component.TRANSFORM, {Position = Position + Vec3:new(0.0, 2.0, -0.2), Scale = Vec3:new(4.5, 7.0, 0.7)})
     Portal:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = Material:new(PortalShader), Layer = 2})
     return Portal

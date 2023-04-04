@@ -14,6 +14,6 @@ namespace Volund
 
 	private:
 
-		uint32_t m_Buffer = NULL;
+		uint32_t m_Buffer = 0;
 	};
 }

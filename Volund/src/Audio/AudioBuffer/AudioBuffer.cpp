@@ -23,7 +23,8 @@ namespace Volund
 
 		if (!file.load(Filesystem::GetFinalPath(filepath)))
 		{
-			VOLUND_WARNING("Failed to load sound (%s)!", filepath.c_str());
+			VOLUND_WARNING("Unable to load sound file (%s)!", filepath.c_str());
+			return;
 		}
 		file.writePCMToBuffer(pcmDataBytes);
 
@@ -51,10 +52,10 @@ namespace Volund
 
 	AudioBuffer::~AudioBuffer()
 	{
-		if (this->m_Buffer != NULL && alIsBuffer(this->m_Buffer))
+		if (this->m_Buffer != 0 && alIsBuffer(this->m_Buffer))
 		{
 			AL_CALL(alDeleteBuffers, 1, &this->m_Buffer);
-			this->m_Buffer = NULL;
+			this->m_Buffer = 0;
 		}
 	}
 }

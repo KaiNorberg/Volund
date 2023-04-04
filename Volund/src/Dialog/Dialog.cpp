@@ -30,7 +30,7 @@ namespace Volund
         CursorMode oldMode = window->GetCursorMode();
 
         window->SetCursorMode(CursorMode::Normal);
-        const char* ret = tinyfd_openFileDialog("", "", 0, NULL, "", NULL);
+        const char* ret = tinyfd_openFileDialog("", "", 0, 0, "", 0);
         window->SetCursorMode(oldMode);
 
         if (ret != nullptr)

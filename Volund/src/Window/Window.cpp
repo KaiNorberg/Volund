@@ -379,13 +379,13 @@ namespace Volund
 			glfwWindowHint(GLFW_BLUE_BITS, mode->blueBits);
 			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
-			GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Volund", monitor, NULL);
+			GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Volund", monitor, 0);
 			m_WindowData->Height = mode->height;
 			m_WindowData->Width = mode->width;
 		}
 		else
 		{
-			this->m_WindowData->GlfwWindow = glfwCreateWindow(Width, Height, "Volund", NULL, NULL);
+			this->m_WindowData->GlfwWindow = glfwCreateWindow(Width, Height, "Volund", 0, 0);
 
 			m_WindowData->Height = Height;
 			m_WindowData->Width = Width;

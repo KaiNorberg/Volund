@@ -64,10 +64,10 @@ namespace Volund
 
 		std::unordered_map<std::array<V, 8>, I, ArrayHasher> vertexToIndexMap;
 
-		std::stringstream buffer = std::stringstream(VL::Filesystem::LoadFile(filepath));
+		auto stringStream = std::istringstream(Filesystem::Load(filepath));
 
 		std::string line;
-		while (std::getline(buffer, line))
+		while (std::getline(stringStream, line))
 		{
 			char lineHeader[16] = {};
 			lineHeader[15] = 0;

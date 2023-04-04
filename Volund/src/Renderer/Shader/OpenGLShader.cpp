@@ -147,21 +147,21 @@ namespace Volund
 	{
 		uint32_t program = glCreateProgram();
 
-		uint32_t vs = NULL;
+		uint32_t vs = 0;
 		if (vertexSource.length() > 1)
 		{
 			vs = CompileShader(GL_VERTEX_SHADER, vertexSource.data());
 			glAttachShader(program, vs);
 		}
 
-		uint32_t fs = NULL;
+		uint32_t fs = 0;
 		if (fragmentSource.length() > 1)
 		{
 			fs = CompileShader(GL_FRAGMENT_SHADER, fragmentSource.data());
 			glAttachShader(program, fs);
 		}
 
-		uint32_t gs = NULL;
+		uint32_t gs = 0;
 		if (geometrySource.length() > 1)
 		{
 			gs = CompileShader(GL_GEOMETRY_SHADER, geometrySource.data());
@@ -171,17 +171,17 @@ namespace Volund
 		glLinkProgram(program);
 		glValidateProgram(program);
 
-		if (vs != NULL)
+		if (vs != 0)
 		{
 			glDeleteShader(vs);
 		}
 
-		if (fs != NULL)
+		if (fs != 0)
 		{
 			glDeleteShader(fs);
 		}
 
-		if (gs != NULL)
+		if (gs != 0)
 		{
 			glDeleteShader(gs);
 		}

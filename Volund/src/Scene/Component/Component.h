@@ -33,7 +33,7 @@ namespace Volund
 
 		void Init(Entity entity, Scene* scene);
 
-		Entity m_Entity = NULL;
+		Entity m_Entity = 0;
 
 		Scene* m_Scene = nullptr;
 	};

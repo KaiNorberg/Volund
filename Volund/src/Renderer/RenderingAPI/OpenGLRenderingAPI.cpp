@@ -127,7 +127,7 @@ namespace Volund
 
 	OpenGLRenderingAPI::OpenGLRenderingAPI()
 	{
-		VOLUND_ASSERT(gladLoadGL(), "Failed to load OpenGL");
+		VOLUND_ASSERT(gladLoadGL(), "Unable to load OpenGL");
 
 		glEnable(GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);

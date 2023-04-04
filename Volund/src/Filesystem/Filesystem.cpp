@@ -2,21 +2,59 @@
 #include "Filesystem.h"
 
 namespace Volund
-{
-	std::string Filesystem::LoadFile(const std::string& filepath)
+{    
+	Ref<FilesystemLink> FilesystemLink::Create(const std::string& relativeFilepath)
+    {
+        auto newLink = std::make_shared<FilesystemLink>();
+		newLink->m_RelativeFilepath = relativeFilepath;
+
+		Filesystem::AddLink(newLink);
+
+		return newLink;
+    }
+
+    std::string FilesystemLink::GetRelativeFilepath()
+    {
+        return this->m_RelativeFilepath;
+    }
+
+    FilesystemLink::~FilesystemLink()
+    {
+		Filesystem::RemoveLink(this);
+    }
+
+	std::string Filesystem::GetFinalPath(const std::string& filepath)
 	{
+		if (std::filesystem::exists(filepath))
+		{
+			return filepath;
+		}
+
+		for (auto& link : m_FilesystemLinks)
+		{
+			std::string newPath = link->GetRelativeFilepath() + "/" + filepath;
+			
+			if (std::filesystem::exists(newPath))
+			{			
+				return newPath;
+			}
+		}
+
+		return filepath;
+	}
+    
+	std::string Filesystem::Load(const std::string& filepath)
+    {
 		if (IsResource(filepath))
 		{
-			return LoadResource(filepath);
-		}
+			return GetResource(filepath);
+		}		
 		
-		std::ifstream file(GetFinalPath(filepath));
-		
-		if (!file)
-		{		
-			VOLUND_WARNING("Unable to load file %s.", filepath.c_str());
+		auto file = std::ifstream(GetFinalPath(filepath));
 
-			return "";
+		if (!file)
+		{
+			VOLUND_WARNING("Unable to load file %s.", filepath.c_str());	
 		}
 		
 		std::string line;
@@ -26,16 +64,14 @@ namespace Volund
 			output += line + '\n';
 		}
 		return output;
-	}
+    }
 
-	void Filesystem::WriteFile(const std::string& filepath, const std::string& file)
-	{
-		std::ofstream stream(GetFinalPath(filepath));
+    /*void Filesystem::Write(const std::string& filepath, const std::string& content)
+    {
 
-		stream << file;
-	}
+    }*/
 
-	std::string Filesystem::LoadResource(const std::string& filepath)
+    std::string Filesystem::GetResource(const std::string& filepath)
 	{
 		if (IsResource(filepath))
 		{
@@ -59,43 +95,27 @@ namespace Volund
 		m_Resources[filepath] = content;
 	}
 
-	void Filesystem::AddRelativeFilepath(const std::string& filepath)
-	{
-		m_RelativeFilepaths.push_back(filepath);
-	}
+    void Filesystem::AddLink(Ref<FilesystemLink> newLink)
+    {
+		m_FilesystemLinks.push_back(newLink.get());
+    }
 
-	void Filesystem::RemoveRelativeFilepath(const std::string& filepath)
-	{
-		auto it = std::find(m_RelativeFilepaths.begin(), m_RelativeFilepaths.end(), filepath);
-
-		if (it != m_RelativeFilepaths.end())
-		{
-			m_RelativeFilepaths.erase(it);
-		}
-	}
-
-	std::string Filesystem::GetFinalPath(const std::string& filepath)
-	{
-		if (std::filesystem::exists(filepath))
-		{
-			return filepath;
-		}
-
-		for (auto& relativePath : m_RelativeFilepaths)
-		{
-			std::string newPath = relativePath + "/" + filepath;
-
-			if (std::filesystem::exists(newPath))
-			{			
-				return newPath;
+    void Filesystem::RemoveLink(FilesystemLink* oldLink)
+    {
+		for (int i = 0; i < m_FilesystemLinks.size(); i++)
+		{				
+			if (m_FilesystemLinks[i] == oldLink)
+			{
+				m_FilesystemLinks.erase(m_FilesystemLinks.begin() + i);
+				return;
 			}
 		}
 
-		return filepath;
-	}
+		VOLUND_WARNING("Unable to remove FilesystemLink!");
+    }
 
-	Filesystem::Filesystem()
-	{
+    Filesystem::Filesystem()
+    {
 		CreateResource("Simple.vshader",
 			#include "Shaders/Simple.vshader"
 		);

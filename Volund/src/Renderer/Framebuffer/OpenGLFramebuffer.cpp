@@ -29,13 +29,13 @@ namespace Volund
 				glDeleteTextures(1, &this->m_ColorAttachments[i]);
 			}
 
-			if (this->m_DepthAttachment != NULL)
+			if (this->m_DepthAttachment != 0)
 			{
 				glDeleteTextures(1, &this->m_DepthAttachment);
 			}
 
 			this->m_ColorAttachments.clear();
-			this->m_DepthAttachment = NULL;
+			this->m_DepthAttachment = 0;
 		}
 
 		glGenFramebuffers(1, &this->m_ID);
@@ -143,13 +143,13 @@ namespace Volund
 				glDeleteTextures(1, &this->m_ColorAttachments[i]);
 			}
 
-			if (this->m_DepthAttachment != NULL)
+			if (this->m_DepthAttachment != 0)
 			{
 				glDeleteTextures(1, &this->m_DepthAttachment);
 			}
 
 			this->m_ColorAttachments.clear();
-			this->m_DepthAttachment = NULL;
+			this->m_DepthAttachment = 0;
 		}
 	}
 }

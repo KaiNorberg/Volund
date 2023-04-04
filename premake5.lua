@@ -1,3 +1,4 @@
+---@diagnostic disable: undefined-global
 workspace "Volund"
 	architecture "x64"
 

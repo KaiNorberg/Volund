@@ -34,7 +34,7 @@ namespace Volund
 		stbi_set_flip_vertically_on_load(true);
 		this->m_Data = stbi_load(finalPath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, desiredChannels);
 
-		VOLUND_ASSERT(this->m_Data, "Failed to load image (%s)!", finalPath.c_str());
+		VOLUND_ASSERT(this->m_Data, "Unable to load image (%s)!", finalPath.c_str());
 	}
 
 	ImageLoader::~ImageLoader()

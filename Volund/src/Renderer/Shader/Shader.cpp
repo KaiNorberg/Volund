@@ -26,9 +26,10 @@ namespace Volund
 		std::stringstream sourceStrings[3];
 		ShaderType type = ShaderType::None;
 
-		std::istringstream iss = std::istringstream(Filesystem::LoadFile(filepath));
-		while (std::getline(iss, line))
-		{
+		auto stringStream = std::istringstream(Filesystem::Load(filepath));
+
+		while (std::getline(stringStream, line))
+		{		
 			//Split into words
 			std::vector<std::string> words;
 			std::istringstream iss(line);

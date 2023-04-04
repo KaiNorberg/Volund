@@ -10,7 +10,7 @@ namespace Volund
 	{
 	public:
 
-		int Padding = NULL;
+		int Padding = 0;
 
 		Ref<Framebuffer> Get();
 
