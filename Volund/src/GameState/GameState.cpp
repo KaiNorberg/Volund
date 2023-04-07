@@ -21,7 +21,7 @@ namespace Volund
 
 	GameState::GameState(Ref<Window> window, const std::string& filepath)
 	{		
-		this->m_FilesystemLink = FilesystemLink::Create(std::filesystem::path(filepath).parent_path());
+		this->m_FilesystemLink = FilesystemLink::Create(std::filesystem::path(filepath).parent_path().string());
 
 		this->m_Input = std::make_shared<Input>();
 		this->m_Scene = std::make_shared<Scene>();
