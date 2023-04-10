@@ -14,7 +14,7 @@ void ViewportWidget::OnKey(const VL::Event& e)
 
 	this->m_Input.Procedure(e);
 
-	//if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
+	if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
 	{
 		if (this->m_Input.IsPressed('R'))
 		{

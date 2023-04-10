@@ -8,7 +8,7 @@ namespace Volund
 		CameraMovement = 2,
 		MeshRenderer = 3,
 		PointLight = 4,
-		Script = 5,
+		//Script = 5,
 		Tag = 6,
 		Transform = 7,
 		SoundSource = 8,

@@ -7,11 +7,12 @@ namespace Volund
 	class Input
 	{
 	public:
-		bool IsHeld(char keyCode) const;
-		bool IsPressed(char keyCode);
 
-		bool IsMouseButtonHeld(char button) const;
-		bool IsMouseButtonPressed(char button);
+		bool IsHeld(uint16_t keyCode) const;
+		bool IsPressed(uint16_t keyCode);
+
+		bool IsMouseButtonHeld(uint16_t button) const;
+		bool IsMouseButtonPressed(uint16_t button);
 
 		uint32_t GetScrollPosition() const;
 

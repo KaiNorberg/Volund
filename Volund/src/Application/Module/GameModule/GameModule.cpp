@@ -63,14 +63,7 @@ namespace Volund
 
 			this->m_GameState.reset();
 
-			try
-			{
-				this->m_GameState = std::make_shared<GameState>(this->m_GameWindow, this->m_Filepath);
-			}
-			catch (sol::error e)
-			{
-				VOLUND_WARNING(e.what());
-			}
+			this->m_GameState = std::make_shared<GameState>(this->m_Filepath);
 		});
 	}
 }

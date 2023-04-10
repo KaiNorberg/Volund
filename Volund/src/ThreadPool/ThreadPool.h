@@ -37,5 +37,8 @@ namespace Volund
 	};
 }
 
+
+/// The global threadpool is only suouposed to be used for temporary jobs, for example loading a file.
+/// Any job submited to the globalpool must not wait for any external signal, it must allays finish on its own without external changes.
 #define VOLUND_THREADPOOL_SUBMIT(...) ::Volund::ThreadPool::GetGlobalPool().Submit(__VA_ARGS__)
 #define VOLUND_THREADPOOL_BUSY() ::Volund::ThreadPool::GetGlobalPool().Busy()

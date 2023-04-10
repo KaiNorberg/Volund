@@ -2,7 +2,7 @@
 
 #include "Input/Input.h"
 #include "Scene/Scene.h"
-#include "Lua/LuaState/LuaState.h"
+#include "Window/Window.h"
 #include "Filesystem/Filesystem.h"
 
 namespace Volund
@@ -13,11 +13,9 @@ namespace Volund
 
 		Ref<Scene> GetScene();
 
-		Ref<LuaState> GetLuaState();
-
 		void Procedure(const Event& e);
 
-		GameState(Ref<Window> window, const std::string& filepath);
+		GameState(const std::string& filepath);
 
 		~GameState();
 
@@ -25,7 +23,6 @@ namespace Volund
 
 		Ref<Input> m_Input;
 		Ref<Scene> m_Scene;
-		Ref<LuaState> m_LuaState;
 		Ref<FilesystemLink> m_FilesystemLink;
 	};
 }

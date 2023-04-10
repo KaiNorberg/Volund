@@ -3,12 +3,12 @@
 
 namespace Volund
 {
-	bool Input::IsHeld(char keyCode) const
+	bool Input::IsHeld(uint16_t keyCode) const
 	{
 		return (bool)this->m_Keys[keyCode];
 	}
 
-	bool Input::IsPressed(char keyCode)
+	bool Input::IsPressed(uint16_t keyCode)
 	{
 		const bool isDown = this->m_Keys[keyCode];
 		this->m_Keys[keyCode] = false;
@@ -16,12 +16,12 @@ namespace Volund
 		return isDown;
 	}
 
-	bool Input::IsMouseButtonHeld(char button) const
+	bool Input::IsMouseButtonHeld(uint16_t button) const
 	{
 		return (bool)this->m_MouseButtons[button];
 	}
 
-	bool Input::IsMouseButtonPressed(char button)
+	bool Input::IsMouseButtonPressed(uint16_t button)
 	{
 		const bool isDown = this->m_MouseButtons[button] == 1;
 		this->m_MouseButtons[button] += isDown;

@@ -117,8 +117,12 @@ namespace Volund
 	#define VOLUND_INFO(...) ::Volund::Logger::GetCoreLogger().Info(__VA_ARGS__)
 	#define VOLUND_WARNING(...) ::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__)
 	#define VOLUND_ERROR(...) ::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__)
+	#define VOLUND_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__);}
+	#define VOLUND_SOFT_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__);}
 #else
     #define VOLUND_INFO(...) ::Volund::Logger::GetClientLogger().Info(__VA_ARGS__)
     #define VOLUND_WARNING(...) ::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__)
     #define VOLUND_ERROR(...) ::Volund::Logger::GetClientLogger().Error(__VA_ARGS__)
+	#define VOLUND_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetClientLogger().Error(__VA_ARGS__);}
+	#define VOLUND_SOFT_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__);}
 #endif
