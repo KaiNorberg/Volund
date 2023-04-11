@@ -10,10 +10,12 @@ namespace Volund
 {    
     template<>
     Ref<Mesh> AssetCache::PushAsset<Mesh>(const std::string& filepath)
-    {            
+    {   
+        auto data = Mesh::Create(filepath);         
+
         auto newAsset = std::make_shared<Asset<Mesh>>();
         newAsset->Filepath = filepath;
-        newAsset->Data = Mesh::Create(filepath);
+        newAsset->Data = data;
         m_Data.PushBack(newAsset);
         
         return newAsset->Data.lock();
@@ -21,10 +23,12 @@ namespace Volund
 
     template<>
     Ref<Texture> AssetCache::PushAsset<Texture>(const std::string& filepath)
-    {   
+    {           
+        auto data = Texture::Create(filepath);         
+
         auto newAsset = std::make_shared<Asset<Texture>>();
         newAsset->Filepath = filepath;
-        newAsset->Data = Texture::Create(filepath);
+        newAsset->Data = data;
         m_Data.PushBack(newAsset);
 
         return newAsset->Data.lock();

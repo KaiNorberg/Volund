@@ -41,11 +41,7 @@ namespace Volund::LuaUtils
             auto newComponent = scene->CreateComponent<CameraMovement>(entity);
 
             VOLUND_SET_COMPONENT(componentTable, newComponent->Speed, "Speed");
-
-            if (componentTable["Sensitivity"] != sol::lua_nil)
-            {
-                newComponent->Sensitivity = componentTable["Sensitivity"];
-            }
+            VOLUND_SET_COMPONENT(componentTable, newComponent->Sensitivity, "Sensitivity");
         }
         break;
         case LuaComponentID::MeshRenderer:
@@ -75,7 +71,11 @@ namespace Volund::LuaUtils
         {
             auto newComponent = scene->CreateComponent<PointLight>(entity);
 
-            VOLUND_SET_COMPONENT(componentTable, newComponent->Color, "Color");
+            if (componentTable["Color"] != sol::lua_nil)
+            {
+                newComponent->Color = componentTable["Color"].get<LuaVec3>().GLM();
+            }
+
             VOLUND_SET_COMPONENT(componentTable, newComponent->Brightness, "Brightness");
         }
         break;
@@ -94,13 +94,18 @@ namespace Volund::LuaUtils
         {
             auto newComponent = scene->CreateComponent<Transform>(entity);
             
-            VOLUND_SET_COMPONENT(componentTable, newComponent->Position, "Position");
-            VOLUND_SET_COMPONENT(componentTable, newComponent->Scale, "Scale");
-
+            if (componentTable["Position"] != sol::lua_nil)
+            {
+                newComponent->Position = componentTable["Position"].get<LuaVec3>().GLM();
+            }
+            if (componentTable["Scale"] != sol::lua_nil)
+            {
+                newComponent->Scale = componentTable["Scale"].get<LuaVec3>().GLM();
+            }
             if (componentTable["Rotation"] != sol::lua_nil)
             {
-                Vec3 rotation = componentTable["Rotation"];
-                newComponent->SetRotation(componentTable["Rotation"]);
+                Vec3 rotation = componentTable["Rotation"].get<LuaVec3>().GLM();
+                newComponent->SetRotation(rotation);
             }
         }
         break;

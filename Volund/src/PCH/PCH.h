@@ -24,6 +24,7 @@
 #include <set>
 #include <algorithm>
 #include <iterator>
+#include <signal.h>
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/vec2.hpp>
