@@ -1,7 +1,6 @@
 #include "PCH/PCH.h"
 
 #include "Lua/LuaComponent/LuaComponentID.h"
-#include "Lua/LuaState/LuaMaterial/LuaMaterial.h"
 #include "Lua/LuaVec/LuaVec.h"
 
 #include "Scene/Component/Components.h"
@@ -56,15 +55,14 @@ namespace Volund::LuaUtils
                 std::string meshFilepath = componentTable["Mesh"];
                 std::string materialFilepath = componentTable["Material"];
 
-                //TODO: Fix cache is caching luamaterial not the material itself.
                 Ref<Mesh> mesh = scene->FetchAsset<Mesh>(meshFilepath);
-                Ref<LuaMaterial> luaMaterial = scene->FetchAsset<LuaMaterial>(materialFilepath);
+                Ref<Material> material = scene->FetchAsset<Material>(materialFilepath);
 
-                auto newComponent = scene->CreateComponent<MeshRenderer>(entity, mesh, luaMaterial->Get());			
+                auto newComponent = scene->CreateComponent<MeshRenderer>(entity, mesh, material);			
                 
                 if (componentTable["Layer"] != sol::lua_nil)
                 {
-                    newComponent->SetLayer(componentTable["Layer"]);
+                    newComponent->SetLayer(componentTable["Layer"]); 
                 }
             }
             else
@@ -95,7 +93,7 @@ namespace Volund::LuaUtils
         case LuaComponentID::Transform:
         {
             auto newComponent = scene->CreateComponent<Transform>(entity);
-
+            
             VOLUND_SET_COMPONENT(componentTable, newComponent->Position, "Position");
             VOLUND_SET_COMPONENT(componentTable, newComponent->Scale, "Scale");
 
@@ -176,52 +174,5 @@ namespace Volund::LuaUtils
 		}    
 
         return object;
-    }
-
-    std::string LuaTableToString(sol::table table, int indentation)
-    {
-        std::string output;
-        output += "{\n";
-
-        for (auto& [key, value] : table)
-        {        
-            for (int i = 0; i < indentation + 4; i++)
-            {
-                output += ' ';
-            }        
-            output += key.as<std::string>() + " = ";
-            if (value.is<sol::table>())
-            {
-                output += LuaTableToString(value, indentation + 4);
-            }
-            else if (value.is<LuaVec2>())
-            {
-                LuaVec2 vec2 = value.as<LuaVec2>();
-                output += "Vec2:new(" + std::to_string(vec2.x) + ", "  + std::to_string(vec2.y) + ")";
-            }
-            else if (value.is<LuaVec3>())
-            {
-                LuaVec3 vec3 = value.as<LuaVec3>();
-                output += "Vec3:new(" + std::to_string(vec3.x) + ", "  + std::to_string(vec3.y) + ", "  + std::to_string(vec3.z) + ")";
-            }
-            else if (value.is<LuaVec4>())
-            {
-                LuaVec4 vec4 = value.as<LuaVec4>();
-                output += "Vec4:new(" + std::to_string(vec4.x) + ", "  + std::to_string(vec4.y) + ", "  + std::to_string(vec4.z) + std::to_string(vec4.w) + ")";
-            }
-            else
-            {
-                output += value.as<std::string>();
-            }
-            output += ",\n";
-        }
-
-        for (int i = 0; i < indentation; i++)
-        {
-            output += ' ';
-        }        
-        output += "}";
-
-        return output;
     }
 }

@@ -11,8 +11,6 @@ namespace Volund
 	{
 	public:
 
-		std::string GetFilepath();
-
 		void SetInt(const std::string& name, int value);
 
 		void SetFloat(const std::string& name, float value);
@@ -55,7 +53,5 @@ namespace Volund
 		std::unordered_map<std::string, Ref<Framebuffer>> m_FramebufferUniforms;
 
 		Ref<Shader> m_Shader;
-
-		std::string m_Filepath;
 	};
 }

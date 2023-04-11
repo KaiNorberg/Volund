@@ -10,10 +10,13 @@ namespace Volund
 
         template<typename T>
         Ref<T> Fetch(const std::string& filepath);
-
+        
         AssetCache();
 
     private:
+
+        template<typename T>
+        Ref<T> PushAsset(const std::string& filepath);
 
         class PrimitiveAsset
         {
@@ -56,15 +59,7 @@ namespace Volund
             }
         }
 
-        //Asset not currently loaded
-        VOLUND_INFO("Asset not loaded");
-
-        Ref<T> newAssetData = T::Create(filepath);
-
-        Ref<Asset<T>> newAsset = std::make_shared<Asset<T>>();
-        newAsset->Filepath = filepath;
-        newAsset->Data = newAssetData;
-        m_Data.PushBack(newAsset);
+        Ref<T> newAssetData = this->PushAsset<T>(filepath);
 
         return newAssetData;
     }

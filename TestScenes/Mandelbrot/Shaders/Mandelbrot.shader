@@ -1,9 +1,13 @@
 #VOLUND_SHADER_TYPE VERTEX
 #version 460
 
-layout(location = 0) in vec3 Vertex_Position;
-layout(location = 1) in vec2 Vertex_TextureCoord;
-layout(location = 2) in vec3 Vertex_Normal;
+layout(location = 0) in vec3 VertexPosition;
+layout(location = 1) in vec2 VertexTextureCoord;
+layout(location = 2) in vec3 VertexNormal;
+
+out vec3 FragPosition;
+out vec2 FragTextureCoord;
+out vec3 FragNormal;
 
 layout(std140, binding = 0) uniform Camera
 {
@@ -16,10 +20,13 @@ out vec2 Coord;
 uniform mat4 _ModelMatrix;
 
 void main()
-{
-    Coord = Vertex_TextureCoord;
-    gl_Position = ViewProjMatrix * vec4(Vertex_Position, 1.0f);
-    gl_Position.w = 0.1f;
+{    
+    Coord = VertexTextureCoord;
+
+    FragPosition = (_ModelMatrix * vec4(VertexPosition, 1.0)).xyz;
+    FragTextureCoord = VertexTextureCoord;
+    FragNormal = normalize(mat3(_ModelMatrix) * VertexNormal);
+    gl_Position = ViewProjMatrix * vec4(FragPosition, 1.0f);
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT

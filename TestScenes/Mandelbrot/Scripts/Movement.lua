@@ -14,18 +14,18 @@ local Movement = {
 
 function Movement.Control(Value, Upkey, DownKey, StepSize, TimeStep)
     if Input:IsHeld(Upkey) then
-        return Value + StepSize * TimeStep 
+        return Value + StepSize * TimeStep
     elseif Input:IsHeld(DownKey) then
-        return Value - StepSize * TimeStep 
+        return Value - StepSize * TimeStep
     else
         return Value
-    end    
+    end
 end
 
-function Movement:OnUpdate(TimeStep)    
+function Movement:OnUpdate(TimeStep)
     EntityMat = self.Entity:Get(Component.MESH_RENDERER):GetMaterial()
 
-    EntityMat:SetInt("Julia", self.Julia)   
+    EntityMat:SetInt("Julia", self.Julia)
     EntityMat:SetDouble("JuliaC", self.JuliaC)
 
     EntityMat:SetInt("MaxIterations", self.Iter)

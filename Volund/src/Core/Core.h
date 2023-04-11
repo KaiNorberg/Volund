@@ -14,6 +14,7 @@
 #define VOLUND_KEY_ESCAPE 256
 
 //#define VOLUND_ENABLE_PROFILING
+#define VOLUND_DISABLE_MULTITHREADING
 
 #ifdef _WIN32
 #define CHRONO_TIME_POINT std::chrono::time_point<std::chrono::steady_clock>

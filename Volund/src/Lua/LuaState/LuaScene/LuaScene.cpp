@@ -23,17 +23,37 @@ namespace Volund
 
         this->m_Scene = std::make_shared<Scene>();
 
-        VOLUND_ASSERT(sceneTable != sol::nil && sceneTable.is<sol::table>(), "Scene files must return a valid Lua table!");
+        if (sceneTable == sol::nil)
+        {
+            VOLUND_WARNING("Scene file does not return a table!");
+            return;
+        }
+
+        if (!sceneTable.is<sol::table>())
+        {
+            VOLUND_WARNING("Scene file returns a non table type!");
+            return;
+        }
+
         for (auto& [entityKey, entity] : sceneTable)
-        {                
-            VOLUND_ASSERT(entity != sol::nil && entity.is<sol::table>(), "Invalid entity found in scene file!");
+        {                        
+            if (entity == sol::nil || !entity.is<sol::table>())
+            {
+                VOLUND_WARNING("Invalid entity found in scene file!");
+                return;
+            }
 
             auto newEntity = this->m_Scene->RegisterNewEntity();
 
             sol::table entityTable = sol::table(entity);
             for (auto& [componentKey, component] : entityTable)
-            {                        
-                VOLUND_ASSERT(component != sol::nil && component.is<sol::table>(), "Component found in scene file is not a table!");
+            {   
+                if (component == sol::nil || !component.is<sol::table>())
+                {
+                    VOLUND_WARNING("Component found in scene file is not a table!");
+                    return;
+                }             
+
                 sol::table componentTable = sol::table(component);            
                 
                 LuaUtils::AddComponentToEntity(this->m_Scene, newEntity, componentTable);

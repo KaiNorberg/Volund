@@ -1,4 +1,4 @@
-local count = 2
+local count = 20
 
 local scene =
 {

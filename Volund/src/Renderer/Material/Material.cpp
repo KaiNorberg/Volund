@@ -3,11 +3,6 @@
 
 namespace Volund
 {
-	std::string Material::GetFilepath()
-	{
-		return this->m_Filepath;
-	}
-
 	void Material::SetInt(const std::string& name, int value)
 	{
 		this->m_IntUniforms[name] = value;

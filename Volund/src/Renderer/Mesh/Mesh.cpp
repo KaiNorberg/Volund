@@ -47,7 +47,7 @@ namespace Volund
 		Ref<Mesh> newMesh = Mesh::Create();
 
 		VOLUND_THREADPOOL_SUBMIT([filepath, newMesh]()
-		{
+		{		
 			newMesh->m_Filepath = filepath;
 
 			ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(filepath);
@@ -55,7 +55,7 @@ namespace Volund
 			newMesh->m_Aabb = Loader.aabb;
 
 			DelayedTaskHandler::DelayTask([newMesh, Loader]()
-			{
+			{			
 				Ref<VertexBuffer> VBuffer = VertexBuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
 				VBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
 

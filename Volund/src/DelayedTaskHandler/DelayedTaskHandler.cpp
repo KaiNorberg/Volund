@@ -5,8 +5,8 @@ namespace Volund
 {
 	void DelayedTaskHandler::DelayTask(std::function<void()> task)
 	{
-#ifdef VOLUND_ENABLE_PROFILING
-		Task();
+#ifdef VOLUND_DISABLE_MULTITHREADING
+		task();
 #else
 		std::unique_lock lock(m_Mutex);
 

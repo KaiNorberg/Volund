@@ -68,8 +68,6 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 		
-		VOLUND_INFO("Creating lua state...");
-
 		this->m_SolState = std::make_shared<sol::state>();
 
 		this->m_SolState->open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::utf8, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::package);
