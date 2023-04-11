@@ -33,6 +33,11 @@ namespace Volund
 		this->m_Vec3Uniforms[name] = value;
 	}
 
+	void Material::SetVec4(const std::string& name, const Vec4& value)
+	{
+		this->m_Vec4Uniforms[name] = value;
+	}
+
 	void Material::SetTexture(const std::string& name, Ref<Texture> value)
 	{
 		this->m_TextureUniforms[name] = value;
@@ -70,6 +75,11 @@ namespace Volund
 		for (auto& [name, value] : this->m_Vec3Uniforms)
 		{
 			this->m_Shader->SetVec3(name, value);
+		}
+
+		for (auto& [name, value] : this->m_Vec4Uniforms)
+		{
+			this->m_Shader->SetVec4(name, value);
 		}
 
 		int textureUnit = 0;

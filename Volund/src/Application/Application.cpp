@@ -93,9 +93,9 @@ namespace Volund
 
 	Application::~Application()
 	{
-		for (const auto& [TypeID, View] : this->m_Modules)
+		for (auto& [TypeID, View] : this->m_Modules)
 		{
-			for (const auto& module : View)
+			for (auto& module : View)
 			{
 				module->OnDetach();
 			}

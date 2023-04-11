@@ -37,32 +37,6 @@ In Volund a scene is simply any .lua file. In the future there will be an editor
 
 Currently the only way to run a scene is to open the Editor (the executable that was generated using your chosen toolset in the previous step) and click the ```Load Scene``` button within the ```Viewport``` Widget, after that simply select the .lua file you wish to run.
 
-## Example Scene
-
-```java
-
-SimpleShader = Shader:new("Simple.vshader")
-
-RedMaterial = Material:new(SimpleShader)
-RedMaterial:SetVec3("Color", Vec3:new(1.0, 0.0, 0.0))
-
-CubeMesh = Mesh:new("Cube.vobj")
-
-Camera = Scene:CreateEntity()
-Camera:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 4.0)})
-Camera:Add(Component.CAMERA, {IsActive = true})
-
-RedCube = Scene:CreateEntity()
-RedCube:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 0.0, 0.0)})
-RedCube:Add(Component.MESH_RENDERER, {Mesh = CubeMesh, Material = RedMaterial})
-
-PointLight = Scene:CreateEntity()
-PointLight:Add(Component.TRANSFORM, {Position = Vec3:new(0.0, 5.0, 5.0)})
-PointLight:Add(Component.POINT_LIGHT, {Brightness = 1.0, Color = Vec3:new(1.0, 1.0, 1.0)})
-```
-
-There are more examples provided in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder, you may also go to the [Wiki](https://github.com/Kaj9296/Volund/wiki) for more documentation on the lua API.
-
 ## Test Scenes
 
 The following are two of the scenes that can be found in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder.

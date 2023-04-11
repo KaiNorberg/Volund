@@ -67,6 +67,8 @@ namespace Volund
 	LuaState::LuaState()
 	{
 		VOLUND_PROFILE_FUNCTION();
+		
+		VOLUND_INFO("Creating lua state...");
 
 		this->m_SolState = std::make_shared<sol::state>();
 

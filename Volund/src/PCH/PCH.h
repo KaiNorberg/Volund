@@ -4,6 +4,7 @@
 
 #define SOL_NO_EXCEPTIONS 0
 #define SOL_PRINT_ERRORS 0
+#define SOL_SAFE_NUMERICS 1
 
 #include <iostream>
 #include <sstream>

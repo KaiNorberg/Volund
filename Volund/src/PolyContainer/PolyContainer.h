@@ -3,10 +3,10 @@
 namespace Volund
 {
 	/// <summary>
-	/// A container that can store any type that can be type cast from T.
+	/// Short for polymorphic container, a PolyContainer class can store any type that can be type cast from T.
 	/// </summary>
 	template<typename T>
-	class Container
+	class PolyContainer
 	{
 	public:
 
@@ -29,7 +29,7 @@ namespace Volund
 		uint64_t Size();
 
 		template<typename D>
-		const std::vector<Ref<T>>& View();
+		std::vector<Ref<T>>& View();
 
 		std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator begin();
 		std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator end();
@@ -44,7 +44,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline void Container<T>::PushBack(Ref<D> entry)
+	inline void PolyContainer<T>::PushBack(Ref<D> entry)
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -53,7 +53,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline void Container<T>::PushBack(D* entry)
+	inline void PolyContainer<T>::PushBack(D* entry)
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -62,7 +62,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline void Container<T>::Erase(uint64_t index)
+	inline void PolyContainer<T>::Erase(uint64_t index)
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -74,7 +74,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline Ref<D> Container<T>::Get(uint64_t index)
+	inline Ref<D> PolyContainer<T>::Get(uint64_t index)
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -83,7 +83,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline bool Container<T>::Contains()
+	inline bool PolyContainer<T>::Contains()
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -92,7 +92,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline uint64_t Container<T>::Size()
+	inline uint64_t PolyContainer<T>::Size()
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -101,7 +101,7 @@ namespace Volund
 
 	template<typename T>
 	template<typename D>
-	inline const std::vector<Ref<T>>& Container<T>::View()
+	inline std::vector<Ref<T>>& PolyContainer<T>::View()
 	{
 		static uint64_t typeId = typeid(D).hash_code();
 
@@ -109,25 +109,25 @@ namespace Volund
 	}
 
 	template<typename T>
-	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator Container<T>::begin()
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator PolyContainer<T>::begin()
 	{
 		return this->m_Data.begin();
 	}
 
 	template<typename T>
-	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator Container<T>::end()
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator PolyContainer<T>::end()
 	{
 		return this->m_Data.end();
 	}
 
 	template<typename T>
-	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator Container<T>::begin() const
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator PolyContainer<T>::begin() const
 	{
 		return this->m_Data.begin();
 	}
 
 	template<typename T>
-	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator Container<T>::end() const
+	inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator PolyContainer<T>::end() const
 	{
 		return this->m_Data.end();
 	}
