@@ -34,8 +34,7 @@ namespace Volund
 
         std::string shaderFilepath = materialTable[1];
 
-        //TODO: Add asset lib
-        auto shader = Shader::Create(shaderFilepath);
+        auto shader = assetCache->Fetch<Shader>(shaderFilepath);
 
         this->m_Data = Material::Create(shader);
 

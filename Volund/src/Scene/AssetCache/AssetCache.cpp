@@ -35,6 +35,19 @@ namespace Volund
     }
 
     template<>
+    Ref<Shader> AssetCache::PushAsset<Shader>(const std::string& filepath)
+    {   
+        auto data = Shader::Create(filepath);         
+
+        auto newAsset = std::make_shared<Asset<Shader>>();
+        newAsset->Filepath = filepath;
+        newAsset->Data = data;
+        m_Data.PushBack(newAsset);
+        
+        return newAsset->Data.lock();
+    }
+
+    template<>
     Ref<Material> AssetCache::PushAsset<Material>(const std::string& filepath)
     {   
         LuaAssetLoader<Material> material = LuaAssetLoader<Material>(this, filepath);        
