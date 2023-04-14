@@ -158,14 +158,14 @@ namespace Volund::LuaUtils
         }
     }
 
-    sol::object ScriptFile(Ref<sol::state> state, const std::string &filepath)
+    sol::protected_function_result ScriptFile(Ref<sol::state> state, const std::string &filepath)
     {
         std::string script = Filesystem::Load(filepath);
 
-        sol::object object;
+        sol::protected_function_result result;
         try
 		{
-			object = state->script(script, [](lua_State*, sol::protected_function_result pfr)
+            result = state->script(script, [](lua_State*, sol::protected_function_result pfr)
 			{		
 				sol::error err = pfr;
 				VOLUND_WARNING(err.what());
@@ -178,6 +178,6 @@ namespace Volund::LuaUtils
 			VOLUND_WARNING(e.what());
 		}    
 
-        return object;
+        return result;
     }
 }

@@ -1,13 +1,16 @@
 --Rotate = require("Scripts/Rotate.lua")
 
---Window:SetCursorMode(CursorMode.DISABLED)
+local config =
+{
+    CursorMode = "Disabled"
+}
 
 local scene =
 {
     {
         {Component.Transform, Position = Vec3:new(0.0, 2.0, 10.0)},
         {Component.Camera},
-        {Component.CameraMovement, Sensitivity = 0.5, Speed = 8}
+        --{Component.CameraMovement, Sensitivity = 0.5, Speed = 8}
     },
     {
         {Component.Transform, Position = Vec3:new(0.0, 7.5, 0.0)},
@@ -32,4 +35,4 @@ local scene =
     }
 }
 
-return scene
+return config, scene

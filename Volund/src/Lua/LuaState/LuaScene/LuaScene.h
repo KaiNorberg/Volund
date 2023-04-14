@@ -4,6 +4,8 @@
 
 #include "Scene/Scene.h"
 
+#include "Window/Window.h"
+
 namespace Volund
 {
     class LuaScene : public LuaState

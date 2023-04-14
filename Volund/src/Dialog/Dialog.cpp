@@ -12,7 +12,7 @@ namespace Volund
         CursorMode oldMode = window->GetCursorMode();
 
         window->SetCursorMode(CursorMode::Normal);
-        const char* ret = tinyfd_selectFolderDialog("", std::filesystem::current_path().c_str());
+        const char* ret = tinyfd_selectFolderDialog("", std::filesystem::current_path().string().c_str());
         window->SetCursorMode(oldMode);
 
         if (ret != nullptr)
@@ -30,7 +30,7 @@ namespace Volund
         CursorMode oldMode = window->GetCursorMode();
 
         window->SetCursorMode(CursorMode::Normal);
-        const char* ret = tinyfd_openFileDialog("", std::filesystem::current_path().c_str(), 0, 0, "", 0);
+        const char* ret = tinyfd_openFileDialog("", std::filesystem::current_path().string().c_str(), 0, 0, "", 0);
         window->SetCursorMode(oldMode);
 
         if (ret != nullptr)
