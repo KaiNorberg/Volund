@@ -1,7 +1,5 @@
 #pragma once
 
-#define VOLUND_LUA_THIS_SCENE "VOLUND_THIS_SCENE"
-
 namespace sol
 {
 	class state;

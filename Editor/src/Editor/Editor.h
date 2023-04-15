@@ -12,6 +12,8 @@ public:
 
 	void Procedure(const VL::Event& e) override;
 
+	virtual ~Editor() = default;
+
 private:
 	
 	std::vector<VL::Ref<Widget>> m_Widgets;
