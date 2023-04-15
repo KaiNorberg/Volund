@@ -31,6 +31,8 @@ namespace Volund
 		glCreateBuffers(1, &this->m_ID);
 		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), vertices, GL_STATIC_DRAW);
+
+		this->m_AABB = AABB(vertices, count);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()

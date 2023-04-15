@@ -17,13 +17,13 @@ namespace Volund
 		this->m_Scene->Procedure(e);
 	}
 
-	GameState::GameState(const std::string& filepath)
+	GameState::GameState(Ref<Window> window, const std::string& filepath)
 	{	
 		while (VOLUND_THREADPOOL_BUSY());	
 
 		this->m_FilesystemLink = FilesystemLink::Create(std::filesystem::path(filepath).parent_path().string());
 
-		LuaScene luaScene = LuaScene(filepath);
+		LuaScene luaScene = LuaScene(window, filepath);
 
 		this->m_Input = std::make_shared<Input>();
 		this->m_Scene = luaScene.Get();

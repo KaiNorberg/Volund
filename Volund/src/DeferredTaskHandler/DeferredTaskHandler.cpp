@@ -1,9 +1,9 @@
 #include "PCH/PCH.h"
-#include "DelayedTaskHandler.h"
+#include "DeferredTaskHandler.h"
 
 namespace Volund
 {
-	void DelayedTaskHandler::DelayTask(std::function<void()> task)
+	void DeferredTaskHandler::DeferTask(std::function<void()> task)
 	{
 #ifdef VOLUND_DISABLE_MULTITHREADING
 		task();
@@ -14,7 +14,7 @@ namespace Volund
 #endif
 	}
 
-	void DelayedTaskHandler::Execute()
+	void DeferredTaskHandler::Execute()
 	{
 		std::unique_lock lock(m_Mutex);
 

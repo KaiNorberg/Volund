@@ -2,11 +2,11 @@
 
 namespace Volund
 {
-	class DelayedTaskHandler
+	class DeferredTaskHandler
 	{
 	public:
 
-		static void DelayTask(std::function<void()> task);
+		static void DeferTask(std::function<void()> task);
 
 		static void Execute();
 

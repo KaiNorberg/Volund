@@ -6,6 +6,8 @@
 #include "Scene/Component/Components.h"
 #include "Filesystem/Filesystem.h"
 
+#include "Audio/AudioBuffer/AudioBuffer.h"
+
 #include <sol/sol.hpp>
 #include "LuaUtils.h"
 
@@ -27,7 +29,7 @@ namespace Volund::LuaUtils
 
             if (componentTable["TargetBuffer"] != sol::lua_nil)
             {
-                //TODO: Add LuaFramebuffer
+                //TODO: Add framebuffer asset
                 //newComponent->SetTargetBuffer(componentTable["TargetBuffer"].get<LuaFramebuffer>().Get());
             }
             else
@@ -111,9 +113,7 @@ namespace Volund::LuaUtils
         break;
         case LuaComponentID::SoundSource:
         {                
-            //TODO: fix
-
-            /*auto newComponent = scene->CreateComponent<SoundSource>(entity);
+            auto newComponent = scene->CreateComponent<SoundSource>(entity);
 
             if (componentTable["Looping"] != sol::lua_nil)
             {
@@ -134,15 +134,15 @@ namespace Volund::LuaUtils
             }
 
             if (componentTable["Sound"] != sol::lua_nil)
-            {
-                LuaSound sound = componentTable["Sound"];
-                newComponent->SetBuffer(sound.GetBuffer());
+            {            
+                Ref<AudioBuffer> sound = scene->FetchAsset<AudioBuffer>(componentTable["Sound"]);
+                newComponent->SetBuffer(sound);
             }
 
             if (componentTable["Play"] != sol::lua_nil && componentTable["Play"] == true)
             {
                 newComponent->Play();
-            }*/
+            }
         }
         break;
         case LuaComponentID::SoundListener:

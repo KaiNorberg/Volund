@@ -14,8 +14,6 @@ namespace Volund
     template<>
     LuaAssetLoader<Material>::LuaAssetLoader(AssetCache* assetCache, const std::string& filepath)
     {
-        VOLUND_INFO("Loading Material (%s)...", filepath.c_str());
-
         std::string script = Filesystem::Load(filepath);
 
         sol::table materialTable = LuaUtils::ScriptFile(this->m_SolState, filepath);

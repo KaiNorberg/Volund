@@ -7,7 +7,7 @@
 
 #include "Filesystem/Filesystem.h"
 
-#include "DelayedTaskHandler/DelayedTaskHandler.h"
+#include "DeferredTaskHandler/DeferredTaskHandler.h"
 
 namespace Volund
 {
@@ -57,13 +57,13 @@ namespace Volund
 	{
 		std::unique_lock lock(this->m_Mutex);
 
-		DelayedTaskHandler::DelayTask([this, filepath]()
+		DeferredTaskHandler::DeferTask([this, filepath]()
 		{
 			this->m_Filepath = filepath;
 
 			this->m_GameState.reset();
 
-			this->m_GameState = std::make_shared<GameState>(this->m_Filepath);
+			this->m_GameState = std::make_shared<GameState>(this->m_GameWindow, this->m_Filepath);
 		});
 	}
 }

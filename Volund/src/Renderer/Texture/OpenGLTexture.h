@@ -10,7 +10,9 @@ namespace Volund
 
 		void Bind(uint32_t unit) override;
 
-		OpenGLTexture(const std::string& filepath);
+		void SetData(unsigned char* data, uint32_t width, uint32_t height) override;
+
+		OpenGLTexture();
 
 		~OpenGLTexture() override;
 

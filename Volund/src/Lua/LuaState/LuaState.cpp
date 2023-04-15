@@ -3,6 +3,8 @@
 
 #include "Filesystem/Filesystem.h"
 
+#include "Window/Window.h"
+
 #include "Lua/LuaVec/LuaVec.h"
 #include "Lua/LuaComponent/LuaComponentID.h"
 
@@ -72,12 +74,12 @@ namespace Volund
 
 		this->m_SolState->open_libraries(sol::lib::base, sol::lib::math, sol::lib::string, sol::lib::utf8, sol::lib::os, sol::lib::table, sol::lib::io, sol::lib::package);
 
-		//Functions
+		//Global Functions
 
 		(*this->m_SolState)["require"] = LuaRequire;
 		(*this->m_SolState)["print"] = LuaPrint;
 
-		//Usertypes
+		//Global UserTypes
 
 		this->m_SolState->new_usertype<LuaVec4>("Vec4", sol::constructors<void(LuaVec4), void(), void(float), void(float, float, float, float)>(),
 			"x", &LuaVec4::x,
@@ -123,10 +125,13 @@ namespace Volund
 		);
 
 		//Tables
-			
+
+		sol::table stateTable = this->m_SolState->create_named_table("state");
+		sol::table enumTable = stateTable.create_named("Enums");
+
 		//Enums
 
-		this->m_SolState->new_enum("Component",
+		enumTable.new_enum("Component",
 			"Camera", LuaComponentID::Camera,
 			"CameraMovement", LuaComponentID::CameraMovement,
 			"MeshRenderer", LuaComponentID::MeshRenderer,
@@ -137,12 +142,6 @@ namespace Volund
 			"SoundSource", LuaComponentID::SoundSource,
 			"SoundListener", LuaComponentID::SoundListener
 		);
-
-		/*this->m_SolState.new_enum("CursorMode",
-			"NORMAL", CursorMode::Normal,
-			"HIDDEN", CursorMode::Hidden,
-			"DISABLED", CursorMode::Disabled
-		);*/
 	}
 
 	LuaState::~LuaState()

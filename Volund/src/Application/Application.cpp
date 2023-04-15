@@ -9,7 +9,7 @@
 
 #include "ThreadPool/ThreadPool.h"
 
-#include "DelayedTaskHandler/DelayedTaskHandler.h"
+#include "DeferredTaskHandler/DeferredTaskHandler.h"
 
 #include <glad/glad.h>
 
@@ -69,7 +69,7 @@ namespace Volund
 
 			while (this->m_ThreadPool.Busy());
 
-			DelayedTaskHandler::Execute();
+			DeferredTaskHandler::Execute();
 		}
 	}
 

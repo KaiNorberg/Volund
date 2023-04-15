@@ -24,10 +24,13 @@ namespace Volund
 
 		template<typename T>
 		Ref<T> FetchAsset(const std::string& filepath);
+		template<typename T>
+		std::string FetchAssetFilepath(Ref<T> asset);
 
 		Entity RegisterNewEntity();
 		void UnregisterEntity(Entity entity);
 		bool IsEntityRegistered(Entity entity);
+		std::vector<Entity> GetRegisteredEntities();
 
 		template<typename T>
 		void DeleteComponent(Entity entity, uint64_t index = 0);
@@ -39,9 +42,6 @@ namespace Volund
 		uint64_t ComponentAmount(Entity entity);
 		template<typename T>
 		Ref<T> GetComponent(Entity entity, uint64_t index = 0);
-
-		template<typename T>
-		void View(std::vector<Ref<T>>& output);
 
 		void ResizeTarget(uint32_t width, uint32_t height);
 		
@@ -74,6 +74,12 @@ namespace Volund
     {
         return this->m_AssetCache.Fetch<T>(filepath);
     }
+
+	template<typename T>
+	inline std::string Scene::FetchAssetFilepath(Ref<T> asset)
+	{
+		return this->m_AssetCache.FetchFilepath<T>(asset);
+	}
 
     template <typename T>
     inline void Scene::DeleteComponent(Entity entity, uint64_t index)
@@ -144,21 +150,5 @@ namespace Volund
 		const uint64_t entityIndex = FindEntity(entity);
 
 		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>() ? this->m_Registry[entityIndex].second.Get<T>(index) : nullptr;
-	}
-
-	template<typename T>
-	inline void Scene::View(std::vector<Ref<T>>& output)
-	{
-		VOLUND_PROFILE_FUNCTION();
-
-		output.reserve(this->m_Registry.size());
-
-		for (auto& [entity, polystorage] : this->m_Registry)
-		{
-			for (auto& component : polystorage.template View<T>())
-			{
-				output.push_back(std::dynamic_pointer_cast<T>(component));
-			}
-		}
 	}
 }

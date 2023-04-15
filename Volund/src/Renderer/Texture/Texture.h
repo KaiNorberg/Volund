@@ -6,8 +6,6 @@ namespace Volund
 	{
 	public:
 
-		std::string GetFilepath();
-
 		uint32_t GetID() const;
 
 		uint32_t GetWidth() const;
@@ -16,17 +14,17 @@ namespace Volund
 
 		virtual void Bind(uint32_t unit = 0) = 0;
 
-		static Ref<Texture> Create(const std::string& filepath);
+		virtual void SetData(unsigned char* data, uint32_t width, uint32_t height) = 0;
+
+		static Ref<Texture> Create();
 
 		virtual ~Texture() = default;
 
 	protected:
 
-		uint32_t m_Height = 0;
+		uint32_t m_Height = 5;
 
-		uint32_t m_Width = 0;
-
-		std::string m_Filepath;
+		uint32_t m_Width = 5;
 
 		uint32_t m_ID = 0;
 	};

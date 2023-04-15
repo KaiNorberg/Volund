@@ -8,14 +8,32 @@
 
 namespace Volund
 {
+    using ConfigSetterFunc = void(*)(Ref<Window>, sol::object);
+
+    void CursorEnabledSetter(Ref<Window> window, sol::object value)
+    {
+        window->SetCursorEnabled(value.as<bool>());
+    }
+
+    void VsyncSetter(Ref<Window> window, sol::object value)
+    {
+        window->SetVsync(value.as<bool>());
+    }
+
+    std::unordered_map<std::string, ConfigSetterFunc> configSetters =
+    {
+        {"CursorEnabled", CursorEnabledSetter},
+        {"Vsync", VsyncSetter}
+    };
+
     Ref<Scene> LuaScene::Get()
     {
         return this->m_Scene;
     }
 
-    LuaScene::LuaScene(const std::string& filepath)
+    LuaScene::LuaScene(Ref<Window> window, const std::string& filepath)
     {           		
-        VOLUND_INFO("Loading scene (%s)...", filepath.c_str());
+        VOLUND_INFO("Loading Scene %s", filepath.c_str());
 
         std::tuple<sol::table, sol::table> result = LuaUtils::ScriptFile(this->m_SolState, filepath);
         sol::table configTable = std::get<0>(result);
@@ -32,21 +50,21 @@ namespace Volund
             return;
         }
 
-        /*for (auto& [key, value] : configTable)
+        for (auto& [key, value] : configTable)
         {
             std::string keyString = key.as<std::string>();
 
-            if (ConfigSetters.contains(keyString))
+            if (configSetters.contains(keyString))
             {
-                ConfigSetters[keyString](this, value);
+                configSetters[keyString](window, value);
             }
-        }*/
+        }
 
         this->m_Scene = std::make_shared<Scene>();
 
         for (auto& [entityKey, entity] : sceneTable)
         {
-            if (entity == sol::nil || !entity.is<sol::table>())
+            if (!entity.is<sol::table>())
             {
                 VOLUND_WARNING("Invalid entity found in scene file!");
                 return;
@@ -57,7 +75,7 @@ namespace Volund
             sol::table entityTable = sol::table(entity);
             for (auto& [componentKey, component] : entityTable)
             {
-                if (component == sol::nil || !component.is<sol::table>())
+                if (!component.is<sol::table>())
                 {
                     VOLUND_WARNING("Component found in scene file is of a non table type!");
                     return;

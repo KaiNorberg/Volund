@@ -11,8 +11,6 @@ namespace Volund
 	{
 	public:
 		
-		AABB aabb;
-
 		std::vector<V> Vertices;
 		std::vector<I> Indices;
 
@@ -41,8 +39,6 @@ namespace Volund
 	template <typename V, typename I>
 	ModelLoader<V, I>::ModelLoader(const std::string& filepath)
 	{
-		VOLUND_INFO("Loading OBJ file (%s)...", filepath.data());
-
 		if (filepath.ends_with(".obj") || filepath.ends_with(".vobj"))
 		{
 			this->LoadOBJ(filepath);
@@ -51,8 +47,6 @@ namespace Volund
 		{
 			VOLUND_WARNING("Unable to read unknown model file type (%s)!", filepath.data());
 		}
-
-		this->aabb = AABB(this->Vertices);
 	}
 
 	template <typename V, typename I>

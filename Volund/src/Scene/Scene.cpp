@@ -51,6 +51,19 @@ namespace Volund
 		return FindEntity(entity) != -1;
 	}
 
+	std::vector<Entity> Scene::GetRegisteredEntities()
+	{
+		std::vector<Entity> output;
+		output.reserve(this->m_Registry.size());
+		
+		for (auto& [entity, polyContainer] : this->m_Registry)
+		{
+			output.push_back(entity);
+		}
+
+		return output;
+	}
+
 	void Scene::ResizeTarget(const uint32_t width, const uint32_t height)
 	{
 		auto spec = this->m_TargetBuffer->GetSpec();

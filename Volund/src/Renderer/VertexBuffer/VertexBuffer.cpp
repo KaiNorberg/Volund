@@ -10,9 +10,9 @@
 
 namespace Volund
 {
-	uint32_t VertexBuffer::GetCount() const
+	AABB VertexBuffer::GetAABB()
 	{
-		return this->m_Count;
+		return this->m_AABB;
 	}
 
 	Ref<VertexBuffer> VertexBuffer::Create(const float vertices[], uint32_t count)

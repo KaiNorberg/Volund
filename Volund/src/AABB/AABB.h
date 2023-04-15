@@ -14,6 +14,8 @@ namespace Volund
 
 		AABB() = default;
 
+		AABB(const float points[], const uint32_t count);
+
 		AABB(const std::vector<float>& points);
 
 		AABB(const std::vector<Vec3>& points);

@@ -8,13 +8,6 @@
 
 namespace Volund
 {
-	enum class CursorMode
-	{
-		Normal = GLFW_CURSOR_NORMAL,
-		Hidden = GLFW_CURSOR_HIDDEN,
-		Disabled = GLFW_CURSOR_DISABLED
-	};
-
 	struct WindowData
 	{
 		uint64_t Width = 0;
@@ -22,7 +15,7 @@ namespace Volund
 
 		GLFWwindow* GlfwWindow;
 
-		CursorMode CurrentCursorMode;
+		bool IsCursorEnabled;
 
 		Ref<EventDispatcher> Dispatcher;
 
@@ -45,9 +38,9 @@ namespace Volund
 
 		GLFWwindow* GetGlfwWindow();
 
-		void SetCursorMode(CursorMode newMode);
+		void SetCursorEnabled(bool enabled);
 
-		CursorMode GetCursorMode();
+		bool IsCursorEnabled();
 
 		void SetTitle(const std::string& title);
 
@@ -58,8 +51,6 @@ namespace Volund
 		float GetAspectRatio();
 
 		void Flush();
-
-		void Reset();
 
 		void ConnectWindowFocusCallback(GLFWwindowfocusfun callback);		
 		void ConnectCursorEnterCallback(GLFWcursorenterfun callback);

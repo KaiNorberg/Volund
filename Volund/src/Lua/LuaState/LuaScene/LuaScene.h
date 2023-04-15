@@ -14,7 +14,7 @@ namespace Volund
 
         Ref<Scene> Get();
 
-        LuaScene(const std::string& filepath);
+        LuaScene(Ref<Window> window, const std::string& filepath);
 
     private:
 
