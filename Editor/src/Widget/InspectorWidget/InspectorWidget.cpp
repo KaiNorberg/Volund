@@ -16,7 +16,7 @@ const char* InspectorWidget::GetName()
 
 void InspectorWidget::OnRender()
 {
-	auto scene = this->m_App->GetModule<VL::GameModule>()->GetScene();
+	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
 
@@ -44,7 +44,7 @@ void InspectorWidget::OnRender()
 
 void InspectorWidget::DrawComponents()
 {
-	auto scene = this->m_App->GetModule<VL::GameModule>()->GetScene();
+	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
 
@@ -76,17 +76,6 @@ void InspectorWidget::DrawComponents()
 		transform->Scale = scale;
 	});
 
-	this->DrawComponent<VL::Camera>("Camera", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto camera = scene->GetComponent<VL::Camera>(selectedEntity, i);
-
-		//TODO: Add targetbuffer
-
-		this->FloatControl("FOV", &camera->FOV);
-		this->FloatControl("FarPlane", &camera->FarPlane);
-		this->FloatControl("NearPlane", &camera->NearPlane);
-	});
-
 	this->DrawComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
 	{
 		auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
@@ -107,13 +96,15 @@ void InspectorWidget::DrawComponents()
 		}
 	});
 
-	this->DrawComponent<VL::PointLight>("PointLight", selectedEntity, [this, selectedEntity, scene](int i)
+	this->DrawComponent<VL::Camera>("Camera", selectedEntity, [this, selectedEntity, scene](int i)
 	{
-		auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
+		auto camera = scene->GetComponent<VL::Camera>(selectedEntity, i);
 
-		ImGui::ColorPicker3("##Color", glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
+		//TODO: Add targetbuffer
 
-		FloatControl("Brightness", &pointLight->Brightness);
+		this->FloatControl("FOV", &camera->FOV);
+		this->FloatControl("FarPlane", &camera->FarPlane);
+		this->FloatControl("NearPlane", &camera->NearPlane);
 	});
 
 	this->DrawComponent<VL::CameraMovement>("CameraMovement", selectedEntity, [this, selectedEntity, scene](int i)
@@ -123,11 +114,64 @@ void InspectorWidget::DrawComponents()
 		FloatControl("Speed", &cameraMovement->Speed);
 		FloatControl("Sensitivity", &cameraMovement->Sensitivity);
 	});
+
+	this->DrawComponent<VL::PointLight>("PointLight", selectedEntity, [this, selectedEntity, scene](int i)
+	{
+		auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
+
+		ImGui::ColorPicker3("##Color", glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
+
+		FloatControl("Brightness", &pointLight->Brightness);
+	});
+
+	this->DrawComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene](int i)
+	{
+		auto soundSource = scene->GetComponent<VL::SoundSource>(selectedEntity, i);
+		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
+
+		//Todo: Add variables
+		std::string defaultSound = scene->FetchAssetFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
+		auto selectedSound = FileSelectorControl("AudioBuffer", defaultSound, window);
+		if (selectedSound != "")
+		{
+			soundSource->SetBuffer(scene->FetchAsset<VL::AudioBuffer>(selectedSound));
+		}
+
+		BoolControl("AutoPlay", &soundSource->AutoPlay);
+
+		bool oldLooping = soundSource->GetLooping();
+		bool newLooping = oldLooping;
+		BoolControl("Looping", &newLooping);
+		if (oldLooping != newLooping)
+		{
+			soundSource->SetLooping(newLooping);
+		}
+
+		float oldPitch = soundSource->GetPitch();
+		float newPitch = oldPitch;
+		FloatControl("Pitch", &newPitch);
+		if (oldPitch != newPitch)
+		{
+			soundSource->SetPitch(newPitch);
+		}
+
+		float oldGain = soundSource->GetGain();
+		float newGain = oldGain;
+		FloatControl("Gain", &newGain);
+		if (oldLooping != newLooping)
+		{
+			soundSource->SetGain(newGain);
+		}
+	});
+
+	this->DrawComponent<VL::SoundListener>("SoundListener", selectedEntity, [this, selectedEntity, scene](int i)
+	{
+	});
 }
 
 void InspectorWidget::DrawAddComponents()
 {
-	auto scene = this->m_App->GetModule<VL::GameModule>()->GetScene();
+	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
 
@@ -169,6 +213,16 @@ void InspectorWidget::DrawAddComponents()
 		if (ImGui::MenuItem("CameraMovement"))
 		{
 			scene->CreateComponent<VL::CameraMovement>(selectedEntity);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("SoundSource"))
+		{
+			scene->CreateComponent<VL::SoundSource>(selectedEntity);
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("SoundListener"))
+		{
+			scene->CreateComponent<VL::SoundListener>(selectedEntity);
 			ImGui::CloseCurrentPopup();
 		}
 

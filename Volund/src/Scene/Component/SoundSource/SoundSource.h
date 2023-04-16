@@ -10,15 +10,22 @@ namespace Volund
 	{
 	public:
 
+		bool AutoPlay = false;
+
 		void Play();
 
 		void SetBuffer(Ref<AudioBuffer> buffer);
+		
+		Ref<AudioBuffer> GetBuffer();
 
 		void SetPitch(float pitch);
+		float GetPitch();
 
 		void SetLooping(bool looping);
+		bool GetLooping();
 
 		void SetGain(float gain);
+		float GetGain();
 
 		void Procedure(const Event& e);
 

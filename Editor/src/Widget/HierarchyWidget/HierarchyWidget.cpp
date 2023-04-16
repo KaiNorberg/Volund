@@ -10,7 +10,7 @@ const char* HierarchyWidget::GetName()
 
 void HierarchyWidget::OnRender()
 {
-	auto scene = this->m_App->GetModule<VL::GameModule>()->GetScene();
+	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	if (ImGui::Begin("Entities", &this->IsActive))
 	{
@@ -59,7 +59,7 @@ void HierarchyWidget::OnRender()
 
 bool HierarchyWidget::DrawEntityNode(VL::Entity entity, const std::string& entityName)
 {
-	auto scene = this->m_App->GetModule<VL::GameModule>()->GetScene();
+	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	auto& selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
 

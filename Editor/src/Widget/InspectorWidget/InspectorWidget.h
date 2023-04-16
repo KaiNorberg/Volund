@@ -2,6 +2,8 @@
 
 #include "Widget/Widget.h"
 
+#include "Editor/EditorModule/EditorModule.h"
+
 class InspectorWidget : public Widget
 {
 public:
@@ -27,7 +29,7 @@ private:
 template<typename T>
 inline void InspectorWidget::DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
-	auto scene = this->m_App->GetModule<VL::GameModule>()->GetScene();
+	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	for (int i = 0; i < scene->ComponentAmount<T>(entity); i++)
 	{

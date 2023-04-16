@@ -15,7 +15,6 @@ public:
 	virtual ~Editor() = default;
 
 private:
-	
 	std::vector<VL::Ref<Widget>> m_Widgets;
 
 	VL::Input m_Input;

@@ -2,6 +2,8 @@
 
 #include "ViewportWidget.h"
 
+#include "Editor/EditorModule/EditorModule.h"
+
 const char* ViewportWidget::GetName()
 {
 	return "Viewport";
@@ -9,61 +11,20 @@ const char* ViewportWidget::GetName()
 
 void ViewportWidget::OnKey(const VL::Event& e)
 {
-	const auto gameModule = this->m_App->GetModule<VL::GameModule>();
-	auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
 
-	this->m_Input.Procedure(e);
-
-	if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
-	{
-		if (this->m_Input.IsPressed('R'))
-		{
-			const auto scene = gameModule->GetScene();
-			if (scene != nullptr)
-			{
-				gameModule->LoadNewState(gameModule->GetFilepath());
-			}
-		}		
-		else if (this->m_Input.IsPressed('E'))
-		{
-			const std::string filepath = VL::Dialog::OpenFile(window);
-			if (!filepath.empty())
-			{
-				gameModule->LoadNewState(filepath);
-			}
-		}
-	}
 }
 
 void ViewportWidget::OnRender()
 {
-	const auto gameModule = this->m_App->GetModule<VL::GameModule>();
+	const auto editorModule = this->m_App->GetModule<EditorModule>();
 	auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
 
 	if (ImGui::Begin(this->GetName(), &this->IsActive))
 	{
-		if (ImGui::Button("Load Scene (Shift + E)"))
-		{
-			const std::string filepath = VL::Dialog::OpenFile(window);
-			if (!filepath.empty())
-			{
-				gameModule->LoadNewState(filepath);
-				ImGui::End();
-				return;
-			}
-		}
-
-		auto scene = gameModule->GetScene();
+		auto scene = editorModule->GetScene();
 		if (scene != nullptr)
 		{
 			ImGui::SameLine();
-
-			if (ImGui::Button("Reload (Shift + R)"))
-			{
-				gameModule->LoadNewState(gameModule->GetFilepath());
-				ImGui::End();
-				return;
-			}
 
 			if (ImGui::BeginChild("ViewPort"))
 			{

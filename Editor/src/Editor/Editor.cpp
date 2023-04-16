@@ -13,7 +13,7 @@ void Editor::OnRun()
 {
 	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OpenGL, std::make_shared<VL::ForwardRenderer>()));
 	this->AttachModule(new VL::ImGuiModule());
-	this->AttachModule(new VL::GameModule());
+	//this->AttachModule(new EditorModule());
 	this->AttachModule(new VL::AudioModule());
 	this->AttachModule(new EditorModule());
 
@@ -40,13 +40,45 @@ void Editor::Procedure(const VL::Event& e)
 	switch (e.Type)
 	{
 	case VL::EventType::Render:
-	{ 
+	{ 	
+		const auto editorModule = this->GetModule<EditorModule>();
+		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
+
 		VL::ImGuiModule::BeginFrame();
 
 		if (VL::ImGuiModule::BeginDockSpace())
 		{
 			if (ImGui::BeginMenuBar())
 			{
+				if (ImGui::BeginMenu("File"))
+				{
+					if (ImGui::BeginMenu("Open"))
+					{
+						if (ImGui::MenuItem("Scene", "Shift + E"))
+						{
+							const std::string filepath = VL::Dialog::OpenFile(window);
+							if (!filepath.empty())
+							{
+								editorModule->LoadNewState(filepath);
+							}
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Reload"))
+					{
+						if (ImGui::MenuItem("Scene", "Shift + R"))
+						{
+							editorModule->LoadNewState(editorModule->GetFilepath());
+						}
+
+						ImGui::EndMenu();
+					}
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("Widget"))
 				{
 					for (const auto& widget : this->m_Widgets)
@@ -91,7 +123,30 @@ void Editor::Procedure(const VL::Event& e)
 	}
 	break;
 	case VL::EventType::Key:
-	{
+	{	
+		const auto editorModule = this->GetModule<EditorModule>();
+		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
+
+		if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
+		{
+			if (this->m_Input.IsPressed('R'))
+			{
+				const auto scene = editorModule->GetScene();
+				if (scene != nullptr)
+				{
+					editorModule->LoadNewState(editorModule->GetFilepath());
+				}
+			}
+			else if (this->m_Input.IsPressed('E'))
+			{
+				const std::string filepath = VL::Dialog::OpenFile(window);
+				if (!filepath.empty())
+				{
+					editorModule->LoadNewState(filepath);
+				}
+			}
+		}
+
 		for (const auto& widget : this->m_Widgets)
 		{
 			if (widget->IsActive)
