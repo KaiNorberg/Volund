@@ -11,7 +11,7 @@ namespace Volund
     {        
         bool cursorEnabled = window->IsCursorEnabled();
 
-        window->SetCursorEnabled(false);
+        window->SetCursorEnabled(true);
         const char* ret = tinyfd_selectFolderDialog("", std::filesystem::current_path().string().c_str());
         window->SetCursorEnabled(cursorEnabled);
 
@@ -29,7 +29,7 @@ namespace Volund
     {
         bool cursorEnabled = window->IsCursorEnabled();
 
-        window->SetCursorEnabled(false);
+        window->SetCursorEnabled(true);
         const char* ret = tinyfd_openFileDialog("", std::filesystem::current_path().string().c_str(), 0, 0, "", 0);
         window->SetCursorEnabled(cursorEnabled);
 
