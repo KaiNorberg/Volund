@@ -1,5 +1,5 @@
 #include "PCH/PCH.h"
-#include "LuaScene.h"
+#include "LuaGameState.h"
 
 #include "Filesystem/Filesystem.h"
 
@@ -26,14 +26,16 @@ namespace Volund
         {"Vsync", VsyncSetter}
     };
 
-    Ref<Scene> LuaScene::Get()
+    Ref<GameState> LuaGameState::Get()
     {
-        return this->m_Scene;
+        return this->m_GameState;
     }
 
-    LuaScene::LuaScene(Ref<Window> window, const std::string& filepath)
+    LuaGameState::LuaGameState(Ref<Window> window, const std::string& filepath)
     {           		
         VOLUND_INFO("Loading Scene %s", filepath.c_str());
+
+        this->m_GameState = std::make_shared<GameState>(window, filepath);
 
         std::tuple<sol::table, sol::table> result = LuaUtils::ScriptFile(this->m_SolState, filepath);
         sol::table configTable = std::get<0>(result);
@@ -60,7 +62,7 @@ namespace Volund
             }
         }
 
-        this->m_Scene = std::make_shared<Scene>();
+        auto scene = this->m_GameState->GetScene();
 
         for (auto& [entityKey, entity] : sceneTable)
         {
@@ -70,7 +72,7 @@ namespace Volund
                 return;
             }
 
-            auto newEntity = this->m_Scene->RegisterNewEntity();
+            auto newEntity = scene->RegisterNewEntity();
 
             sol::table entityTable = sol::table(entity);
             for (auto& [componentKey, component] : entityTable)
@@ -83,7 +85,7 @@ namespace Volund
 
                 sol::table componentTable = sol::table(component);
 
-                LuaUtils::AddComponentToEntity(this->m_Scene, newEntity, componentTable);
+                LuaUtils::AddComponentToEntity(scene, newEntity, componentTable);
             }
         }
     }

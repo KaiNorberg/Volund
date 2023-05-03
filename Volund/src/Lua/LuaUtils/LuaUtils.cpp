@@ -17,6 +17,8 @@ namespace Volund::LuaUtils
     {
         LuaComponentID componentID = componentTable[1];
 
+        //IMPORTANT: Remember to update the code below whenever a new component is implemented.
+
         switch (componentID)
         {
         case LuaComponentID::Camera:

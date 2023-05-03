@@ -1,7 +1,9 @@
 #pragma once
 
 namespace Volund
-{
+{        
+	//IMPORTANT: Remember to update the code below whenever a new component is implemented.
+
 	enum class LuaComponentID
 	{
 		Camera = 1,

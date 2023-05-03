@@ -24,7 +24,7 @@ namespace Volund
 		Ref<Mesh> mesh;
 		Ref<Material> material;
 
-		uint16_t LayerMask;
+		uint16_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 
 		bool Discriminated = false;
 	};
@@ -43,7 +43,7 @@ namespace Volund
 
 		Vec3 Position;
 
-		uint16_t LayerMask;
+		uint16_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 
 		Ref<Framebuffer> Target;
 	};

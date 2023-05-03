@@ -6,13 +6,11 @@ public:
 
 	virtual const char* GetName() = 0;
 
-	virtual void OnKey(const VL::Event& e) {}
-
-	virtual void OnUpdate(VL::TimeStep ts) {}
-
-	virtual void OnRender() {}
+	virtual void Procedure(const VL::Event& e) = 0;
 
 	bool IsActive = true;
+
+	virtual ~Widget() = default;
 
 protected:
 	

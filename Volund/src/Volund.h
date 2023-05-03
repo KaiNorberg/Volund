@@ -30,3 +30,5 @@
 #include "Audio/AudioContext/AudioContext.h"
 #include "Audio/AudioDevice/AudioDevice.h"
 #include "Audio/AudioSource/AudioSource.h"
+
+#include "Lua/LuaState/LuaGameState/LuaGameState.h"

@@ -8,7 +8,7 @@ public:
 
 	const char* GetName() override;
 
-	void OnRender() override;
+	void Procedure(const VL::Event& e) override;
 
 	HierarchyWidget(VL::Application* app);
 

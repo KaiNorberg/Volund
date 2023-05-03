@@ -9,6 +9,8 @@
 
 #include "DeferredTaskHandler/DeferredTaskHandler.h"
 
+#include "Lua/LuaState/LuaGameState/LuaGameState.h"
+
 namespace Volund
 {
 	void GameModule::OnAttach(Application* app)
@@ -63,7 +65,9 @@ namespace Volund
 
 			this->m_GameState.reset();
 
-			this->m_GameState = std::make_shared<GameState>(this->m_GameWindow, this->m_Filepath);
+			auto luaGameState = VL::LuaGameState(this->m_GameWindow, this->m_Filepath);
+
+			this->m_GameState = luaGameState.Get();
 		});
 	}
 }

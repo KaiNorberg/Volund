@@ -7,47 +7,55 @@ const char* OutputWidget::GetName()
 	return "Output";
 }
 
-void OutputWidget::OnUpdate(const VL::TimeStep ts)
+void OutputWidget::Procedure(const VL::Event& e)
 {
-	m_TotalTime += (float)ts;
-}
-
-void OutputWidget::OnRender()
-{
-	std::unique_lock lock(m_Mutex);
-
-	if (ImGui::Begin(this->GetName(), &this->IsActive))
+	switch (e.Type)
 	{
-		if (ImGui::BeginListBox("###OutputTextbox", ImVec2(-FLT_MIN, -FLT_MIN)))
+	case VL::EventType::Render:
+	{	
+		std::unique_lock lock(m_Mutex);
+
+		if (ImGui::Begin(this->GetName(), &this->IsActive))
 		{
-			for (auto& string : m_Output)
+			if (ImGui::BeginListBox("###OutputTextbox", ImVec2(-FLT_MIN, -FLT_MIN)))
 			{
-				DrawText(string);
+				for (auto& string : m_Output)
+				{
+					DrawText(string);
+				}
+
+				ImGui::SameLine();
+
+				ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::CalcTextSize("   ").x);
+
+				if (static_cast<int>(m_TotalTime * 2) % 2 == 0)
+				{
+					ImGui::Text("|");
+				}
+				else
+				{
+					ImGui::Text(" ");
+				}
+
+				if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+				{
+					ImGui::SetScrollHereY(1.0f);
+				}
+
+				ImGui::EndListBox();
 			}
-
-			ImGui::SameLine();
-
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::CalcTextSize("   ").x);
-
-			if (static_cast<int>(m_TotalTime * 2) % 2 == 0)
-			{
-				ImGui::Text("|");
-			}
-			else
-			{
-				ImGui::Text(" ");
-			}
-
-			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-			{
-				ImGui::SetScrollHereY(1.0f);
-			}
-
-			ImGui::EndListBox();
 		}
+		ImGui::End();
 	}
+	break;
+	case VL::EventType::Update:
+	{	
+		float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-	ImGui::End();
+		this->m_TotalTime += timeStep;
+	}
+	break;
+	}
 }
 
 void OutputWidget::LoggerCallback(const std::string& string)

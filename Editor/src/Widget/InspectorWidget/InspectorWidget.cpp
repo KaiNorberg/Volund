@@ -14,39 +14,53 @@ const char* InspectorWidget::GetName()
 	return "Inspector";
 }
 
-void InspectorWidget::OnRender()
-{
-	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
-
-	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
-
-	if (ImGui::Begin("Inspector", &this->IsActive))
+void InspectorWidget::Procedure(const VL::Event& e)
+{	
+	switch (e.Type)
 	{
-		if (scene != nullptr && scene->IsEntityRegistered(selectedEntity))
+	case VL::EventType::Render:
+	{
+		const auto editorModule = this->m_App->GetModule<EditorModule>();
+		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
+
+		if (ImGui::Begin(this->GetName(), &this->IsActive))
 		{
-			ImGui::Separator();
+			auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
+			auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
 
-			this->DrawComponents();
+			if (scene != nullptr && scene->IsEntityRegistered(selectedEntity))
+			{
+				ImGui::Separator();
 
-			ImGui::Separator();
+				this->DrawComponents();
 
-			this->DrawAddComponents();
+				ImGui::Separator();
+
+				this->DrawAddComponents();
+			}
+			else
+			{
+				ImGui::Text("No Entity Selected!");
+			}
 		}
-		else
-		{
-			ImGui::Text("No Entity Selected!");
-		}
-
+		ImGui::End();
 	}
-
-	ImGui::End();
+	break;
+	case VL::EventType::Update:
+	{
+	}
+	break;
+	}
 }
+
 
 void InspectorWidget::DrawComponents()
 {
 	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
+
+	//IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
 	this->DrawComponent<VL::Tag>("Tag", selectedEntity, [this, selectedEntity, scene](int i)
 	{

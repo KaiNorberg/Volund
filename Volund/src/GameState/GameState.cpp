@@ -2,7 +2,7 @@
 #include "GameState.h"
 
 #include "ThreadPool/ThreadPool.h"
-#include "Lua/LuaState/LuaScene/LuaScene.h"
+#include "Lua/LuaState/LuaGameState/LuaGameState.h"
 
 namespace Volund
 {
@@ -23,10 +23,8 @@ namespace Volund
 
 		this->m_FilesystemLink = FilesystemLink::Create(std::filesystem::path(filepath).parent_path().string());
 
-		LuaScene luaScene = LuaScene(window, filepath);
-
 		this->m_Input = std::make_shared<Input>();
-		this->m_Scene = luaScene.Get();
+		this->m_Scene = std::make_shared<Scene>();
 	}
 
 	GameState::~GameState()

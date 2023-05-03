@@ -55,6 +55,8 @@ void EditorModule::LoadNewState(const std::string& filepath)
 
 		this->m_GameState.reset();
 
-		this->m_GameState = std::make_shared<VL::GameState>(this->m_GameWindow, this->m_Filepath);
+		auto luaGameState = VL::LuaGameState(this->m_GameWindow, this->m_Filepath);
+
+		this->m_GameState = luaGameState.Get();
 	});
 }

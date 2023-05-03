@@ -48,13 +48,14 @@ void Editor::Procedure(const VL::Event& e)
 
 		if (VL::ImGuiModule::BeginDockSpace())
 		{
+			//TODO: Improve readability of menu bar code
 			if (ImGui::BeginMenuBar())
 			{
 				if (ImGui::BeginMenu("File"))
 				{
 					if (ImGui::BeginMenu("Open"))
 					{
-						if (ImGui::MenuItem("Scene", "Shift + E"))
+						if (ImGui::MenuItem("State", "Shift + E"))
 						{
 							const std::string filepath = VL::Dialog::OpenFile(window);
 							if (!filepath.empty())
@@ -68,7 +69,7 @@ void Editor::Procedure(const VL::Event& e)
 
 					if (ImGui::BeginMenu("Reload"))
 					{
-						if (ImGui::MenuItem("Scene", "Shift + R"))
+						if (ImGui::MenuItem("State", "Shift + R"))
 						{
 							editorModule->LoadNewState(editorModule->GetFilepath());
 						}
@@ -99,7 +100,7 @@ void Editor::Procedure(const VL::Event& e)
 			{
 				if (widget->IsActive)
 				{
-					widget->OnRender();
+					widget->Procedure(e);
 				}
 			}
 		}
@@ -107,21 +108,10 @@ void Editor::Procedure(const VL::Event& e)
 		ImGui::End();
 
 		VL::ImGuiModule::EndFrame();
+
+		return;
 	}
 	break;	
-	case VL::EventType::Update:
-	{
-		const float ts = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
-
-		for (const auto& widget : this->m_Widgets)
-		{
-			if (widget->IsActive)
-			{
-				widget->OnUpdate(ts);
-			}
-		}
-	}
-	break;
 	case VL::EventType::Key:
 	{	
 		const auto editorModule = this->GetModule<EditorModule>();
@@ -146,14 +136,6 @@ void Editor::Procedure(const VL::Event& e)
 				}
 			}
 		}
-
-		for (const auto& widget : this->m_Widgets)
-		{
-			if (widget->IsActive)
-			{
-				widget->OnKey(e);
-			}
-		}
 	}
 	break;
 	case VL::EventType::WindowClose:
@@ -166,5 +148,13 @@ void Editor::Procedure(const VL::Event& e)
 
 	}
 	break;
+	}
+
+	for (const auto& widget : this->m_Widgets)
+	{
+		if (widget->IsActive)
+		{
+			widget->Procedure(e);
+		}
 	}
 }

@@ -8,53 +8,65 @@ const char* HierarchyWidget::GetName()
 	return "Hierarchy";
 }
 
-void HierarchyWidget::OnRender()
+void HierarchyWidget::Procedure(const VL::Event& e)
 {
-	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
-
-	if (ImGui::Begin("Entities", &this->IsActive))
+	switch (e.Type)
 	{
-		if (scene != nullptr)
-		{
-			if (ImGui::Button("+"))
-			{
-				scene->RegisterNewEntity();
-			}
-			ImGui::SameLine();
+	case VL::EventType::Render:
+	{
+		const auto editorModule = this->m_App->GetModule<EditorModule>();
+		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
 
-			static char searchTerm[64];
-			ImGui::Text("Search: ");
-			ImGui::SameLine();
-			ImGui::InputText(" ", searchTerm, 64);
+		if (ImGui::Begin(this->GetName(), &this->IsActive))
+		{
+			auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
 
 			if (scene != nullptr)
 			{
-				for (auto& [entity, container] : *scene)
+				if (ImGui::Button("+"))
 				{
-					std::string entityName = "#" + std::to_string(entity);
-					if (scene->HasComponent<VL::Tag>(entity))
-					{
-						entityName += " | " + scene->GetComponent<VL::Tag>(entity)->String;
-					}
+					scene->RegisterNewEntity();
+				}
+				ImGui::SameLine();
 
-					if (entityName.find(searchTerm) != std::string::npos)
+				static char searchTerm[64];
+				ImGui::Text("Search: ");
+				ImGui::SameLine();
+				ImGui::InputText(" ", searchTerm, 64);
+
+				if (scene != nullptr)
+				{
+					for (auto& [entity, container] : *scene)
 					{
-						if (!this->DrawEntityNode(entity, entityName))
+						std::string entityName = "#" + std::to_string(entity);
+						if (scene->HasComponent<VL::Tag>(entity))
 						{
-							break;
+							entityName += " | " + scene->GetComponent<VL::Tag>(entity)->String;
+						}
+
+						if (entityName.find(searchTerm) != std::string::npos)
+						{
+							if (!this->DrawEntityNode(entity, entityName))
+							{
+								break;
+							}
 						}
 					}
 				}
 			}
+			else
+			{
+				ImGui::Text("No Scene Selected!");
+			}
 		}
-		else
-		{
-			ImGui::Text("No Scene Selected!");
-		}
-
+		ImGui::End();
 	}
-
-	ImGui::End();
+	break;
+	case VL::EventType::Update:
+	{
+	}
+	break;
+	}
 }
 
 bool HierarchyWidget::DrawEntityNode(VL::Entity entity, const std::string& entityName)
