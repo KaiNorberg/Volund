@@ -15,7 +15,7 @@ namespace Volund
 
 		GLFWwindow* GlfwWindow;
 
-		bool IsCursorEnabled;
+		bool IsCursorEnabled = true;
 
 		Ref<EventDispatcher> Dispatcher;
 

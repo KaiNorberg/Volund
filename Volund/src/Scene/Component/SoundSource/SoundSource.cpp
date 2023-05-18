@@ -61,9 +61,9 @@ namespace Volund
 		{
 		case EventType::Update:
 		{				
-			if (this->AutoPlay)
+			if (this->AutoPlay && !this->m_HasAutoPlayed)
 			{
-				this->AutoPlay = false;
+				this->m_HasAutoPlayed = true;
 				this->Play();
 			}
 

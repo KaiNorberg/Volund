@@ -133,7 +133,8 @@ void InspectorWidget::DrawComponents()
 	{
 		auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
 
-		ImGui::ColorPicker3("##Color", glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
+		std::string label = "##Color" + std::to_string((int)pointLight.get());
+		ImGui::ColorPicker3(label.c_str(), glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
 
 		FloatControl("Brightness", &pointLight->Brightness);
 	});

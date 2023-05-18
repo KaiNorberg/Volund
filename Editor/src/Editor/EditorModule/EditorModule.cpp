@@ -1,6 +1,8 @@
 #include "PCH/PCH.h"
 #include "EditorModule.h"
 
+#include "Lua/Serializer/SceneSerializer/SceneSerializer.h"
+
 VL::Ref<VL::Scene> EditorModule::GetScene()
 {
 	if (this->m_GameState != nullptr)
@@ -13,9 +15,9 @@ VL::Ref<VL::Scene> EditorModule::GetScene()
 	}
 }
 
-std::string EditorModule::GetFilepath()
+std::string EditorModule::GetSceneFilepath()
 {
-	return this->m_Filepath;
+	return this->m_SceneFilepath;
 }
 
 void EditorModule::OnAttach(VL::Application* app)
@@ -45,17 +47,36 @@ void EditorModule::Procedure(const VL::Event& e)
 	}
 }
 
-void EditorModule::LoadNewState(const std::string& filepath)
+void EditorModule::SaveScene(const std::string& filepath)
+{
+	if (this->GetScene() == nullptr)
+	{
+		return;
+	}
+
+	std::unique_lock lock(this->m_Mutex);
+
+	VL::DeferredTaskHandler::DeferTask([this, filepath]()
+	{
+		this->m_SceneFilepath = filepath;
+
+		auto sceneSerializer = VL::SceneSerializer(this->GetScene());
+
+		sceneSerializer.WriteToFile(filepath);
+	});
+}
+
+void EditorModule::LoadNewScene(const std::string& filepath)
 {
 	std::unique_lock lock(this->m_Mutex);
 
 	VL::DeferredTaskHandler::DeferTask([this, filepath]()
 	{
-		this->m_Filepath = filepath;
+		this->m_SceneFilepath = filepath;
 
 		this->m_GameState.reset();
 
-		auto luaGameState = VL::LuaGameState(this->m_GameWindow, this->m_Filepath);
+		auto luaGameState = VL::LuaGameState(this->m_GameWindow, this->m_SceneFilepath);
 
 		this->m_GameState = luaGameState.Get();
 	});

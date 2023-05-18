@@ -33,6 +33,8 @@ namespace Volund
 
 	private:
 
+		bool m_HasAutoPlayed = false;
+
 		AudioSource m_Source;
 	};
 }

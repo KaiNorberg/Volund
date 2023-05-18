@@ -1,72 +1,108 @@
-local scene =
+local table =
 {
-    {
-        {
-            state.Enums.Component.Transform,
-            Position = Vec3:new(0.0, 2.0, 10.0)
-        },
-        {
-            state.Enums.Component.Camera
-        },
-        --{Component.CameraMovement, Sensitivity = 0.5, Speed = 8}
-    },
-    {
-        {
-            state.Enums.Component.Transform,
-            Position = Vec3:new(0.0, 7.5, 0.0)
-        },
-        {
-            state.Enums.Component.PointLight,
-            Brightness = 1.0,
-            Color = Vec3:new(1.0, 1.0, 1.0)
-        }
-    },
-    {
-        {
-            state.Enums.Component.Transform,
-            Position = Vec3:new(-3.0, 0.0, 0.0)
-        },
-        {
-            state.Enums.Component.MeshRenderer,
-            Mesh = "://Cube.obj",
-            Material = "Materials/Texture.mat.lua"
-        },
-        --{Component.Script, Script = Rotate}
-    },
-    {
-        {
-            state.Enums.Component.Transform,
-            Position = Vec3:new(-6.8, 4.5, -7.6)
-        },
-        {
-            state.Enums.Component.MeshRenderer,
-            Mesh = "://Cube.obj",
-            Material = "Materials/Green.mat.lua"
-        }
-    },
-    {
-        {
-            state.Enums.Component.Transform,
-            Position = Vec3:new(2.9, 0.0, 0.0)
-        },
-        {
-            state.Enums.Component.MeshRenderer,
-            Mesh = "Models/Teapot.obj",
-            Material = "Materials/Blue.mat.lua"
-        }
-    },
-    {
-        {
-            state.Enums.Component.Transform,
-            Position = Vec3:new(0.0, -10.0, 0.0),
-            Scale = Vec3:new(1000, 1, 1000)
-        },
-        {
-            state.Enums.Component.MeshRenderer,
-            Mesh = "://Cube.obj",
-            Material = "Materials/White.mat.lua"
-        }
-    }
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(0.000000, 2.000000, 10.000000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
+		},
+		{
+			state.Enums.Component.Camera,
+			FOV = 80.000000,
+			NearPlane = 0.100000,
+			FarPlane = 100.000000
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "Camera"
+		}
+	},
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(0.000000, 7.500000, 0.000000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
+		},
+		{
+			state.Enums.Component.PointLight,
+			Color = Vec3:new(1.000000, 1.000000, 1.000000),
+			Brightness = 1.000000
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "Light"
+		}
+	},
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(-3.000000, 0.000000, 0.000000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
+		},
+		{
+			state.Enums.Component.MeshRenderer,
+			Mesh = "://Cube.obj",
+			Material = "Materials/Texture.mat.lua"
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "TexturedCube"
+		}
+	},
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(-6.800000, 4.500000, -7.600000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
+		},
+		{
+			state.Enums.Component.MeshRenderer,
+			Mesh = "://Cube.obj",
+			Material = "Materials/Green.mat.lua"
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "GreenCube"
+		}
+	},
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(2.900000, 0.000000, 0.000000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
+		},
+		{
+			state.Enums.Component.MeshRenderer,
+			Mesh = "Models/Teapot.obj",
+			Material = "Materials/Blue.mat.lua"
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "BlueTeapot"
+		}
+	},
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(0.000000, -10.000000, 0.000000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1000.000000, 1.000000, 1000.000000)
+		},
+		{
+			state.Enums.Component.MeshRenderer,
+			Mesh = "://Cube.obj",
+			Material = "Materials/White.mat.lua"
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "Ground"
+		}
+	}
 }
 
-return scene
+return table

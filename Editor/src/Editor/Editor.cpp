@@ -13,7 +13,6 @@ void Editor::OnRun()
 {
 	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OpenGL, std::make_shared<VL::ForwardRenderer>()));
 	this->AttachModule(new VL::ImGuiModule());
-	//this->AttachModule(new EditorModule());
 	this->AttachModule(new VL::AudioModule());
 	this->AttachModule(new EditorModule());
 
@@ -53,14 +52,38 @@ void Editor::Procedure(const VL::Event& e)
 			{
 				if (ImGui::BeginMenu("File"))
 				{
-					if (ImGui::BeginMenu("Open"))
+					if (ImGui::BeginMenu("Load"))
 					{
-						if (ImGui::MenuItem("State", "Shift + E"))
+						if (ImGui::MenuItem("State", "Ctrl + E"))
 						{
 							const std::string filepath = VL::Dialog::OpenFile(window);
 							if (!filepath.empty())
 							{
-								editorModule->LoadNewState(filepath);
+								editorModule->LoadNewScene(filepath);
+							}
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Save"))
+					{
+						if (ImGui::MenuItem("Scene", "Ctrl + S"))
+						{
+							editorModule->SaveScene(editorModule->GetSceneFilepath());
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Save As"))
+					{
+						if (ImGui::MenuItem("Scene"))
+						{
+							const std::string filepath = VL::Dialog::OpenFile(window);
+							if (!filepath.empty())
+							{
+								editorModule->SaveScene(filepath);
 							}
 						}
 
@@ -69,9 +92,9 @@ void Editor::Procedure(const VL::Event& e)
 
 					if (ImGui::BeginMenu("Reload"))
 					{
-						if (ImGui::MenuItem("State", "Shift + R"))
+						if (ImGui::MenuItem("State", "Ctrl + R"))
 						{
-							editorModule->LoadNewState(editorModule->GetFilepath());
+							editorModule->LoadNewScene(editorModule->GetSceneFilepath());
 						}
 
 						ImGui::EndMenu();
@@ -117,14 +140,14 @@ void Editor::Procedure(const VL::Event& e)
 		const auto editorModule = this->GetModule<EditorModule>();
 		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
 
-		if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
+		if (this->m_Input.IsHeld(VOLUND_KEY_CONTROL))
 		{
 			if (this->m_Input.IsPressed('R'))
 			{
 				const auto scene = editorModule->GetScene();
 				if (scene != nullptr)
 				{
-					editorModule->LoadNewState(editorModule->GetFilepath());
+					editorModule->LoadNewScene(editorModule->GetSceneFilepath());
 				}
 			}
 			else if (this->m_Input.IsPressed('E'))
@@ -132,8 +155,12 @@ void Editor::Procedure(const VL::Event& e)
 				const std::string filepath = VL::Dialog::OpenFile(window);
 				if (!filepath.empty())
 				{
-					editorModule->LoadNewState(filepath);
+					editorModule->LoadNewScene(filepath);
 				}
+			}
+			else if (this->m_Input.IsPressed('S'))
+			{
+				editorModule->SaveScene(editorModule->GetSceneFilepath());
 			}
 		}
 	}

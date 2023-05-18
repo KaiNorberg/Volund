@@ -8,7 +8,9 @@
 
 namespace Volund::LuaUtils
 {
-    void AddComponentToEntity(Ref<Scene> scene, Entity entity, sol::table componentTable);
+    Entity DeserializeEntity(Ref<Scene> scene, sol::table entityTable);
+
+    void DeserializeScene(Ref<Scene> scene, sol::table sceneTable);
 
     sol::protected_function_result ScriptFile(Ref<sol::state> state, const std::string& filepath);
 }

@@ -8,7 +8,7 @@ public:
 
 	VL::Ref<VL::Scene> GetScene();
 
-	std::string GetFilepath();
+	std::string GetSceneFilepath();
 
 	void OnAttach(VL::Application* app) override;
 
@@ -16,7 +16,9 @@ public:
 
 	void Procedure(const VL::Event& e) override;
 
-	void LoadNewState(const std::string& filepath);
+	void SaveScene(const std::string& filepath);
+
+	void LoadNewScene(const std::string& filepath);
 
 private:
 
@@ -26,6 +28,6 @@ private:
 
 	VL::Ref<VL::Window> m_GameWindow;
 
-	std::string m_Filepath;
+	std::string m_SceneFilepath;
 };
 

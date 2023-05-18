@@ -66,10 +66,12 @@ namespace Volund
 		return output;
     }
 
-    /*void Filesystem::Write(const std::string& filepath, const std::string& content)
-    {
-
-    }*/
+	void Filesystem::Write(const std::string& filepath, const std::string& content)
+	{
+		std::ofstream out(GetFinalPath(filepath));
+		out << content;
+		out.close();
+	}
 
     std::string Filesystem::GetResource(const std::string& filepath)
 	{
