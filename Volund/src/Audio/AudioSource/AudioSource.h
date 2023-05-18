@@ -11,8 +11,7 @@ namespace Volund
 		void Play();
 
 		void SetBuffer(Ref<AudioBuffer> buffer);
-
-		void SetPitch(float pitch);
+		Ref<AudioBuffer> GetBuffer();
 
 		void SetPosition(const Vec3& position);
 
@@ -20,9 +19,14 @@ namespace Volund
 
 		void SetVelocity(const Vec3& velocity);
 
+		void SetPitch(float pitch);
+		float GetPitch();
+
 		void SetLooping(bool looping);
+		bool GetLooping();
 
 		void SetGain(float gain);
+		float GetGain();
 
 		AudioSource();
 

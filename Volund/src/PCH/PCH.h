@@ -4,6 +4,7 @@
 
 #define SOL_NO_EXCEPTIONS 0
 #define SOL_PRINT_ERRORS 0
+#define SOL_SAFE_NUMERICS 1
 
 #include <iostream>
 #include <sstream>
@@ -21,8 +22,10 @@
 #include <string_view>
 #include <atomic>
 #include <set>
-
-#include <sol/sol.hpp>
+#include <algorithm>
+#include <iterator>
+#include <signal.h>
+#include <tuple>
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/vec2.hpp>

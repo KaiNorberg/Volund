@@ -20,6 +20,6 @@ namespace Volund
 
 	private:
 
-		Ref<Application> m_App;
+		WeakRef<Application> m_App;
 	};
 }

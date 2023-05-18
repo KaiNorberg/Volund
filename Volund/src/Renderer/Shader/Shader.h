@@ -33,8 +33,6 @@ namespace Volund
 
 		virtual void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit) = 0;
 
-		static Ref<Shader> Create(const std::string& filepath);
-
 		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource);
 
 		virtual ~Shader() = default;

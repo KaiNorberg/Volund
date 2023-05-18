@@ -32,6 +32,21 @@ namespace Volund
 		return newAABB;
 	}
 
+	AABB::AABB(const float points[], const uint32_t count)
+	{
+		for (uint64_t i = 0; i < count; i += 3)
+		{
+			this->Min.x = Utils::Min(this->Min.x, points[i]);
+			this->Max.x = Utils::Max(this->Max.x, points[i]);
+
+			this->Min.y = Utils::Min(this->Min.y, points[i + 1]);
+			this->Max.y = Utils::Max(this->Max.y, points[i + 1]);
+
+			this->Min.z = Utils::Min(this->Min.z, points[i + 2]);
+			this->Max.z = Utils::Max(this->Max.z, points[i + 2]);
+		}
+	}
+
 	AABB::AABB(const std::vector<float>& points)
 	{
 		for (uint64_t i = 0; i < points.size(); i += 3)

@@ -3,7 +3,7 @@
 #include "Module/Module.h"
 
 #include "Time/Time.h"
-#include "Container/Container.h"
+#include "PolyContainer/PolyContainer.h"
 #include "EventDispatcher/EventDispatcher.h"
 #include "ThreadPool/ThreadPool.h"
 
@@ -57,7 +57,7 @@ namespace Volund
 
  		ThreadPool m_ThreadPool;
 
-		Container<Module> m_Modules;
+		PolyContainer<Module> m_Modules;
 	};
 
 	template<typename T>

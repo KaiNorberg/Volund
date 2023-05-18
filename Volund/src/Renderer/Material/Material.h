@@ -3,15 +3,13 @@
 #include "Renderer/Shader/Shader.h"
 #include "Renderer/Texture/Texture.h"
 
-#include "Container/Container.h"
+#include "PolyContainer/PolyContainer.h"
 
 namespace Volund
 {
 	class Material
 	{
 	public:
-
-		std::string GetFilepath();
 
 		void SetInt(const std::string& name, int value);
 
@@ -22,6 +20,8 @@ namespace Volund
 		void SetVec2(const std::string& name, const Vec2& value);
 
 		void SetVec3(const std::string& name, const Vec3& value);
+
+		void SetVec4(const std::string& name, const Vec4& value);
 
 		void SetTexture(const std::string& name, Ref<Texture> value);
 
@@ -46,12 +46,12 @@ namespace Volund
 
 		std::unordered_map<std::string, Vec3> m_Vec3Uniforms;
 
+		std::unordered_map<std::string, Vec4> m_Vec4Uniforms;
+
 		std::unordered_map<std::string, Ref<Texture>> m_TextureUniforms;
 
 		std::unordered_map<std::string, Ref<Framebuffer>> m_FramebufferUniforms;
 
 		Ref<Shader> m_Shader;
-
-		std::string m_Filepath;
 	};
 }

@@ -44,7 +44,13 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		const uint32_t lightAmount = (uint32_t)this->m_Data.Lights.size();
+		uint32_t lightAmount = (uint32_t)this->m_Data.Lights.size();
+		
+		if (lightAmount > VOLUND_MAX_LIGHTS)
+		{
+			lightAmount = 64;
+		}
+
 		this->m_LightsUniforms->Set("LightAmount", &lightAmount);
 		for (uint64_t i = 0; i < lightAmount; i++)
 		{

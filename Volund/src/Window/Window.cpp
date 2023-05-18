@@ -261,15 +261,22 @@ namespace Volund
 		return this->m_WindowData->GlfwWindow;
 	}
 
-	void Window::SetCursorMode(const CursorMode newMode)
+	void Window::SetCursorEnabled(bool enabled)
 	{
-		this->m_WindowData->CurrentCursorMode = newMode;
-		glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, (int32_t)newMode);
+		this->m_WindowData->IsCursorEnabled = enabled;
+		if (enabled)
+		{
+			glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+		}
+		else
+		{
+			glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+		}
 	}
 
-	CursorMode Window::GetCursorMode()
+	bool Window::IsCursorEnabled()
 	{
-		return this->m_WindowData->CurrentCursorMode;
+		return this->m_WindowData->IsCursorEnabled;
 	}
 
 	void Window::SetTitle(const std::string &title)
@@ -304,12 +311,6 @@ namespace Volund
 		VOLUND_PROFILE_FUNCTION();
 
 		glfwSwapBuffers(this->m_WindowData->GlfwWindow);
-	}
-
-	void Window::Reset()
-	{
-		this->SetCursorMode(CursorMode::Normal);
-		this->SetVsync(true);
 	}
 
     void Window::ConnectWindowFocusCallback(GLFWwindowfocusfun callback)

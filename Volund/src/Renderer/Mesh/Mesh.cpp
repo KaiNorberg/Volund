@@ -8,18 +8,18 @@
 #include "ModelLoader/ModelLoader.h"
 
 #include "ThreadPool/ThreadPool.h"
-#include "DelayedTaskHandler/DelayedTaskHandler.h"
+#include "DeferredTaskHandler/DeferredTaskHandler.h"
 
 namespace Volund
 {
 	AABB Mesh::GetAABB(const Mat4x4& modelMatrix)
 	{
-		return this->m_Aabb.ToWorldSpace(modelMatrix);
-	}
+		if (this->m_VertexBuffer == nullptr)
+		{
+			return AABB();
+		}
 
-	std::string Mesh::GetFilepath()
-	{
-		return this->m_Filepath;
+		return this->m_VertexBuffer->GetAABB().ToWorldSpace(modelMatrix);
 	}
 
 	Ref<VertexBuffer> Mesh::GetVertexBuffer()
@@ -42,20 +42,20 @@ namespace Volund
 		return this->m_IndexBuffer;
 	}
 
-	Ref<Mesh> Mesh::Create(const std::string& filepath)
+	/*Ref<Mesh> Mesh::Create(const std::string& filepath)
 	{
 		Ref<Mesh> newMesh = Mesh::Create();
 
 		VOLUND_THREADPOOL_SUBMIT([filepath, newMesh]()
-		{
+		{		                
 			newMesh->m_Filepath = filepath;
 
 			ModelLoader<float, uint32_t> Loader = ModelLoader<float, uint32_t>(filepath);
 
 			newMesh->m_Aabb = Loader.aabb;
 
-			DelayedTaskHandler::DelayTask([newMesh, Loader]()
-			{
+			DeferredTaskHandler::DeferTask([newMesh, Loader]()
+			{						
 				Ref<VertexBuffer> VBuffer = VertexBuffer::Create(Loader.Vertices.data(), (uint32_t)Loader.Vertices.size());
 				VBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
 
@@ -67,7 +67,7 @@ namespace Volund
 		});
 
 		return newMesh;
-	}
+	}*/
 
 	Ref<Mesh> Mesh::Create()
 	{

@@ -22,17 +22,17 @@ namespace Volund
 		return this->m_TargetBuffer;
 	}
 
-	Entity Scene::CreateEntity()
+	Entity Scene::RegisterNewEntity()
 	{
 		Entity newEntity = this->m_NewEntity;
 
-		this->m_Registry.push_back(std::pair<Entity, Container<Component>>(newEntity, Container<Component>()));
+		this->m_Registry.push_back(std::pair<Entity, PolyContainer<Component>>(newEntity, PolyContainer<Component>()));
 
 		this->m_NewEntity++;
 		return newEntity;
 	}
 
-	void Scene::DestroyEntity(Entity entity)
+	void Scene::UnregisterEntity(Entity entity)
 	{
 		const uint64_t index = FindEntity(entity);
 
@@ -46,9 +46,22 @@ namespace Volund
 		}
 	}
 
-	bool Scene::HasEntity(Entity entity)
+	bool Scene::IsEntityRegistered(Entity entity)
 	{
 		return FindEntity(entity) != -1;
+	}
+
+	std::vector<Entity> Scene::GetRegisteredEntities()
+	{
+		std::vector<Entity> output;
+		output.reserve(this->m_Registry.size());
+		
+		for (auto& [entity, polyContainer] : this->m_Registry)
+		{
+			output.push_back(entity);
+		}
+
+		return output;
 	}
 
 	void Scene::ResizeTarget(const uint32_t width, const uint32_t height)
@@ -66,11 +79,11 @@ namespace Volund
 
 	void Scene::Procedure(const Event& e)
 	{
-		for (const auto& [entity, Container] : this->m_Registry)
+		for (const auto& [entity, polystorage] : this->m_Registry)
 		{
-			for (auto& [TypeID, Components] : Container)
+			for (auto& [typeID, components] : polystorage)
 			{
-				for (const auto& component : Components)
+				for (const auto& component : components)
 				{
 					component->Procedure(e);
 				}
@@ -78,12 +91,12 @@ namespace Volund
 		}
 	}
 
-	Registry::iterator Scene::begin()
+	EntityRegistry::iterator Scene::begin()
 	{
 		return this->m_Registry.begin();
 	}
 
-	Registry::iterator Scene::end()
+	EntityRegistry::iterator Scene::end()
 	{
 		return this->m_Registry.end();
 	}
@@ -104,7 +117,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		auto it = std::lower_bound(this->m_Registry.begin(), this->m_Registry.end(), entity, [](const std::pair<Entity, Container<Component>>& a, Entity entity)
+		auto it = std::lower_bound(this->m_Registry.begin(), this->m_Registry.end(), entity, [](const std::pair<Entity, PolyContainer<Component>>& a, Entity entity)
 		{
 			return a.first < entity;
 		});
@@ -121,9 +134,9 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (const auto& [entity, Container] : this->m_Registry)
+		for (const auto& [entity, PolyContainer] : this->m_Registry)
 		{
-			for (auto& [TypeID, Components] : Container)
+			for (auto& [TypeID, Components] : PolyContainer)
 			{
 				for (const auto& component : Components)
 				{

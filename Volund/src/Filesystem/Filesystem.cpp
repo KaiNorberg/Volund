@@ -66,10 +66,12 @@ namespace Volund
 		return output;
     }
 
-    /*void Filesystem::Write(const std::string& filepath, const std::string& content)
-    {
-
-    }*/
+	void Filesystem::Write(const std::string& filepath, const std::string& content)
+	{
+		std::ofstream out(GetFinalPath(filepath));
+		out << content;
+		out.close();
+	}
 
     std::string Filesystem::GetResource(const std::string& filepath)
 	{
@@ -116,25 +118,25 @@ namespace Volund
 
     Filesystem::Filesystem()
     {
-		CreateResource("Simple.vshader",
+		CreateResource("://Simple.shader",
 			#include "Shaders/Simple.vshader"
 		);
-		CreateResource("SimpleTexture.vshader",
+		CreateResource("://SimpleTexture.shader",
 			#include "Shaders/SimpleTexture.vshader"
 		);
-		CreateResource("PBR.vshader",
+		CreateResource("://PBR.shader",
 			#include "Shaders/PBR.vshader"
 		);
-		CreateResource("PBRTexture.vshader",
+		CreateResource("://PBRTexture.shader",
 			#include "Shaders/PBRTexture.vshader"
 		);
-		CreateResource("Sphere.vobj",
+		CreateResource("://Sphere.obj",
 			#include "Meshes/Sphere.vobj"
 		);
-		CreateResource("Cube.vobj",
+		CreateResource("://Cube.obj",
 			#include "Meshes/Cube.vobj"
 		);
-		CreateResource("Quad.vobj",
+		CreateResource("://Quad.obj",
 			#include "Meshes/Quad.vobj"
 		);
 	}

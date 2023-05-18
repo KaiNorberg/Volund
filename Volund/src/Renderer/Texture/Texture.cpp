@@ -7,11 +7,6 @@
 
 namespace Volund
 {
-	std::string Texture::GetFilepath()
-	{
-		return this->m_Filepath;
-	}
-
 	uint32_t Texture::GetID() const
 	{
 		return this->m_ID;
@@ -27,15 +22,13 @@ namespace Volund
 		return this->m_Height;
 	}
 
-	Ref<Texture> Texture::Create(const std::string& filepath)
+	Ref<Texture> Texture::Create()
 	{
-		VOLUND_INFO("Loading Texture2D (%s)...", filepath.data());
-
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLTexture>(filepath);
+			return std::make_shared<OpenGLTexture>();
 		}
 		break;
 		default:

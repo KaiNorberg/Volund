@@ -13,8 +13,6 @@ namespace Volund
 
 		AABB GetAABB(const Mat4x4& modelMatrix);
 
-		std::string GetFilepath();
-
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
@@ -26,8 +24,6 @@ namespace Volund
 		const Ref<VertexBuffer> GetVertexBuffer() const;
 		const Ref<IndexBuffer> GetIndexBuffer() const;
 
-		static Ref<Mesh> Create(const std::string& filepath);
-
 		static Ref<Mesh> Create();
 
 		static Ref<Mesh> Create(Ref<VertexBuffer>& VertexBuffer, Ref<IndexBuffer>& IndexBuffer);
@@ -35,10 +31,6 @@ namespace Volund
 		virtual ~Mesh() = default;
 
 	protected:
-
-		AABB m_Aabb = {};
-
-		std::string m_Filepath;
 
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;

@@ -1,6 +1,4 @@
 #pragma once
-
-#define VOLUND_ASSERT(Check, ...) if (!(bool)(Check)) { VOLUND_ERROR(__VA_ARGS__); }
 	
 #define VOLUND_KEY_AMOUNT 348
 #define VOLUND_MOUSE_BUTTON_AMOUNT 8
@@ -16,6 +14,7 @@
 #define VOLUND_KEY_ESCAPE 256
 
 //#define VOLUND_ENABLE_PROFILING
+//#define VOLUND_DISABLE_MULTITHREADING
 
 #ifdef _WIN32
 #define CHRONO_TIME_POINT std::chrono::time_point<std::chrono::steady_clock>

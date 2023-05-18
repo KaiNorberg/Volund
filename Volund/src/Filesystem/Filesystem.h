@@ -32,7 +32,7 @@ namespace Volund
 
 		static std::string Load(const std::string& filepath);
 
-		//static void Write(const std::string& filepath, const std::string& content);
+		static void Write(const std::string& filepath, const std::string& content);
 
 	private:
 		friend class FilesystemLink;

@@ -4,19 +4,25 @@
 
 #include "Widget/OutputWidget/OutputWidget.h"
 #include "Widget/ViewportWidget/ViewportWidget.h"
+#include "Widget/InspectorWidget/InspectorWidget.h"
+#include "Widget/HierarchyWidget/HierarchyWidget.h"
+
+#include "EditorModule/EditorModule.h"
 
 void Editor::OnRun()
 {
 	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OpenGL, std::make_shared<VL::ForwardRenderer>()));
 	this->AttachModule(new VL::ImGuiModule());
-	this->AttachModule(new VL::GameModule());
 	this->AttachModule(new VL::AudioModule());
+	this->AttachModule(new EditorModule());
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
 	this->m_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this)));
 	this->m_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this)));
+	this->m_Widgets.push_back(VL::Ref<InspectorWidget>(new InspectorWidget(this)));
+	this->m_Widgets.push_back(VL::Ref<HierarchyWidget>(new HierarchyWidget(this)));
 }
 
 void Editor::OnTerminate()
@@ -33,15 +39,70 @@ void Editor::Procedure(const VL::Event& e)
 	switch (e.Type)
 	{
 	case VL::EventType::Render:
-	{ 
-		this->GetModule<VL::WindowModule>()->GetWindow()->SetVsync(true);
+	{ 	
+		const auto editorModule = this->GetModule<EditorModule>();
+		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
 
 		VL::ImGuiModule::BeginFrame();
 
 		if (VL::ImGuiModule::BeginDockSpace())
 		{
+			//TODO: Improve readability of menu bar code
 			if (ImGui::BeginMenuBar())
 			{
+				if (ImGui::BeginMenu("File"))
+				{
+					if (ImGui::BeginMenu("Load"))
+					{
+						if (ImGui::MenuItem("State", "Ctrl + E"))
+						{
+							const std::string filepath = VL::Dialog::OpenFile(window);
+							if (!filepath.empty())
+							{
+								editorModule->LoadNewScene(filepath);
+							}
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Save"))
+					{
+						if (ImGui::MenuItem("Scene", "Ctrl + S"))
+						{
+							editorModule->SaveScene(editorModule->GetSceneFilepath());
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Save As"))
+					{
+						if (ImGui::MenuItem("Scene"))
+						{
+							const std::string filepath = VL::Dialog::OpenFile(window);
+							if (!filepath.empty())
+							{
+								editorModule->SaveScene(filepath);
+							}
+						}
+
+						ImGui::EndMenu();
+					}
+
+					if (ImGui::BeginMenu("Reload"))
+					{
+						if (ImGui::MenuItem("State", "Ctrl + R"))
+						{
+							editorModule->LoadNewScene(editorModule->GetSceneFilepath());
+						}
+
+						ImGui::EndMenu();
+					}
+
+					ImGui::EndMenu();
+				}
+
 				if (ImGui::BeginMenu("Widget"))
 				{
 					for (const auto& widget : this->m_Widgets)
@@ -62,7 +123,7 @@ void Editor::Procedure(const VL::Event& e)
 			{
 				if (widget->IsActive)
 				{
-					widget->OnRender();
+					widget->Procedure(e);
 				}
 			}
 		}
@@ -70,28 +131,36 @@ void Editor::Procedure(const VL::Event& e)
 		ImGui::End();
 
 		VL::ImGuiModule::EndFrame();
+
+		return;
 	}
 	break;	
-	case VL::EventType::Update:
-	{
-		const float ts = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
-
-		for (const auto& widget : this->m_Widgets)
-		{
-			if (widget->IsActive)
-			{
-				widget->OnUpdate(ts);
-			}
-		}
-	}
-	break;
 	case VL::EventType::Key:
-	{
-		for (const auto& widget : this->m_Widgets)
+	{	
+		const auto editorModule = this->GetModule<EditorModule>();
+		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
+
+		if (this->m_Input.IsHeld(VOLUND_KEY_CONTROL))
 		{
-			if (widget->IsActive)
+			if (this->m_Input.IsPressed('R'))
 			{
-				widget->OnKey(e);
+				const auto scene = editorModule->GetScene();
+				if (scene != nullptr)
+				{
+					editorModule->LoadNewScene(editorModule->GetSceneFilepath());
+				}
+			}
+			else if (this->m_Input.IsPressed('E'))
+			{
+				const std::string filepath = VL::Dialog::OpenFile(window);
+				if (!filepath.empty())
+				{
+					editorModule->LoadNewScene(filepath);
+				}
+			}
+			else if (this->m_Input.IsPressed('S'))
+			{
+				editorModule->SaveScene(editorModule->GetSceneFilepath());
 			}
 		}
 	}
@@ -106,5 +175,13 @@ void Editor::Procedure(const VL::Event& e)
 
 	}
 	break;
+	}
+
+	for (const auto& widget : this->m_Widgets)
+	{
+		if (widget->IsActive)
+		{
+			widget->Procedure(e);
+		}
 	}
 }

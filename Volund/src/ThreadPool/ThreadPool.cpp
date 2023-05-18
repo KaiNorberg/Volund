@@ -7,14 +7,14 @@ namespace Volund
 
 	void ThreadPool::Submit(ThreadJob job)
 	{
-#ifndef VOLUND_ENABLE_PROFILING
+#ifdef VOLUND_DISABLE_MULTITHREADING
+		job();
+#else
 		{
 			std::unique_lock lock(m_Mutex);
 			this->m_JobQueue.push(job);
 		}
 		this->m_Condition.notify_one();
-#else
-		Job();
 #endif
 	}
 

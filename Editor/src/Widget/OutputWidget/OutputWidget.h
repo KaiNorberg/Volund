@@ -8,9 +8,7 @@ public:
 
 	const char* GetName() override;
 
-	void OnUpdate(VL::TimeStep ts) override;
-
-	void OnRender() override;
+	void Procedure(const VL::Event& e) override;
 
 	static void LoggerCallback(const std::string& string);
 

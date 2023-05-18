@@ -41,7 +41,7 @@ namespace Volund
 		}
 		else
 		{
-			return lookAt(Vec3(0.0f), Vec3(0.0f),
+			return lookAt(Vec3(0.0f), Vec3(0.0f, 1.0, 0.0),
 				Vec3(0.0f));
 		}
 	}
@@ -80,8 +80,10 @@ namespace Volund
 		switch (e.Type)
 		{
 		case EventType::Render:
-		{
+		{				
 			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+
+			VOLUND_ASSERT(entityTransform != nullptr, "Camera component unable to retrive transform component!");		
 
 			const auto spec = this->m_TargetBuffer->GetSpec();
 

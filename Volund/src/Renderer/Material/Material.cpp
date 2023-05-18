@@ -3,11 +3,6 @@
 
 namespace Volund
 {
-	std::string Material::GetFilepath()
-	{
-		return this->m_Filepath;
-	}
-
 	void Material::SetInt(const std::string& name, int value)
 	{
 		this->m_IntUniforms[name] = value;
@@ -31,6 +26,11 @@ namespace Volund
 	void Material::SetVec3(const std::string& name, const Vec3& value)
 	{
 		this->m_Vec3Uniforms[name] = value;
+	}
+
+	void Material::SetVec4(const std::string& name, const Vec4& value)
+	{
+		this->m_Vec4Uniforms[name] = value;
 	}
 
 	void Material::SetTexture(const std::string& name, Ref<Texture> value)
@@ -70,6 +70,11 @@ namespace Volund
 		for (auto& [name, value] : this->m_Vec3Uniforms)
 		{
 			this->m_Shader->SetVec3(name, value);
+		}
+
+		for (auto& [name, value] : this->m_Vec4Uniforms)
+		{
+			this->m_Shader->SetVec4(name, value);
 		}
 
 		int textureUnit = 0;

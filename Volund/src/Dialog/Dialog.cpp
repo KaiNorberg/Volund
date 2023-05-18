@@ -9,11 +9,11 @@ namespace Volund
 {
     std::string Dialog::OpenFolder(Ref<Window> window)
     {        
-        CursorMode oldMode = window->GetCursorMode();
+        bool cursorEnabled = window->IsCursorEnabled();
 
-        window->SetCursorMode(CursorMode::Normal);
-        const char* ret = tinyfd_selectFolderDialog("", "");
-        window->SetCursorMode(oldMode);
+        window->SetCursorEnabled(true);
+        const char* ret = tinyfd_selectFolderDialog("", std::filesystem::current_path().string().c_str());
+        window->SetCursorEnabled(cursorEnabled);
 
         if (ret != nullptr)
         {
@@ -27,11 +27,11 @@ namespace Volund
 
     std::string Dialog::OpenFile(Ref<Window> window)
     {
-        CursorMode oldMode = window->GetCursorMode();
+        bool cursorEnabled = window->IsCursorEnabled();
 
-        window->SetCursorMode(CursorMode::Normal);
-        const char* ret = tinyfd_openFileDialog("", "", 0, 0, "", 0);
-        window->SetCursorMode(oldMode);
+        window->SetCursorEnabled(true);
+        const char* ret = tinyfd_openFileDialog("", std::filesystem::current_path().string().c_str(), 0, 0, "", 0);
+        window->SetCursorEnabled(cursorEnabled);
 
         if (ret != nullptr)
         {

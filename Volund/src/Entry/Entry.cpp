@@ -1,20 +1,10 @@
 #include "PCH/PCH.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 #include "Volund.h"
 
 int Main()
 {
 	VOLUND_PROFILE_FUNCTION();
-
-	//VL::AudioDevice Device(nullptr);
-	//VL::AudioContext Context(Device);
-	//Context.MakeCurrent();
-	//VL::AudioBuffer Buffer("Bell.wav");
-	//VL::AudioSource Source;
-	//Source.SetBuffer(Buffer);
-	//Source.Play();
 
 	VL::Entry();
 

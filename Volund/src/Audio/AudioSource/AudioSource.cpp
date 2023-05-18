@@ -19,9 +19,9 @@ namespace Volund
         AL_CALL(alSourcei, this->m_Source, AL_BUFFER, buffer->GetBuffer());
     }
 
-    void AudioSource::SetPitch(const float pitch)
+    Ref<AudioBuffer> AudioSource::GetBuffer()
     {
-        AL_CALL(alSourcef, this->m_Source, AL_PITCH, pitch);
+        return this->m_Buffer;
     }
 
     void AudioSource::SetPosition(const Vec3& position)
@@ -38,8 +38,20 @@ namespace Volund
 
     void AudioSource::SetVelocity(const Vec3& velocity)
     {
-        AL_CALL(alSource3f, this->m_Source, AL_VELOCITY, 
+        AL_CALL(alSource3f, this->m_Source, AL_VELOCITY,
             velocity.x, velocity.y, velocity.z);
+    }
+
+    void AudioSource::SetPitch(const float pitch)
+    {
+        AL_CALL(alSourcef, this->m_Source, AL_PITCH, pitch);
+    }
+
+    float AudioSource::GetPitch()
+    {
+        float out;
+        AL_CALL(alGetSourcef, this->m_Source, AL_PITCH, &out);
+        return out;
     }
 
     void AudioSource::SetLooping(const bool looping)
@@ -47,9 +59,23 @@ namespace Volund
         AL_CALL(alSourcei, this->m_Source, AL_LOOPING, looping);
     }
 
+    bool AudioSource::GetLooping()
+    {
+        int out;
+        AL_CALL(alGetSourcei, this->m_Source, AL_LOOPING, &out);
+        return out;
+    }
+
     void AudioSource::SetGain(const float gain)
     {
         AL_CALL(alSourcef, this->m_Source, AL_GAIN, gain);
+    }
+
+    float AudioSource::GetGain()
+    {
+        float out;
+        AL_CALL(alGetSourcef, this->m_Source, AL_GAIN, &out);
+        return out;
     }
 
     AudioSource::AudioSource()

@@ -11,15 +11,17 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 	
-		if (this->m_App == nullptr)
+		if (this->m_App.expired())
 		{
 			VOLUND_WARNING("Event dispatcher not connected!");
 			return;
 		}
 
-		this->m_App->Procedure(e);
+		Ref<Application> appRef = this->m_App.lock();
 
-		for (const auto& [TypeID, View] : this->m_App->m_Modules)
+		appRef->Procedure(e);
+
+		for (const auto& [TypeID, View] : appRef->m_Modules)
 		{
 			for (const auto& module : View)
 			{
