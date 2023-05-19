@@ -35,8 +35,8 @@
 
 //MOUSE_WHEEL
 
-#define VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(E, Value) E.Args[0] = Value
-#define VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(E) E.Args[0]
+#define VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(E, Value) E.Args[0] = Volund::Utils::CastFloatToInt(Value);
+#define VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(E) Volund::Utils::CastIntToFloat(E.Args[0]);
 
 //WINDOW_SIZE
 

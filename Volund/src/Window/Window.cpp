@@ -59,63 +59,11 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-		{
-			if (action == GLFW_PRESS)
-			{
-				Event e = Event(EventType::MouseButton);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
+		Event e = Event(EventType::MouseButton);
+		VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, button);
+		VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, (action != GLFW_RELEASE));
 
-				windowData->Dispatcher->Dispatch(e);
-			}
-			else if (action == GLFW_RELEASE)
-			{
-				Event e = Event(EventType::MouseButton);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_RIGHT);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
-
-				windowData->Dispatcher->Dispatch(e);
-			}
-		}
-		else if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-		{
-			if (action == GLFW_PRESS)
-			{
-				Event e = Event(EventType::MouseButton);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
-
-				windowData->Dispatcher->Dispatch(e);
-			}
-			else if (action == GLFW_RELEASE)
-			{
-				Event e = Event(EventType::MouseButton);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_LEFT);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
-
-				windowData->Dispatcher->Dispatch(e);
-			}
-		}
-		else if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
-		{
-			if (action == GLFW_PRESS)
-			{
-				Event e = Event(EventType::MouseButton);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, true);
-
-				windowData->Dispatcher->Dispatch(e);
-			}
-			else if (action == GLFW_RELEASE)
-			{
-				Event e = Event(EventType::MouseButton);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, VOLUND_MOUSE_BUTTON_MIDDLE);
-				VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, false);
-
-				windowData->Dispatcher->Dispatch(e);
-			}
-		}
+		windowData->Dispatcher->Dispatch(e);
 	}
 
 	void DefaultScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
@@ -123,7 +71,7 @@ namespace Volund
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 		Event e = Event(EventType::MouseWheel);
-		VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, yoffset);
+		VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, (float)yoffset);
 
 		windowData->Dispatcher->Dispatch(e);
 	}
@@ -420,6 +368,8 @@ namespace Volund
 		this->ConnectScrollCallback(DefaultScrollCallback);
 
 		glfwWindowHint(GLFW_OPENGL_DEBUG_CONTEXT, GLFW_TRUE);
+
+		this->SetVsync(true);
 	}
 
 	Window::~Window()

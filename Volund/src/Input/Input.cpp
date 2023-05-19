@@ -29,7 +29,7 @@ namespace Volund
 		return isDown;
 	}
 
-	uint32_t Input::GetScrollPosition() const
+	float Input::GetScrollPosition() const
 	{
 		return this->m_ScrollPosition;
 	}
@@ -63,7 +63,7 @@ namespace Volund
 		break;
 		case EventType::MouseWheel:
 		{
-			const uint64_t delta = VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(e);
+			const float delta = VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(e);
 
 			this->m_ScrollPosition += delta;
 		}

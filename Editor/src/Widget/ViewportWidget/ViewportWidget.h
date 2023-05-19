@@ -14,26 +14,31 @@ public:
 
 private:
 	
-	struct ViewportCamera
+	class ViewportCamera
 	{
-		VL::Vec3 Position;
-		VL::Vec3 Rotation;
+	public:
 
-		VL::Quat Quaternion;
+		float MoveSpeed = 10.0f;
+		float ZoomSpeed = 1.0f;
+		float LookSpeed = 1.0f;
 
-		glm::mat4x4 GetViewMatrix();
-
-		glm::mat4x4 GetProjectionMatrix();
-
-		VL::Vec3 GetFront();
-
-		VL::Vec3 GetUp();
-
-		VL::Vec3 GetRight();
-
-		void Procedure(const VL::Event& e);
+		float FOV = 80.0f;
 
 		VL::Ref<VL::Framebuffer> Framebuffer;
+
+		void Update(VL::Input& input, float timeStep);
+
+		void SubmitToRenderer(ImVec2 viewportSize);
+
+		ViewportCamera();
+
+	private:
+
+		VL::Vec3 m_Position = VL::Vec3(0, 1, 0);
+		VL::Vec3 m_Rotation = VL::Vec3(0, 0, 0);
+
+		float m_OldScrollPosition;
+		VL::IVec2 m_OldMousePosition;
 	} m_Camera;
 
 	VL::Input m_Input;

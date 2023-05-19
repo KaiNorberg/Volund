@@ -11,7 +11,7 @@ const char* ViewportWidget::GetName()
 
 void ViewportWidget::Procedure(const VL::Event& e)
 {
-	this->m_Camera.Procedure(e);
+	this->m_Input.Procedure(e);
 
 	switch (e.Type)
 	{
@@ -29,30 +29,11 @@ void ViewportWidget::Procedure(const VL::Event& e)
 
 				if (ImGui::BeginChild("ViewPort"))
 				{
-					ImVec2 vMin = ImGui::GetWindowContentRegionMin();
-					ImVec2 vMax = ImGui::GetWindowContentRegionMax();
-
-					ImVec2 viewportSize = ImVec2(vMax.x - vMin.x, vMax.y - vMin.y);
+					ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 
 					scene->ResizeTarget(viewportSize.x, viewportSize.y);
 
-					auto spec = this->m_Camera.Framebuffer->GetSpec();
-
-					if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
-					{
-						spec.Width = viewportSize.x;
-						spec.Height = viewportSize.y;
-						this->m_Camera.Framebuffer->SetSpec(spec);
-					}
-
-					VL::RendererEye eye;
-					eye.Target = this->m_Camera.Framebuffer;
-					eye.ProjectionMatrix = this->m_Camera.GetProjectionMatrix();
-					eye.ViewMatrix = this->m_Camera.GetViewMatrix();
-					eye.Position = this->m_Camera.Position;
-					eye.LayerMask = -1;
-
-					VL::Renderer::Submit(eye);
+					this->m_Camera.SubmitToRenderer(viewportSize);
 
 					ImGui::Image(reinterpret_cast<void*>(this->m_Camera.Framebuffer->GetAttachment(0)), viewportSize, ImVec2(0, 1), ImVec2(1, 0));
 
@@ -69,6 +50,9 @@ void ViewportWidget::Procedure(const VL::Event& e)
 	break;
 	case VL::EventType::Update:
 	{
+		float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
+
+		this->m_Camera.Update(this->m_Input, timeStep);
 	}
 	break;
 	}
@@ -77,76 +61,92 @@ void ViewportWidget::Procedure(const VL::Event& e)
 ViewportWidget::ViewportWidget(VL::Application* app)
 {
 	this->m_App = app;
+}
 
+////////////////////////////////////////////////////////////
+
+void ViewportWidget::ViewportCamera::Update(VL::Input& input, float timeStep)
+{
+	VL::Quat quaternion = VL::Quat(glm::radians(this->m_Rotation));
+	VL::Vec3 front = quaternion * VL::Utils::BACK;
+	VL::Vec3 up = quaternion * VL::Utils::UP;
+	VL::Vec3 right = quaternion * VL::Utils::RIGHT;
+
+	VL::IVec2 cursorDelta = input.GetMousePosition() - this->m_OldMousePosition;
+	float scrollDelta = input.GetScrollPosition() - this->m_OldScrollPosition;
+
+	cursorDelta.x = VL::Utils::Clamp(cursorDelta.x, -10, 10);
+	cursorDelta.y = VL::Utils::Clamp(cursorDelta.y, -10, 10);
+	scrollDelta = VL::Utils::Clamp(scrollDelta, -10.0f, 10.0f);
+
+	if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_MIDDLE))
+	{
+		this->m_Position += (up * (float)cursorDelta.y - right * (float)cursorDelta.x) * (this->MoveSpeed / 200.0f);
+	}
+	else if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
+	{
+		if (input.IsHeld('W'))
+		{
+			this->m_Position += front * float(timeStep) * this->MoveSpeed;
+		}
+		if (input.IsHeld('S'))
+		{
+			this->m_Position -= front * float(timeStep) * this->MoveSpeed;
+		}
+		if (input.IsHeld('A'))
+		{
+			this->m_Position -= right * float(timeStep) * this->MoveSpeed;
+		}
+		if (input.IsHeld('D'))
+		{
+			this->m_Position += right * float(timeStep) * this->MoveSpeed;
+		}
+
+		this->m_Rotation -= VL::Vec3(cursorDelta.y, cursorDelta.x, 0.0f) * this->LookSpeed;
+		this->m_Rotation.x = VL::Utils::Clamp(this->m_Rotation.x, -89.0f, 89.0f);
+	}
+
+	this->m_Position += (front * scrollDelta) * this->ZoomSpeed;
+
+	this->m_OldScrollPosition = input.GetScrollPosition();
+	this->m_OldMousePosition = input.GetMousePosition();
+}
+
+void ViewportWidget::ViewportCamera::SubmitToRenderer(ImVec2 viewportSize)
+{
+	auto spec = this->Framebuffer->GetSpec();
+
+	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
+	{
+		spec.Width = viewportSize.x;
+		spec.Height = viewportSize.y;
+		this->Framebuffer->SetSpec(spec);
+	}
+
+	VL::Quat quaternion = VL::Quat(glm::radians(this->m_Rotation));
+	VL::Vec3 front = quaternion * VL::Utils::BACK;
+	VL::Vec3 up = quaternion * VL::Utils::UP;
+
+	VL::Mat4x4 viewMatrix = glm::lookAt(this->m_Position, this->m_Position + front, -up);
+	VL::Mat4x4 projectionMatrix = glm::perspective(this->FOV, (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
+
+	VL::RendererEye eye;
+	eye.Target = this->Framebuffer;
+	eye.ProjectionMatrix = projectionMatrix;
+	eye.ViewMatrix = viewMatrix;
+	eye.Position = this->m_Position;
+	eye.LayerMask = -1;
+
+	VL::Renderer::Submit(eye);
+}
+
+ViewportWidget::ViewportCamera::ViewportCamera()
+{
 	VL::FramebufferSpec spec;
 	spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
 	spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
 	spec.Height = 1080;
 	spec.Width = 1920;
 
-	this->m_Camera.Framebuffer = VL::Framebuffer::Create(spec);
-	this->m_Camera.Position = VL::Vec3(0, 2, 10);
-	this->m_Camera.Rotation = VL::Vec3(0, 0, 0);
-}
-
-glm::mat4x4 ViewportWidget::ViewportCamera::GetViewMatrix()
-{
-	VL::Quat quaternion = VL::Quat(this->Rotation);
-	VL::Vec3 front = quaternion * VL::Utils::BACK;
-	VL::Vec3 up = quaternion * VL::Utils::UP;
-
-	return glm::lookAt(this->Position, this->Position + front, up);
-}
-
-glm::mat4x4 ViewportWidget::ViewportCamera::GetProjectionMatrix()
-{
-	auto spec = this->Framebuffer->GetSpec();
-
-	return glm::perspective(glm::radians(80.0f), (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
-}
-
-VL::Vec3 ViewportWidget::ViewportCamera::GetFront()
-{
-	return VL::Vec3();
-}
-
-VL::Vec3 ViewportWidget::ViewportCamera::GetUp()
-{
-	return VL::Vec3();
-}
-
-VL::Vec3 ViewportWidget::ViewportCamera::GetRight()
-{
-	return VL::Vec3();
-}
-
-void ViewportWidget::ViewportCamera::Procedure(const VL::Event& e)
-{
-	/*if (m_Input.IsHeld('W'))
-	{
-		this->m_Camera.Position += entityTransform->GetFront() * float(ts) * this->Speed;
-	}
-	if (m_Input.IsHeld('S'))
-	{
-		this->m_Camera.Position -= entityTransform->GetFront() * float(ts) * this->Speed;
-	}
-	if (m_Input.IsHeld('A'))
-	{
-		this->m_Camera.Position -= entityTransform->GetRight() * float(ts) * this->Speed;
-	}
-	if (m_Input.IsHeld('D'))
-	{
-		this->m_Camera.Position += entityTransform->GetRight() * float(ts) * this->Speed;
-	}
-
-	VL::Vec2 delta = m_Input.GetMousePosition() - this->m_OldMousePosition;
-
-	delta.x = ((float)VL::Utils::Clamp(delta.x, -10.0f, 10.0f) * this->Sensitivity);
-	delta.y = ((float)VL::Utils::Clamp(delta.y, -10.0f, 10.0f) * this->Sensitivity);
-
-	this->m_Camera.Rotation -= VL::Vec3(delta.y, delta.x, 0.0f) * this->Sensitivity;
-	this->m_Camera.Rotation.x = VL::Utils::Clamp(this->m_Camera.Rotation.x, -89.0f, 89.0f);
-
-	entityTransform->SetRotation(m_Rotation);
-	this->m_OldMousePosition = m_Input.GetMousePosition();*/
+	this->Framebuffer = VL::Framebuffer::Create(spec);
 }
