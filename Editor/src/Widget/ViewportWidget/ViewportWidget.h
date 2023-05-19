@@ -18,9 +18,9 @@ private:
 	{
 	public:
 
-		float MoveSpeed = 10.0f;
-		float ZoomSpeed = 1.0f;
 		float LookSpeed = 1.0f;
+		float MoveSpeed = 5.0f;
+		float ZoomSpeed = 0.1f;
 
 		float FOV = 80.0f;
 
@@ -34,11 +34,14 @@ private:
 
 	private:
 
-		VL::Vec3 m_Position = VL::Vec3(0, 1, 0);
-		VL::Vec3 m_Rotation = VL::Vec3(0, 0, 0);
+		VL::Vec3 m_Position;
+		VL::Vec3 m_Rotation;
+		VL::Vec3 m_BallCenter;
+		VL::Vec3 m_BallRotation;
+		float m_Distance;
 
-		float m_OldScrollPosition;
 		VL::IVec2 m_OldMousePosition;
+		float m_OldScrollPosition;
 	} m_Camera;
 
 	VL::Input m_Input;

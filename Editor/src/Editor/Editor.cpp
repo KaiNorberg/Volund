@@ -54,7 +54,7 @@ void Editor::Procedure(const VL::Event& e)
 				{
 					if (ImGui::BeginMenu("Load"))
 					{
-						if (ImGui::MenuItem("State", "Ctrl + E"))
+						if (ImGui::MenuItem("Scene", "Ctrl + E"))
 						{
 							const std::string filepath = VL::Dialog::OpenFile(window);
 							if (!filepath.empty())
@@ -92,7 +92,7 @@ void Editor::Procedure(const VL::Event& e)
 
 					if (ImGui::BeginMenu("Reload"))
 					{
-						if (ImGui::MenuItem("State", "Ctrl + R"))
+						if (ImGui::MenuItem("Scene", "Ctrl + R"))
 						{
 							editorModule->LoadNewScene(editorModule->GetSceneFilepath());
 						}

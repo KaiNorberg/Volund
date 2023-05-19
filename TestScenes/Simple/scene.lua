@@ -72,23 +72,6 @@ local table =
 	{
 		{
 			state.Enums.Component.Transform,
-			Position = Vec3:new(2.900000, 0.000000, 0.000000),
-			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
-			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
-		},
-		{
-			state.Enums.Component.MeshRenderer,
-			Mesh = "Models/Teapot.obj",
-			Material = "Materials/Blue.mat.lua"
-		},
-		{
-			state.Enums.Component.Tag,
-			String = "BlueTeapot"
-		}
-	},
-	{
-		{
-			state.Enums.Component.Transform,
 			Position = Vec3:new(0.000000, -10.000000, 0.000000),
 			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
 			Scale = Vec3:new(1000.000000, 1.000000, 1000.000000)
@@ -101,6 +84,23 @@ local table =
 		{
 			state.Enums.Component.Tag,
 			String = "Ground"
+		}
+	},
+	{
+		{
+			state.Enums.Component.Transform,
+			Position = Vec3:new(3.000000, 0.000000, 0.000000),
+			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
+			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
+		},
+		{
+			state.Enums.Component.MeshRenderer,
+			Mesh = "..\TestScenes\Simple\Models\Teapot.obj",
+			Material = "..\TestScenes\Simple\Materials\Blue.mat.lua"
+		},
+		{
+			state.Enums.Component.Tag,
+			String = "BlueTeapot"
 		}
 	}
 }
