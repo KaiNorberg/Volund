@@ -48,9 +48,9 @@ namespace Volund
             std::string keyString = key.as<std::string>();
 
             //TODO: Add texture and framebuffer
-            if (value.is<uint64_t>())
+            if (value.is<int64_t>())
             {
-                this->m_Data->SetInt(keyString, value.as<uint64_t>());
+                this->m_Data->SetInt(keyString, value.as<int64_t>());
             }
             else if (value.is<double>())
             {

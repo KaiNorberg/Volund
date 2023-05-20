@@ -29,7 +29,7 @@ namespace Volund
 
 	ImageLoader::ImageLoader(const std::string& filepath, int32_t desiredChannels)
 	{
-		std::string finalPath = VL::Filesystem::GetFinalPath(filepath);
+		std::string finalPath = VL::Filesystem::GetFullPath(filepath);
 
 		stbi_set_flip_vertically_on_load(true);
 		this->m_Data = stbi_load(finalPath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, desiredChannels);

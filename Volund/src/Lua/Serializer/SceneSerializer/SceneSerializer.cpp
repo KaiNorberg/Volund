@@ -24,6 +24,16 @@ namespace Volund
 
 		this->StartTable();
 
+		for (int i = 0; i < scene->ComponentAmount<Tag>(entity); i++)
+		{
+			auto component = scene->GetComponent<Tag>(entity, i);
+
+			this->StartTable();
+			this->Insert("", "state.Enums.Component.Tag", false);
+			this->Insert("String", component->String);
+			this->EndTable();
+		}
+
 		for (int i = 0; i < scene->ComponentAmount<Transform>(entity); i++)
 		{
 			auto component = scene->GetComponent<Transform>(entity, i);
@@ -45,7 +55,7 @@ namespace Volund
 			this->Insert("FOV", component->FOV);
 			this->Insert("NearPlane", component->NearPlane);
 			this->Insert("FarPlane", component->FarPlane);
-			//Insert targetbuffer
+			//TODO: Insert targetbuffer
 			this->EndTable();
 		}
 
@@ -64,10 +74,16 @@ namespace Volund
 		{
 			auto component = scene->GetComponent<MeshRenderer>(entity, i);
 
+			std::string meshPath = scene->FetchAssetFilepath(component->GetMesh());
+			std::replace(meshPath.begin(), meshPath.end(), '\\', '/');
+
+			std::string materialPath = scene->FetchAssetFilepath(component->GetMaterial());
+			std::replace(materialPath.begin(), materialPath.end(), '\\', '/');
+
 			this->StartTable();
 			this->Insert("", "state.Enums.Component.MeshRenderer", false);
-			this->Insert("Mesh", scene->FetchAssetFilepath(component->GetMesh()));
-			this->Insert("Material", scene->FetchAssetFilepath(component->GetMaterial()));
+			this->Insert("Mesh", meshPath);
+			this->Insert("Material", materialPath);
 			this->EndTable();
 		}
 
@@ -79,16 +95,6 @@ namespace Volund
 			this->Insert("", "state.Enums.Component.PointLight", false);
 			this->Insert("Color", component->Color);
 			this->Insert("Brightness", component->Brightness);
-			this->EndTable();
-		}
-
-		for (int i = 0; i < scene->ComponentAmount<Tag>(entity); i++)
-		{
-			auto component = scene->GetComponent<Tag>(entity, i);
-
-			this->StartTable();
-			this->Insert("", "state.Enums.Component.Tag", false);
-			this->Insert("String", component->String);
 			this->EndTable();
 		}
 

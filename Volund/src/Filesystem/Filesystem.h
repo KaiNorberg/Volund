@@ -28,7 +28,9 @@ namespace Volund
 	{
 	public:
 
-		static std::string GetFinalPath(const std::string& filepath);
+		static std::string GetFullPath(const std::string& filepath);
+
+		static std::string GetShortestPath(const std::string& filepath);
 
 		static std::string Load(const std::string& filepath);
 
@@ -38,6 +40,8 @@ namespace Volund
 		friend class FilesystemLink;
 
 		Filesystem();
+
+		static uint8_t GetFilepathDepth(const std::string& filepath);
 
 		static std::string GetResource(const std::string& filepath);
 

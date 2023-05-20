@@ -2,6 +2,8 @@
 
 #include "PolyContainer/PolyContainer.h"
 
+#include "Filesystem/Filesystem.h"
+
 namespace Volund
 {
     class AssetCache
@@ -101,7 +103,7 @@ namespace Volund
     inline void AssetCache::PushAsset(const std::string& filepath, Ref<T> assetData)
     {
         auto newAsset = std::make_shared<Asset<T>>();
-        newAsset->Filepath = filepath;
+        newAsset->Filepath = Filesystem::GetShortestPath(filepath);
         newAsset->Data = assetData;
         newAsset->Identifier = assetData.get();
         this->m_Data.PushBack(newAsset);

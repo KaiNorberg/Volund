@@ -23,8 +23,13 @@ namespace Volund
 		Filesystem::RemoveLink(this->m_RelativeFilepath);
     }
 
-	std::string Filesystem::GetFinalPath(const std::string& filepath)
+	std::string Filesystem::GetFullPath(const std::string& filepath)
 	{
+		if (IsResource(filepath))
+		{
+			return filepath;
+		}
+
 		if (std::filesystem::exists(filepath))
 		{
 			return filepath;
@@ -39,10 +44,36 @@ namespace Volund
 				return newPath;
 			}
 		}
-		
 		return filepath;
 	}
-    
+
+	std::string Filesystem::GetShortestPath(const std::string& filepath)
+	{
+		if (IsResource(filepath))
+		{
+			return filepath;
+		}
+
+		std::filesystem::path path = filepath;
+
+		std::filesystem::path shortestPath = GetFullPath(filepath);
+		uint8_t shortestPathLength = GetFilepathDepth(shortestPath.string());
+
+		for (auto& link : m_FilesystemLinks)
+		{
+			std::filesystem::path newPath = std::filesystem::relative(shortestPath, link);
+			uint8_t newPathLength = GetFilepathDepth(newPath.string());
+
+			if (newPathLength < shortestPathLength)
+			{
+				shortestPath = newPath;
+				shortestPathLength = newPathLength;
+			}
+		}
+
+		return shortestPath.string();
+	}
+
 	std::string Filesystem::Load(const std::string& filepath)
     {
 		if (IsResource(filepath))
@@ -50,7 +81,7 @@ namespace Volund
 			return GetResource(filepath);
 		}		
 		
-		auto file = std::ifstream(GetFinalPath(filepath));
+		auto file = std::ifstream(GetFullPath(filepath));
 
 		if (!file)
 		{
@@ -68,7 +99,7 @@ namespace Volund
 
 	void Filesystem::Write(const std::string& filepath, const std::string& content)
 	{
-		std::ofstream out(GetFinalPath(filepath));
+		std::ofstream out(GetFullPath(filepath));
 		out << content;
 		out.close();
 	}
@@ -139,5 +170,18 @@ namespace Volund
 		CreateResource("://Quad.obj",
 			#include "Meshes/Quad.vobj"
 		);
+	}
+
+	uint8_t Filesystem::GetFilepathDepth(const std::string& filepath)
+	{
+		uint8_t length = 0;
+		for (auto& chr : filepath)
+		{
+			if (chr == '/' || chr == '\\')
+			{
+				length++;
+			}
+		}
+		return length;
 	}
 }
