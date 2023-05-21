@@ -3,7 +3,7 @@
 #include "InspectorWidget.h"
 
 #include "Editor/Editor.h"
-#include "Editor/EditorModule/EditorModule.h"
+#include "Editor/EditorContext/EditorContext.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -20,13 +20,10 @@ void InspectorWidget::Procedure(const VL::Event& e)
 	{
 	case VL::EventType::Render:
 	{
-		const auto editorModule = this->m_App->GetModule<EditorModule>();
-		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
-
 		if (ImGui::Begin(this->GetName(), &this->IsActive))
 		{
-			auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
-			auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
+			auto scene = this->m_Context->GetScene();
+			auto selectedEntity = this->m_Context->SelectedEntity;
 
 			if (scene != nullptr && scene->IsEntityRegistered(selectedEntity))
 			{
@@ -56,9 +53,8 @@ void InspectorWidget::Procedure(const VL::Event& e)
 
 void InspectorWidget::DrawComponents()
 {
-	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
-
-	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
+	auto scene = this->m_Context->GetScene();
+	auto selectedEntity = this->m_Context->SelectedEntity;
 
 	//IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
@@ -93,7 +89,7 @@ void InspectorWidget::DrawComponents()
 	this->DrawComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
 	{
 		auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
-		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
+		auto window = this->m_Context->GetWindow();
 
 		std::string defaultMaterial = scene->FetchAssetFilepath<VL::Material>(meshRenderer->GetMaterial());
 		auto selectedMaterial = FileSelectorControl("Material", defaultMaterial, window);
@@ -142,7 +138,7 @@ void InspectorWidget::DrawComponents()
 	this->DrawComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene](int i)
 	{
 		auto soundSource = scene->GetComponent<VL::SoundSource>(selectedEntity, i);
-		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
+		auto window = this->m_Context->GetWindow();
 
 		//Todo: Add variables
 		std::string defaultSound = scene->FetchAssetFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
@@ -186,9 +182,8 @@ void InspectorWidget::DrawComponents()
 
 void InspectorWidget::DrawAddComponents()
 {
-	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
-
-	auto selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
+	auto scene = this->m_Context->GetScene();
+	auto selectedEntity = this->m_Context->SelectedEntity;
 
 	ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 
@@ -245,7 +240,7 @@ void InspectorWidget::DrawAddComponents()
 	}
 }
 
-InspectorWidget::InspectorWidget(VL::Application* app)
+InspectorWidget::InspectorWidget(VL::Ref<EditorContext> context)
 {
-	this->m_App = app;
+	this->m_Context = context;
 }

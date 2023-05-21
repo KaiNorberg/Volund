@@ -2,7 +2,7 @@
 
 #include "Widget/Widget.h"
 
-#include "Editor/EditorModule/EditorModule.h"
+#include "Editor/EditorContext/EditorContext.h"
 
 class InspectorWidget : public Widget
 {
@@ -12,7 +12,7 @@ public:
 
 	void Procedure(const VL::Event& e) override;
 
-	InspectorWidget(VL::Application* app);
+	InspectorWidget(VL::Ref<EditorContext> context);
 
 private:
 
@@ -22,14 +22,12 @@ private:
 	void DrawComponents();
 
 	void DrawAddComponents();
-
-	VL::Entity m_SelectedEntity = 3;
 };
 
 template<typename T>
 inline void InspectorWidget::DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
-	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
+	auto scene = this->m_Context->GetScene();
 
 	for (int i = 0; i < scene->ComponentAmount<T>(entity); i++)
 	{

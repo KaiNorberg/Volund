@@ -87,6 +87,11 @@ namespace Volund
 	template<typename T>
 	inline Ref<T> Application::GetModule()
 	{
+		if (!this->HasModule<T>())
+		{
+			VOLUND_ERROR("Application does not have Module of specifed type!");
+		}
+
 		return this->m_Modules.Get<T>();
 	}
 

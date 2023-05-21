@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Editor/EditorContext/EditorContext.h"
+
 class Widget
 {
 public:
@@ -38,5 +40,5 @@ protected:
 
 	static VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
 
-	VL::Application* m_App = nullptr;
+	VL::Ref<EditorContext> m_Context;
 };

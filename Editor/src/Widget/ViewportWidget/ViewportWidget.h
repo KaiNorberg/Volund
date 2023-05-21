@@ -8,9 +8,9 @@ public:
 
 	const char* GetName() override;
 
-	void Procedure(const VL::Event& e);
+	void Procedure(const VL::Event& e) override;
 
-	ViewportWidget(VL::Application* app);
+	ViewportWidget(VL::Ref<EditorContext> context);
 
 private:
 	

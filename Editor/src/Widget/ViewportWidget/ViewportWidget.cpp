@@ -2,7 +2,7 @@
 
 #include "ViewportWidget.h"
 
-#include "Editor/EditorModule/EditorModule.h"
+#include "Editor/EditorContext/EditorContext.h"
 
 const char* ViewportWidget::GetName()
 {
@@ -17,12 +17,9 @@ void ViewportWidget::Procedure(const VL::Event& e)
 	{
 	case VL::EventType::Render:
 	{
-		const auto editorModule = this->m_App->GetModule<EditorModule>();
-		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
-
 		if (ImGui::Begin(this->GetName(), &this->IsActive))
 		{
-			auto scene = editorModule->GetScene();
+			auto scene = this->m_Context->GetScene();
 			if (scene != nullptr)
 			{
 				ImGui::SameLine();
@@ -45,6 +42,7 @@ void ViewportWidget::Procedure(const VL::Event& e)
 				ImGui::Text("No Scene Selected!");
 			}
 		}
+
 		ImGui::End();
 	}
 	break;
@@ -58,9 +56,9 @@ void ViewportWidget::Procedure(const VL::Event& e)
 	}
 }
 
-ViewportWidget::ViewportWidget(VL::Application* app)
+ViewportWidget::ViewportWidget(VL::Ref<EditorContext> context)
 {
-	this->m_App = app;
+	this->m_Context = context;
 }
 
 ////////////////////////////////////////////////////////////

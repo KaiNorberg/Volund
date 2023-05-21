@@ -1,7 +1,7 @@
 #include "PCH/PCH.h"
 #include "HierarchyWidget.h"
 
-#include "Editor/EditorModule/EditorModule.h"
+#include "Editor/EditorContext/EditorContext.h"
 
 const char* HierarchyWidget::GetName()
 {
@@ -14,12 +14,9 @@ void HierarchyWidget::Procedure(const VL::Event& e)
 	{
 	case VL::EventType::Render:
 	{
-		const auto editorModule = this->m_App->GetModule<EditorModule>();
-		auto window = this->m_App->GetModule<VL::WindowModule>()->GetWindow();
-
 		if (ImGui::Begin(this->GetName(), &this->IsActive))
 		{
-			auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
+			auto scene = this->m_Context->GetScene();
 
 			if (scene != nullptr)
 			{
@@ -71,9 +68,8 @@ void HierarchyWidget::Procedure(const VL::Event& e)
 
 bool HierarchyWidget::DrawEntityNode(VL::Entity entity, const std::string& entityName)
 {
-	auto scene = this->m_App->GetModule<EditorModule>()->GetScene();
-
-	auto& selectedEntity = this->m_App->GetModule<EditorModule>()->SelectedEntity;
+	auto scene = this->m_Context->GetScene();
+	auto& selectedEntity = this->m_Context->SelectedEntity;
 
 	ImGui::PushID((void*)entity);
 
@@ -115,7 +111,7 @@ bool HierarchyWidget::DrawEntityNode(VL::Entity entity, const std::string& entit
 	return EntityAlive;
 }
 
-HierarchyWidget::HierarchyWidget(VL::Application* app)
+HierarchyWidget::HierarchyWidget(VL::Ref<EditorContext> context)
 {
-	this->m_App = app;
+	this->m_Context = context;
 }

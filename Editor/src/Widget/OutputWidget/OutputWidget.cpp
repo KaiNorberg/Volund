@@ -70,9 +70,9 @@ void OutputWidget::LoggerCallback(const std::string& string)
 	m_Output.push_back(string);
 }
 
-OutputWidget::OutputWidget(VL::Application* app)
+OutputWidget::OutputWidget(VL::Ref<EditorContext> context)
 {
-	this->m_App = app;
+	this->m_Context = context;
 
 	VL::Logger::GetClientLogger().SetCallback(LoggerCallback);
 	VL::Logger::GetCoreLogger().SetCallback(LoggerCallback);

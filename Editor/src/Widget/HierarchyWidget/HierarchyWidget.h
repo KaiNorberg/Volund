@@ -10,7 +10,7 @@ public:
 
 	void Procedure(const VL::Event& e) override;
 
-	HierarchyWidget(VL::Application* app);
+	HierarchyWidget(VL::Ref<EditorContext> context);
 
 private:
 

@@ -12,7 +12,7 @@ public:
 
 	static void LoggerCallback(const std::string& string);
 
-	OutputWidget(VL::Application* app);
+	OutputWidget(VL::Ref<EditorContext> context);
 
 private:
 
