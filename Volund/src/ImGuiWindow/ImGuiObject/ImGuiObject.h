@@ -4,9 +4,13 @@
 
 namespace Volund
 {
+	class ImGuiWindow;
+
 	class ImGuiObject
 	{
 	public:
+
+		bool IsActive = true;
 
 		std::string GetID();
 
@@ -15,6 +19,8 @@ namespace Volund
 		virtual ~ImGuiObject() = default;
 
 	protected:
+
+		static void ImGuiColoredText(const std::string& text);
 
 		std::string m_Id;
 	};

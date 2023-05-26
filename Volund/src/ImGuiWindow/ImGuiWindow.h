@@ -12,13 +12,19 @@ namespace Volund
 
 		bool IsActive = true;
 
-		Vec2 Position;
+		void SetSize(const Vec2& size);
 
-		Vec2 Size;
+		void SetPosition(const Vec2& position);
+
+		Vec2 GetSize();
+
+		Vec2 GetPosition();
 
 		virtual const char* GetName() = 0;
 
 		void Procedure(const Event& e);
+
+		virtual void OnProcedure(const Event& e) {};
 
 		virtual ~ImGuiWindow() = default;
 
@@ -27,11 +33,14 @@ namespace Volund
 		template <typename T>
 		void AddObject(Ref<T> object);
 
+		template <typename T>
+		Ref<T> GetObject(const std::string& objectId);
+
 	private:
 
-		Vec2 m_PreviousPosition;
+		Vec2 m_Position;
 
-		Vec2 m_PreviousSize;
+		Vec2 m_Size;
 
 		PolyContainer<ImGuiObject> m_ImGuiObjects;
 		std::vector<Ref<ImGuiObject>> m_ObjectDrawOrder;
@@ -42,6 +51,12 @@ namespace Volund
 	{
 		this->m_ImGuiObjects.PushBack(object);
 		this->m_ObjectDrawOrder.push_back(object);
+	}
+
+	template<typename T>
+	inline Ref<T> ImGuiWindow::GetObject(const std::string& objectId)
+	{
+		
 	}
 }
 

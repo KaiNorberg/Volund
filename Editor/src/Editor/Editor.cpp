@@ -2,32 +2,11 @@
 
 #include "Editor.h"
 
-#include "Widget/OutputWidget/OutputWidget.h"
-#include "Widget/ViewportWidget/ViewportWidget.h"
-#include "Widget/InspectorWidget/InspectorWidget.h"
-#include "Widget/HierarchyWidget/HierarchyWidget.h"
+#include "EditorWindow/OutputWindow/OutputWindow.h"
+#include "EditorWindow/ViewportWindow/ViewportWindow.h"
+#include "EditorWindow/InspectorWindow/InspectorWindow.h"
 
 #include "EditorContext/EditorContext.h"
-
-class TestWindow : public VL::ImGuiWindow
-{
-public:
-
-	const char* GetName() override
-	{
-		return "TestWindow"; 
-	}
-
-	TestWindow()
-	{
-		this->Position = VL::Vec2(500, 500);
-		this->Size = VL::Vec2(500, 500);
-
-		this->AddObject(std::make_shared<VL::ImGuiText>("Hello, World!"));
-	}
-
-private:
-};
 
 void Editor::OnRun()
 {
@@ -38,15 +17,29 @@ void Editor::OnRun()
 	auto window = this->GetModule<VL::WindowModule>()->GetWindow();
 	this->m_Context = std::make_shared<EditorContext>(window);
 
-	this->m_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this->m_Context)));
+	/*this->m_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this->m_Context)));
 	this->m_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this->m_Context)));
 	this->m_Widgets.push_back(VL::Ref<InspectorWidget>(new InspectorWidget(this->m_Context)));
-	this->m_Widgets.push_back(VL::Ref<HierarchyWidget>(new HierarchyWidget(this->m_Context)));
+	this->m_Widgets.push_back(VL::Ref<HierarchyWidget>(new HierarchyWidget(this->m_Context)));*/
 
-	this->GetModule<VL::ImGuiModule>()->AddWindow(VL::Ref<TestWindow>(new TestWindow()));
+	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(this->m_Context));
+	outputWindow->SetSize(VL::Vec2(1980, 300));
+	outputWindow->SetPosition(VL::Vec2(0, 1080 - outputWindow->GetSize().y));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
+
+	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(this->m_Context));
+	viewportWindow->SetSize(VL::Vec2(1980 - 1000, outputWindow->GetPosition().y - 25));
+	viewportWindow->SetPosition(VL::Vec2(250, 25));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(viewportWindow);
+
+	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(this->m_Context));
+	inspectorWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
+	inspectorWindow->SetPosition(VL::Vec2(viewportWindow->GetPosition().x + viewportWindow->GetSize().x, 25));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
+	ImGui::LoadIniSettingsFromDisk("imgui.ini");
 }
 
 void Editor::OnTerminate()
@@ -202,13 +195,5 @@ void Editor::Procedure(const VL::Event& e)
 
 	}
 	break;
-	}
-
-	for (const auto& widget : this->m_Widgets)
-	{
-		if (widget->IsActive)
-		{
-			widget->Procedure(e);
-		}
 	}
 }

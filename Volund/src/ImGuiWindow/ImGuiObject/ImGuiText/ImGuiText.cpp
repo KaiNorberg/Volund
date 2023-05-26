@@ -5,13 +5,23 @@
 
 namespace Volund
 {
+	void ImGuiText::SetText(const std::string& text)
+	{
+		this->m_Text = text;
+	}
+
+	std::string ImGuiText::GetText()
+	{
+		return this->m_Text;
+	}
+
 	void ImGuiText::Procedure(const Event& e)
 	{
 		switch (e.Type)
 		{
 		case EventType::Render:
-		{
-			ImGui::Text(this->m_Id.c_str());
+		{			
+			ImGuiColoredText(this->m_Text.c_str());
 		}
 		break;
 		default:
@@ -22,8 +32,9 @@ namespace Volund
 		}
 	}
 
-	ImGuiText::ImGuiText(const std::string& id)
+	ImGuiText::ImGuiText(const std::string& id, const std::string& text)
 	{
 		this->m_Id = id;
+		this->m_Text = text;
 	}
 }

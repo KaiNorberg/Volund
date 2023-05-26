@@ -5,34 +5,50 @@
 
 namespace Volund
 {
+	void ImGuiWindow::SetSize(const Vec2& size)
+	{
+		this->m_Size = size;
+		ImGui::SetWindowSize(this->GetName(), ImVec2(size.x, size.y));
+	}
+
+	void ImGuiWindow::SetPosition(const Vec2& position)
+	{
+		this->m_Position = position;
+		ImGui::SetWindowPos(this->GetName(), ImVec2(position.x, position.y));
+	}
+
+	Vec2 ImGuiWindow::GetSize()
+	{
+		return this->m_Size;
+	}
+
+	Vec2 ImGuiWindow::GetPosition()
+	{
+		return this->m_Position;
+	}
+
 	void ImGuiWindow::Procedure(const Event& e)
 	{
+		this->OnProcedure(e);
+
 		switch (e.Type)
 		{
 		case EventType::Render:
 		{    
-			if (this->Position != this->m_PreviousPosition)
-			{
-				ImGui::SetNextWindowPos(ImVec2(this->Position.x, this->Position.y));
-			}
-			if (this->Size != this->m_PreviousSize)
-			{
-				ImGui::SetNextWindowSize(ImVec2(this->Size.x, this->Size.y));
-			}
-
 			if (ImGui::Begin(this->GetName(), &this->IsActive))
 			{
 				ImVec2 windowSize = ImGui::GetWindowSize();
 				ImVec2 windowPos = ImGui::GetWindowPos();
 
-				this->Size = Vec2(windowSize.x, windowSize.y);
-				this->Position = Vec2(windowPos.x, windowPos.y);
-				this->m_PreviousSize = this->Size;
-				this->m_PreviousPosition = this->Position;
+				this->m_Size = Vec2(windowSize.x, windowSize.y);
+				this->m_Position = Vec2(windowPos.x, windowPos.y);
 
 				for (auto& imGuiObject : this->m_ObjectDrawOrder)
 				{
-					imGuiObject->Procedure(e);
+					if (imGuiObject->IsActive)
+					{
+						imGuiObject->Procedure(e);
+					}
 				}
 			}	
 
@@ -41,7 +57,10 @@ namespace Volund
 		break;
 		default:
 		{
-
+			for (auto& imGuiObject : this->m_ObjectDrawOrder)
+			{
+				imGuiObject->Procedure(e);
+			}
 		}
 		break;
 		}

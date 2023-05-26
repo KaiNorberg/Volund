@@ -1,15 +1,15 @@
 #include "PCH/PCH.h"
 
-#include "ViewportWidget.h"
+#include "ViewportWindow.h"
 
-#include "Editor/EditorContext/EditorContext.h"
+#include "EditorContext/EditorContext.h"
 
-const char* ViewportWidget::GetName()
+const char* ViewportWindow::GetName()
 {
 	return "Viewport";
 }
 
-void ViewportWidget::Procedure(const VL::Event& e)
+void ViewportWindow::OnProcedure(const VL::Event& e)
 {
 	this->m_Input.Procedure(e);
 
@@ -17,33 +17,16 @@ void ViewportWidget::Procedure(const VL::Event& e)
 	{
 	case VL::EventType::Render:
 	{
-		if (ImGui::Begin(this->GetName(), &this->IsActive))
+		auto scene = this->m_Context->GetScene();
+
+		VL::Vec2 viewportSize = this->m_ViewportImage->GetSize();
+
+		if (scene != nullptr)
 		{
-			auto scene = this->m_Context->GetScene();
-			if (scene != nullptr)
-			{
-				ImGui::SameLine();
-
-				if (ImGui::BeginChild("ViewPort"))
-				{
-					ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-
-					scene->ResizeTarget(viewportSize.x, viewportSize.y);
-
-					this->m_Camera.SubmitToRenderer(viewportSize);
-
-					ImGui::Image(reinterpret_cast<void*>(this->m_Camera.Framebuffer->GetAttachment(0)), viewportSize, ImVec2(0, 1), ImVec2(1, 0));
-
-					ImGui::EndChild();
-				}
-			}
-			else
-			{
-				ImGui::Text("No Scene Selected!");
-			}
+			scene->ResizeTarget(viewportSize.x, viewportSize.y);
 		}
 
-		ImGui::End();
+		this->m_Camera.SubmitToRenderer(ImVec2(viewportSize.x, viewportSize.y));
 	}
 	break;
 	case VL::EventType::Update:
@@ -56,14 +39,18 @@ void ViewportWidget::Procedure(const VL::Event& e)
 	}
 }
 
-ViewportWidget::ViewportWidget(VL::Ref<EditorContext> context)
+ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 {
 	this->m_Context = context;
+
+	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage("ViewportImage", VL::Vec2(100, 100), this->m_Camera.Framebuffer));
+	this->m_ViewportImage->FillWindow = true;
+	this->AddObject(this->m_ViewportImage);
 }
 
 ////////////////////////////////////////////////////////////
 
-void ViewportWidget::ViewportCamera::Update(VL::Input& input, float timeStep)
+void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 {
 	VL::IVec2 cursorDelta = input.GetMousePosition() - this->m_OldMousePosition;
 	float scrollDelta = input.GetScrollPosition() - this->m_OldScrollPosition;
@@ -128,7 +115,7 @@ void ViewportWidget::ViewportCamera::Update(VL::Input& input, float timeStep)
 	this->m_OldMousePosition = input.GetMousePosition();
 }
 
-void ViewportWidget::ViewportCamera::SubmitToRenderer(ImVec2 viewportSize)
+void ViewportWindow::ViewportCamera::SubmitToRenderer(ImVec2 viewportSize)
 {
 	auto spec = this->Framebuffer->GetSpec();
 
@@ -154,7 +141,7 @@ void ViewportWidget::ViewportCamera::SubmitToRenderer(ImVec2 viewportSize)
 	VL::Renderer::Submit(eye);
 }
 
-ViewportWidget::ViewportCamera::ViewportCamera()
+ViewportWindow::ViewportCamera::ViewportCamera()
 {
 	VL::FramebufferSpec spec;
 	spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };

@@ -1,57 +1,22 @@
 #include "PCH/PCH.h"
 
-#include "InspectorWidget.h"
+#include "InspectorWindow.h"
 
 #include "Editor/Editor.h"
-#include "Editor/EditorContext/EditorContext.h"
+#include "EditorContext/EditorContext.h"
+
+#include "EntityInspector/EntityInspector.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
 
-const char* InspectorWidget::GetName()
+const char* InspectorWindow::GetName()
 {
 	return "Inspector";
 }
 
-void InspectorWidget::Procedure(const VL::Event& e)
-{	
-	switch (e.Type)
-	{
-	case VL::EventType::Render:
-	{
-		if (ImGui::Begin(this->GetName(), &this->IsActive))
-		{
-			auto scene = this->m_Context->GetScene();
-			auto selectedEntity = this->m_Context->SelectedEntity;
-
-			if (scene != nullptr && scene->IsEntityRegistered(selectedEntity))
-			{
-				ImGui::Separator();
-
-				this->DrawComponents();
-
-				ImGui::Separator();
-
-				this->DrawAddComponents();
-			}
-			else
-			{
-				ImGui::Text("No Entity Selected!");
-			}
-		}
-		ImGui::End();
-	}
-	break;
-	case VL::EventType::Update:
-	{
-	}
-	break;
-	}
-}
-
-
-void InspectorWidget::DrawComponents()
+/*void InspectorWindow::DrawComponents()
 {
 	auto scene = this->m_Context->GetScene();
 	auto selectedEntity = this->m_Context->SelectedEntity;
@@ -178,9 +143,9 @@ void InspectorWidget::DrawComponents()
 	this->DrawComponent<VL::SoundListener>("SoundListener", selectedEntity, [this, selectedEntity, scene](int i)
 	{
 	});
-}
+}*/
 
-void InspectorWidget::DrawAddComponents()
+/*void InspectorWindow::DrawAddComponents()
 {
 	auto scene = this->m_Context->GetScene();
 	auto selectedEntity = this->m_Context->SelectedEntity;
@@ -238,9 +203,54 @@ void InspectorWidget::DrawAddComponents()
 
 		ImGui::EndPopup();
 	}
-}
+}*/
 
-InspectorWidget::InspectorWidget(VL::Ref<EditorContext> context)
+/*void InspectorWindow::Procedure(const VL::Event& e)
+{
+	switch (e.Type)
+	{
+	case VL::EventType::Render:
+	{
+		if (ImGui::Begin(this->GetName(), &this->IsActive))
+		{
+			auto scene = this->m_Context->GetScene();
+			auto selectedEntity = this->m_Context->SelectedEntity;
+
+			if (scene != nullptr && scene->IsEntityRegistered(selectedEntity))
+			{
+				ImGui::Separator();
+
+				this->DrawComponents();
+
+				ImGui::Separator();
+
+				this->DrawAddComponents();
+			}
+			else
+			{
+				ImGui::Text("No Entity Selected!");
+			}
+		}
+		ImGui::End();
+	}
+	break;
+	case VL::EventType::Update:
+	{
+	}
+	break;
+	}
+}*/
+
+InspectorWindow::InspectorWindow(VL::Ref<EditorContext> context)
 {
 	this->m_Context = context;
+
+	this->AddObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator("InspectorUpperSeperator")));
+
+	this->AddObject(VL::Ref<EntityInspector>(new EntityInspector("EntityInspector", this->m_Context)));
+
+	this->AddObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator("InspectorLowerSeperator")));
+
+	//this->AddObject(VL::Ref<VL::ImGuiButton>(new VL::ImGuiButton("AddComponentButton")));
 }
+

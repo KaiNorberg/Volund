@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Widget/Widget.h"
+#include "EditorContext/EditorContext.h"
 
 class Editor : public VL::Application
 {
@@ -15,8 +15,6 @@ public:
 	virtual ~Editor() = default;
 
 private:
-
-	std::vector<VL::Ref<Widget>> m_Widgets;
 
 	VL::Ref<EditorContext> m_Context;
 

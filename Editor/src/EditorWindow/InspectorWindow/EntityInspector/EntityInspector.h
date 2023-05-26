@@ -1,31 +1,25 @@
 #pragma once
 
-#include "Widget/Widget.h"
+#include "EditorContext/EditorContext.h"
 
-#include "Editor/EditorContext/EditorContext.h"
-
-class InspectorWidget : public Widget
+class EntityInspector : public VL::ImGuiObject
 {
 public:
 
-	const char* GetName() override;
-
 	void Procedure(const VL::Event& e) override;
 
-	InspectorWidget(VL::Ref<EditorContext> context);
+	EntityInspector(const std::string& id, VL::Ref<EditorContext> context);
 
 private:
 
 	template<typename T>
 	void DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc);
 
-	void DrawComponents();
-
-	void DrawAddComponents();
-};
+	VL::Ref<EditorContext> m_Context;
+}; 
 
 template<typename T>
-inline void InspectorWidget::DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
+inline void EntityInspector::DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
 	auto scene = this->m_Context->GetScene();
 
@@ -33,7 +27,7 @@ inline void InspectorWidget::DrawComponent(const std::string& name, VL::Entity e
 	{
 		void* ptrID = scene->GetComponent<T>(entity, i).get();
 
-		bool Open = ImGui::TreeNodeEx(ptrID, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, name.c_str());
+		bool open = ImGui::TreeNodeEx(ptrID, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, name.c_str());
 
 		if (ImGui::BeginPopupContextItem())
 		{
@@ -45,7 +39,7 @@ inline void InspectorWidget::DrawComponent(const std::string& name, VL::Entity e
 			ImGui::EndPopup();
 		}
 
-		if (Open)
+		if (open)
 		{
 			drawFunc(i);
 			ImGui::TreePop();

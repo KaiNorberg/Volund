@@ -1,16 +1,16 @@
 #pragma once
 
-#include "Widget/Widget.h"
+#include "../EditorWindow.h"
 
-class ViewportWidget : public Widget
+class ViewportWindow : public EditorWindow
 {
 public:
 
 	const char* GetName() override;
 
-	void Procedure(const VL::Event& e) override;
+	void OnProcedure(const VL::Event& e) override;
 
-	ViewportWidget(VL::Ref<EditorContext> context);
+	ViewportWindow(VL::Ref<EditorContext> context);
 
 private:
 	
@@ -43,6 +43,8 @@ private:
 		VL::IVec2 m_OldMousePosition;
 		float m_OldScrollPosition;
 	} m_Camera;
+
+	VL::Ref<VL::ImGuiImage> m_ViewportImage;
 
 	VL::Input m_Input;
 };
