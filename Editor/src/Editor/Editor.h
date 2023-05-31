@@ -16,6 +16,8 @@ public:
 
 private:
 
+	bool m_iniLoaded = false;
+
 	VL::Ref<EditorContext> m_Context;
 
 	VL::Input m_Input;

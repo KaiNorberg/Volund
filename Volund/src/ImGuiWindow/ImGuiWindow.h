@@ -16,27 +16,41 @@ namespace Volund
 
 		void SetPosition(const Vec2& position);
 
+		void SetName(const std::string& name);
+
 		Vec2 GetSize();
 
 		Vec2 GetPosition();
 
-		virtual const char* GetName() = 0;
+		std::string GetName();
+
+		std::string GetId();
 
 		void Procedure(const Event& e);
 
 		virtual void OnProcedure(const Event& e) {};
+
+		ImGuiWindow();
 
 		virtual ~ImGuiWindow() = default;
 
 	protected:
 
 		template <typename T>
-		void AddObject(Ref<T> object);
+		void PushObject(Ref<T> object);
 
 		template <typename T>
 		Ref<T> GetObject(const std::string& objectId);
 
 	private:
+
+		std::string m_Name;
+
+		std::string m_Id;
+
+		bool m_PositionChanged;
+
+		bool m_SizeChanged;
 
 		Vec2 m_Position;
 
@@ -47,7 +61,7 @@ namespace Volund
 	};
 
 	template<typename T>
-	inline void ImGuiWindow::AddObject(Ref<T> object)
+	inline void ImGuiWindow::PushObject(Ref<T> object)
 	{
 		this->m_ImGuiObjects.PushBack(object);
 		this->m_ObjectDrawOrder.push_back(object);
@@ -56,7 +70,16 @@ namespace Volund
 	template<typename T>
 	inline Ref<T> ImGuiWindow::GetObject(const std::string& objectId)
 	{
-		
+		for (int i = 0; i < this->m_ImGuiObjects.Size<T>(); i++)
+		{
+			auto object = this->m_ImGuiObjects.Get<T>(i);
+			if (object->GetID() == objectId)
+			{
+				return object;
+			}
+		}
+
+		return nullptr;
 	}
 }
 

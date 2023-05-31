@@ -169,8 +169,10 @@ namespace Utils
 		float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 ButtonSize(LineHeight + 3.0f, LineHeight);
 
-		ImGui::PushMultiItemsWidths(3, ImGui::GetContentRegionAvail().x - ButtonSize.x * 3);
-		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 0));
+		float spacing = 2;
+
+		ImGui::PushMultiItemsWidths(3, ImGui::GetContentRegionAvail().x - (ButtonSize.x - spacing) * 3);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(spacing, 1));
 
 		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
 		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));

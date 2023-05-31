@@ -21,8 +21,6 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		ImGuiTextList(const std::string& id);
-
 	private:
 
 		float m_TotalTime = 0.0f;

@@ -31,7 +31,7 @@ namespace Volund
 		{
 		case EventType::Render:
 		{
-			if (ImGui::BeginChild(this->m_Id.c_str()))
+			if (ImGui::BeginChild(this->GetId().c_str()))
 			{
 				if (FillWindow)
 				{
@@ -53,16 +53,14 @@ namespace Volund
 		}
 	}
 
-	ImGuiImage::ImGuiImage(const std::string& id, Vec2 size, Ref<Texture> texture)
+	ImGuiImage::ImGuiImage(Vec2 size, Ref<Texture> texture)
 	{
-		this->m_Id = id;
 		this->m_Size = size;
 		this->SetTexture(texture);
 	}
 
-	ImGuiImage::ImGuiImage(const std::string& id, Vec2 size, Ref<Framebuffer> framebuffer, uint32_t attachmentId)
+	ImGuiImage::ImGuiImage(Vec2 size, Ref<Framebuffer> framebuffer, uint32_t attachmentId)
 	{
-		this->m_Id = id;
 		this->m_Size = size;
 		this->SetTexture(framebuffer, attachmentId);
 	}

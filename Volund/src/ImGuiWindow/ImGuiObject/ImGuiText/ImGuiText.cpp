@@ -32,9 +32,8 @@ namespace Volund
 		}
 	}
 
-	ImGuiText::ImGuiText(const std::string& id, const std::string& text)
+	ImGuiText::ImGuiText(const std::string& text)
 	{
-		this->m_Id = id;
 		this->m_Text = text;
 	}
 }

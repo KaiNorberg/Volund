@@ -21,9 +21,4 @@ namespace Volund
 		break;
 		}
 	}
-
-	ImGuiSeparator::ImGuiSeparator(const std::string& id)
-	{
-		this->m_Id = id;
-	}
 }

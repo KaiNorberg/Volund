@@ -8,7 +8,7 @@ public:
 
 	void Procedure(const VL::Event& e) override;
 
-	EntityInspector(const std::string& id, VL::Ref<EditorContext> context);
+	EntityInspector(VL::Ref<EditorContext> context);
 
 private:
 

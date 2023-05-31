@@ -2,10 +2,6 @@
 
 #include "OutputWindow.h"
 
-const char* OutputWindow::GetName()
-{
-	return "Output";
-}
 
 void OutputWindow::LoggerCallback(const std::string& string)
 {
@@ -16,9 +12,11 @@ void OutputWindow::LoggerCallback(const std::string& string)
 
 OutputWindow::OutputWindow(VL::Ref<EditorContext> context)
 {
+	this->SetName("Output");
+
 	this->m_Context = context;
 
-	this->AddObject(m_TextList);
+	this->PushObject(m_TextList);
 
 	VL::Logger::GetClientLogger().SetCallback(LoggerCallback);
 	VL::Logger::GetCoreLogger().SetCallback(LoggerCallback);

@@ -10,8 +10,6 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		ImGuiSeparator(const std::string& id);
-
 	private:
 
 		std::string m_Text;

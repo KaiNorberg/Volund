@@ -6,7 +6,7 @@ class EditorContext
 {
 public:
 
-	VL::Entity SelectedEntity;
+	VL::Entity SelectedEntity = 1;
 
 	VL::Ref<VL::Window> GetWindow();
 

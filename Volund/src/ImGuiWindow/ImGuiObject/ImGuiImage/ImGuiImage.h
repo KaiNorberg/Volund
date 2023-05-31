@@ -23,9 +23,9 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		ImGuiImage(const std::string& id, Vec2 size, Ref<Texture> texture);
+		ImGuiImage(Vec2 size, Ref<Texture> texture);
 
-		ImGuiImage(const std::string& id, Vec2 size, Ref<Framebuffer> framebuffer, uint32_t attachmentId = 0);
+		ImGuiImage(Vec2 size, Ref<Framebuffer> framebuffer, uint32_t attachmentId = 0);
 
 	private:
 

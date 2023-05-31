@@ -14,6 +14,7 @@ void EntityInspector::Procedure(const VL::Event& e)
 
 		if (scene == nullptr || !scene->IsEntityRegistered(selectedEntity))
 		{
+			ImGui::Text("No valid entity selected!");
 			break;
 		}
 
@@ -148,8 +149,7 @@ void EntityInspector::Procedure(const VL::Event& e)
 	}
 }
 
-EntityInspector::EntityInspector(const std::string& id, VL::Ref<EditorContext> context)
+EntityInspector::EntityInspector(VL::Ref<EditorContext> context)
 {
-	this->m_Id = id;
 	this->m_Context = context;
 }

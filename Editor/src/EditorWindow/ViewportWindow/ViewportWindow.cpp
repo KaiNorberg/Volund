@@ -4,11 +4,6 @@
 
 #include "EditorContext/EditorContext.h"
 
-const char* ViewportWindow::GetName()
-{
-	return "Viewport";
-}
-
 void ViewportWindow::OnProcedure(const VL::Event& e)
 {
 	this->m_Input.Procedure(e);
@@ -41,11 +36,13 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 
 ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 {
+	this->SetName("Viewport");
+
 	this->m_Context = context;
 
-	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage("ViewportImage", VL::Vec2(100, 100), this->m_Camera.Framebuffer));
+	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.Framebuffer));
 	this->m_ViewportImage->FillWindow = true;
-	this->AddObject(this->m_ViewportImage);
+	this->PushObject(this->m_ViewportImage);
 }
 
 ////////////////////////////////////////////////////////////

@@ -17,7 +17,7 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		ImGuiText(const std::string& id, const std::string& text);
+		ImGuiText(const std::string& text);
 
 	private:
 

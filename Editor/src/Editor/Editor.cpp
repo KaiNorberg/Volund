@@ -5,6 +5,7 @@
 #include "EditorWindow/OutputWindow/OutputWindow.h"
 #include "EditorWindow/ViewportWindow/ViewportWindow.h"
 #include "EditorWindow/InspectorWindow/InspectorWindow.h"
+#include "EditorWindow/HierarchyWindow/HierarchyWindow.h"
 
 #include "EditorContext/EditorContext.h"
 
@@ -28,8 +29,8 @@ void Editor::OnRun()
 	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
 
 	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(this->m_Context));
-	viewportWindow->SetSize(VL::Vec2(1980 - 1000, outputWindow->GetPosition().y - 25));
-	viewportWindow->SetPosition(VL::Vec2(250, 25));
+	viewportWindow->SetSize(VL::Vec2(1980 - 800, outputWindow->GetPosition().y - 25));
+	viewportWindow->SetPosition(VL::Vec2(400, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(viewportWindow);
 
 	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(this->m_Context));
@@ -37,9 +38,13 @@ void Editor::OnRun()
 	inspectorWindow->SetPosition(VL::Vec2(viewportWindow->GetPosition().x + viewportWindow->GetSize().x, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
 
+	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(this->m_Context));
+	hierarchyWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
+	hierarchyWindow->SetPosition(VL::Vec2(0, 25));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
-	ImGui::LoadIniSettingsFromDisk("imgui.ini");
 }
 
 void Editor::OnTerminate()
@@ -63,6 +68,12 @@ void Editor::Procedure(const VL::Event& e)
 	case VL::EventType::Render:
 	{ 	
 		auto window = this->m_Context->GetWindow();
+
+		if (!this->m_iniLoaded)
+		{
+			ImGui::LoadIniSettingsFromDisk("imgui.ini");
+			this->m_iniLoaded = true;
+		}
 
 		/*VL::ImGuiModule::BeginFrame();
 

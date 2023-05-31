@@ -41,7 +41,7 @@ namespace Volund
 		{
 		case EventType::Render:
 		{		
-			if (ImGui::BeginListBox(this->m_Id.c_str(), ImVec2(-FLT_MIN, -FLT_MIN)))
+			if (ImGui::BeginListBox(this->GetId().c_str(), ImVec2(-FLT_MIN, -FLT_MIN)))
 			{
 				for (auto& string : m_TextList)
 				{
@@ -83,10 +83,5 @@ namespace Volund
 		}
 		break;
 		}
-	}
-
-	ImGuiTextList::ImGuiTextList(const std::string& id)
-	{
-		this->m_Id = id;
 	}
 }

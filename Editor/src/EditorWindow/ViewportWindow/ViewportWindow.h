@@ -6,8 +6,6 @@ class ViewportWindow : public EditorWindow
 {
 public:
 
-	const char* GetName() override;
-
 	void OnProcedure(const VL::Event& e) override;
 
 	ViewportWindow(VL::Ref<EditorContext> context);

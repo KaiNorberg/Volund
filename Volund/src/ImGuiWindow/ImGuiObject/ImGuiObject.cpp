@@ -5,9 +5,14 @@
 
 namespace Volund
 {
-	std::string ImGuiObject::GetID()
+	std::string ImGuiObject::GetId()
 	{
 		return this->m_Id;
+	}
+
+	ImGuiObject::ImGuiObject()
+	{
+		this->m_Id = "##" + std::to_string(rand());
 	}
 
 	void ImGuiObject::ImGuiColoredText(const std::string& text)

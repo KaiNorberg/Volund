@@ -79,6 +79,8 @@ namespace Volund
 
 	void Scene::Procedure(const Event& e)
 	{
+		this->OnProcedure(e);
+
 		for (const auto& [entity, polystorage] : this->m_Registry)
 		{
 			for (auto& [typeID, components] : polystorage)
@@ -111,6 +113,24 @@ namespace Volund
 		this->m_TargetBuffer = VL::Framebuffer::Create(spec);
 	
 		this->m_StartTime = std::chrono::high_resolution_clock::now();
+
+		this->OnCreate();
+	}
+
+	Scene::~Scene()
+	{
+		for (const auto& [entity, PolyContainer] : this->m_Registry)
+		{
+			for (auto& [TypeID, Components] : PolyContainer)
+			{
+				for (const auto& component : Components)
+				{
+					component->OnDestroy();
+				}
+			}
+		}
+
+		this->OnDestroy();
 	}
 
 	uint64_t Scene::FindEntity(Entity entity)
@@ -129,20 +149,6 @@ namespace Volund
 		else
 		{
 			return -1;
-		}
-	}
-
-	Scene::~Scene()
-	{
-		for (const auto& [entity, PolyContainer] : this->m_Registry)
-		{
-			for (auto& [TypeID, Components] : PolyContainer)
-			{
-				for (const auto& component : Components)
-				{
-					component->OnDestroy();
-				}
-			}
 		}
 	}
 }

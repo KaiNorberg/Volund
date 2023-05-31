@@ -47,6 +47,12 @@ namespace Volund
 		
 		void Procedure(const Event& e);
 
+		virtual void OnProcedure(const Event& e) {};
+		
+		virtual void OnCreate() {};
+
+		virtual void OnDestroy() {};
+
 		EntityRegistry::iterator begin();
 		EntityRegistry::iterator end();
 

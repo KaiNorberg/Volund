@@ -11,140 +11,6 @@
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
 
-const char* InspectorWindow::GetName()
-{
-	return "Inspector";
-}
-
-/*void InspectorWindow::DrawComponents()
-{
-	auto scene = this->m_Context->GetScene();
-	auto selectedEntity = this->m_Context->SelectedEntity;
-
-	//IMPORTANT: Remember to update the code below whenever a new component is implemented.
-
-	this->DrawComponent<VL::Tag>("Tag", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto tag = scene->GetComponent<VL::Tag>(selectedEntity, i);
-
-		std::string newTag = this->TextControl("Tag", tag->String);
-		if (newTag != "")
-		{
-			tag->String = newTag;
-		}
-	});
-
-	this->DrawComponent<VL::Transform>("Transform", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto transform = scene->GetComponent<VL::Transform>(selectedEntity, i);
-
-		VL::Vec3 position = transform->Position;
-		VL::Vec3 rotation = transform->GetRotation();
-		VL::Vec3 scale = transform->Scale;
-
-		this->Vec3Control("Position", &position, 0.1f, 0.0f);
-		this->Vec3Control("Rotation", &rotation, 0.1f, 0.0f);
-		this->Vec3Control("Scale", &scale, 0.1f, 1.0f);
-
-		transform->Position = position;
-		transform->SetRotation(rotation);
-		transform->Scale = scale;
-	});
-
-	this->DrawComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
-		auto window = this->m_Context->GetWindow();
-
-		std::string defaultMaterial = scene->FetchAssetFilepath<VL::Material>(meshRenderer->GetMaterial());
-		auto selectedMaterial = FileSelectorControl("Material", defaultMaterial, window);
-		if (selectedMaterial != "")
-		{
-			meshRenderer->SetMaterial(scene->FetchAsset<VL::Material>(selectedMaterial));
-		}
-
-		std::string defaultMesh = scene->FetchAssetFilepath<VL::Mesh>(meshRenderer->GetMesh());
-		auto selectedMesh = FileSelectorControl("Mesh", defaultMesh, window);
-		if (selectedMesh != "")
-		{
-			meshRenderer->SetMesh(scene->FetchAsset<VL::Mesh>(selectedMesh));
-		}
-	});
-
-	this->DrawComponent<VL::Camera>("Camera", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto camera = scene->GetComponent<VL::Camera>(selectedEntity, i);
-
-		//TODO: Add targetbuffer
-
-		this->FloatControl("FOV", &camera->FOV);
-		this->FloatControl("FarPlane", &camera->FarPlane);
-		this->FloatControl("NearPlane", &camera->NearPlane);
-	});
-
-	this->DrawComponent<VL::CameraMovement>("CameraMovement", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto cameraMovement = scene->GetComponent<VL::CameraMovement>(selectedEntity, i);
-
-		FloatControl("Speed", &cameraMovement->Speed);
-		FloatControl("Sensitivity", &cameraMovement->Sensitivity);
-	});
-
-	this->DrawComponent<VL::PointLight>("PointLight", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
-
-		std::string label = "##Color" + std::to_string((int)pointLight.get());
-		ImGui::ColorPicker3(label.c_str(), glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
-
-		FloatControl("Brightness", &pointLight->Brightness);
-	});
-
-	this->DrawComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-		auto soundSource = scene->GetComponent<VL::SoundSource>(selectedEntity, i);
-		auto window = this->m_Context->GetWindow();
-
-		//Todo: Add variables
-		std::string defaultSound = scene->FetchAssetFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
-		auto selectedSound = FileSelectorControl("AudioBuffer", defaultSound, window);
-		if (selectedSound != "")
-		{
-			soundSource->SetBuffer(scene->FetchAsset<VL::AudioBuffer>(selectedSound));
-		}
-
-		BoolControl("AutoPlay", &soundSource->AutoPlay);
-
-		bool oldLooping = soundSource->GetLooping();
-		bool newLooping = oldLooping;
-		BoolControl("Looping", &newLooping);
-		if (oldLooping != newLooping)
-		{
-			soundSource->SetLooping(newLooping);
-		}
-
-		float oldPitch = soundSource->GetPitch();
-		float newPitch = oldPitch;
-		FloatControl("Pitch", &newPitch);
-		if (oldPitch != newPitch)
-		{
-			soundSource->SetPitch(newPitch);
-		}
-
-		float oldGain = soundSource->GetGain();
-		float newGain = oldGain;
-		FloatControl("Gain", &newGain);
-		if (oldLooping != newLooping)
-		{
-			soundSource->SetGain(newGain);
-		}
-	});
-
-	this->DrawComponent<VL::SoundListener>("SoundListener", selectedEntity, [this, selectedEntity, scene](int i)
-	{
-	});
-}*/
-
 /*void InspectorWindow::DrawAddComponents()
 {
 	auto scene = this->m_Context->GetScene();
@@ -243,14 +109,20 @@ const char* InspectorWindow::GetName()
 
 InspectorWindow::InspectorWindow(VL::Ref<EditorContext> context)
 {
+	this->SetName("Inspector");
+
 	this->m_Context = context;
 
-	this->AddObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator("InspectorUpperSeperator")));
+	//this->PushObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator("InspectorUpperSeperator")));
 
-	this->AddObject(VL::Ref<EntityInspector>(new EntityInspector("EntityInspector", this->m_Context)));
+	auto tabBar = VL::Ref<VL::ImGuiTabBar>(new VL::ImGuiTabBar());
 
-	this->AddObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator("InspectorLowerSeperator")));
+	tabBar->PushObject("EntityInspector", VL::Ref<EntityInspector>(new EntityInspector(this->m_Context)));
 
-	//this->AddObject(VL::Ref<VL::ImGuiButton>(new VL::ImGuiButton("AddComponentButton")));
+	this->PushObject(tabBar);
+
+	this->PushObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator()));
+
+	//this->PushObject(VL::Ref<VL::ImGuiButton>(new VL::ImGuiButton("AddComponentButton")));
 }
 
