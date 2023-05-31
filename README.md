@@ -43,11 +43,11 @@ The following are two of the scenes that can be found in the [examples](https://
 
 **Mandelbrot.lua**
 
-![Alt text](Resources/Mandelbrot_Screenshot.png "Mandelbrot")
+![Alt text](resources/Mandelbrot_Screenshot.png "Mandelbrot")
 
 **PBR.lua [WIP]**
 
-![Alt text](Resources/Screenshot_PBR.png "PBR")
+![Alt text](resources/Screenshot_PBR.png "PBR")
 
 ## Contributing
 
