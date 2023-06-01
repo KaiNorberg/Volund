@@ -62,12 +62,12 @@ namespace Volund
 
 		virtual void End() = 0;
 
+		RendererInstance();
+
 		virtual ~RendererInstance() = default;
 
 	protected:
 		friend class Renderer;
-
-		void Init();
 
 		void UpdateLightUniforms();
 
@@ -83,8 +83,6 @@ namespace Volund
 			std::vector<RendererLight> Lights;
 			std::vector<RendererEye> Eyes;
 		} m_Data;
-
-		Ref<RenderingAPI> m_Api;
 
 	private:
 

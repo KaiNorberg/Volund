@@ -3,6 +3,7 @@
 #include "OpenGLRenderingAPI.h"
 
 #include <glad/include/glad/glad.h>
+#include <glfw/glfw3.h>
 
 namespace Volund
 {
@@ -123,6 +124,33 @@ namespace Volund
 		{
 			glDrawElements(GL_TRIANGLES, mesh->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
 		}
+	}
+
+	void OpenGLRenderingAPI::BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer)
+	{
+		uint32_t readId = readBuffer->GetID();
+		auto readSpec = readBuffer->GetSpec();
+
+		uint32_t drawId;
+		int32_t drawWidth;
+		int32_t drawHeight;
+		if (drawBuffer != nullptr)
+		{
+			auto drawSpec = drawBuffer->GetSpec();
+
+			drawId = drawBuffer->GetID();
+			drawWidth = drawSpec.Width;
+			drawHeight = drawSpec.Height;
+		}
+		else
+		{
+			drawId = 0;
+
+			auto currentWindow = glfwGetCurrentContext();
+			glfwGetWindowSize(currentWindow, &drawWidth, &drawHeight);
+		}
+
+		glBlitNamedFramebuffer(readId, drawId, 0, 0, readSpec.Width, readSpec.Height, 0, 0, drawWidth, drawHeight, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	OpenGLRenderingAPI::OpenGLRenderingAPI()

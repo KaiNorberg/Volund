@@ -20,7 +20,7 @@ namespace Volund
 
 		Ref<Scene> GetScene();
 
-		void LoadNewState(const std::string& filepath);
+		void LoadNewScene(const std::string& filepath);
 
 	private:	
 

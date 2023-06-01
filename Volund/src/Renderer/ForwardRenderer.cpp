@@ -51,7 +51,7 @@ namespace Volund
 					}
 
 					model.mesh->Bind();
-					this->m_Api->DrawIndexed(model.mesh);
+					VL::RenderingAPI::DrawIndexed(model.mesh);
 				}
 			}
 

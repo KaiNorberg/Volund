@@ -42,8 +42,6 @@ namespace Volund
 	/// </summary>
 	template <typename T>
 	using WeakRef = std::weak_ptr<T>;
-
-	void Entry();
 }
 
 namespace VL = Volund;

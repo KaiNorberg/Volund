@@ -32,7 +32,7 @@ namespace Volund
 		return this->m_ShouldRun;
 	}
 
-	Ref<EventDispatcher> Application::GetEventDispatcher()
+	Ref<EventDispatcher> Application::GetDispatcher()
 	{
 		return this->m_EventDispatcher;
 	}
@@ -73,9 +73,17 @@ namespace Volund
 		}
 	}
 
-	void Application::Connect(Ref<EventDispatcher> dispatcher)
+	void Application::Dispatch(const Event& e)
 	{
-		this->m_EventDispatcher = dispatcher;
+		this->Procedure(e);
+
+		for (const auto& [typeId, view] : this->m_Modules)
+		{
+			for (const auto& module : view)
+			{
+				module->Procedure(e);
+			}
+		}
 	}
 
 	Application::Application()
@@ -89,6 +97,11 @@ namespace Volund
 #else
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif	
+
+		this->m_EventDispatcher = std::make_shared<EventDispatcher>([this](const Event& e)
+		{
+			this->Dispatch(e);
+		});
 	}
 
 	Application::~Application()

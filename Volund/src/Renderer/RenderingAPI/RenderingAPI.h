@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Renderer/Mesh/Mesh.h"
+#include "Renderer/Framebuffer/Framebuffer.h"
 
 namespace Volund
 {
@@ -22,6 +23,8 @@ namespace Volund
 
 		virtual void DrawIndexed(const Ref<Mesh>& mesh) = 0;
 
+		virtual void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer) = 0;
+
 		virtual ~RenderingAPIInstance() = default;
 	};
 
@@ -36,17 +39,19 @@ namespace Volund
 		static void SetViewPort(int32_t x, int32_t y, int32_t width, int32_t height);
 
 		static void DrawIndexed(const Ref<Mesh>& mesh);
+		
+		static void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer);
 
-		static void Select(GraphicsAPI api);
-			
-		static void Init();
+		static void Init(GraphicsAPI api);
 
 		static GraphicsAPI GetSelectedAPI();
 
 	private:
 
+		RenderingAPI() = delete;
+
 		static inline Ref<RenderingAPIInstance> m_Instance;
 
-		static inline GraphicsAPI m_SelectedApi;
+		static inline GraphicsAPI m_SelectedAPI;
 	};
 }

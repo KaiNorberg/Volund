@@ -31,14 +31,23 @@ namespace Volund
 		m_Instance->DrawIndexed(mesh);
 	}
 
-	void RenderingAPI::Select(GraphicsAPI api)
+	void RenderingAPI::BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer)
 	{
-		m_SelectedApi = api;
+		VOLUND_PROFILE_FUNCTION();
+	
+		m_Instance->BlitFramebuffer(readBuffer, drawBuffer);
 	}
 
-	void RenderingAPI::Init()
+	void RenderingAPI::Init(GraphicsAPI api)
 	{
-		switch (RenderingAPI::GetSelectedAPI())
+		if (m_Instance != nullptr)
+		{
+			VOLUND_ERROR("The RenderingAPI is already initialized!");
+		}
+
+		m_SelectedAPI = api;
+
+		switch (api)
 		{
 		case GraphicsAPI::OpenGL:
 		{
@@ -55,6 +64,6 @@ namespace Volund
 
 	GraphicsAPI RenderingAPI::GetSelectedAPI()
 	{
-		return m_SelectedApi;
+		return m_SelectedAPI;
 	}
 }

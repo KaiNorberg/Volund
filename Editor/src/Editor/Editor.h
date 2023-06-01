@@ -22,3 +22,4 @@ private:
 
 	VL::Input m_Input;
 };
+

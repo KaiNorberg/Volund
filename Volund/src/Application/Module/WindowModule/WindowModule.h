@@ -21,12 +21,10 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		WindowModule(GraphicsAPI api, Ref<RendererInstance> instance);
+		WindowModule();
 
 	private:	
 
 		Ref<Window> m_Window;
-
-		Ref<RendererInstance> m_RendererInstance;
 	};
 }

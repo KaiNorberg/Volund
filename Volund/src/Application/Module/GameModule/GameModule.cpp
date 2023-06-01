@@ -32,9 +32,27 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->m_GameState != nullptr)
+		if (this->m_GameState == nullptr)
+		{
+			return;
+		}
+
+		switch (e.Type)
+		{
+		case EventType::Render:
 		{
 			this->m_GameState->Procedure(e);
+
+			if (this->m_GameState->GetScene() != nullptr)
+			{
+				RenderingAPI::BlitFramebuffer(this->m_GameState->GetScene()->GetTargetBuffer(), nullptr);
+			}
+		}
+		break;
+		default:
+		{
+			this->m_GameState->Procedure(e);
+		}
 		}
 	}
 
@@ -55,7 +73,7 @@ namespace Volund
 		}
 	}
 
-	void GameModule::LoadNewState(const std::string& filepath)
+	void GameModule::LoadNewScene(const std::string& filepath)
 	{
 		std::unique_lock lock(this->m_Mutex);
 

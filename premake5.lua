@@ -195,6 +195,94 @@ project "Editor"
 			"ImGui",
 			"lua54",
 		}
+
+project "Launcher"
+	location "Launcher"
+	language "C++"
+	cppdialect "C++20"
+	systemversion "latest"
+	staticruntime "on"
+
+	dependson 
+	{
+		"Volund"
+	}
+
+	targetdir (TargetDir)
+	objdir (ObjDir)
+
+	files
+	{
+		"%{prj.name}/src/**.h",
+		"%{prj.name}/src/**.cpp"
+	}
+
+	includedirs
+	{
+		"%{prj.name}/src",
+		"vendor",
+		"vendor/imgui",
+		"Volund/src",
+		"vendor/glfw/include",
+		"vendor/glad/include",
+		"vendor/lua"
+	}
+
+	libdirs
+	{
+		TargetDir,
+		"vendor/lua",
+		"vendor/OpenAL_Soft/lib"
+	}
+
+	pchheader "PCH/PCH.h"
+	pchsource "%{prj.name}/src/PCH/PCH.cpp"
+
+	filter "configurations:Debug"
+		defines "VOLUND_DEBUG"
+		symbols "On"
+		runtime "Debug"
+		kind "ConsoleApp"
+
+	filter "configurations:Release"
+		defines "VOLUND_RELEASE"
+		optimize "Speed"
+		runtime "Release"
+		kind "ConsoleApp"
+
+	filter "configurations:Dist"
+		defines "VOLUND_DIST"
+		optimize "Speed"
+		runtime "Release"	
+		kind "WindowedApp"
+
+	filter "system:windows"
+		links
+		{
+			"Volund",
+			"OpenGL32",
+			"Glad",
+			"GLFW",
+			"OpenAL32",
+			"common",
+			"ex-common",
+			"ImGui",
+			"lua54",
+			"winmm"
+		}
+	filter "system:linux"
+		links
+		{
+			"Volund",
+			"dl",
+			"Glad",
+			"GLFW",
+			"openal",
+			"common",
+			"ex-common",
+			"ImGui",
+			"lua54",
+		}
 		
 project "Glad"
 	kind "StaticLib"

@@ -11,17 +11,15 @@
 
 void Editor::OnRun()
 {
-	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OpenGL, std::make_shared<VL::ForwardRenderer>()));
-	this->AttachModule(new VL::ImGuiModule());
+	this->AttachModule(new VL::WindowModule());
 	this->AttachModule(new VL::AudioModule());
+	this->AttachModule(new VL::ImGuiModule());
+
+	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
+	VL::Renderer::Init(std::make_shared<VL::ForwardRenderer>());
 
 	auto window = this->GetModule<VL::WindowModule>()->GetWindow();
 	this->m_Context = std::make_shared<EditorContext>(window);
-
-	/*this->m_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this->m_Context)));
-	this->m_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this->m_Context)));
-	this->m_Widgets.push_back(VL::Ref<InspectorWidget>(new InspectorWidget(this->m_Context)));
-	this->m_Widgets.push_back(VL::Ref<HierarchyWidget>(new HierarchyWidget(this->m_Context)));*/
 
 	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(this->m_Context));
 	outputWindow->SetSize(VL::Vec2(1980, 300));

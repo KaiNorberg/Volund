@@ -20,7 +20,7 @@ namespace Volund
 		this->m_Data.Eyes.push_back(eye);
 	}
 
-	void RendererInstance::Init()
+	RendererInstance::RendererInstance()
 	{
 		this->m_CameraUniforms = UniformBuffer::Create();
 		this->m_CameraUniforms->PushMatrix<Mat4x4>("ViewProjMatrix");
@@ -98,7 +98,6 @@ namespace Volund
 	void Renderer::Init(const Ref<RendererInstance> instance)
 	{
 		m_Instance = instance;
-		m_Instance->Init();
 	}
 
 	void Renderer::Reset()

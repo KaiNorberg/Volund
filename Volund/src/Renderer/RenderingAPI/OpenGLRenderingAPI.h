@@ -19,6 +19,8 @@ namespace Volund
 
 		void DrawIndexed(const Ref<Mesh>& mesh) override;
 
+		void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer) override;
+
 		OpenGLRenderingAPI();
 
 	private:
