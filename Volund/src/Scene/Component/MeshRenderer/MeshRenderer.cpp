@@ -4,7 +4,7 @@
 #include "Scene/Scene.h"
 #include "Scene/Component/Transform/Transform.h"
 
-#include "Renderer/Renderer.h"
+//#include "Rendering/Renderer.h"
 
 namespace Volund
 {
@@ -15,6 +15,11 @@ namespace Volund
 		{
 			this->m_LayerMask |= 1UL << (layer - 1);
 		}
+	}
+
+	uint16_t MeshRenderer::GetLayerMask()
+	{
+		return this->m_LayerMask;
 	}
 
 	void MeshRenderer::SetMesh(const Ref<Mesh> newMesh)
@@ -47,7 +52,7 @@ namespace Volund
 		{
 			if (this->m_Mesh != nullptr && this->m_Material != nullptr)
 			{
-				RendererModel model;
+				/*RendererModel model;
 				model.mesh = this->m_Mesh;
 				model.material = this->m_Material;
 				model.LayerMask = this->m_LayerMask;
@@ -55,7 +60,7 @@ namespace Volund
 				const auto transformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 				model.ModelMatrix = transformComponent != nullptr ? transformComponent->GetModelMatrix() : Mat4x4(1.0f);
 
-				Renderer::Submit(model);
+				Renderer::Submit(model);*/
 			}
 		}
 		break;

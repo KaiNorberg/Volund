@@ -2,6 +2,8 @@
 
 #include "../EditorWindow.h"
 
+#include "EditorContext/EditorContext.h"
+
 class ViewportWindow : public EditorWindow
 {
 public:
@@ -22,11 +24,11 @@ private:
 
 		float FOV = 80.0f;
 
-		VL::Ref<VL::Framebuffer> Framebuffer;
+		VL::Ref<VL::Framebuffer> GetFramebuffer();
 
 		void Update(VL::Input& input, float timeStep);
 
-		void SubmitToRenderer(ImVec2 viewportSize);
+		void Render(VL::Ref<VL::Scene> scene, ImVec2 viewportSize);
 
 		ViewportCamera();
 
@@ -40,6 +42,10 @@ private:
 
 		VL::IVec2 m_OldMousePosition;
 		float m_OldScrollPosition;
+
+		VL::Ref<VL::Renderer> m_Renderer;
+
+		VL::Ref<VL::Framebuffer> m_Framebuffer;
 	} m_Camera;
 
 	VL::Ref<VL::ImGuiImage> m_ViewportImage;

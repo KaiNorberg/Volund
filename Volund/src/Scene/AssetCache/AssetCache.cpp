@@ -1,8 +1,8 @@
 #include "PCH/PCH.h"
 #include "AssetCache.h"
 
-#include "Renderer/Mesh/Mesh.h"
-#include "Renderer/Material/Material.h"
+#include "Rendering/Mesh/Mesh.h"
+#include "Rendering/Material/Material.h"
 
 #include "Audio/AudioBuffer/AudioBuffer.h"
 

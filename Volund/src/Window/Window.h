@@ -2,7 +2,7 @@
 
 #include "EventDispatcher/EventDispatcher.h"
 
-#include "Renderer/Framebuffer/Framebuffer.h"
+#include "Rendering/Framebuffer/Framebuffer.h"
 
 #include "GLFW/glfw3.h"
 

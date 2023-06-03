@@ -65,10 +65,6 @@ namespace Volund::LuaUtils
                     //TODO: Add framebuffer asset
                     //newComponent->SetTargetBuffer(componentTable["TargetBuffer"].get<LuaFramebuffer>().Get());
                 }
-                else
-                {
-                    newComponent->SetTargetBuffer(scene->GetTargetBuffer());
-                }
             }
             break;
             case LuaComponentID::CameraMovement:

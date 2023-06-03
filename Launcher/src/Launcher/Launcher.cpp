@@ -16,11 +16,11 @@ void Launcher::Procedure(const VL::Event& e)
 Launcher::Launcher()
 {
 	this->AttachModule(new VL::WindowModule());
+
+	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
+
 	this->AttachModule(new VL::GameModule());
 	this->AttachModule(new VL::AudioModule());
 	
-	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
-	VL::Renderer::Init(std::make_shared<VL::ForwardRenderer>());
-
-	this->GetModule<VL::GameModule>()->LoadNewScene(MAIN_SCENE);
+	this->GetModule<VL::GameModule>()->LoadScene(MAIN_SCENE);
 }

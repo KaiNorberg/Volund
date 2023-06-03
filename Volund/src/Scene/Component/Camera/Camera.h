@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../Component.h"
-#include "Renderer/Framebuffer/Framebuffer.h"
+#include "Rendering/Framebuffer/Framebuffer.h"
 
 namespace Volund
 {
@@ -19,13 +19,17 @@ namespace Volund
 
 		void SetLayerMask(uint8_t index, bool enabled);
 
+		uint16_t GetLayerMask();
+
 		void SetTargetBuffer(Ref<Framebuffer> newTargetBuffer);
+
+		Ref<Framebuffer> GetTargetBuffer();
 
 		Mat4x4 GetViewMatrix() const;
 
 		Mat4x4 GetOriginViewMatrix() const;
 
-		Mat4x4 GetProjectionMatrix(float aspectRatio) const;
+		Mat4x4 GetProjectionMatrix(const float aspectRatio) const;
 
 		void Procedure(const Event& e);
 

@@ -21,6 +21,15 @@ namespace Volund
 		}
 
 		this->m_GameWindow = app->GetModule<WindowModule>()->GetWindow();
+
+		this->m_Renderer = std::make_shared<ForwardRenderer>();
+
+		VL::FramebufferSpec spec;
+		spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
+		spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
+		spec.Height = 1080;
+		spec.Width = 1920;
+		this->m_Framebuffer = VL::Framebuffer::Create(spec);
 	}
 
 	void GameModule::OnDetach()
@@ -37,22 +46,34 @@ namespace Volund
 			return;
 		}
 
+		this->m_GameState->Procedure(e);
+
 		switch (e.Type)
 		{
 		case EventType::Render:
 		{
-			this->m_GameState->Procedure(e);
+			auto scene = this->m_GameState->GetScene();
 
 			if (this->m_GameState->GetScene() != nullptr)
 			{
-				RenderingAPI::BlitFramebuffer(this->m_GameState->GetScene()->GetTargetBuffer(), nullptr);
+				this->m_Renderer->Begin(this->m_Framebuffer);
+				this->m_Renderer->Submit(scene);
+				this->m_Renderer->End();
+				RenderingAPI::BlitFramebuffer(this->m_Framebuffer, nullptr);
 			}
 		}
 		break;
-		default:
+		case EventType::WindowSize:
 		{
-			this->m_GameState->Procedure(e);
+			uint32_t width = VOLUND_EVENT_WINDOW_SIZE_GET_WIDTH(e);
+			uint32_t height = VOLUND_EVENT_WINDOW_SIZE_GET_HEIGHT(e);
+
+			auto spec = this->m_Framebuffer->GetSpec();
+			spec.Height = height;
+			spec.Width = width;
+			this->m_Framebuffer->SetSpec(spec);
 		}
+		break;
 		}
 	}
 
@@ -73,7 +94,12 @@ namespace Volund
 		}
 	}
 
-	void GameModule::LoadNewScene(const std::string& filepath)
+	Ref<Window> GameModule::GetWindow()
+	{
+		return this->m_GameWindow;
+	}
+
+	void GameModule::LoadScene(const std::string& filepath)
 	{
 		std::unique_lock lock(this->m_Mutex);
 

@@ -5,7 +5,7 @@
 #include "PolyContainer/PolyContainer.h"
 #include "AssetCache/AssetCache.h"
 
-#include "Renderer/Framebuffer/Framebuffer.h"
+#include "Rendering/Framebuffer/Framebuffer.h"
 
 #include "Input/Input.h"
 
@@ -20,11 +20,9 @@ namespace Volund
 
 		CHRONO_TIME_POINT GetStartTime();
 
-		Ref<Framebuffer> GetTargetBuffer();
-
-		template<typename T>
+		template <typename T>
 		Ref<T> FetchAsset(const std::string& filepath);
-		template<typename T>
+		template <typename T>
 		std::string FetchAssetFilepath(Ref<T> asset);
 
 		Entity RegisterNewEntity();
@@ -32,18 +30,16 @@ namespace Volund
 		bool IsEntityRegistered(Entity entity);
 		std::vector<Entity> GetRegisteredEntities();
 
-		template<typename T>
+		template <typename T>
 		void DeleteComponent(Entity entity, uint64_t index = 0);
-		template<typename T, typename... Args>
+		template <typename T, typename... Args>
 		Ref<T> CreateComponent(Entity entity, Args&&... args);
-		template<typename T>
+		template <typename T>
 		bool HasComponent(Entity entity);	
-		template<typename T>
+		template <typename T>
 		uint64_t ComponentAmount(Entity entity);
-		template<typename T>
+		template <typename T>
 		Ref<T> GetComponent(Entity entity, uint64_t index = 0);
-
-		void ResizeTarget(uint32_t width, uint32_t height);
 		
 		void Procedure(const Event& e);
 
@@ -71,8 +67,6 @@ namespace Volund
 		AssetCache m_AssetCache;
 
 		CHRONO_TIME_POINT m_StartTime;
-
-		Ref<Framebuffer> m_TargetBuffer;
 	};
 
     template <typename T>

@@ -3,7 +3,6 @@
 #include "InspectorWindow.h"
 
 #include "Editor/Editor.h"
-#include "EditorContext/EditorContext.h"
 
 #include "EntityInspector/EntityInspector.h"
 

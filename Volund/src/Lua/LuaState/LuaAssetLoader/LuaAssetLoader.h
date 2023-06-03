@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Renderer/Material/Material.h"
+#include "Rendering/Material/Material.h"
 
 #include "Lua/LuaState/LuaState.h"
 

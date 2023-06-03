@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Scene/Component/Component.h"
-#include "Renderer/Shader/Shader.h"
+#include "Rendering/Shader/Shader.h"
 
 namespace Volund
 {

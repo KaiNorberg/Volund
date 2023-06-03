@@ -4,9 +4,6 @@
 
 #include "Window/Window.h"
 
-#include "Renderer/RenderingAPI/RenderingAPI.h"
-#include "Renderer/Renderer.h"
-
 namespace Volund
 {
 	class WindowModule : public Module

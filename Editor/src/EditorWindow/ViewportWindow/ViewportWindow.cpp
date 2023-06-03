@@ -2,8 +2,6 @@
 
 #include "ViewportWindow.h"
 
-#include "EditorContext/EditorContext.h"
-
 void ViewportWindow::OnProcedure(const VL::Event& e)
 {
 	this->m_Input.Procedure(e);
@@ -16,12 +14,7 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 
 		VL::Vec2 viewportSize = this->m_ViewportImage->GetSize();
 
-		if (scene != nullptr)
-		{
-			scene->ResizeTarget(viewportSize.x, viewportSize.y);
-		}
-
-		this->m_Camera.SubmitToRenderer(ImVec2(viewportSize.x, viewportSize.y));
+		this->m_Camera.Render(scene, ImVec2(viewportSize.x, viewportSize.y));
 	}
 	break;
 	case VL::EventType::Update:
@@ -40,12 +33,17 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 
 	this->m_Context = context;
 
-	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.Framebuffer));
+	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.GetFramebuffer()));
 	this->m_ViewportImage->FillWindow = true;
 	this->PushObject(this->m_ViewportImage);
 }
 
 ////////////////////////////////////////////////////////////
+
+VL::Ref<VL::Framebuffer> ViewportWindow::ViewportCamera::GetFramebuffer()
+{
+	return this->m_Framebuffer;
+}
 
 void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 {
@@ -112,15 +110,15 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 	this->m_OldMousePosition = input.GetMousePosition();
 }
 
-void ViewportWindow::ViewportCamera::SubmitToRenderer(ImVec2 viewportSize)
+void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 viewportSize)
 {
-	auto spec = this->Framebuffer->GetSpec();
+	auto spec = this->m_Framebuffer->GetSpec();
 
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
 	{
 		spec.Width = viewportSize.x;
 		spec.Height = viewportSize.y;
-		this->Framebuffer->SetSpec(spec);
+		this->m_Framebuffer->SetSpec(spec);
 	}
 
 	VL::Vec3 front = glm::normalize(this->m_BallCenter - this->m_Position);
@@ -128,14 +126,23 @@ void ViewportWindow::ViewportCamera::SubmitToRenderer(ImVec2 viewportSize)
 	VL::Mat4x4 viewMatrix = glm::lookAt(this->m_Position, this->m_Position + front, -VL::Utils::UP);
 	VL::Mat4x4 projectionMatrix = glm::perspective(this->FOV, (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
 
+	this->m_Renderer->Begin(this->m_Framebuffer);
+
 	VL::RendererEye eye;
-	eye.Target = this->Framebuffer;
+	eye.Target = nullptr;
 	eye.ProjectionMatrix = projectionMatrix;
 	eye.ViewMatrix = viewMatrix;
 	eye.Position = this->m_Position;
 	eye.LayerMask = -1;
 
-	VL::Renderer::Submit(eye);
+	this->m_Renderer->Submit(eye);
+
+	if (scene != nullptr)
+	{
+		this->m_Renderer->Submit(scene);
+	}
+
+	this->m_Renderer->End();
 }
 
 ViewportWindow::ViewportCamera::ViewportCamera()
@@ -145,8 +152,10 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
 	spec.Height = 1080;
 	spec.Width = 1920;
+	this->m_Framebuffer = VL::Framebuffer::Create(spec);
 
-	this->Framebuffer = VL::Framebuffer::Create(spec);
+	this->m_Renderer = std::make_shared<VL::ForwardRenderer>();
+
 	this->m_BallCenter = VL::Vec3(0, 1, 0);
 	this->m_BallRotation = VL::Vec3(0, 0, 0);
 	this->m_Position = VL::Vec3(0, 1, 1);

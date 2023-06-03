@@ -2,8 +2,8 @@
 
 #include "../ImGuiObject.h"
 
-#include "Renderer/Texture/Texture.h"
-#include "Renderer/Framebuffer/Framebuffer.h"
+#include "Rendering/Texture/Texture.h"
+#include "Rendering/Framebuffer/Framebuffer.h"
 
 namespace Volund
 {	

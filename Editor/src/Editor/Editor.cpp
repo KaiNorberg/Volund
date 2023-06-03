@@ -14,29 +14,28 @@ void Editor::OnRun()
 	this->AttachModule(new VL::WindowModule());
 	this->AttachModule(new VL::AudioModule());
 	this->AttachModule(new VL::ImGuiModule());
+	this->AttachModule(new EditorContext());
 
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
-	VL::Renderer::Init(std::make_shared<VL::ForwardRenderer>());
 
-	auto window = this->GetModule<VL::WindowModule>()->GetWindow();
-	this->m_Context = std::make_shared<EditorContext>(window);
+	auto context = this->GetModule<EditorContext>();
 
-	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(this->m_Context));
+	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
 	outputWindow->SetSize(VL::Vec2(1980, 300));
 	outputWindow->SetPosition(VL::Vec2(0, 1080 - outputWindow->GetSize().y));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
 
-	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(this->m_Context));
+	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(context));
 	viewportWindow->SetSize(VL::Vec2(1980 - 800, outputWindow->GetPosition().y - 25));
 	viewportWindow->SetPosition(VL::Vec2(400, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(viewportWindow);
 
-	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(this->m_Context));
+	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(context));
 	inspectorWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
 	inspectorWindow->SetPosition(VL::Vec2(viewportWindow->GetPosition().x + viewportWindow->GetSize().x, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
 
-	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(this->m_Context));
+	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(context));
 	hierarchyWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
 	hierarchyWindow->SetPosition(VL::Vec2(0, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
@@ -54,10 +53,7 @@ void Editor::Procedure(const VL::Event& e)
 {
 	VOLUND_PROFILE_FUNCTION();
 
-	if (this->m_Context->m_State != nullptr)
-	{
-		this->m_Context->m_State->Procedure(e);
-	}
+	auto context = this->GetModule<EditorContext>();
 
 	this->m_Input.Procedure(e);
 
@@ -65,7 +61,7 @@ void Editor::Procedure(const VL::Event& e)
 	{
 	case VL::EventType::Render:
 	{ 	
-		auto window = this->m_Context->GetWindow();
+		auto window = context->GetWindow();
 
 		if (!this->m_iniLoaded)
 		{
@@ -167,16 +163,16 @@ void Editor::Procedure(const VL::Event& e)
 	break;	
 	case VL::EventType::Key:
 	{	
-		auto window = this->m_Context->GetWindow();
+		auto window = context->GetWindow();
 
 		if (this->m_Input.IsHeld(VOLUND_KEY_CONTROL))
 		{
 			if (this->m_Input.IsPressed('R'))
 			{
-				const auto scene = this->m_Context->GetScene();
+				const auto scene = context->GetScene();
 				if (scene != nullptr)
 				{
-					this->m_Context->LoadNewScene(this->m_Context->GetSceneFilepath());
+					context->LoadScene(context->GetFilepath());
 				}
 			}
 			else if (this->m_Input.IsPressed('E'))
@@ -184,12 +180,12 @@ void Editor::Procedure(const VL::Event& e)
 				const std::string filepath = VL::Dialog::OpenFile(window);
 				if (!filepath.empty())
 				{
-					this->m_Context->LoadNewScene(filepath);
+					context->LoadScene(filepath);
 				}
 			}
 			else if (this->m_Input.IsPressed('S'))
 			{
-				this->m_Context->SaveScene(this->m_Context->GetSceneFilepath());
+				context->SaveScene(context->GetFilepath());
 			}
 		}
 	}

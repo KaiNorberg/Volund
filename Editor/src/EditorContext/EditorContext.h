@@ -1,34 +1,35 @@
 #pragma once
 
-class Editor;
-
-class EditorContext
+class EditorContext : public VL::Module
 {
 public:
 
 	VL::Entity SelectedEntity = 1;
 
-	VL::Ref<VL::Window> GetWindow();
+	void OnAttach(VL::Application* app) override;
+
+	void OnDetach() override;
+
+	void Procedure(const VL::Event& e) override;
+
+	std::string GetFilepath();
 
 	VL::Ref<VL::Scene> GetScene();
 
-	std::string GetSceneFilepath();
+	VL::Ref<VL::Window> GetWindow();
+
+	void LoadScene(const std::string& filepath);
 
 	void SaveScene(const std::string& filepath);
 
-	void LoadNewScene(const std::string& filepath);
-
-	EditorContext(VL::Ref<VL::Window> window);
-
-private:
-	friend class Editor;
-
+private:		
+	
 	std::mutex m_Mutex;
 
-	VL::Ref<VL::GameState> m_State;
+	VL::Ref<VL::GameState> m_GameState;
 
-	VL::Ref<VL::Window> m_Window;
+	VL::Ref<VL::Window> m_GameWindow;
 
-	std::string m_SceneFilepath;
+	std::string m_Filepath;
 };
 

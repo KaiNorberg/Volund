@@ -4,6 +4,8 @@
 
 #include "EntityHierarchy/EntityHierarchy.h"
 
+#include "EditorContext/EditorContext.h"
+
 class HierarchyWindow : public EditorWindow
 {
 public:

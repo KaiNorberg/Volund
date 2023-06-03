@@ -4,9 +4,6 @@
 
 #include "Time/Time.h"
 
-#include "Renderer/Renderer.h"
-#include "Renderer/RenderingAPI/RenderingAPI.h"
-
 #include "ThreadPool/ThreadPool.h"
 
 #include "DeferredTaskHandler/DeferredTaskHandler.h"
@@ -63,9 +60,7 @@ namespace Volund
 				this->m_EventDispatcher->Dispatch(updateEvent);
 			});
 
-			Renderer::Begin();
 			this->m_EventDispatcher->Dispatch(Event(EventType::Render));
-			Renderer::End();
 
 			while (this->m_ThreadPool.Busy());
 

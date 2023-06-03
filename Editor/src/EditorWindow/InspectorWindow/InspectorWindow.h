@@ -2,6 +2,8 @@
 
 #include "../EditorWindow.h"
 
+#include "EditorContext/EditorContext.h"
+
 class InspectorWindow : public EditorWindow
 {
 public:
