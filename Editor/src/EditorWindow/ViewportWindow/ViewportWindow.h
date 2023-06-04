@@ -24,7 +24,8 @@ private:
 
 		float FOV = 80.0f;
 
-		VL::Ref<VL::Framebuffer> GetFramebuffer();
+		VL::Ref<VL::Framebuffer> GetSceneFramebuffer();
+		VL::Ref<VL::Framebuffer> GetEditorFramebuffer();
 
 		void Update(VL::Input& input, float timeStep);
 
@@ -45,7 +46,8 @@ private:
 
 		VL::Ref<VL::Renderer> m_Renderer;
 
-		VL::Ref<VL::Framebuffer> m_Framebuffer;
+		VL::Ref<VL::Framebuffer> m_SceneFramebuffer;
+		VL::Ref<VL::Framebuffer> m_EditorFramebuffer;
 	} m_Camera;
 
 	VL::Ref<VL::ImGuiImage> m_ViewportImage;

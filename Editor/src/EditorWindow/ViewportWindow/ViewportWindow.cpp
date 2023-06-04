@@ -33,16 +33,21 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 
 	this->m_Context = context;
 
-	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.GetFramebuffer()));
+	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.GetEditorFramebuffer()));
 	this->m_ViewportImage->FillWindow = true;
 	this->PushObject(this->m_ViewportImage);
 }
 
 ////////////////////////////////////////////////////////////
 
-VL::Ref<VL::Framebuffer> ViewportWindow::ViewportCamera::GetFramebuffer()
+VL::Ref<VL::Framebuffer> ViewportWindow::ViewportCamera::GetSceneFramebuffer()
 {
-	return this->m_Framebuffer;
+	return this->m_SceneFramebuffer;
+}
+
+VL::Ref<VL::Framebuffer> ViewportWindow::ViewportCamera::GetEditorFramebuffer()
+{
+	return this->m_EditorFramebuffer;
 }
 
 void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
@@ -112,13 +117,19 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 
 void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 viewportSize)
 {
-	auto spec = this->m_Framebuffer->GetSpec();
-
+	auto spec = this->m_SceneFramebuffer->GetSpec();
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
 	{
 		spec.Width = viewportSize.x;
 		spec.Height = viewportSize.y;
-		this->m_Framebuffer->SetSpec(spec);
+		this->m_SceneFramebuffer->SetSpec(spec);
+	}
+	spec = this->m_EditorFramebuffer->GetSpec();
+	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
+	{
+		spec.Width = viewportSize.x;
+		spec.Height = viewportSize.y;
+		this->m_EditorFramebuffer->SetSpec(spec);
 	}
 
 	VL::Vec3 front = glm::normalize(this->m_BallCenter - this->m_Position);
@@ -126,10 +137,10 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 	VL::Mat4x4 viewMatrix = glm::lookAt(this->m_Position, this->m_Position + front, -VL::Utils::UP);
 	VL::Mat4x4 projectionMatrix = glm::perspective(this->FOV, (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
 
-	this->m_Renderer->Begin(this->m_Framebuffer);
+	this->m_Renderer->Begin(this->m_SceneFramebuffer);
 
 	VL::RendererEye eye;
-	eye.Target = nullptr;
+	eye.Target = this->m_EditorFramebuffer;
 	eye.ProjectionMatrix = projectionMatrix;
 	eye.ViewMatrix = viewMatrix;
 	eye.Position = this->m_Position;
@@ -152,7 +163,8 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
 	spec.Height = 1080;
 	spec.Width = 1920;
-	this->m_Framebuffer = VL::Framebuffer::Create(spec);
+	this->m_SceneFramebuffer = VL::Framebuffer::Create(spec);
+	this->m_EditorFramebuffer = VL::Framebuffer::Create(spec);
 
 	this->m_Renderer = std::make_shared<VL::ForwardRenderer>();
 
