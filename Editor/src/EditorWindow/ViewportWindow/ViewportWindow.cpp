@@ -21,7 +21,16 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 	{
 		float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-		this->m_Camera.Update(this->m_Input, timeStep);
+		if (!this->m_Context->IsPaused())
+		{
+			this->m_ViewportImage->SetTexture(this->m_Camera.GetSceneFramebuffer());
+		}
+		else
+		{
+			this->m_Camera.Update(this->m_Input, timeStep);
+
+			this->m_ViewportImage->SetTexture(this->m_Camera.GetEditorFramebuffer());
+		}
 	}
 	break;
 	}
@@ -32,6 +41,32 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 	this->SetName("Viewport");
 
 	this->m_Context = context;
+
+	this->PushObject(new VL::ImGuiButton("Play", [this](VL::ImGuiButton* parent) 
+	{
+		if (this->m_Context->GetScene() == nullptr)
+		{
+			return;
+		}
+
+		if (this->m_Context->IsPaused())
+		{
+			this->m_Context->Play();
+		}
+		else
+		{
+			this->m_Context->Pause();
+		}
+
+		if (this->m_Context->IsPaused())
+		{
+			parent->SetText("Play");
+		}
+		else
+		{
+			parent->SetText("Paused");
+		}
+	}, 0.5f));
 
 	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.GetEditorFramebuffer()));
 	this->m_ViewportImage->FillWindow = true;
@@ -123,12 +158,6 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 		spec.Width = viewportSize.x;
 		spec.Height = viewportSize.y;
 		this->m_SceneFramebuffer->SetSpec(spec);
-	}
-	spec = this->m_EditorFramebuffer->GetSpec();
-	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
-	{
-		spec.Width = viewportSize.x;
-		spec.Height = viewportSize.y;
 		this->m_EditorFramebuffer->SetSpec(spec);
 	}
 

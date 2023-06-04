@@ -12,6 +12,12 @@ public:
 
 	void Procedure(const VL::Event& e) override;
 
+	bool IsPaused();
+
+	void Play();
+
+	void Pause();
+
 	std::string GetFilepath();
 
 	VL::Ref<VL::Scene> GetScene();
@@ -24,6 +30,8 @@ public:
 
 private:		
 	
+	bool m_Paused = true;
+
 	std::mutex m_Mutex;
 
 	VL::Ref<VL::GameState> m_GameState;

@@ -37,6 +37,9 @@ namespace Volund
 	protected:
 
 		template <typename T>
+		void PushObject(T* object);
+
+		template <typename T>
 		void PushObject(Ref<T> object);
 
 		template <typename T>
@@ -59,6 +62,12 @@ namespace Volund
 		PolyContainer<ImGuiObject> m_ImGuiObjects;
 		std::vector<Ref<ImGuiObject>> m_ObjectDrawOrder;
 	};
+
+	template<typename T>
+	inline void ImGuiWindow::PushObject(T* object)
+	{
+		this->PushObject(Ref<T>(object));
+	}
 
 	template<typename T>
 	inline void ImGuiWindow::PushObject(Ref<T> object)

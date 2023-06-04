@@ -32,7 +32,7 @@ void EntityHierarchy::Procedure(const VL::Event& e)
 		}
 		else
 		{
-			ImGui::Text("No Scene Selected!");
+			ImGui::Text("No Scene Loaded!");
 		}
 	}
 	break;

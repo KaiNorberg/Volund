@@ -5,8 +5,6 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
 
-#include "ImGuiStyle.h"
-
 #include "Application/Application.h"
 #include "Application/Module/WindowModule/WindowModule.h"
 
@@ -29,8 +27,6 @@ namespace Volund
 		io.IniFilename = iniFilename.c_str();
 
 		const auto appWindow = app->GetModule<WindowModule>()->GetWindow();
-
-		SetupImGuiStyle();
 
 		ImGui_ImplGlfw_InitForOpenGL(appWindow->GetGlfwWindow(), false);
 		ImGui_ImplOpenGL3_Init();

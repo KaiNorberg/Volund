@@ -42,6 +42,8 @@ void Editor::OnRun()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
+
+	std::filesystem::create_directory(EDITOR_TEMP_FOLDER);
 }
 
 void Editor::OnTerminate()
@@ -192,6 +194,7 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case VL::EventType::WindowClose:
 	{
+		std::filesystem::remove_all(EDITOR_TEMP_FOLDER);
 		this->Terminate();
 	}
 	break;

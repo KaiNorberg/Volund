@@ -76,7 +76,9 @@ namespace Volund
 				{
 					if (imGuiObject->IsActive)
 					{
+						ImGui::PushID(imGuiObject->GetId().c_str());
 						imGuiObject->Procedure(e);
+						ImGui::PopID();
 					}
 				}
 			}	
