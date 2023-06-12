@@ -1,6 +1,5 @@
 #include "PCH/PCH.h"
 
-#include "Lua/LuaComponent/LuaComponentID.h"
 #include "Lua/LuaVec/LuaVec.h"
 
 #include "Scene/Component/Components.h"
@@ -13,7 +12,7 @@
 
 namespace Volund::LuaUtils
 {
-    Entity DeserializeEntity(Ref<Scene> scene, sol::table entityTable)
+    /*Entity DeserializeEntity(Ref<Scene> scene, sol::table entityTable)
     {
         auto entity = scene->RegisterNewEntity();
 
@@ -110,11 +109,6 @@ namespace Volund::LuaUtils
                 VOLUND_SET_COMPONENT(componentTable, newComponent->Brightness, "Brightness");
             }
             break;
-            /*case LuaComponentID::Script:
-            {
-                auto newComponent = scene->CreateComponent<Script>(entity, s, (*this), componentTable["Script"], componentTable);
-            }
-            break;*/
             case LuaComponentID::Tag:
             {
                 std::string string = componentTable["String"];
@@ -183,16 +177,14 @@ namespace Volund::LuaUtils
 
             auto newEntity = LuaUtils::DeserializeEntity(scene, sol::table(entityTable));
         }
-    }
+    }*/
 
     sol::protected_function_result ScriptFile(Ref<sol::state> state, const std::string &filepath)
     {
-        std::string script = Filesystem::Load(filepath);
-
         sol::protected_function_result result;
         try
 		{
-            result = state->script(script, [](lua_State*, sol::protected_function_result pfr)
+            result = state->script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
 			{		
 				sol::error err = pfr;
 				VOLUND_WARNING(err.what());

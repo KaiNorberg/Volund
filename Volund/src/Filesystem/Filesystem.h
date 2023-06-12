@@ -4,57 +4,40 @@ namespace Volund
 {
 	class Filesystem;
 
-	/// <summary>
-	/// A FilesystemLink allows files to be loaded by the Filesystem class from the relative filepath that the FilesystemLink contains. 
-	/// This only works for the lifespan of the FilesystemLink.
-	/// </summary>
-	class FilesystemLink
+	class File
 	{
 	public:
 
-		static Ref<FilesystemLink> Create(const std::string& relativeFilepath);
+		std::string String();
 
-		std::string GetRelativeFilepath();
-
-		~FilesystemLink();
+		bool GetLine(std::string& line);
 
 	private:
-		friend class Filesytem;
+		friend class Filesystem;
 
-		std::string m_RelativeFilepath;
+		File(const std::string& content);
+
+		std::istringstream m_StringStream;
 	};
 
 	class Filesystem
 	{
 	public:
 
-		static std::string GetFullPath(const std::string& filepath);
-
-		static std::string GetShortestPath(const std::string& filepath);
-
-		static std::string Load(const std::string& filepath);
+		static Ref<File> Load(const std::string& filepath);
 
 		static void Write(const std::string& filepath, const std::string& content);
 
 	private:
-		friend class FilesystemLink;
 
 		Filesystem();
 
-		static uint8_t GetFilepathDepth(const std::string& filepath);
-
-		static std::string GetResource(const std::string& filepath);
+		static Ref<File> GetResource(const std::string& filepath);
 
 		static bool IsResource(const std::string& filepath);
 
 		static void CreateResource(const std::string& filepath, const char* content);
 
-		static void AddLink(const std::string& filepath);
-
-		static void RemoveLink(const std::string& filepath);
-
-		static inline std::vector<std::string> m_FilesystemLinks;
-
-		static inline std::unordered_map<std::string, const char*> m_Resources;
+		static inline std::unordered_map<std::string, Ref<File>> m_Resources;
 	};
 }

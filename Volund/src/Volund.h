@@ -33,5 +33,3 @@
 
 #include "ImGuiWindow/ImGuiWindow.h"
 #include "ImGuiWindow/ImGuiObject/ImGuiObjects.h"
-
-#include "Lua/LuaState/LuaGameState/LuaGameState.h"

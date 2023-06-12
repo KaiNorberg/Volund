@@ -18,6 +18,8 @@ void EntityInspector::Procedure(const VL::Event& e)
 			break;
 		}
 
+		auto assetManager = this->m_Context->GetAssetmanager();
+
 		//IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
 		this->DrawComponent<VL::Tag>("Tag", selectedEntity, [this, selectedEntity, scene](int i)
@@ -48,23 +50,23 @@ void EntityInspector::Procedure(const VL::Event& e)
 			transform->Scale = scale;
 		});
 
-		this->DrawComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
+		this->DrawComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene, assetManager](int i)
 		{
 			auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
 			auto window = this->m_Context->GetWindow();
 
-			std::string defaultMaterial = scene->FetchAssetFilepath<VL::Material>(meshRenderer->GetMaterial());
+			std::string defaultMaterial = assetManager->FetchFilepath<VL::Material>(meshRenderer->GetMaterial());
 			auto selectedMaterial = Utils::ImGuiFileSelector("Material", defaultMaterial, window);
 			if (selectedMaterial != "")
 			{
-				meshRenderer->SetMaterial(scene->FetchAsset<VL::Material>(selectedMaterial));
+				meshRenderer->SetMaterial(assetManager->Fetch<VL::Material>(selectedMaterial));
 			}
 
-			std::string defaultMesh = scene->FetchAssetFilepath<VL::Mesh>(meshRenderer->GetMesh());
+			std::string defaultMesh = assetManager->FetchFilepath<VL::Mesh>(meshRenderer->GetMesh());
 			auto selectedMesh = Utils::ImGuiFileSelector("Mesh", defaultMesh, window);
 			if (selectedMesh != "")
 			{
-				meshRenderer->SetMesh(scene->FetchAsset<VL::Mesh>(selectedMesh));
+				meshRenderer->SetMesh(assetManager->Fetch<VL::Mesh>(selectedMesh));
 			}
 		});
 
@@ -97,17 +99,17 @@ void EntityInspector::Procedure(const VL::Event& e)
 			Utils::ImGuiFloat("Brightness", &pointLight->Brightness);
 		});
 
-		this->DrawComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene](int i)
+		this->DrawComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene, assetManager](int i)
 		{
 			auto soundSource = scene->GetComponent<VL::SoundSource>(selectedEntity, i);
 			auto window = this->m_Context->GetWindow();
 
 			//Todo: Add variables
-			std::string defaultSound = scene->FetchAssetFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
+			std::string defaultSound = assetManager->FetchFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
 			auto selectedSound = Utils::ImGuiFileSelector("AudioBuffer", defaultSound, window);
 			if (selectedSound != "")
 			{
-				soundSource->SetBuffer(scene->FetchAsset<VL::AudioBuffer>(selectedSound));
+				soundSource->SetBuffer(assetManager->Fetch<VL::AudioBuffer>(selectedSound));
 			}
 
 			Utils::ImGuiBool("AutoPlay", &soundSource->AutoPlay);

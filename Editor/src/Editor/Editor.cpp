@@ -6,6 +6,7 @@
 #include "EditorWindow/ViewportWindow/ViewportWindow.h"
 #include "EditorWindow/InspectorWindow/InspectorWindow.h"
 #include "EditorWindow/HierarchyWindow/HierarchyWindow.h"
+#include "EditorWindow/FilesystemWindow/FilesystemWindow.h"
 
 #include "EditorContext/EditorContext.h"
 
@@ -14,9 +15,10 @@ void Editor::OnRun()
 	this->AttachModule(new VL::WindowModule());
 	this->AttachModule(new VL::AudioModule());
 	this->AttachModule(new VL::ImGuiModule());
-	this->AttachModule(new EditorContext());
 
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
+
+	this->AttachModule(new EditorContext());
 
 	auto context = this->GetModule<EditorContext>();
 
@@ -34,6 +36,11 @@ void Editor::OnRun()
 	inspectorWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
 	inspectorWindow->SetPosition(VL::Vec2(viewportWindow->GetPosition().x + viewportWindow->GetSize().x, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
+
+	auto filesystemWindow = VL::Ref<FilesystemWindow>(new FilesystemWindow(context));
+	filesystemWindow->SetSize(VL::Vec2(500, outputWindow->GetSize().y));
+	filesystemWindow->SetPosition(VL::Vec2(0, 1080 - filesystemWindow->GetSize().y));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(filesystemWindow);
 
 	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(context));
 	hierarchyWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));

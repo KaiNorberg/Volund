@@ -20,6 +20,8 @@ public:
 
 	std::string GetFilepath();
 
+	VL::Ref<VL::AssetManager> GetAssetmanager();
+
 	VL::Ref<VL::Scene> GetScene();
 
 	VL::Ref<VL::Window> GetWindow();

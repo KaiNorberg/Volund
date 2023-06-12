@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "EditorContext.h"
 
-#include "Lua/Serializer/SceneSerializer/SceneSerializer.h"
-
 #include "ImGuiStyles.h"
 
 void EditorContext::OnAttach(VL::Application* app)
@@ -69,6 +67,11 @@ std::string EditorContext::GetFilepath()
 	return this->m_Filepath;
 }
 
+VL::Ref<VL::AssetManager> EditorContext::GetAssetmanager()
+{
+	return this->m_GameState->GetAssetManager();
+}
+
 VL::Ref<VL::Scene> EditorContext::GetScene()
 {
 	if (this->m_GameState != nullptr)
@@ -100,11 +103,7 @@ void EditorContext::LoadScene(const std::string& filepath)
 	{
 		this->m_Filepath = filepath;
 
-		this->m_GameState.reset();
-
-		auto luaGameState = VL::LuaGameState(this->m_GameWindow, this->m_Filepath);
-
-		this->m_GameState = luaGameState.Get();
+		this->m_GameState = std::make_shared<VL::GameState>(this->m_Filepath);
 	});
 }
 
@@ -118,8 +117,8 @@ void EditorContext::SaveScene(const std::string& filepath)
 
 	VL::DeferredTaskHandler::DeferTask([this, filepath]()
 	{
-		auto sceneSerializer = VL::SceneSerializer(this->GetScene());
+		//auto sceneSerializer = VL::SceneSerializer(this->GetScene());
 
-		sceneSerializer.WriteToFile(filepath);
+		//sceneSerializer.WriteToFile(filepath);
 	});
 }

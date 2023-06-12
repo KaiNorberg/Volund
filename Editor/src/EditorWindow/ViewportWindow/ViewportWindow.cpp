@@ -64,7 +64,7 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 		}
 		else
 		{
-			parent->SetText("Paused");
+			parent->SetText("Stop");
 		}
 	}, 0.5f));
 

@@ -60,8 +60,6 @@ namespace Volund
 
 	void Scene::Procedure(const Event& e)
 	{
-		this->OnProcedure(e);
-
 		for (const auto& [entity, polystorage] : this->m_Registry)
 		{
 			for (auto& [typeID, components] : polystorage)
@@ -87,8 +85,6 @@ namespace Volund
 	Scene::Scene()
 	{
 		this->m_StartTime = std::chrono::high_resolution_clock::now();
-
-		this->OnCreate();
 	}
 
 	Scene::~Scene()
@@ -103,8 +99,6 @@ namespace Volund
 				}
 			}
 		}
-
-		this->OnDestroy();
 	}
 
 	uint64_t Scene::FindEntity(Entity entity)

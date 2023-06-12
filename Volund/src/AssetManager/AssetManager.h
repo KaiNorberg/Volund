@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class AssetCache
+    class AssetManager : public std::enable_shared_from_this<AssetManager>
     {
     public:
 
@@ -15,17 +15,23 @@ namespace Volund
         template<typename T>
         std::string FetchFilepath(Ref<T> asset);
         
-        AssetCache();
+        static Ref<AssetManager> Create(const std::string& parentPath);
 
     private:
 
+        AssetManager(const std::string& parentPath);
+
         std::mutex m_Mutex;
 
-        template<typename T>
-        Ref<T> LoadAsset(const std::string& filepath);
+        std::string m_ParentPath;
+
+        std::string GetAbsolutePath(const std::string& relativePath);
 
         template<typename T>
-        void PushAsset(const std::string& filepath, Ref<T> assetData);
+        Ref<T> Load(const std::string& filepath);
+
+        template<typename T>
+        void Push(const std::string& filepath, Ref<T> assetData);
 
         class PrimitiveAsset
         {
@@ -48,7 +54,7 @@ namespace Volund
     };
     
     template<typename T>
-    inline Ref<T> AssetCache::Fetch(const std::string& filepath)
+    inline Ref<T> AssetManager::Fetch(const std::string& filepath)
     {
         //std::unique_lock lock(this->m_Mutex);
 
@@ -72,14 +78,14 @@ namespace Volund
             }
         }
 
-        Ref<T> newAssetData = this->LoadAsset<T>(filepath);
-        this->PushAsset(filepath, newAssetData);
+        Ref<T> newAssetData = this->Load<T>(filepath);
+        this->Push(filepath, newAssetData);
 
         return newAssetData;
     }
 
     template<typename T>
-    inline std::string AssetCache::FetchFilepath(Ref<T> asset)
+    inline std::string AssetManager::FetchFilepath(Ref<T> asset)
     {
         //std::unique_lock lock(this->m_Mutex);
 
@@ -100,10 +106,10 @@ namespace Volund
     }
 
     template<typename T>
-    inline void AssetCache::PushAsset(const std::string& filepath, Ref<T> assetData)
+    inline void AssetManager::Push(const std::string& filepath, Ref<T> assetData)
     {
         auto newAsset = std::make_shared<Asset<T>>();
-        newAsset->Filepath = Filesystem::GetShortestPath(filepath);
+        newAsset->Filepath = filepath;
         newAsset->Data = assetData;
         newAsset->Identifier = assetData.get();
         this->m_Data.PushBack(newAsset);

@@ -3,7 +3,6 @@
 #include "EventDispatcher/Event.h"
 #include "Component/Component.h"
 #include "PolyContainer/PolyContainer.h"
-#include "AssetCache/AssetCache.h"
 
 #include "Rendering/Framebuffer/Framebuffer.h"
 
@@ -19,11 +18,6 @@ namespace Volund
 	public:
 
 		CHRONO_TIME_POINT GetStartTime();
-
-		template <typename T>
-		Ref<T> FetchAsset(const std::string& filepath);
-		template <typename T>
-		std::string FetchAssetFilepath(Ref<T> asset);
 
 		Entity RegisterNewEntity();
 		void UnregisterEntity(Entity entity);
@@ -43,12 +37,6 @@ namespace Volund
 		
 		void Procedure(const Event& e);
 
-		virtual void OnProcedure(const Event& e) {};
-		
-		virtual void OnCreate() {};
-
-		virtual void OnDestroy() {};
-
 		EntityRegistry::iterator begin();
 		EntityRegistry::iterator end();
 
@@ -64,22 +52,8 @@ namespace Volund
 
 		EntityRegistry m_Registry;
 		
-		AssetCache m_AssetCache;
-
 		CHRONO_TIME_POINT m_StartTime;
 	};
-
-    template <typename T>
-    inline Ref<T> Scene::FetchAsset(const std::string& filepath)
-    {
-        return this->m_AssetCache.Fetch<T>(filepath);
-    }
-
-	template<typename T>
-	inline std::string Scene::FetchAssetFilepath(Ref<T> asset)
-	{
-		return this->m_AssetCache.FetchFilepath<T>(asset);
-	}
 
     template <typename T>
     inline void Scene::DeleteComponent(Entity entity, uint64_t index)

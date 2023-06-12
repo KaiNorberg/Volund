@@ -58,10 +58,16 @@ namespace Volund
 
 		std::unordered_map<std::array<V, 8>, I, ArrayHasher> vertexToIndexMap;
 
-		auto stringStream = std::istringstream(Filesystem::Load(filepath));
+		auto objFile = Filesystem::Load(filepath);
+
+		if (objFile == nullptr)
+		{
+			VOLUND_WARNING("Unable to load model %s!", filepath.c_str());
+			return;
+		}
 
 		std::string line;
-		while (std::getline(stringStream, line))
+		while (objFile->GetLine(line))
 		{
 			char lineHeader[16] = {};
 			lineHeader[15] = 0;
