@@ -5,5 +5,5 @@
 *.vcxproj.user
 *.vcxproj.filters
 bin/
-Editor/data/vendor
 Makefile
+imgui.ini
