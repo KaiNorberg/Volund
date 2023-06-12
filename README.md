@@ -35,8 +35,9 @@ In Volund a scene is simply any .lua file. In the future there will be an editor
 
 ## Running a Scene
 
-Currently the only way to run a scene is to open the Editor (the executable that was generated using your chosen toolset in the previous step) and click the ```Load Scene``` button within the ```Viewport``` Widget, after that simply select the .lua file you wish to run.
+Currently the only way to run a scene is to open the Editor (the executable that was generated using your chosen toolset in the previous step) and press ```CTRL + E``` this will open a file dialog from which you can select your desired scene.
 
+<!---
 ## Test Scenes
 
 The following are two of the scenes that can be found in the [examples](https://github.com/Kaj9296/Volund/tree/main/examples) folder.
@@ -48,6 +49,7 @@ The following are two of the scenes that can be found in the [examples](https://
 **PBR.lua [WIP]**
 
 ![Alt text](resources/Screenshot_PBR.png "PBR")
+-->
 
 ## Contributing
 
@@ -64,4 +66,3 @@ The main goal of the project is to create a game engine that allows for low leve
 - Windows and Linux Compatibility
 - Feature complete editor
 - Support for multiple graphics APIs for example OpenGL, DirectX and Vulcan.
-- Tools for training and using deep learning/neural networks.
