@@ -14,12 +14,10 @@ namespace Volund
 
 		void Dispatch(const Event& e);
 
-		void Connect(Ref<Application> app);
-
-		EventDispatcher();
+		EventDispatcher(std::function<void(const Event&)> eventCallback);
 
 	private:
 
-		WeakRef<Application> m_App;
+		std::function<void(const Event&)> m_EventCallback;
 	};
 }

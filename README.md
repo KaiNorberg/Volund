@@ -31,7 +31,7 @@ After that, you can simply compile the generated project with your chosen tool s
 
 ## Creating a Scene
 
-In Volund a scene is simply any .lua file. In the future there will be an editor simular to other game engines, however for now you can simply write lua files manualy. Some example files can be found down below and in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder.
+In Volund a scene is simply any .lua file. In the future there will be an editor similar to other game engines, however for now you can simply write lua files manually. Some example files can be found down below and in the [examples](https://github.com/Kaj9296/Volund/tree/main/examples) folder.
 
 ## Running a Scene
 
@@ -39,15 +39,15 @@ Currently the only way to run a scene is to open the Editor (the executable that
 
 ## Test Scenes
 
-The following are two of the scenes that can be found in the [TestScenes](https://github.com/Kaj9296/Volund/tree/main/TestScenes) folder.
+The following are two of the scenes that can be found in the [examples](https://github.com/Kaj9296/Volund/tree/main/examples) folder.
 
 **Mandelbrot.lua**
 
-![Alt text](Resources/Mandelbrot_Screenshot.png "Mandelbrot")
+![Alt text](resources/Mandelbrot_Screenshot.png "Mandelbrot")
 
 **PBR.lua [WIP]**
 
-![Alt text](Resources/Screenshot_PBR.png "PBR")
+![Alt text](resources/Screenshot_PBR.png "PBR")
 
 ## Contributing
 

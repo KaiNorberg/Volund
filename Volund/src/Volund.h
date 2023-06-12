@@ -9,10 +9,10 @@
 #include "Application/Application.h"
 #include "Application/Module/Modules.h"
 
-#include "Renderer/Renderer.h"
-#include "Renderer/ForwardRenderer.h"
-#include "Renderer/Framebuffer/Framebuffer.h"
-#include "Renderer/Texture/Texture.h"
+#include "Rendering/Renderer/Renderer.h"
+#include "Rendering/Renderer/ForwardRenderer/ForwardRenderer.h"
+#include "Rendering/Framebuffer/Framebuffer.h"
+#include "Rendering/Texture/Texture.h"
 
 #include "DeferredTaskHandler/DeferredTaskHandler.h"
 
@@ -31,4 +31,5 @@
 #include "Audio/AudioDevice/AudioDevice.h"
 #include "Audio/AudioSource/AudioSource.h"
 
-#include "Lua/LuaState/LuaGameState/LuaGameState.h"
+#include "ImGuiWindow/ImGuiWindow.h"
+#include "ImGuiWindow/ImGuiObject/ImGuiObjects.h"

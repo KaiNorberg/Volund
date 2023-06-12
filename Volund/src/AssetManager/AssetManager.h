@@ -1,0 +1,117 @@
+#pragma once
+
+#include "PolyContainer/PolyContainer.h"
+
+#include "Filesystem/Filesystem.h"
+
+namespace Volund
+{
+    class AssetManager : public std::enable_shared_from_this<AssetManager>
+    {
+    public:
+
+        template<typename T>
+        Ref<T> Fetch(const std::string& filepath);
+        template<typename T>
+        std::string FetchFilepath(Ref<T> asset);
+        
+        static Ref<AssetManager> Create(const std::string& parentPath);
+
+    private:
+
+        AssetManager(const std::string& parentPath);
+
+        std::mutex m_Mutex;
+
+        std::string m_ParentPath;
+
+        std::string GetAbsolutePath(const std::string& relativePath);
+
+        template<typename T>
+        Ref<T> Load(const std::string& filepath);
+
+        template<typename T>
+        void Push(const std::string& filepath, Ref<T> assetData);
+
+        class PrimitiveAsset
+        {
+        public:
+            std::string Filepath;
+            
+            void* Identifier;
+
+            virtual ~PrimitiveAsset() = default;
+        };
+
+        template<typename T>
+        class Asset : public PrimitiveAsset
+        {
+        public:
+            WeakRef<T> Data;
+        };
+
+        PolyContainer<PrimitiveAsset> m_Data;
+    };
+    
+    template<typename T>
+    inline Ref<T> AssetManager::Fetch(const std::string& filepath)
+    {
+        //std::unique_lock lock(this->m_Mutex);
+
+        if (m_Data.Contains<Asset<T>>())
+        {
+            auto& view = m_Data.View<Asset<T>>();
+
+            for (int i = 0; i < view.size(); i++)
+            {
+                if (view[i]->Filepath == filepath)
+                {
+                    auto fetchedData = std::dynamic_pointer_cast<Asset<T>>(view[i])->Data;
+                    if (fetchedData.expired())
+                    {
+                        this->m_Data.Erase<Asset<T>>(i);
+                        return this->Fetch<T>(filepath);
+                    }
+
+                    return fetchedData.lock();
+                }
+            }
+        }
+
+        Ref<T> newAssetData = this->Load<T>(filepath);
+        this->Push(filepath, newAssetData);
+
+        return newAssetData;
+    }
+
+    template<typename T>
+    inline std::string AssetManager::FetchFilepath(Ref<T> asset)
+    {
+        //std::unique_lock lock(this->m_Mutex);
+
+        if (m_Data.Contains<Asset<T>>())
+        {
+            auto& view = m_Data.View<Asset<T>>();
+
+            for (int i = 0; i < view.size(); i++)
+            {
+                if (view[i]->Identifier == asset.get())
+                {
+                    return view[i]->Filepath;
+                }
+            }
+        }
+
+        return "";
+    }
+
+    template<typename T>
+    inline void AssetManager::Push(const std::string& filepath, Ref<T> assetData)
+    {
+        auto newAsset = std::make_shared<Asset<T>>();
+        newAsset->Filepath = filepath;
+        newAsset->Data = assetData;
+        newAsset->Identifier = assetData.get();
+        this->m_Data.PushBack(newAsset);
+    }
+}

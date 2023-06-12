@@ -2,7 +2,7 @@
 
 #include "PointLight.h"
 
-#include "Renderer/Renderer.h"
+//#include "Rendering/Renderer.h"
 
 #include "Scene/Scene.h"
 #include "Scene/Component/Transform/Transform.h"
@@ -19,12 +19,12 @@ namespace Volund
 		{
 			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			RendererLight light;
+			/*RendererLight light;
 			light.Position = entityTransform->Position;
 			light.Brightness = this->Brightness;
 			light.Color = this->Color;
 
-			Renderer::Submit(light);
+			Renderer::Submit(light);*/
 		}
 		break;
 		default:

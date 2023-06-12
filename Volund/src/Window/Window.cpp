@@ -15,6 +15,9 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
+		windowData->Width = width;
+		windowData->Height = height;
+
 		Event e = Event(EventType::WindowSize);
 		VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(e, windowData->Width);
 		VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(e, windowData->Height);
@@ -353,7 +356,7 @@ namespace Volund
 		glfwSetWindowFocusCallback(this->m_WindowData->GlfwWindow, WindowFocusDispatcher);
 		glfwSetCursorEnterCallback(this->m_WindowData->GlfwWindow, CursorEnterDispatcher);
 		glfwSetWindowCloseCallback(this->m_WindowData->GlfwWindow, WindowCloseDispatcher);
-		glfwSetWindowSizeCallback(this->m_WindowData->GlfwWindow, WindowSizeDispatcher);
+		glfwSetFramebufferSizeCallback(this->m_WindowData->GlfwWindow, WindowSizeDispatcher);
 		glfwSetKeyCallback(this->m_WindowData->GlfwWindow, KeyDispatcher);
 		glfwSetCursorPosCallback(this->m_WindowData->GlfwWindow, CursorPositionDispatcher);
 		glfwSetMouseButtonCallback(this->m_WindowData->GlfwWindow, MouseButtonDispatcher);

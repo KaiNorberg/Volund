@@ -21,7 +21,7 @@ namespace Volund
 		AudioFile<float> file;
 		std::vector<uint8_t> pcmDataBytes;
 
-		if (!file.load(Filesystem::GetFullPath(filepath)))
+		if (!file.load(filepath))
 		{
 			VOLUND_WARNING("Unable to load sound file (%s)!", filepath.c_str());
 			return;

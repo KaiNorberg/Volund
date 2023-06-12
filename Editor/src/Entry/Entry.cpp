@@ -2,13 +2,7 @@
 
 #include "Editor/Editor.h"
 
-void Volund::Entry()
+VL::Ref<VL::Application> Volund::Entry()
 {
-	auto dispatcher = VL::Ref<VL::EventDispatcher>(new VL::EventDispatcher());
-	auto app = VL::Ref<Editor>(new Editor());
-
-	dispatcher->Connect(app);
-	app->Connect(dispatcher);
-
-	app->Run();
+	return VL::Ref<Editor>(new Editor());
 }

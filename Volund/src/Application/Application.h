@@ -17,7 +17,7 @@ namespace Volund
 
 		bool ShouldRun() const;
 
-		Ref<EventDispatcher> GetEventDispatcher();
+		Ref<EventDispatcher> GetDispatcher();
 
 		template<typename T>
 		void AttachModule(T* newModule);
@@ -31,7 +31,7 @@ namespace Volund
 		template<typename T>
 		bool HasModule();
 
-		void Connect(Ref<EventDispatcher> dispatcher);
+		void Dispatch(const Event& e);
 
 		virtual void OnRun() {}
 		virtual void OnTerminate() {}
@@ -87,6 +87,11 @@ namespace Volund
 	template<typename T>
 	inline Ref<T> Application::GetModule()
 	{
+		if (!this->HasModule<T>())
+		{
+			VOLUND_ERROR("Application does not have Module of specifed type!");
+		}
+
 		return this->m_Modules.Get<T>();
 	}
 
@@ -95,4 +100,6 @@ namespace Volund
 	{
 		return this->m_Modules.Contains<T>();
 	}
+
+	Ref<Application> Entry();
 }

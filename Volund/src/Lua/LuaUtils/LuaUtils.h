@@ -4,13 +4,11 @@
 
 #include "Scene/Scene.h"
 
-#define VOLUND_SET_COMPONENT(table, member, name) if (table[name] != sol::nil) {member = table[name];}
-
 namespace Volund::LuaUtils
 {
-    Entity DeserializeEntity(Ref<Scene> scene, sol::table entityTable);
+    //Entity DeserializeEntity(Ref<Scene> scene, sol::table entityTable);
 
-    void DeserializeScene(Ref<Scene> scene, sol::table sceneTable);
+    //void DeserializeScene(Ref<Scene> scene, sol::table sceneTable);
 
     sol::protected_function_result ScriptFile(Ref<sol::state> state, const std::string& filepath);
 }

@@ -4,6 +4,8 @@
 
 #include "GameState/GameState.h"
 
+#include "Rendering/Renderer/ForwardRenderer/ForwardRenderer.h"
+
 namespace Volund
 {
 	class GameModule : public Module
@@ -18,9 +20,11 @@ namespace Volund
 
 		std::string GetFilepath();
 
-		Ref<Scene> GetScene();
+		Ref<Scene> GetScene(); 
 
-		void LoadNewState(const std::string& filepath);
+		Ref<Window> GetWindow();
+
+		void LoadScene(const std::string& filepath);
 
 	private:	
 
@@ -29,6 +33,10 @@ namespace Volund
 		Ref<GameState> m_GameState;
 
 		Ref<Window> m_GameWindow;
+
+		Ref<Renderer> m_Renderer;
+
+		Ref<Framebuffer> m_Framebuffer;
 
 		std::string m_Filepath;
 	};

@@ -9,8 +9,6 @@
 
 #include "DeferredTaskHandler/DeferredTaskHandler.h"
 
-#include "Lua/LuaState/LuaGameState/LuaGameState.h"
-
 namespace Volund
 {
 	void GameModule::OnAttach(Application* app)
@@ -21,6 +19,15 @@ namespace Volund
 		}
 
 		this->m_GameWindow = app->GetModule<WindowModule>()->GetWindow();
+
+		this->m_Renderer = std::make_shared<ForwardRenderer>();
+
+		VL::FramebufferSpec spec;
+		spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
+		spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
+		spec.Height = 1080;
+		spec.Width = 1920;
+		this->m_Framebuffer = VL::Framebuffer::Create(spec);
 	}
 
 	void GameModule::OnDetach()
@@ -32,9 +39,39 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->m_GameState != nullptr)
+		if (this->m_GameState == nullptr)
 		{
-			this->m_GameState->Procedure(e);
+			return;
+		}
+
+		this->m_GameState->Procedure(e);
+
+		switch (e.Type)
+		{
+		case EventType::Render:
+		{
+			auto scene = this->m_GameState->GetScene();
+
+			if (this->m_GameState->GetScene() != nullptr)
+			{
+				this->m_Renderer->Begin(this->m_Framebuffer);
+				this->m_Renderer->Submit(scene);
+				this->m_Renderer->End();
+				RenderingAPI::BlitFramebuffer(this->m_Framebuffer, nullptr);
+			}
+		}
+		break;
+		case EventType::WindowSize:
+		{
+			uint32_t width = VOLUND_EVENT_WINDOW_SIZE_GET_WIDTH(e);
+			uint32_t height = VOLUND_EVENT_WINDOW_SIZE_GET_HEIGHT(e);
+
+			auto spec = this->m_Framebuffer->GetSpec();
+			spec.Height = height;
+			spec.Width = width;
+			this->m_Framebuffer->SetSpec(spec);
+		}
+		break;
 		}
 	}
 
@@ -55,7 +92,12 @@ namespace Volund
 		}
 	}
 
-	void GameModule::LoadNewState(const std::string& filepath)
+	Ref<Window> GameModule::GetWindow()
+	{
+		return this->m_GameWindow;
+	}
+
+	void GameModule::LoadScene(const std::string& filepath)
 	{
 		std::unique_lock lock(this->m_Mutex);
 
@@ -65,9 +107,7 @@ namespace Volund
 
 			this->m_GameState.reset();
 
-			auto luaGameState = VL::LuaGameState(this->m_GameWindow, this->m_Filepath);
-
-			this->m_GameState = luaGameState.Get();
+			this->m_GameState = std::make_shared<VL::GameState>(this->m_Filepath);
 		});
 	}
 }

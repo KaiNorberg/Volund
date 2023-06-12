@@ -2,8 +2,8 @@
 
 #include "../Component.h"
 
-#include "Renderer/Material/Material.h"
-#include "Renderer/Mesh/Mesh.h"
+#include "Rendering/Material/Material.h"
+#include "Rendering/Mesh/Mesh.h"
 
 namespace Volund
 {
@@ -12,6 +12,8 @@ namespace Volund
 	public:
 
 		void SetLayer(uint8_t layer);
+
+		uint16_t GetLayerMask();
 
 		void SetMesh(Ref<Mesh> newMesh);
 

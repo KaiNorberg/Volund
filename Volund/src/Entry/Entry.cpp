@@ -6,7 +6,9 @@ int Main()
 {
 	VOLUND_PROFILE_FUNCTION();
 
-	VL::Entry();
+	auto app = VL::Entry();
+
+	app->Run();
 
 	return EXIT_SUCCESS;
 }

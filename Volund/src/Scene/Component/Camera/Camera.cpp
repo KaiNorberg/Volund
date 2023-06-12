@@ -6,7 +6,7 @@
 #include "Scene/Component/Transform/Transform.h"
 #include "Window/Window.h"
 
-#include "Renderer/Renderer.h"
+//#include "Rendering/Renderer.h"
 
 namespace Volund
 {
@@ -25,9 +25,19 @@ namespace Volund
 		}
 	}
 
+	uint16_t Camera::GetLayerMask()
+	{
+		return this->m_LayerMask;
+	}
+
 	void Camera::SetTargetBuffer(const Ref<Framebuffer> newTargetBuffer)
 	{
 		this->m_TargetBuffer = newTargetBuffer;
+	}
+
+	Ref<Framebuffer> Camera::GetTargetBuffer()
+	{
+		return this->m_TargetBuffer;
 	}
 
 	Mat4x4 Camera::GetViewMatrix() const
@@ -81,11 +91,9 @@ namespace Volund
 		{
 		case EventType::Render:
 		{				
-			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			/*const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			VOLUND_ASSERT(entityTransform != nullptr, "Camera component unable to retrive transform component!");		
-
-			const auto spec = this->m_TargetBuffer->GetSpec();
 
 			RendererEye eye;
 			eye.Target = this->m_TargetBuffer;
@@ -94,7 +102,7 @@ namespace Volund
 			eye.Position = entityTransform->Position;
 			eye.LayerMask = this->m_LayerMask;
 
-			Renderer::Submit(eye);
+			Renderer::Submit(eye);*/
 		}
 		break;
 		default:
@@ -107,6 +115,6 @@ namespace Volund
 
 	void Camera::OnCreate()
 	{
-		this->m_TargetBuffer = this->GetScene()->GetTargetBuffer();
+
 	}
 }

@@ -2,8 +2,9 @@
 
 #include "../Module.h"
 
-#include "ProgressDialog/ProgressDialog.h"
-#include "TextInputDialog/TextInputDialog.h"
+#include "ImGuiWindow/ImGuiWindow.h"
+
+#include "PolyContainer/PolyContainer.h"
 
 namespace Volund
 {
@@ -17,12 +18,23 @@ namespace Volund
 
         void Procedure(const Event& e) override;
 
-        static bool BeginDockSpace();
-
-        static void BeginFrame();
-
-        static void EndFrame();
+        template<typename T>
+        void AddWindow(Ref<T> imGuiWindow);
 
     private:
+
+        PolyContainer<ImGuiWindow> m_ImGuiWindows;
+
+        bool BeginDockSpace();
+
+        void BeginFrame();
+
+        void EndFrame();
     };
+
+    template<typename T>
+    inline void ImGuiModule::AddWindow(Ref<T> imGuiWindow)
+    {
+        this->m_ImGuiWindows.PushBack(imGuiWindow);
+    }
 }

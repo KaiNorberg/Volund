@@ -5,8 +5,6 @@
 #include <backends/imgui_impl_opengl3.h>
 #include <backends/imgui_impl_glfw.h>
 
-#include "ImGuiStyle.h"
-
 #include "Application/Application.h"
 #include "Application/Module/WindowModule/WindowModule.h"
 
@@ -30,8 +28,6 @@ namespace Volund
 
 		const auto appWindow = app->GetModule<WindowModule>()->GetWindow();
 
-		SetupImGuiStyle();
-
 		ImGui_ImplGlfw_InitForOpenGL(appWindow->GetGlfwWindow(), false);
 		ImGui_ImplOpenGL3_Init();
 
@@ -52,6 +48,41 @@ namespace Volund
 	void ImGuiModule::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
+
+		switch (e.Type)
+		{
+		case EventType::Render:
+		{
+			this->BeginFrame();
+
+			if (this->BeginDockSpace())
+			{
+				for (auto& [typeID, imGuiWindows] : this->m_ImGuiWindows)
+				{
+					for (const auto& imGuiWindow : imGuiWindows)
+					{
+						imGuiWindow->Procedure(e);
+					}
+				}
+
+			}
+
+			ImGui::End();
+
+			this->EndFrame();
+		}
+		break;
+		default:
+		{
+			for (auto& [typeID, imGuiWindows] : this->m_ImGuiWindows)
+			{
+				for (const auto& imGuiWindow : imGuiWindows)
+				{
+					imGuiWindow->Procedure(e);
+				}
+			}
+		}
+		}
 	}
 
 	bool ImGuiModule::BeginDockSpace()
@@ -98,9 +129,6 @@ namespace Volund
 
 	void ImGuiModule::EndFrame()
 	{
-		ProgressDialog::Draw();
-		TextInputDialog::Draw();
-
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 	}

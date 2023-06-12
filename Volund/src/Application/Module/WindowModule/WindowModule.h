@@ -4,9 +4,6 @@
 
 #include "Window/Window.h"
 
-#include "Renderer/RenderingAPI/RenderingAPI.h"
-#include "Renderer/Renderer.h"
-
 namespace Volund
 {
 	class WindowModule : public Module
@@ -21,12 +18,10 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		WindowModule(GraphicsAPI api, Ref<RendererInstance> instance);
+		WindowModule();
 
 	private:	
 
 		Ref<Window> m_Window;
-
-		Ref<RendererInstance> m_RendererInstance;
 	};
 }

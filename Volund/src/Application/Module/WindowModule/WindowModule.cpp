@@ -12,12 +12,9 @@ namespace Volund
 
 	void WindowModule::OnAttach(Application* app)
 	{
-		this->m_Window = std::make_shared<Window>(app->GetEventDispatcher(), 1980, 1080, false);
+		this->m_Window = std::make_shared<Window>(app->GetDispatcher(), 1980, 1080, false);
 
 		this->m_Window->SetTitle("Volund");
-
-		VL::RenderingAPI::Init();
-		VL::Renderer::Init(this->m_RendererInstance);
 	}
 
 	void WindowModule::OnDetach()
@@ -44,9 +41,8 @@ namespace Volund
 		}
 	}
 
-	WindowModule::WindowModule(GraphicsAPI api, Ref<RendererInstance> instance)
+	WindowModule::WindowModule()
 	{
-		VL::RenderingAPI::Select(api);
-		this->m_RendererInstance = instance;
+
 	}
 }

@@ -2,90 +2,46 @@
 #include "Filesystem.h"
 
 namespace Volund
-{    
-	Ref<FilesystemLink> FilesystemLink::Create(const std::string& relativeFilepath)
-    {
-        auto newLink = std::make_shared<FilesystemLink>();
-		newLink->m_RelativeFilepath = relativeFilepath;
-
-		Filesystem::AddLink(relativeFilepath);
-
-		return newLink;
-    }
-
-    std::string FilesystemLink::GetRelativeFilepath()
-    {
-        return this->m_RelativeFilepath;
-    }
-
-    FilesystemLink::~FilesystemLink()
-    {
-		Filesystem::RemoveLink(this->m_RelativeFilepath);
-    }
-
-	std::string Filesystem::GetFullPath(const std::string& filepath)
+{
+	std::string File::String()
 	{
-		if (IsResource(filepath))
-		{
-			return filepath;
-		}
-
-		if (std::filesystem::exists(filepath))
-		{
-			return filepath;
-		}
-
-		for (auto& link : m_FilesystemLinks)
-		{
-			std::string newPath = link + "/" + filepath;
-
-			if (std::filesystem::exists(newPath))
-			{			
-				return newPath;
-			}
-		}
-		return filepath;
+		return this->m_StringStream.str();
 	}
 
-	std::string Filesystem::GetShortestPath(const std::string& filepath)
+	bool File::GetLine(std::string& line)
 	{
-		if (IsResource(filepath))
+		auto& ret = std::getline(this->m_StringStream, line);
+
+		if (ret)
 		{
-			return filepath;
+			return true;
 		}
-
-		std::filesystem::path path = filepath;
-
-		std::filesystem::path shortestPath = GetFullPath(filepath);
-		uint8_t shortestPathLength = GetFilepathDepth(shortestPath.string());
-
-		for (auto& link : m_FilesystemLinks)
+		else
 		{
-			std::filesystem::path newPath = std::filesystem::relative(shortestPath, link);
-			uint8_t newPathLength = GetFilepathDepth(newPath.string());
-
-			if (newPathLength < shortestPathLength)
-			{
-				shortestPath = newPath;
-				shortestPathLength = newPathLength;
-			}
+			this->m_StringStream.clear();
+			this->m_StringStream.seekg(0);
+			return false;
 		}
-
-		return shortestPath.string();
 	}
 
-	std::string Filesystem::Load(const std::string& filepath)
+	File::File(const std::string& filepath)
+	{
+		this->m_StringStream = std::istringstream(filepath);
+	}
+
+	Ref<File> Filesystem::Load(const std::string& filepath)
     {
 		if (IsResource(filepath))
 		{
 			return GetResource(filepath);
 		}		
 		
-		auto file = std::ifstream(GetFullPath(filepath));
+		auto file = std::ifstream(filepath);
 
 		if (!file)
 		{
 			VOLUND_WARNING("Unable to load file %s.", filepath.c_str());	
+			return nullptr;
 		}
 		
 		std::string line;
@@ -94,17 +50,17 @@ namespace Volund
 		{
 			output += line + '\n';
 		}
-		return output;
+		return Ref<File>(new File(output));
     }
 
 	void Filesystem::Write(const std::string& filepath, const std::string& content)
 	{
-		std::ofstream out(GetFullPath(filepath));
+		std::ofstream out(filepath);
 		out << content;
 		out.close();
 	}
 
-    std::string Filesystem::GetResource(const std::string& filepath)
+	Ref<File> Filesystem::GetResource(const std::string& filepath)
 	{
 		if (IsResource(filepath))
 		{
@@ -112,7 +68,7 @@ namespace Volund
 		}
 		else
 		{
-			return std::string();
+			return nullptr;
 		}
 	}
 
@@ -125,27 +81,8 @@ namespace Volund
 
 	void Filesystem::CreateResource(const std::string& filepath, const char* content)
 	{
-		m_Resources[filepath] = content;
+		m_Resources[filepath] = Ref<File>(new File(content));
 	}
-
-    void Filesystem::AddLink(const std::string& filepath)
-    {
-		m_FilesystemLinks.push_back(filepath);
-    }
-
-    void Filesystem::RemoveLink(const std::string& filepath)
-    {
-		for (int i = 0; i < m_FilesystemLinks.size(); i++)
-		{				
-			if (m_FilesystemLinks[i] == filepath)
-			{
-				m_FilesystemLinks.erase(m_FilesystemLinks.begin() + i);
-				return;
-			}
-		}
-
-		VOLUND_WARNING("Unable to remove FilesystemLink!");
-    }
 
     Filesystem::Filesystem()
     {
@@ -170,18 +107,5 @@ namespace Volund
 		CreateResource("://Quad.obj",
 			#include "Meshes/Quad.vobj"
 		);
-	}
-
-	uint8_t Filesystem::GetFilepathDepth(const std::string& filepath)
-	{
-		uint8_t length = 0;
-		for (auto& chr : filepath)
-		{
-			if (chr == '/' || chr == '\\')
-			{
-				length++;
-			}
-		}
-		return length;
 	}
 }

@@ -2,27 +2,55 @@
 
 #include "Editor.h"
 
-#include "Widget/OutputWidget/OutputWidget.h"
-#include "Widget/ViewportWidget/ViewportWidget.h"
-#include "Widget/InspectorWidget/InspectorWidget.h"
-#include "Widget/HierarchyWidget/HierarchyWidget.h"
+#include "EditorWindow/OutputWindow/OutputWindow.h"
+#include "EditorWindow/ViewportWindow/ViewportWindow.h"
+#include "EditorWindow/InspectorWindow/InspectorWindow.h"
+#include "EditorWindow/HierarchyWindow/HierarchyWindow.h"
+#include "EditorWindow/FilesystemWindow/FilesystemWindow.h"
 
-#include "EditorModule/EditorModule.h"
+#include "EditorContext/EditorContext.h"
 
 void Editor::OnRun()
 {
-	this->AttachModule(new VL::WindowModule(VL::GraphicsAPI::OpenGL, std::make_shared<VL::ForwardRenderer>()));
-	this->AttachModule(new VL::ImGuiModule());
+	this->AttachModule(new VL::WindowModule());
 	this->AttachModule(new VL::AudioModule());
-	this->AttachModule(new EditorModule());
+	this->AttachModule(new VL::ImGuiModule());
+
+	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
+
+	this->AttachModule(new EditorContext());
+
+	auto context = this->GetModule<EditorContext>();
+
+	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
+	outputWindow->SetSize(VL::Vec2(1980, 300));
+	outputWindow->SetPosition(VL::Vec2(0, 1080 - outputWindow->GetSize().y));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
+
+	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(context));
+	viewportWindow->SetSize(VL::Vec2(1980 - 800, outputWindow->GetPosition().y - 25));
+	viewportWindow->SetPosition(VL::Vec2(400, 25));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(viewportWindow);
+
+	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(context));
+	inspectorWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
+	inspectorWindow->SetPosition(VL::Vec2(viewportWindow->GetPosition().x + viewportWindow->GetSize().x, 25));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
+
+	auto filesystemWindow = VL::Ref<FilesystemWindow>(new FilesystemWindow(context));
+	filesystemWindow->SetSize(VL::Vec2(500, outputWindow->GetSize().y));
+	filesystemWindow->SetPosition(VL::Vec2(0, 1080 - filesystemWindow->GetSize().y));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(filesystemWindow);
+
+	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(context));
+	hierarchyWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
+	hierarchyWindow->SetPosition(VL::Vec2(0, 25));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
-	this->m_Widgets.push_back(VL::Ref<OutputWidget>(new OutputWidget(this)));
-	this->m_Widgets.push_back(VL::Ref<ViewportWidget>(new ViewportWidget(this)));
-	this->m_Widgets.push_back(VL::Ref<InspectorWidget>(new InspectorWidget(this)));
-	this->m_Widgets.push_back(VL::Ref<HierarchyWidget>(new HierarchyWidget(this)));
+	std::filesystem::create_directory(EDITOR_TEMP_FOLDER);
 }
 
 void Editor::OnTerminate()
@@ -34,16 +62,23 @@ void Editor::Procedure(const VL::Event& e)
 {
 	VOLUND_PROFILE_FUNCTION();
 
+	auto context = this->GetModule<EditorContext>();
+
 	this->m_Input.Procedure(e);
 
 	switch (e.Type)
 	{
 	case VL::EventType::Render:
 	{ 	
-		const auto editorModule = this->GetModule<EditorModule>();
-		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
+		auto window = context->GetWindow();
 
-		VL::ImGuiModule::BeginFrame();
+		if (!this->m_iniLoaded)
+		{
+			ImGui::LoadIniSettingsFromDisk("imgui.ini");
+			this->m_iniLoaded = true;
+		}
+
+		/*VL::ImGuiModule::BeginFrame();
 
 		if (VL::ImGuiModule::BeginDockSpace())
 		{
@@ -59,7 +94,7 @@ void Editor::Procedure(const VL::Event& e)
 							const std::string filepath = VL::Dialog::OpenFile(window);
 							if (!filepath.empty())
 							{
-								editorModule->LoadNewScene(filepath);
+								this->m_Context->LoadNewScene(filepath);
 							}
 						}
 
@@ -70,7 +105,7 @@ void Editor::Procedure(const VL::Event& e)
 					{
 						if (ImGui::MenuItem("Scene", "Ctrl + S"))
 						{
-							editorModule->SaveScene(editorModule->GetSceneFilepath());
+							this->m_Context->SaveScene(this->m_Context->GetSceneFilepath());
 						}
 
 						ImGui::EndMenu();
@@ -83,7 +118,7 @@ void Editor::Procedure(const VL::Event& e)
 							const std::string filepath = VL::Dialog::OpenFile(window);
 							if (!filepath.empty())
 							{
-								editorModule->SaveScene(filepath);
+								this->m_Context->SaveScene(filepath);
 							}
 						}
 
@@ -94,7 +129,7 @@ void Editor::Procedure(const VL::Event& e)
 					{
 						if (ImGui::MenuItem("Scene", "Ctrl + R"))
 						{
-							editorModule->LoadNewScene(editorModule->GetSceneFilepath());
+							this->m_Context->LoadNewScene(this->m_Context->GetSceneFilepath());
 						}
 
 						ImGui::EndMenu();
@@ -130,24 +165,23 @@ void Editor::Procedure(const VL::Event& e)
 
 		ImGui::End();
 
-		VL::ImGuiModule::EndFrame();
+		VL::ImGuiModule::EndFrame();*/
 
 		return;
 	}
 	break;	
 	case VL::EventType::Key:
 	{	
-		const auto editorModule = this->GetModule<EditorModule>();
-		auto window = this->GetModule<VL::WindowModule>()->GetWindow();
+		auto window = context->GetWindow();
 
 		if (this->m_Input.IsHeld(VOLUND_KEY_CONTROL))
 		{
 			if (this->m_Input.IsPressed('R'))
 			{
-				const auto scene = editorModule->GetScene();
+				const auto scene = context->GetScene();
 				if (scene != nullptr)
 				{
-					editorModule->LoadNewScene(editorModule->GetSceneFilepath());
+					context->LoadScene(context->GetFilepath());
 				}
 			}
 			else if (this->m_Input.IsPressed('E'))
@@ -155,18 +189,19 @@ void Editor::Procedure(const VL::Event& e)
 				const std::string filepath = VL::Dialog::OpenFile(window);
 				if (!filepath.empty())
 				{
-					editorModule->LoadNewScene(filepath);
+					context->LoadScene(filepath);
 				}
 			}
 			else if (this->m_Input.IsPressed('S'))
 			{
-				editorModule->SaveScene(editorModule->GetSceneFilepath());
+				context->SaveScene(context->GetFilepath());
 			}
 		}
 	}
 	break;
 	case VL::EventType::WindowClose:
 	{
+		std::filesystem::remove_all(EDITOR_TEMP_FOLDER);
 		this->Terminate();
 	}
 	break;
@@ -175,13 +210,5 @@ void Editor::Procedure(const VL::Event& e)
 
 	}
 	break;
-	}
-
-	for (const auto& widget : this->m_Widgets)
-	{
-		if (widget->IsActive)
-		{
-			widget->Procedure(e);
-		}
 	}
 }
