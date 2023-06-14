@@ -18,7 +18,9 @@ public:
 
 	void Pause();
 
-	std::string GetFilepath();
+	std::string GetScenePath();
+
+	std::string GetParentPath();
 
 	VL::Ref<VL::AssetManager> GetAssetmanager();
 
@@ -39,7 +41,5 @@ private:
 	VL::Ref<VL::GameState> m_GameState;
 
 	VL::Ref<VL::Window> m_GameWindow;
-
-	std::string m_Filepath;
 };
 

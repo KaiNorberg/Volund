@@ -70,34 +70,39 @@ namespace Utils
 		}
 	}
 
-	std::string ImGuiFileSelector(const std::string& Name, const std::string& Default, VL::Ref<VL::Window> Owner)
+	bool ImGuiFile(const std::string& name, std::string& out)
 	{
+		bool outChanged = false;
+
 		ImGuiStartCombo();
 
-		ImGui::Text(Name.data());
+		ImGui::Text(name.data());
 		ImGuiNextColumn();
 
 		float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
 		ImVec2 ButtonSize(-FLT_MIN, LineHeight);
 
-		std::string buttonLabel;
-		if (Default.empty())
-		{
-			buttonLabel = "None";
-		}
-		else
-		{
-			buttonLabel = Default;
-		}
+		ImGui::Button(std::filesystem::path(out).filename().string().c_str(), ButtonSize);
 
-		if (ImGui::Button(buttonLabel.c_str(), ButtonSize))
+		if (ImGui::BeginDragDropTarget())
 		{
-			ImGuiEndCombo();
-			return std::filesystem::relative(VL::Dialog::OpenFile(Owner), std::filesystem::current_path()).string();
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(EDITOR_FILESYSTEM_FILE);
+
+			if (payload != nullptr)
+			{
+				const char* path = (const char*)payload->Data;
+
+				out = path;
+
+				outChanged = true;
+			}
+
+			ImGui::EndDragDropTarget();
 		}
 
 		ImGuiEndCombo();
-		return std::string();
+		
+		return outChanged;
 	}
 
 	std::string ImGuiString(const std::string& Name, const std::string& Default)

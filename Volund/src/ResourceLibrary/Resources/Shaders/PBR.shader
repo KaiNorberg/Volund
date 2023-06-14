@@ -48,10 +48,13 @@ layout(std140, binding = 1) uniform LightsUniform
     vec3 LightColors[64];
 };
 
-//Material Uniforms
+#VOLUND_MATERIAL_START
+
 uniform vec3 Albedo;
 uniform float Metalness;
 uniform float Roughness;
+
+#VOLUND_MATERIAL_END
 
 layout(location = 0) out vec4 FragColor;
 
@@ -131,7 +134,6 @@ void main()
         Lo += (kD * Albedo / PI + specular) * radiance * NdotL; 
     }   
   
-    //vec3 ambient = vec3(0.03) * Albedo;
     vec3 ambient = vec3(0.0);
     vec3 color = ambient + Lo;
    

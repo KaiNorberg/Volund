@@ -72,7 +72,7 @@ namespace Volund
         if (!materialData.Valid())
         {
             VOLUND_WARNING("Material data is not valid!");
-            return nullptr;
+            return Material::Create();
         }
 
         auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
@@ -131,6 +131,11 @@ namespace Volund
         return material;
     }
 
+    std::string AssetManager::GetParentPath()
+    {
+        return this->m_ParentPath;
+    }
+
     Ref<AssetManager> AssetManager::Create(const std::string& parentPath)
     {
         return Ref<AssetManager>(new AssetManager(parentPath));
@@ -150,7 +155,11 @@ namespace Volund
 
     std::string AssetManager::GetAbsolutePath(const std::string& relativePath)
     {
-        if (!relativePath.empty() && relativePath[0] == ':')
+        if (std::filesystem::exists(relativePath))
+        {
+            return std::filesystem::relative(relativePath, this->m_ParentPath).string();
+        }
+        else if (!relativePath.empty() && relativePath[0] == ':')
         {
             return relativePath;
         }

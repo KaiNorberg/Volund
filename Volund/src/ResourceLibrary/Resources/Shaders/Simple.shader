@@ -46,9 +46,12 @@ layout(std140, binding = 1) uniform LightsUniform
     vec3 LightColors[64];
 };
 
-//Material Uniforms
+#VOLUND_MATERIAL_START
+
 uniform vec3 AmbientLighting;
 uniform vec3 Color;
+
+#VOLUND_MATERIAL_END
 
 layout(location = 0) out vec4 FragColor;
 

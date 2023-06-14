@@ -22,6 +22,10 @@ void Editor::OnRun()
 
 	auto context = this->GetModule<EditorContext>();
 
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = "data/imgui.ini";
+	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
+
 	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
 	outputWindow->SetSize(VL::Vec2(1980, 300));
 	outputWindow->SetPosition(VL::Vec2(0, 1080 - outputWindow->GetSize().y));
@@ -46,9 +50,6 @@ void Editor::OnRun()
 	hierarchyWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
 	hierarchyWindow->SetPosition(VL::Vec2(0, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
-
-	ImGuiIO& io = ImGui::GetIO();
-	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
 	std::filesystem::create_directory(EDITOR_TEMP_FOLDER);
 }
@@ -181,7 +182,7 @@ void Editor::Procedure(const VL::Event& e)
 				const auto scene = context->GetScene();
 				if (scene != nullptr)
 				{
-					context->LoadScene(context->GetFilepath());
+					context->LoadScene(context->GetScenePath());
 				}
 			}
 			else if (this->m_Input.IsPressed('E'))
@@ -194,7 +195,7 @@ void Editor::Procedure(const VL::Event& e)
 			}
 			else if (this->m_Input.IsPressed('S'))
 			{
-				context->SaveScene(context->GetFilepath());
+				context->SaveScene(context->GetScenePath());
 			}
 		}
 	}

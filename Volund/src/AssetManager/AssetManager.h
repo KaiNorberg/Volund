@@ -13,6 +13,8 @@ namespace Volund
         template<typename T>
         std::string FetchFilepath(Ref<T> asset);
         
+        std::string GetParentPath();
+
         static Ref<AssetManager> Create(const std::string& parentPath);
 
     private:

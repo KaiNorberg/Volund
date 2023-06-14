@@ -34,7 +34,24 @@ namespace Volund
 		return this->m_AssetManager;
 	}
 
-	void GameState::Procedure(const Event& e)
+    std::string GameState::GetScenePath()
+    {
+        return this->m_ScenePath;
+    }
+
+    std::string GameState::GetParentPath()
+    {
+        if (this->m_AssetManager != nullptr)
+        {
+            return this->m_AssetManager->GetParentPath();
+        }
+        else
+        {
+            return "";
+        }
+    }
+
+    void GameState::Procedure(const Event& e)
 	{
 		this->m_Input->Procedure(e);
 		this->m_Scene->Procedure(e);
@@ -53,11 +70,18 @@ namespace Volund
 	{	
 		while (VOLUND_THREADPOOL_BUSY());	
 
-		this->m_AssetManager = AssetManager::Create(filepath);
+        this->m_ScenePath = filepath;
+
+		this->m_AssetManager = AssetManager::Create(this->m_ScenePath);
 		this->m_Input = std::make_shared<Input>();
 		this->m_Scene = std::make_shared<Scene>();
 
-        LuaData sceneData = LuaData(filepath);
+        LuaData sceneData = LuaData(this->m_ScenePath);
+
+        if (!sceneData.Valid())
+        {
+            return;
+        }
 
         //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 

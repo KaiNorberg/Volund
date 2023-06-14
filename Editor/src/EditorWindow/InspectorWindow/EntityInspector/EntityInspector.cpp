@@ -55,18 +55,16 @@ void EntityInspector::Procedure(const VL::Event& e)
 			auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
 			auto window = this->m_Context->GetWindow();
 
-			std::string defaultMaterial = assetManager->FetchFilepath<VL::Material>(meshRenderer->GetMaterial());
-			auto selectedMaterial = Utils::ImGuiFileSelector("Material", defaultMaterial, window);
-			if (selectedMaterial != "")
+			std::string materialPath = assetManager->FetchFilepath<VL::Material>(meshRenderer->GetMaterial());
+			if (Utils::ImGuiFile("Material", materialPath))
 			{
-				meshRenderer->SetMaterial(assetManager->Fetch<VL::Material>(selectedMaterial));
+				meshRenderer->SetMaterial(assetManager->Fetch<VL::Material>(materialPath));
 			}
 
-			std::string defaultMesh = assetManager->FetchFilepath<VL::Mesh>(meshRenderer->GetMesh());
-			auto selectedMesh = Utils::ImGuiFileSelector("Mesh", defaultMesh, window);
-			if (selectedMesh != "")
+			std::string meshPath = assetManager->FetchFilepath<VL::Mesh>(meshRenderer->GetMesh());
+			if (Utils::ImGuiFile("Mesh", meshPath))
 			{
-				meshRenderer->SetMesh(assetManager->Fetch<VL::Mesh>(selectedMesh));
+				meshRenderer->SetMesh(assetManager->Fetch<VL::Mesh>(meshPath));
 			}
 		});
 
@@ -105,11 +103,10 @@ void EntityInspector::Procedure(const VL::Event& e)
 			auto window = this->m_Context->GetWindow();
 
 			//Todo: Add variables
-			std::string defaultSound = assetManager->FetchFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
-			auto selectedSound = Utils::ImGuiFileSelector("AudioBuffer", defaultSound, window);
-			if (selectedSound != "")
+			std::string audiobufferPath = assetManager->FetchFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
+			if (Utils::ImGuiFile("AudioBuffer", audiobufferPath))
 			{
-				soundSource->SetBuffer(assetManager->Fetch<VL::AudioBuffer>(selectedSound));
+				soundSource->SetBuffer(assetManager->Fetch<VL::AudioBuffer>(audiobufferPath));
 			}
 
 			Utils::ImGuiBool("AutoPlay", &soundSource->AutoPlay);

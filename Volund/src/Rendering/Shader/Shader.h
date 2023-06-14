@@ -5,6 +5,8 @@
 
 #include "ResourceLibrary/ResourceLibrary.h"
 
+#include "MaterialBlueprint/MaterialBlueprint.h"
+
 namespace Volund
 {
 	class Shader
@@ -35,6 +37,8 @@ namespace Volund
 
 		virtual void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit) = 0;
 
+		const Ref<MaterialBlueprint> GetMaterialBlueprint();
+
 		static Ref<Shader> Create(const std::string& filepath);
 
 		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource);
@@ -43,7 +47,10 @@ namespace Volund
 
 	protected:
 
+		Shader();
+
 	private:
 
+		Ref<MaterialBlueprint> m_MaterialBlueprint;
 	};
 }

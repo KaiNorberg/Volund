@@ -3,8 +3,6 @@
 #include "Rendering/Shader/Shader.h"
 #include "Rendering/Texture/Texture.h"
 
-#include "PolyContainer/PolyContainer.h"
-
 namespace Volund
 {
 	class Material
@@ -30,7 +28,11 @@ namespace Volund
 		void UpdateShader();
 		Ref<Shader> GetShader();
 
+		static Ref<Material> Create();
+
 		static Ref<Material> Create(Ref<Shader> shader);
+
+		Material();
 
 		Material(Ref<Shader> shader);
 
@@ -53,5 +55,9 @@ namespace Volund
 		std::unordered_map<std::string, Ref<Framebuffer>> m_FramebufferUniforms;
 
 		Ref<Shader> m_Shader;
+
+		bool m_MaterialChanged = true;
+
+		void CompareBlueprint();
 	};
 }

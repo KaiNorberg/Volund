@@ -10,6 +10,26 @@ namespace Volund
 		return this->m_Id;
 	}
 
+	void ImGuiObject::SetDragDropTargetCallback(std::function<void(void)> callback)
+	{
+		this->m_DragDropTargetCallback = callback;
+	}
+
+	std::function<void(void)> ImGuiObject::GetDragDropTargetCallback()
+	{
+		return this->m_DragDropTargetCallback;
+	}
+
+	void ImGuiObject::SetDragDropSourceCallback(std::function<void(void)> callback)
+	{
+		this->m_DragDropSourceCallback = callback;
+	}
+
+	std::function<void(void)> ImGuiObject::GetDragDropSourceCallback()
+	{
+		return this->m_DragDropSourceCallback;
+	}
+
 	ImGuiObject::ImGuiObject()
 	{
 		this->m_Id = "##" + std::to_string(rand());

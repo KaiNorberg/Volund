@@ -38,38 +38,64 @@ bool EditorContext::IsPaused()
 
 void EditorContext::Play()
 {
-	if (!this->m_Paused)
+	if (this->m_GameState == nullptr || !this->m_Paused)
 	{
 		return;
 	}
 	this->m_Paused = false;
 
-	this->SaveScene(this->m_Filepath);
+	this->SaveScene(this->m_GameState->GetScenePath());
 
 	SetDarkImGuiStyle();
 }
 
 void EditorContext::Pause()
 {
-	if (this->m_Paused)
+	if (this->m_GameState == nullptr || this->m_Paused)
 	{
 		return;
 	}	
 	this->m_Paused = true;
 
-	this->LoadScene(this->m_Filepath);
+	this->LoadScene(this->m_GameState->GetScenePath());
 
 	SetDefaultImGuiStyle();
 }
 
-std::string EditorContext::GetFilepath()
+std::string EditorContext::GetScenePath()
 {
-	return this->m_Filepath;
+	if (this->m_GameState != nullptr)
+	{
+		return this->m_GameState->GetScenePath();
+	}
+	else
+	{
+		return "";
+	}
+}
+
+std::string EditorContext::GetParentPath()
+{
+	if (this->m_GameState != nullptr)
+	{
+		return this->m_GameState->GetParentPath();
+	}
+	else
+	{
+		return "";
+	}
 }
 
 VL::Ref<VL::AssetManager> EditorContext::GetAssetmanager()
 {
-	return this->m_GameState->GetAssetManager();
+	if (this->m_GameState != nullptr)
+	{
+		return this->m_GameState->GetAssetManager();
+	}
+	else
+	{
+		return nullptr;
+	}
 }
 
 VL::Ref<VL::Scene> EditorContext::GetScene()
@@ -101,9 +127,7 @@ void EditorContext::LoadScene(const std::string& filepath)
 
 	VL::DeferredTaskHandler::DeferTask([this, filepath]()
 	{
-		this->m_Filepath = filepath;
-
-		this->m_GameState = std::make_shared<VL::GameState>(this->m_Filepath);
+		this->m_GameState = std::make_shared<VL::GameState>(filepath);
 	});
 }
 
@@ -117,6 +141,8 @@ void EditorContext::SaveScene(const std::string& filepath)
 
 	VL::DeferredTaskHandler::DeferTask([this, filepath]()
 	{
+		//TODO: Reimplement this
+
 		//auto sceneSerializer = VL::SceneSerializer(this->GetScene());
 
 		//sceneSerializer.WriteToFile(filepath);

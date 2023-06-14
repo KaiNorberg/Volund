@@ -48,10 +48,13 @@ layout(std140, binding = 1) uniform LightsUniform
     vec3 LightColors[64];
 };
 
-//Material Uniforms
+#VOLUND_MATERIAL_START
+
 uniform sampler2D AlbedoTexture;
 uniform sampler2D MetalTexture;
 uniform sampler2D RoughTexture;
+
+#VOLUND_MATERIAL_END
 
 layout(location = 0) out vec4 FragColor;
 

@@ -42,7 +42,7 @@ local table =
 		},
 		{
 			ComponentType = 7,
-			Position = Vec3:new(-3.000000, 0.000000, 0.000000),
+			Position = Vec3:new(-5.000000, 0.000000, 0.000000),
 			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
 			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
 		},
@@ -93,7 +93,7 @@ local table =
 		},
 		{
 			ComponentType = 7,
-			Position = Vec3:new(3.000000, 0.000000, 0.000000),
+			Position = Vec3:new(5.000000, 0.000000, 0.000000),
 			Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
 			Scale = Vec3:new(1.000000, 1.000000, 1.000000)
 		},

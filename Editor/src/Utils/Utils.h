@@ -1,5 +1,8 @@
 #pragma once
 
+#define EDITOR_FILESYSTEM_FILE "EDITOR_FILESYSTEM_FILE"
+#define EDITOR_FILESYSTEM_DIRECTORY "EDITOR_FILESYSTEM_DIRECTORY"
+
 namespace Utils
 {
 	void ImGuiStartCombo();
@@ -10,11 +13,11 @@ namespace Utils
 
 	void ImGuiAlign(float Width, float Alignment);
 
+	bool ImGuiFile(const std::string& name, std::string& out);
+
 	std::string ImGuiStringSelector(const std::string& Name, const std::string& Default, const std::vector<std::string>& SelectableValues);
 
 	std::string ImGuiString(const std::string& Name, const std::string& Default);
-
-	std::string ImGuiFileSelector(const std::string& Name, const std::string& Default, VL::Ref<VL::Window> Owner);
 
 	void ImGuiBool(const std::string& Name, bool* Value);
 

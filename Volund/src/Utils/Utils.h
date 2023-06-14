@@ -41,6 +41,8 @@ namespace Volund::Utils
 	static inline const Vec3 ONE = Vec3(1, 1, 1);
 	static inline const Vec3 ZERO = Vec3(0, 0, 0);
 
+	std::filesystem::path RelativePath(const std::filesystem::path& path, const std::filesystem::path& parentPath);
+
 	std::vector<std::string_view> SplitString(std::string_view string, const char delimiter);
 
 	int Svtoi(std::string_view string);

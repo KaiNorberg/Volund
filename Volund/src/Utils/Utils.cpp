@@ -4,6 +4,13 @@
 
 namespace Volund::Utils
 {
+	std::filesystem::path RelativePath(const std::filesystem::path& path, const std::filesystem::path& parentPath)
+	{
+		std::filesystem::path relativePath = std::filesystem::relative(path.parent_path(), parentPath);
+		relativePath /= path.filename();
+		return relativePath.string();
+	}
+
 	std::vector<std::string_view> SplitString(std::string_view string, const char delimiter)
 	{
 		std::vector<std::string_view> output;

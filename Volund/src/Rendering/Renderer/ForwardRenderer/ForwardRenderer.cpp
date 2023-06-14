@@ -55,7 +55,7 @@ namespace Volund
 
 					Ref<Shader> materialShader = model.material->GetShader();
 
-					if (materialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
+					if (materialShader != nullptr && materialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
 					{
 						materialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}

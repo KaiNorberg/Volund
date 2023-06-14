@@ -29,9 +29,13 @@ void main()
 #VOLUND_SHADER_TYPE FRAGMENT
 #version 460
 
+#VOLUND_MATERIAL_START
+
 in vec3 FragPosition;
 in vec2 FragTextureCoord;
 in vec3 FragNormal;
+
+#VOLUND_MATERIAL_END
 
 layout(std140, binding = 0) uniform Camera
 {    
@@ -46,9 +50,12 @@ layout(std140, binding = 1) uniform LightsUniform
     vec3 LightColors[64];
 };
 
-//Material Uniforms
+#VOLUND_MATERIAL_START
+
 uniform vec3 AmbientLighting;
 uniform sampler2D ColorTexture;
+
+#VOLUND_MATERIAL_END
 
 layout(location = 0) out vec4 FragColor;
 

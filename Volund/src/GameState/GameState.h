@@ -15,6 +15,10 @@ namespace Volund
 
 		Ref<AssetManager> GetAssetManager();
 
+		std::string GetScenePath();
+
+		std::string GetParentPath();
+
 		void Procedure(const Event& e);
 
 		GameState(Ref<Scene> scene);
@@ -24,6 +28,8 @@ namespace Volund
 		~GameState();
 
 	private:
+
+		std::string m_ScenePath;
 
 		Ref<Input> m_Input;
 		Ref<Scene> m_Scene;

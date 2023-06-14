@@ -77,7 +77,26 @@ namespace Volund
 					if (imGuiObject->IsActive)
 					{
 						ImGui::PushID(imGuiObject->GetId().c_str());
+
 						imGuiObject->Procedure(e);
+
+						if (imGuiObject->GetDragDropSourceCallback() != nullptr)
+						{
+							if (ImGui::BeginDragDropSource())
+							{
+								imGuiObject->GetDragDropSourceCallback()();
+								ImGui::EndDragDropSource();
+							}
+						}
+						if (imGuiObject->GetDragDropTargetCallback() != nullptr)
+						{
+							if (ImGui::BeginDragDropTarget())
+							{
+								imGuiObject->GetDragDropTargetCallback()();
+								ImGui::EndDragDropTarget();
+							}
+						}
+
 						ImGui::PopID();
 					}
 				}

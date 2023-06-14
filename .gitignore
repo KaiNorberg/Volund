@@ -6,4 +6,3 @@
 *.vcxproj.filters
 bin/
 Makefile
-imgui.ini
