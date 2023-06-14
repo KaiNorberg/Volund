@@ -36,10 +36,10 @@ namespace Volund
 
 	struct RendererEye
 	{
-		Mat4x4 ViewMatrix;
-		Mat4x4 ProjectionMatrix;
+		Mat4x4 ViewMatrix = Mat4x4();
+		Mat4x4 ProjectionMatrix = Mat4x4() ;
 
-		Vec3 Position;
+		Vec3 Position = Vec3();
 
 		uint16_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 

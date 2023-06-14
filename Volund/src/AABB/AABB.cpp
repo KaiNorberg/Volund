@@ -36,14 +36,14 @@ namespace Volund
 	{
 		for (uint64_t i = 0; i < count; i += 3)
 		{
-			this->Min.x = Utils::Min(this->Min.x, points[i]);
-			this->Max.x = Utils::Max(this->Max.x, points[i]);
+			this->Min.x = std::min(this->Min.x, points[i]);
+			this->Max.x = std::max(this->Max.x, points[i]);
 
-			this->Min.y = Utils::Min(this->Min.y, points[i + 1]);
-			this->Max.y = Utils::Max(this->Max.y, points[i + 1]);
+			this->Min.y = std::min(this->Min.y, points[i + 1]);
+			this->Max.y = std::max(this->Max.y, points[i + 1]);
 
-			this->Min.z = Utils::Min(this->Min.z, points[i + 2]);
-			this->Max.z = Utils::Max(this->Max.z, points[i + 2]);
+			this->Min.z = std::min(this->Min.z, points[i + 2]);
+			this->Max.z = std::max(this->Max.z, points[i + 2]);
 		}
 	}
 
@@ -51,14 +51,14 @@ namespace Volund
 	{
 		for (uint64_t i = 0; i < points.size(); i += 3)
 		{
-			this->Min.x = Utils::Min(this->Min.x, points[i]);
-			this->Max.x = Utils::Max(this->Max.x, points[i]);
+			this->Min.x = std::min(this->Min.x, points[i]);
+			this->Max.x = std::max(this->Max.x, points[i]);
 
-			this->Min.y = Utils::Min(this->Min.y, points[i + 1]);
-			this->Max.y = Utils::Max(this->Max.y, points[i + 1]);
+			this->Min.y = std::min(this->Min.y, points[i + 1]);
+			this->Max.y = std::max(this->Max.y, points[i + 1]);
 
-			this->Min.z = Utils::Min(this->Min.z, points[i + 2]);
-			this->Max.z = Utils::Max(this->Max.z, points[i + 2]);
+			this->Min.z = std::min(this->Min.z, points[i + 2]);
+			this->Max.z = std::max(this->Max.z, points[i + 2]);
 		}
 	}
 
@@ -66,14 +66,14 @@ namespace Volund
 	{
 		for (uint64_t i = 0; i < points.size(); i++)
 		{
-			this->Min.x = Utils::Min(this->Min.x, points[i].x);
-			this->Max.x = Utils::Max(this->Max.x, points[i].x);
+			this->Min.x = std::min(this->Min.x, points[i].x);
+			this->Max.x = std::max(this->Max.x, points[i].x);
 
-			this->Min.y = Utils::Min(this->Min.y, points[i].y);
-			this->Max.y = Utils::Max(this->Max.y, points[i].y);
+			this->Min.y = std::min(this->Min.y, points[i].y);
+			this->Max.y = std::max(this->Max.y, points[i].y);
 
-			this->Min.z = Utils::Min(this->Min.z, points[i].z);
-			this->Max.z = Utils::Max(this->Max.z, points[i].z);
+			this->Min.z = std::min(this->Min.z, points[i].z);
+			this->Max.z = std::max(this->Max.z, points[i].z);
 		}
 	}
 

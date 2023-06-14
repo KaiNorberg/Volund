@@ -5,6 +5,8 @@
 
 #include "AABB/AABB.h"
 
+#include "ResourceLibrary/ResourceLibrary.h"
+
 namespace Volund
 {
 	class Mesh
@@ -21,12 +23,17 @@ namespace Volund
 
 		Ref<VertexBuffer> GetVertexBuffer();
 		Ref<IndexBuffer> GetIndexBuffer();
+
 		const Ref<VertexBuffer> GetVertexBuffer() const;
 		const Ref<IndexBuffer> GetIndexBuffer() const;
 
 		static Ref<Mesh> Create();
 
-		static Ref<Mesh> Create(Ref<VertexBuffer>& VertexBuffer, Ref<IndexBuffer>& IndexBuffer);
+		static Ref<Mesh> Create(const std::string& filepath);
+
+		static Ref<Mesh> Create(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer);
+
+		static Ref<Mesh> CreateAsync(const std::string& filepath);
 
 		virtual ~Mesh() = default;
 
@@ -34,5 +41,7 @@ namespace Volund
 
 		Ref<VertexBuffer> m_VertexBuffer;
 		Ref<IndexBuffer> m_IndexBuffer;
+	
+	private:
 	};
 }

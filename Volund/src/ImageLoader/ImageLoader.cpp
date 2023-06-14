@@ -3,8 +3,6 @@
 
 #include "stb/stb_image.h"
 
-#include "Filesystem/Filesystem.h"
-
 namespace Volund
 {
 	int32_t ImageLoader::GetWidth() const

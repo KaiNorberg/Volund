@@ -89,9 +89,9 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 {
 	VL::IVec2 cursorDelta = input.GetMousePosition() - this->m_OldMousePosition;
 	float scrollDelta = input.GetScrollPosition() - this->m_OldScrollPosition;
-	cursorDelta.x = VL::Utils::Clamp(cursorDelta.x, -10, 10);
-	cursorDelta.y = VL::Utils::Clamp(cursorDelta.y, -10, 10);
-	scrollDelta = VL::Utils::Clamp(scrollDelta, -10.0f, 10.0f);
+	cursorDelta.x = std::clamp(cursorDelta.x, -10, 10);
+	cursorDelta.y = std::clamp(cursorDelta.y, -10, 10);
+	scrollDelta = std::clamp(scrollDelta, -10.0f, 10.0f);
 
 	if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT) || scrollDelta != 0.0f)
 	{
@@ -125,7 +125,7 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 		}
 
 		this->m_BallRotation -= VL::Vec3(cursorDelta.y, cursorDelta.x, 0.0f) * this->LookSpeed;
-		this->m_BallRotation.x = VL::Utils::Clamp(this->m_BallRotation.x, -89.0f, 89.0f);
+		this->m_BallRotation.x = std::clamp(this->m_BallRotation.x, -89.0f, 89.0f);
 
 		VL::Quat ballQuaternion = VL::Quat(glm::radians(this->m_BallRotation));
 
@@ -155,8 +155,8 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 	auto spec = this->m_SceneFramebuffer->GetSpec();
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
 	{
-		spec.Width = viewportSize.x;
-		spec.Height = viewportSize.y;
+		spec.Width = (uint32_t)viewportSize.x;
+		spec.Height = (uint32_t)viewportSize.y;
 		this->m_SceneFramebuffer->SetSpec(spec);
 		this->m_EditorFramebuffer->SetSpec(spec);
 	}

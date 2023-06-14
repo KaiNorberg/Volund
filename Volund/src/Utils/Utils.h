@@ -41,17 +41,19 @@ namespace Volund::Utils
 	static inline const Vec3 ONE = Vec3(1, 1, 1);
 	static inline const Vec3 ZERO = Vec3(0, 0, 0);
 
+	std::vector<std::string_view> SplitString(std::string_view string, const char delimiter);
+
+	int Svtoi(std::string_view string);
+
+	float Svtof(std::string_view string);
+
 	uint32_t CastFloatToInt(float value);
 
 	float CastIntToFloat(int value);
 
-    std::string ReplaceAll(std::string str, const std::string& from, const std::string& to);
-
-    std::wstring ConvertToWString(std::string_view string);		
-
 	int RoundUp(int n, int m);
 
-	template <class T>
+	/*template <class T>
 	T ToRadians(const T& v)
 	{
 		return (PI / 180.0f) * v;
@@ -79,5 +81,5 @@ namespace Volund::Utils
 	T Clamp(T n, T lower, T upper)
 	{
 		return Max(lower, Min(n, upper));
-	}
+	}*/
 }

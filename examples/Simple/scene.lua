@@ -48,7 +48,7 @@ local table =
 		},
 		{
 			ComponentType = 3,
-			Mesh = "://Cube.obj",
+			Mesh = "://Meshes/Cube.obj",
 			Material = "Materials/Texture.mat.lua"
 		}
 	},
@@ -65,7 +65,7 @@ local table =
 		},
 		{
 			ComponentType = 3,
-			Mesh = "://Cube.obj",
+			Mesh = "://Meshes/Cube.obj",
 			Material = "Materials/Green.mat.lua"
 		}
 	},
@@ -82,7 +82,7 @@ local table =
 		},
 		{
 			ComponentType = 3,
-			Mesh = "://Cube.obj",
+			Mesh = "://Meshes/Cube.obj",
 			Material = "Materials/White.mat.lua"
 		}
 	},

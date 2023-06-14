@@ -24,7 +24,7 @@ namespace Volund
 	bool Input::IsMouseButtonPressed(uint16_t button)
 	{
 		const bool isDown = this->m_MouseButtons[button] == 1;
-		this->m_MouseButtons[button] += isDown;
+		this->m_MouseButtons[button] += (int)isDown;
 
 		return isDown;
 	}

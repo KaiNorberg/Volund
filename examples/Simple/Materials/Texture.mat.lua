@@ -1,6 +1,6 @@
 local material =
 {
-    "://SimpleTexture.shader",
+    "://Shaders/SimpleTexture.shader",
     ColorTexture = "Textures/Test.jpg",
 }
 

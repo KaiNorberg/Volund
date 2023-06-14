@@ -8,21 +8,21 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->Quaternion = Quat(Utils::ToRadians(rotation));
+		this->Quaternion = Quat(glm::radians(rotation));
 	}
 
 	Vec3 Transform::GetRotation() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return Utils::ToDegrees(eulerAngles(this->Quaternion));
+		return glm::degrees(eulerAngles(this->Quaternion));
 	}
 
 	void Transform::AddRotation(const Vec3& rotation)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->Quaternion *= Quat(Utils::ToRadians(rotation));
+		this->Quaternion *= Quat(glm::radians(rotation));
 	}
 
 	Vec3 Transform::GetFront() const

@@ -23,9 +23,10 @@ namespace Volund
 		Input();
 
 	private:
-		IVec2 m_MousePosition;
 
-		float m_ScrollPosition;
+		IVec2 m_MousePosition = IVec2(0);
+
+		float m_ScrollPosition = 0.0f;
 
 		bool m_MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
 		bool m_Keys[VOLUND_KEY_AMOUNT];

@@ -4,7 +4,46 @@
 
 namespace Volund::Utils
 {
-	uint32_t CastFloatToInt(const float value)
+	std::vector<std::string_view> SplitString(std::string_view string, const char delimiter)
+	{
+		std::vector<std::string_view> output;
+		output.reserve(std::count(string.begin(), string.end(), delimiter) + 1);
+
+		for (auto it = string.begin();; ++it)
+		{
+			auto newIt = std::find(it, string.end(), delimiter);
+			output.emplace_back(it, newIt);
+			it = newIt;
+			if (it == string.end())
+			{
+				return output;
+			}
+		}
+	}
+
+	int Svtoi(std::string_view string)
+	{
+		int output;
+		const std::from_chars_result result = std::from_chars(string.data(), string.data() + string.size(), output);
+		if (result.ec == std::errc::invalid_argument || result.ec == std::errc::result_out_of_range)
+		{
+			return 0;
+		}
+		return output;
+	}
+
+	float Svtof(std::string_view string)
+	{
+		float output;
+		const std::from_chars_result result = std::from_chars(string.data(), string.data() + string.size(), output);
+		if (result.ec == std::errc::invalid_argument || result.ec == std::errc::result_out_of_range)
+		{
+			return 0.0f;
+		}
+		return output;
+	}
+
+	uint32_t CastFloatToInt(const float value) 
 	{
 		union { float f; int i; } u;
 		u.f = value;
@@ -17,24 +56,6 @@ namespace Volund::Utils
 		u.i = value;
 		return u.f;
 	}
-
-    std::string ReplaceAll(std::string str, const std::string& from, const std::string& to) 
-    {
-        size_t startPos = 0;
-
-        while ((startPos = str.find(from, startPos)) != std::string::npos) 
-        {
-            str.replace(startPos, from.length(), to);
-            startPos += to.length();
-        }
-
-        return str;
-    }
-
-    std::wstring ConvertToWString(std::string_view string)
-    {
-        return std::wstring(string.begin(), string.end());
-    }	
 
 	int RoundUp(const int n, const int m)
 	{

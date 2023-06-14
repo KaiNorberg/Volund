@@ -39,7 +39,7 @@ namespace Volund
 					this->m_Size = Vec2(viewportSize.x, viewportSize.y);
 				}
 
-				ImGui::Image(reinterpret_cast<void*>(this->m_TextureId), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_TextureId), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
 
 				ImGui::EndChild();
 			}

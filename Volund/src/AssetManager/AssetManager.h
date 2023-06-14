@@ -2,8 +2,6 @@
 
 #include "PolyContainer/PolyContainer.h"
 
-#include "Filesystem/Filesystem.h"
-
 namespace Volund
 {
     class AssetManager : public std::enable_shared_from_this<AssetManager>
@@ -38,7 +36,7 @@ namespace Volund
         public:
             std::string Filepath;
             
-            void* Identifier;
+            void* Identifier = nullptr;
 
             virtual ~PrimitiveAsset() = default;
         };

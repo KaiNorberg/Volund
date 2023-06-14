@@ -3,6 +3,8 @@
 #include "Rendering/Texture/Texture.h"
 #include "Rendering/Framebuffer/Framebuffer.h"
 
+#include "ResourceLibrary/ResourceLibrary.h"
+
 namespace Volund
 {
 	class Shader
@@ -33,11 +35,15 @@ namespace Volund
 
 		virtual void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit) = 0;
 
+		static Ref<Shader> Create(const std::string& filepath);
+
 		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource);
 
 		virtual ~Shader() = default;
 
 	protected:
+
+	private:
 
 	};
 }
