@@ -10,10 +10,29 @@
 #include "ModelLoader/ModelLoader.h"
 #include "DeferredTaskHandler/DeferredTaskHandler.h"
 
+#include "Scene/Component/Components.h"
+
+#include "Scene/Scene.h"
+
 #include "Lua/LuaData/LuaData.h"
+
+#define VOLUND_SET_COMPONENT(table, member, name) if (table[name] != sol::nil) {member = table[name];}
 
 namespace Volund
 {    
+    enum class LuaComponentID
+    {
+        Camera = 1,
+        CameraMovement = 2,
+        MeshRenderer = 3,
+        PointLight = 4,
+        //Script = 5,
+        Tag = 6,
+        Transform = 7,
+        SoundSource = 8,
+        SoundListener = 9
+    };
+
     template<>
     Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath)
     {
@@ -119,6 +138,182 @@ namespace Volund
         }
 
         return material;
+    }
+
+    template<>
+    Ref<Scene> AssetManager::Load<Scene>(const std::string& filepath)
+    {
+        VOLUND_INFO("Loading Scene (%s)...", filepath.c_str());
+
+        auto scene = std::make_shared<Scene>();
+
+        LuaData sceneData = LuaData(filepath);
+
+        if (!sceneData.Valid())
+        {
+            return scene;
+        }
+
+        //IMPORTANT: Remember to update the code below whenever a new component is implemented.
+
+        for (auto& [key, value] : sceneData)
+        {
+            if (!value.is<sol::table>())
+            {
+                VOLUND_WARNING("Invalid entity found in scene file!");
+                return scene;
+            }
+
+            sol::table entityTable = value.as<sol::table>();
+
+            Entity entity = scene->RegisterNewEntity();
+
+            for (auto& [key, value] : entityTable)
+            {
+                if (!value.is<sol::table>())
+                {
+                    VOLUND_WARNING("Invalid component found in scene file!");
+                    return scene;
+                }
+
+                sol::table componentTable = value.as<sol::table>();
+
+                int64_t componentId = componentTable["ComponentType"];
+
+                switch ((LuaComponentID)componentId)
+                {
+                case LuaComponentID::Transform:
+                {
+                    auto newComponent = scene->CreateComponent<Transform>(entity);
+
+                    if (componentTable["Position"] != sol::lua_nil)
+                    {
+                        newComponent->Position = componentTable["Position"];
+                    }
+                    if (componentTable["Scale"] != sol::lua_nil)
+                    {
+                        newComponent->Scale = componentTable["Scale"];
+                    }
+                    if (componentTable["Rotation"] != sol::lua_nil)
+                    {
+                        Vec3 rotation = componentTable["Rotation"];
+                        newComponent->SetRotation(rotation);
+                    }
+                }
+                break;
+                case LuaComponentID::Camera:
+                {
+                    auto newComponent = scene->CreateComponent<Camera>(entity);
+
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->FOV, "FOV");
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->NearPlane, "NearPlane");
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->FarPlane, "FarPlane");
+
+                    if (componentTable["TargetBuffer"] != sol::lua_nil)
+                    {
+                        //TODO: Add framebuffer asset
+                        //newComponent->SetTargetBuffer(componentTable["TargetBuffer"].get<LuaFramebuffer>().Get());
+                    }
+                }
+                break;
+                case LuaComponentID::CameraMovement:
+                {
+                    auto newComponent = scene->CreateComponent<CameraMovement>(entity);
+
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Speed, "Speed");
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Sensitivity, "Sensitivity");
+                }
+                break;
+                case LuaComponentID::MeshRenderer:
+                {
+                    if (componentTable["Mesh"] != sol::lua_nil && componentTable["Material"] != sol::lua_nil)
+                    {
+                        std::string meshFilepath = componentTable["Mesh"];
+                        std::string materialFilepath = componentTable["Material"];
+
+                        Ref<Mesh> mesh = this->Fetch<Mesh>(meshFilepath);
+                        Ref<Material> material = this->Fetch<Material>(materialFilepath);
+
+                        auto newComponent = scene->CreateComponent<MeshRenderer>(entity, mesh, material);
+
+                        if (componentTable["Layer"] != sol::lua_nil)
+                        {
+                            newComponent->SetLayer(componentTable["Layer"]);
+                        }
+                    }
+                    else
+                    {
+                        VOLUND_WARNING("Unable to read mesh or material from MeshRenderer componentTable!");
+                    }
+                }
+                break;
+                case LuaComponentID::PointLight:
+                {
+                    auto newComponent = scene->CreateComponent<PointLight>(entity);
+
+                    if (componentTable["Color"] != sol::lua_nil)
+                    {
+                        newComponent->Color = componentTable["Color"];
+                    }
+
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Brightness, "Brightness");
+                }
+                break;
+                case LuaComponentID::Tag:
+                {
+                    std::string string = componentTable["String"];
+                    auto newComponent = scene->CreateComponent<Tag>(entity, string);
+                }
+                break;
+                case LuaComponentID::SoundSource:
+                {
+                    auto newComponent = scene->CreateComponent<SoundSource>(entity);
+
+                    if (componentTable["Looping"] != sol::lua_nil)
+                    {
+                        bool looping = componentTable["Looping"];
+                        newComponent->SetLooping(looping);
+                    }
+
+                    if (componentTable["Pitch"] != sol::lua_nil)
+                    {
+                        float pitch = componentTable["Pitch"];
+                        newComponent->SetPitch(pitch);
+                    }
+
+                    if (componentTable["Gain"] != sol::lua_nil)
+                    {
+                        float gain = componentTable["Gain"];
+                        newComponent->SetGain(gain);
+                    }
+
+                    if (componentTable["Sound"] != sol::lua_nil)
+                    {
+                        Ref<AudioBuffer> sound = this->Fetch<AudioBuffer>(componentTable["Sound"]);
+                        newComponent->SetBuffer(sound);
+                    }
+
+                    if (componentTable["AutoPlay"] != sol::lua_nil)
+                    {
+                        newComponent->AutoPlay = componentTable["AutoPlay"];
+                    }
+                }
+                break;
+                case LuaComponentID::SoundListener:
+                {
+                    auto newComponent = scene->CreateComponent<SoundListener>(entity);
+                }
+                break;
+                default:
+                {
+                    VOLUND_WARNING("Unknown component id (%s)! Check for proper capitalization and spelling!", componentId);
+                }
+                break;
+                }
+            }
+        }
+
+        return scene;
     }
 
     std::string AssetManager::GetParentPath()
