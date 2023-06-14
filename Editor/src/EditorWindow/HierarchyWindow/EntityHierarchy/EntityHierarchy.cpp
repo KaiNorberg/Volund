@@ -14,7 +14,7 @@ void EntityHierarchy::Procedure(const VL::Event& e)
 		std::string scenePath = this->m_Context->GetScenePath();
 		if (Utils::ImGuiFile("Scene", scenePath))
 		{
-			this->m_Context->LoadScene(this->m_Context->GetParentPath() + "/" + scenePath);
+			this->m_Context->LoadScene(scenePath);
 		}
 
 		if (scene != nullptr)

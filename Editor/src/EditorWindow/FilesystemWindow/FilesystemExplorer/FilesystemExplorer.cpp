@@ -13,7 +13,7 @@ void FilesystemExplorer::Procedure(const VL::Event& e)
 
 		if (parentDir != this->m_OldParentDir)
 		{
-			this->m_RelativeDirectory = "";
+			this->m_CurrentDirectory = parentDir;
 		}
 		this->m_OldParentDir = parentDir;
 
@@ -21,9 +21,6 @@ void FilesystemExplorer::Procedure(const VL::Event& e)
 		{
 			break;
 		}
-
-		std::filesystem::path currentDirectory = parentDir;
-		currentDirectory /= this->m_RelativeDirectory;
 
 		float cellSize = this->m_ThumbnailSize + this->m_Padding;
 
@@ -34,30 +31,34 @@ void FilesystemExplorer::Procedure(const VL::Event& e)
 
 		ImGui::Columns(columnCount, 0, false);
 
-		if (!this->m_RelativeDirectory.empty())
+		if (parentDir != this->m_CurrentDirectory)
 		{
-			this->ImGuiDirectory(this->m_RelativeDirectory.parent_path(), "../");
+			this->ImGuiDirectory(this->m_CurrentDirectory.parent_path().string(), "../");
 		}
 
-		for (auto& directory : std::filesystem::directory_iterator(currentDirectory))
+		for (auto& directory : std::filesystem::directory_iterator(this->m_CurrentDirectory))
 		{
 			if (!directory.is_directory())
 			{
 				continue;
 			}
 
-			this->ImGuiDirectory(directory.path());
+			auto filepath = directory.path();
+			this->ImGuiDirectory(filepath.string(), filepath.filename().string());
 		}
 
-		for (auto& file : std::filesystem::directory_iterator(currentDirectory))
+		for (auto& file : std::filesystem::directory_iterator(this->m_CurrentDirectory))
 		{
 			if (file.is_directory())
 			{
 				continue;
 			}
 
-			this->ImGuiFile(file);
+			auto filepath = file.path();
+			this->ImGuiFile(filepath.string(), filepath.filename().string());
 		}
+
+		//this->ImGuiFile("://Meshes/Cube.obj", "Cube.obj");
 
 		ImGui::Columns(1);				
 	}
@@ -77,13 +78,9 @@ FilesystemExplorer::FilesystemExplorer(VL::Ref<EditorContext> context)
 	this->m_FileIcon = VL::Texture::CreateAsync("data/icons/file.png");
 }
 
-void FilesystemExplorer::ImGuiDirectory(const std::filesystem::path& path, const char* name)
+void FilesystemExplorer::ImGuiDirectory(const std::string& payloadPath, const std::string& name)
 {
-	std::filesystem::path parentDir = this->m_Context->GetParentPath();
-
-	std::string filenameString = path.filename().string();
-
-	ImGui::PushID(filenameString.c_str());
+	ImGui::PushID(payloadPath.c_str());
 
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 	ImGui::ImageButton((ImTextureID)m_DirectoryIcon->GetID(), { this->m_ThumbnailSize, this->m_ThumbnailSize }, { 0, 1 }, { 1, 0 });
@@ -91,7 +88,7 @@ void FilesystemExplorer::ImGuiDirectory(const std::filesystem::path& path, const
 
 	if (ImGui::BeginDragDropSource())
 	{
-		const char* itemPath = path.string().c_str();
+		const char* itemPath = payloadPath.c_str();
 		ImGui::Text(itemPath);
 		ImGui::SetDragDropPayload(EDITOR_FILESYSTEM_DIRECTORY, itemPath, (std::strlen(itemPath) + 1) * sizeof(char));
 		ImGui::EndDragDropSource();
@@ -104,23 +101,19 @@ void FilesystemExplorer::ImGuiDirectory(const std::filesystem::path& path, const
 
 		if (filePayload != nullptr)
 		{
-			std::filesystem::path sourcePath = parentDir;
-			sourcePath /= (const char*)filePayload->Data;
-
-			std::filesystem::path targetPath = parentDir;
-			targetPath /= path;
-			targetPath /= sourcePath.filename();
-
-			std::filesystem::rename(sourcePath, targetPath);
+			std::filesystem::path sourcePath = (const char*)filePayload->Data;
+			std::filesystem::path targetPath = payloadPath + "/" + sourcePath.filename().string();
+		
+			if (std::filesystem::exists(sourcePath) && std::filesystem::exists(targetPath))
+			{
+				std::filesystem::rename(sourcePath, targetPath);
+			}
 		}
 
 		if (directoryPayload != nullptr)
 		{
 			std::filesystem::path sourcePath = (const char*)directoryPayload->Data;
-
-			std::filesystem::path targetPath = parentDir;
-			targetPath /= path;
-			targetPath /= sourcePath.filename();
+			std::filesystem::path targetPath = payloadPath + "/" + sourcePath.filename().string();
 
 			std::filesystem::create_directory(targetPath);
 
@@ -137,29 +130,18 @@ void FilesystemExplorer::ImGuiDirectory(const std::filesystem::path& path, const
 
 	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 	{
-		this->m_RelativeDirectory = std::filesystem::relative(path, parentDir);
+		this->m_CurrentDirectory = payloadPath;
 	}
 
-	if (name != nullptr)
-	{
-		ImGui::TextWrapped(name);
-	}
-	else
-	{
-		ImGui::TextWrapped(filenameString.c_str());
-	}
+	ImGui::TextWrapped(name.c_str());
 
 	ImGui::NextColumn();
 	ImGui::PopID();
 }
 
-void FilesystemExplorer::ImGuiFile(const std::filesystem::path& path)
+void FilesystemExplorer::ImGuiFile(const std::string& payloadPath, const std::string& name)
 {
-	std::filesystem::path parentDir = this->m_Context->GetParentPath();
-
-	std::string filenameString = path.filename().string();
-
-	ImGui::PushID(filenameString.c_str());
+	ImGui::PushID(payloadPath.c_str());
 
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
 	ImGui::ImageButton((ImTextureID)m_FileIcon->GetID(), { this->m_ThumbnailSize, this->m_ThumbnailSize }, { 0, 1 }, { 1, 0 });
@@ -167,14 +149,13 @@ void FilesystemExplorer::ImGuiFile(const std::filesystem::path& path)
 
 	if (ImGui::BeginDragDropSource())
 	{
-		std::string relativePathString = VL::Utils::RelativePath(path, parentDir).string();
-		const char* itemPath = relativePathString.c_str();
+		const char* itemPath = payloadPath.c_str();
 		ImGui::Text(itemPath);
 		ImGui::SetDragDropPayload(EDITOR_FILESYSTEM_FILE, itemPath, (std::strlen(itemPath) + 1) * sizeof(char));
 		ImGui::EndDragDropSource();
 	}
 
-	ImGui::TextWrapped(filenameString.c_str());
+	ImGui::TextWrapped(name.c_str());
 
 	ImGui::NextColumn();
 	ImGui::PopID();

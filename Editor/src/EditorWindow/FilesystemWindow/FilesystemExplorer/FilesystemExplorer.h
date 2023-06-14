@@ -18,12 +18,12 @@ private:
 	VL::Ref<VL::Texture> m_DirectoryIcon;
 	VL::Ref<VL::Texture> m_FileIcon;
 
-	std::filesystem::path m_RelativeDirectory;
+	std::filesystem::path m_CurrentDirectory;
 	std::filesystem::path m_OldParentDir;
 
 	VL::Ref<EditorContext> m_Context;
 
-	void ImGuiDirectory(const std::filesystem::path& path, const char* name = nullptr);
+	void ImGuiDirectory(const std::string& payloadPath, const std::string& name);
 
-	void ImGuiFile(const std::filesystem::path& path);
+	void ImGuiFile(const std::string& payloadPath, const std::string& name);
 }; 

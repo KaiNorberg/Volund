@@ -25,6 +25,8 @@ namespace Volund
 
         std::string m_ParentPath;
 
+        std::string GetRelativePath(const std::string& absolutePath);
+
         std::string GetAbsolutePath(const std::string& relativePath);
 
         template<typename T>
@@ -58,19 +60,22 @@ namespace Volund
     {
         //std::unique_lock lock(this->m_Mutex);
 
+        std::string absolutePath = this->GetAbsolutePath(filepath);
+        std::string relativePath = this->GetRelativePath(filepath);
+
         if (m_Data.Contains<Asset<T>>())
         {
             auto& view = m_Data.View<Asset<T>>();
 
             for (int i = 0; i < view.size(); i++)
             {
-                if (view[i]->Filepath == filepath)
+                if (view[i]->Filepath == relativePath)
                 {
                     auto fetchedData = std::dynamic_pointer_cast<Asset<T>>(view[i])->Data;
                     if (fetchedData.expired())
                     {
                         this->m_Data.Erase<Asset<T>>(i);
-                        return this->Fetch<T>(filepath);
+                        return this->Fetch<T>(relativePath);
                     }
 
                     return fetchedData.lock();
@@ -78,8 +83,8 @@ namespace Volund
             }
         }
 
-        Ref<T> newAssetData = this->Load<T>(filepath);
-        this->Push(filepath, newAssetData);
+        Ref<T> newAssetData = this->Load<T>(absolutePath);
+        this->Push(relativePath, newAssetData);
 
         return newAssetData;
     }

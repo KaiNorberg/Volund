@@ -19,9 +19,7 @@ namespace Volund
     {
         VOLUND_INFO("Loading Mesh (%s)...", filepath.c_str());
 
-        std::string absolutePath = this->GetAbsolutePath(filepath);
-
-        Ref<Mesh> newMesh = Mesh::CreateAsync(absolutePath);
+        Ref<Mesh> newMesh = Mesh::CreateAsync(filepath);
 
         return newMesh;
     }
@@ -31,9 +29,7 @@ namespace Volund
     {
         VOLUND_INFO("Loading Texture (%s)...", filepath.c_str());
 
-        std::string absolutePath = this->GetAbsolutePath(filepath);
-
-        Ref<Texture> newTexture = Texture::CreateAsync(absolutePath);
+        Ref<Texture> newTexture = Texture::CreateAsync(filepath);
 
         return newTexture;
     }
@@ -43,9 +39,7 @@ namespace Volund
     {           
         VOLUND_INFO("Loading Shader (%s)...", filepath.c_str());
 
-        std::string absolutePath = this->GetAbsolutePath(filepath);
-
-        Ref<Shader> newShader = Shader::Create(absolutePath);
+        Ref<Shader> newShader = Shader::Create(filepath);
 
         return newShader;
     }
@@ -55,9 +49,7 @@ namespace Volund
     {
         VOLUND_INFO("Loading AudioBuffer (%s)...", filepath.c_str());
 
-        std::string absolutePath = this->GetAbsolutePath(filepath);
-
-        return std::make_shared<AudioBuffer>(absolutePath);
+        return std::make_shared<AudioBuffer>(filepath);
     }
 
     template<>
@@ -65,11 +57,9 @@ namespace Volund
     {
         VOLUND_INFO("Loading Material (%s)...", filepath.c_str());
 
-        std::string absolutePath = this->GetAbsolutePath(filepath);
+        auto materialData = LuaData(filepath);
 
-        auto materialData = LuaData(absolutePath);
-
-        if (!materialData.Valid())
+        if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
         {
             VOLUND_WARNING("Material data is not valid!");
             return Material::Create();
@@ -153,13 +143,25 @@ namespace Volund
         }
     }
 
+    std::string AssetManager::GetRelativePath(const std::string& absolutePath)
+    {
+        if (std::filesystem::exists(absolutePath))
+        {
+            return std::filesystem::relative(absolutePath, this->m_ParentPath).string();
+        }
+        else
+        {
+            return absolutePath;
+        }
+    }
+
     std::string AssetManager::GetAbsolutePath(const std::string& relativePath)
     {
-        if (std::filesystem::exists(relativePath))
+        if (!relativePath.empty() && relativePath[0] == ':')
         {
-            return std::filesystem::relative(relativePath, this->m_ParentPath).string();
-        }
-        else if (!relativePath.empty() && relativePath[0] == ':')
+            return relativePath;
+        }        
+        else if (std::filesystem::exists(relativePath))
         {
             return relativePath;
         }

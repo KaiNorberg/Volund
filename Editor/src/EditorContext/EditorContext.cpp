@@ -142,6 +142,7 @@ void EditorContext::SaveScene(const std::string& filepath)
 	VL::DeferredTaskHandler::DeferTask([this, filepath]()
 	{
 		//TODO: Reimplement this
+		//IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
 		//auto sceneSerializer = VL::SceneSerializer(this->GetScene());
 

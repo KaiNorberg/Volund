@@ -26,7 +26,7 @@ namespace Volund
 
             if (!file)
             {
-                VOLUND_ERROR("Failed to load shader %s!", filepath.c_str());
+                VOLUND_WARNING("Failed to load shader %s!", filepath.c_str());
                 return nullptr;
             }
 
