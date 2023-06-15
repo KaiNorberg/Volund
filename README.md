@@ -31,7 +31,7 @@ After that, you can simply compile the generated project with your chosen tool s
 
 ## Creating a Scene
 
-In Volund a scene is simply any .lua file. In the future there will be an editor similar to other game engines, however for now you can simply write lua files manually. Some example files can be found down below and in the [examples](https://github.com/Kaj9296/Volund/tree/main/examples) folder.
+In Volund a scene is simply any .lua file. Some example files can be found down below and in the [examples](https://github.com/Kaj9296/Volund/tree/main/examples) folder.
 
 ## Running a Scene
 
