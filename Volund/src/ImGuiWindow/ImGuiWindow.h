@@ -2,7 +2,9 @@
 
 #include "EventDispatcher/Event.h"
 #include "PolyContainer/PolyContainer.h"
-#include "ImGuiObject/ImGuiObject.h"
+
+#define VOLUND_IMGUI_FILE "VOLUND_IMGUI_FILE"
+#define VOLUND_IMGUI_DIRECTORY "VOLUND_IMGUI_DIRECTORY"
 
 namespace Volund
 {
@@ -36,14 +38,29 @@ namespace Volund
 
 	protected:
 
-		template <typename T>
-		void PushObject(T* object);
+		static void ImGuiStartCombo();
 
-		template <typename T>
-		void PushObject(Ref<T> object);
+		static void ImGuiNextColumn();
 
-		template <typename T>
-		Ref<T> GetObject(const std::string& objectId);
+		static void ImGuiEndCombo();
+
+		static void ImGuiAlign(const std::string& text, float alignment);
+
+		static bool ImGuiFile(const std::string& name, std::string& out);
+
+		static void ImGuiString(const std::string& name, std::string& out);
+
+		static void ImGuiBool(const std::string& name, bool& value);
+
+		static void ImGuiFloat(const std::string& name, float& value);
+
+		static void ImGuiVec3(std::string_view Name, VL::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
+
+		static void ImGuiColoredText(const std::string& text);
+
+		static void ImGuiTextList(const std::string& name, const std::vector<std::string>& textList);
+
+		static VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
 
 	private:
 
@@ -58,37 +75,6 @@ namespace Volund
 		Vec2 m_Position;
 
 		Vec2 m_Size;
-
-		PolyContainer<ImGuiObject> m_ImGuiObjects;
-		std::vector<Ref<ImGuiObject>> m_ObjectDrawOrder;
 	};
-
-	template<typename T>
-	inline void ImGuiWindow::PushObject(T* object)
-	{
-		this->PushObject(Ref<T>(object));
-	}
-
-	template<typename T>
-	inline void ImGuiWindow::PushObject(Ref<T> object)
-	{
-		this->m_ImGuiObjects.PushBack(object);
-		this->m_ObjectDrawOrder.push_back(object);
-	}
-
-	template<typename T>
-	inline Ref<T> ImGuiWindow::GetObject(const std::string& objectId)
-	{
-		for (int i = 0; i < this->m_ImGuiObjects.Size<T>(); i++)
-		{
-			auto object = this->m_ImGuiObjects.Get<T>(i);
-			if (object->GetID() == objectId)
-			{
-				return object;
-			}
-		}
-
-		return nullptr;
-	}
 }
 

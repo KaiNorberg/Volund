@@ -50,7 +50,9 @@ private:
 		VL::Ref<VL::Framebuffer> m_EditorFramebuffer;
 	} m_Camera;
 
-	VL::Ref<VL::ImGuiImage> m_ViewportImage;
+	VL::Vec2 m_Size = VL::Vec2(100, 100);
+	std::string m_Text;
+	VL::Ref<VL::Framebuffer> m_Viewportbuffer;
 
 	VL::Input m_Input;
 };

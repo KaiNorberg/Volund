@@ -3,7 +3,7 @@
 
 #include "ThreadPool/ThreadPool.h"
 
-#include "Lua/LuaData/LuaData.h"
+#include "Lua/LuaDeserializer/LuaDeserializer.h"
 
 namespace Volund
 {

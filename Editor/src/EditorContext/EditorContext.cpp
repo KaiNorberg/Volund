@@ -125,10 +125,7 @@ void EditorContext::LoadScene(const std::string& filepath)
 		return;
 	}
 
-	VL::DeferredTaskHandler::DeferTask([this, filepath]()
-	{
-		this->m_GameState = std::make_shared<VL::GameState>(filepath);
-	});
+	this->m_GameState = std::make_shared<VL::GameState>(filepath);
 }
 
 void EditorContext::SaveScene(const std::string& filepath)
@@ -141,11 +138,6 @@ void EditorContext::SaveScene(const std::string& filepath)
 
 	VL::DeferredTaskHandler::DeferTask([this, filepath]()
 	{
-		//TODO: Reimplement this
-		//IMPORTANT: Remember to update the code below whenever a new component is implemented.
-
-		//auto sceneSerializer = VL::SceneSerializer(this->GetScene());
-
-		//sceneSerializer.WriteToFile(filepath);
+		this->GetAssetmanager()->Serialize(this->GetScene(), filepath);
 	});
 }

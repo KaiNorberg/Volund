@@ -10,6 +10,8 @@ namespace Volund
 
 		static const char* Fetch(const std::string& filepath);
 
+		static const std::unordered_map<std::string, const char*>& Map();
+
 	private:
 
 		ResourceLibrary();

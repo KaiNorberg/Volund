@@ -22,6 +22,11 @@ namespace Volund
 		}
     }
 
+	const std::unordered_map<std::string, const char*>& ResourceLibrary::Map()
+	{
+		return m_Resources;
+	}
+
 	void ResourceLibrary::CreateResource(const std::string& filepath, const char* content)
 	{
 		m_Resources[filepath] = content;
@@ -29,25 +34,25 @@ namespace Volund
 
 	ResourceLibrary::ResourceLibrary()
     {
-		CreateResource("://Shaders/Simple.shader",
+		CreateResource("://Simple.shader",
 			#include "Resources/Shaders/Simple.shader"
 		);
-		CreateResource("://Shaders/SimpleTexture.shader",
+		CreateResource("://SimpleTexture.shader",
 			#include "Resources/Shaders/SimpleTexture.shader"
 		);
-		CreateResource("://Shaders/PBR.shader",
+		CreateResource("://PBR.shader",
 			#include "Resources/Shaders/PBR.shader"
 		);
-		CreateResource("://Shaders/PBRTexture.shader",
+		CreateResource("://PBRTexture.shader",
 			#include "Resources/Shaders/PBRTexture.shader"
 		);
-		CreateResource("://Meshes/Sphere.obj",
+		CreateResource("://Sphere.obj",
 			#include "Resources/Meshes/Sphere.obj"
 		);
-		CreateResource("://Meshes/Cube.obj",
+		CreateResource("://Cube.obj",
 			#include "Resources/Meshes/Cube.obj"
 		);
-		CreateResource("://Meshes/Quad.obj",
+		CreateResource("://Quad.obj",
 			#include "Resources/Meshes/Quad.obj"
 		);
 	}

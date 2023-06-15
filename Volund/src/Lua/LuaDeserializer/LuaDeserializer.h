@@ -2,7 +2,7 @@
 
 namespace Volund 
 {
-	class LuaData
+	class LuaDeserializer
 	{
 	public:
 
@@ -18,9 +18,9 @@ namespace Volund
 
 		sol::table::iterator end();
 
-		LuaData(const std::string& filepath = "");
+		LuaDeserializer(const std::string& filepath = "");
 
-		virtual ~LuaData();
+		virtual ~LuaDeserializer();
 
 	private:
 

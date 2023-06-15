@@ -4,15 +4,46 @@
 
 #include "EditorContext/EditorContext.h"
 
-#include "AddComponentPopup/AddComponentPopup.h"
-
 class InspectorWindow : public EditorWindow
 {
 public:
+
+	void OnProcedure(const VL::Event& e) override;
 
 	InspectorWindow(VL::Ref<EditorContext> context);
 
 private:
 
-	VL::Ref<AddComponentPopup> m_AddComponentPopup;
+	template<typename T>
+	void DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc);
 };
+
+template<typename T>
+inline void InspectorWindow::DrawComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
+{
+	auto scene = this->m_Context->GetScene();
+
+	for (int i = 0; i < scene->ComponentAmount<T>(entity); i++)
+	{
+		void* ptrID = scene->GetComponent<T>(entity, i).get();
+
+		bool open = ImGui::TreeNodeEx(ptrID, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, name.c_str());
+
+		if (ImGui::BeginPopupContextItem())
+		{
+			if (ImGui::MenuItem("Delete"))
+			{
+				scene->DeleteComponent<T>(entity, i);
+			}
+
+			ImGui::EndPopup();
+		}
+
+		if (open)
+		{
+			drawFunc(i);
+			ImGui::TreePop();
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
+		}
+	}
+}

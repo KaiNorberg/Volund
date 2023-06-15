@@ -12,9 +12,41 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 	{
 		auto scene = this->m_Context->GetScene();
 
-		VL::Vec2 viewportSize = this->m_ViewportImage->GetSize();
+		this->m_Camera.Render(scene, ImVec2(this->m_Size.x, this->m_Size.y));
 
-		this->m_Camera.Render(scene, ImVec2(viewportSize.x, viewportSize.y));
+		const char* buttonText;
+		if (this->m_Context->IsPaused())
+		{
+			buttonText = "Play";
+		}
+		else
+		{
+			buttonText = "Stop";
+		}
+
+		ImGuiAlign(buttonText, 0.5f);
+		if (ImGui::Button(buttonText))
+		{
+			if (this->m_Context->GetScene() != nullptr)
+			{
+				if (this->m_Context->IsPaused())
+				{
+					this->m_Context->Play();
+				}
+				else
+				{
+					this->m_Context->Pause();
+				}
+			}
+		}
+
+		if (ImGui::BeginChild(this->GetId().c_str()))
+		{
+			ImVec2 viewportSize = ImGui::GetContentRegionAvail();
+			this->m_Size = VL::Vec2(viewportSize.x, viewportSize.y);
+			ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_Viewportbuffer->GetAttachment(0)), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
+			ImGui::EndChild();
+		}
 	}
 	break;
 	case VL::EventType::Update:
@@ -23,13 +55,13 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 
 		if (!this->m_Context->IsPaused())
 		{
-			this->m_ViewportImage->SetTexture(this->m_Camera.GetSceneFramebuffer());
+			this->m_Viewportbuffer = this->m_Camera.GetSceneFramebuffer();
 		}
 		else
 		{
 			this->m_Camera.Update(this->m_Input, timeStep);
 
-			this->m_ViewportImage->SetTexture(this->m_Camera.GetEditorFramebuffer());
+			this->m_Viewportbuffer = this->m_Camera.GetEditorFramebuffer();
 		}
 	}
 	break;
@@ -41,36 +73,6 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 	this->SetName("Viewport");
 
 	this->m_Context = context;
-
-	this->PushObject(new VL::ImGuiButton("Play", [this](VL::ImGuiButton* parent) 
-	{
-		if (this->m_Context->GetScene() == nullptr)
-		{
-			return;
-		}
-
-		if (this->m_Context->IsPaused())
-		{
-			this->m_Context->Play();
-		}
-		else
-		{
-			this->m_Context->Pause();
-		}
-
-		if (this->m_Context->IsPaused())
-		{
-			parent->SetText("Play");
-		}
-		else
-		{
-			parent->SetText("Stop");
-		}
-	}, 0.5f));
-
-	this->m_ViewportImage = VL::Ref<VL::ImGuiImage>(new VL::ImGuiImage(VL::Vec2(100, 100), this->m_Camera.GetEditorFramebuffer()));
-	this->m_ViewportImage->FillWindow = true;
-	this->PushObject(this->m_ViewportImage);
 }
 
 ////////////////////////////////////////////////////////////

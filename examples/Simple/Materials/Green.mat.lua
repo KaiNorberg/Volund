@@ -1,6 +1,6 @@
 local material = 
 {
-    "://Shaders/Simple.shader",
+    "://Simple.shader",
     Color = Vec3:new(0.0, 1.0, 0.0),
     AmbientLighting = Vec3:new(0.0, 0.0, 0.0)
 }

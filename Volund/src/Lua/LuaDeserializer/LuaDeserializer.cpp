@@ -1,5 +1,5 @@
 #include "PCH/PCH.h"
-#include "LuaData.h"
+#include "LuaDeserializer.h"
 
 #include <sol/sol.hpp>
 
@@ -19,37 +19,37 @@ namespace Volund
 	
 	////////////////////////////////////////////////////////////////////
 
-	uint64_t LuaData::Size()
+	uint64_t LuaDeserializer::Size()
 	{
 		return this->m_Table.size();
 	}
 
-	bool LuaData::Valid()
+	bool LuaDeserializer::Valid()
 	{
 		return this->m_Valid;
 	}
 
-	sol::object LuaData::operator[](uint64_t i)
+	sol::object LuaDeserializer::operator[](uint64_t i)
 	{
 		return this->m_Table[i];
 	}
 
-	sol::object LuaData::operator[](const std::string& key)
+	sol::object LuaDeserializer::operator[](const std::string& key)
 	{
 		return this->m_Table[key];
 	}
 
-	sol::table::iterator LuaData::begin()
+	sol::table::iterator LuaDeserializer::begin()
 	{
 		return this->m_Table.begin();
 	}
 
-	sol::table::iterator LuaData::end()
+	sol::table::iterator LuaDeserializer::end()
 	{
 		return this->m_Table.end();
 	}
 
-	LuaData::LuaData(const std::string& filepath)
+	LuaDeserializer::LuaDeserializer(const std::string& filepath)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -91,7 +91,7 @@ namespace Volund
 		}
 	}
 
-	LuaData::~LuaData()
+	LuaDeserializer::~LuaDeserializer()
 	{
 
 	}

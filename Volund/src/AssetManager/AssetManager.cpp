@@ -14,7 +14,8 @@
 
 #include "Scene/Scene.h"
 
-#include "Lua/LuaData/LuaData.h"
+#include "Lua/LuaDeserializer/LuaDeserializer.h"
+#include "Lua/LuaSerializer/LuaSerializer.h"
 
 #define VOLUND_SET_COMPONENT(table, member, name) if (table[name] != sol::nil) {member = table[name];}
 
@@ -34,110 +35,120 @@ namespace Volund
     };
 
     template<>
-    Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath)
+    void AssetManager::Serialize<Scene>(Ref<Scene> scene, const std::string& destinationPath)
     {
-        VOLUND_INFO("Loading Mesh (%s)...", filepath.c_str());
+        VOLUND_INFO("Serializing scene to (%s)...", destinationPath.c_str());
 
-        Ref<Mesh> newMesh = Mesh::CreateAsync(filepath);
+        LuaSerializer serializer = LuaSerializer();
 
-        return newMesh;
-    }
+        //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
-    template<>
-    Ref<Texture> AssetManager::Load<Texture>(const std::string& filepath)
-    {
-        VOLUND_INFO("Loading Texture (%s)...", filepath.c_str());
-
-        Ref<Texture> newTexture = Texture::CreateAsync(filepath);
-
-        return newTexture;
-    }
-
-    template<>
-    Ref<Shader> AssetManager::Load<Shader>(const std::string& filepath)
-    {           
-        VOLUND_INFO("Loading Shader (%s)...", filepath.c_str());
-
-        Ref<Shader> newShader = Shader::Create(filepath);
-
-        return newShader;
-    }
-
-    template<>
-    Ref<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath)
-    {
-        VOLUND_INFO("Loading AudioBuffer (%s)...", filepath.c_str());
-
-        return std::make_shared<AudioBuffer>(filepath);
-    }
-
-    template<>
-    Ref<Material> AssetManager::Load<Material>(const std::string& filepath)
-    {
-        VOLUND_INFO("Loading Material (%s)...", filepath.c_str());
-
-        auto materialData = LuaData(filepath);
-
-        if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
+        serializer.StartTable();
+        for (auto& [entity, polyContainer] : (*scene))
         {
-            VOLUND_WARNING("Material data is not valid!");
-            return Material::Create();
+            serializer.StartTable();
+
+            for (int i = 0; i < scene->ComponentAmount<Tag>(entity); i++)
+            {
+                auto component = scene->GetComponent<Tag>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::Tag);
+                serializer.Insert("String", component->String);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<Transform>(entity); i++)
+            {
+                auto component = scene->GetComponent<Transform>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::Transform);
+                serializer.Insert("Position", component->Position);
+                serializer.Insert("Rotation", component->GetRotation());
+                serializer.Insert("Scale", component->Scale);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<Camera>(entity); i++)
+            {
+                auto component = scene->GetComponent<Camera>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::Camera);
+                serializer.Insert("FOV", component->FOV);
+                serializer.Insert("NearPlane", component->NearPlane);
+                serializer.Insert("FarPlane", component->FarPlane);
+                //TODO: Insert targetbuffer
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<CameraMovement>(entity); i++)
+            {
+                auto component = scene->GetComponent<CameraMovement>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::CameraMovement);
+                serializer.Insert("Speed", component->Speed);
+                serializer.Insert("Sensitivity", component->Sensitivity);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<MeshRenderer>(entity); i++)
+            {
+                auto component = scene->GetComponent<MeshRenderer>(entity, i);
+
+                std::string meshPath = this->FetchFilepath(component->GetMesh());
+                std::replace(meshPath.begin(), meshPath.end(), '\\', '/');
+
+                std::string materialPath = this->FetchFilepath(component->GetMaterial());
+                std::replace(materialPath.begin(), materialPath.end(), '\\', '/');
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::MeshRenderer);
+                serializer.Insert("Mesh", meshPath);
+                serializer.Insert("Material", materialPath);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<PointLight>(entity); i++)
+            {
+                auto component = scene->GetComponent<PointLight>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::PointLight);
+                serializer.Insert("Color", component->Color);
+                serializer.Insert("Brightness", component->Brightness);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<SoundSource>(entity); i++)
+            {
+                auto component = scene->GetComponent<SoundSource>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::SoundSource);
+                serializer.Insert("Looping", component->GetLooping());
+                serializer.Insert("Pitch", component->GetPitch());
+                serializer.Insert("Gain", component->GetGain());
+                serializer.Insert("AutoPlay", component->AutoPlay);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<SoundListener>(entity); i++)
+            {
+                auto component = scene->GetComponent<SoundListener>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::SoundListener);
+                serializer.EndTable();
+            }
+
+            serializer.EndTable();
         }
+        serializer.EndTable();
 
-        auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
-
-        auto material = Material::Create(shader);
-
-        bool first = true;
-
-        for (auto& [key, value] : materialData)
-        {
-            if (first)
-            {
-                first = false;
-                continue;
-            }
-
-            switch (value.get_type())
-            {
-            case sol::type::number:
-            {
-                if (value.is<int64_t>())
-                {
-                    material->SetInt(key.as<std::string>(), (int)value.as<int64_t>());
-                }
-                else if (value.is<double>())
-                {
-                    material->SetFloat(key.as<std::string>(), (float)value.as<double>());
-                }
-            }
-            break;
-            case sol::type::userdata:
-            {
-                if (value.is<Vec2>())
-                {
-                    material->SetVec2(key.as<std::string>(), value.as<Vec2>());
-                }
-                else if (value.is<Vec3>())
-                {
-                    material->SetVec3(key.as<std::string>(), value.as<Vec3>());
-                }
-                else if (value.is<Vec4>())
-                {
-                    material->SetVec4(key.as<std::string>(), value.as<Vec4>());
-                }
-            }
-            break;
-            case sol::type::string:
-            {
-                auto texture = this->Fetch<Texture>(value.as<std::string>());
-                material->SetTexture(key.as<std::string>(), texture);
-            }
-            break;
-            }
-        }
-
-        return material;
+        serializer.WriteToFile(destinationPath);
     }
 
     template<>
@@ -147,7 +158,7 @@ namespace Volund
 
         auto scene = std::make_shared<Scene>();
 
-        LuaData sceneData = LuaData(filepath);
+        LuaDeserializer sceneData = LuaDeserializer(filepath);
 
         if (!sceneData.Valid())
         {
@@ -314,6 +325,113 @@ namespace Volund
         }
 
         return scene;
+    }
+
+    template<>
+    Ref<Material> AssetManager::Load<Material>(const std::string& filepath)
+    {
+        VOLUND_INFO("Loading Material (%s)...", filepath.c_str());
+
+        auto materialData = LuaDeserializer(filepath);
+
+        if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
+        {
+            VOLUND_WARNING("Material data is not valid!");
+            return Material::Create();
+        }
+
+        auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
+
+        auto material = Material::Create(shader);
+
+        bool first = true;
+
+        for (auto& [key, value] : materialData)
+        {
+            if (first)
+            {
+                first = false;
+                continue;
+            }
+
+            switch (value.get_type())
+            {
+            case sol::type::number:
+            {
+                if (value.is<int64_t>())
+                {
+                    material->SetInt(key.as<std::string>(), (int)value.as<int64_t>());
+                }
+                else if (value.is<double>())
+                {
+                    material->SetFloat(key.as<std::string>(), (float)value.as<double>());
+                }
+            }
+            break;
+            case sol::type::userdata:
+            {
+                if (value.is<Vec2>())
+                {
+                    material->SetVec2(key.as<std::string>(), value.as<Vec2>());
+                }
+                else if (value.is<Vec3>())
+                {
+                    material->SetVec3(key.as<std::string>(), value.as<Vec3>());
+                }
+                else if (value.is<Vec4>())
+                {
+                    material->SetVec4(key.as<std::string>(), value.as<Vec4>());
+                }
+            }
+            break;
+            case sol::type::string:
+            {
+                auto texture = this->Fetch<Texture>(value.as<std::string>());
+                material->SetTexture(key.as<std::string>(), texture);
+            }
+            break;
+            }
+        }
+
+        return material;
+    }
+
+    template<>
+    Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath)
+    {
+        VOLUND_INFO("Loading Mesh (%s)...", filepath.c_str());
+
+        Ref<Mesh> newMesh = Mesh::CreateAsync(filepath);
+
+        return newMesh;
+    }
+
+    template<>
+    Ref<Texture> AssetManager::Load<Texture>(const std::string& filepath)
+    {
+        VOLUND_INFO("Loading Texture (%s)...", filepath.c_str());
+
+        Ref<Texture> newTexture = Texture::CreateAsync(filepath);
+
+        return newTexture;
+    }
+
+    template<>
+    Ref<Shader> AssetManager::Load<Shader>(const std::string& filepath)
+    {           
+        VOLUND_INFO("Loading Shader (%s)...", filepath.c_str());
+
+        Ref<Shader> newShader = Shader::Create(filepath);
+
+        return newShader;
+    }
+
+    template<>
+    Ref<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath)
+    {
+        VOLUND_INFO("Loading AudioBuffer (%s)...", filepath.c_str());
+
+        return std::make_shared<AudioBuffer>(filepath);
     }
 
     std::string AssetManager::GetParentPath()

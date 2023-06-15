@@ -2,6 +2,8 @@
 #include "ImGuiWindow.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 namespace Volund
 {
@@ -47,8 +49,6 @@ namespace Volund
 
 	void ImGuiWindow::Procedure(const Event& e)
 	{
-		this->OnProcedure(e);
-
 		switch (e.Type)
 		{
 		case EventType::Render:
@@ -72,48 +72,325 @@ namespace Volund
 				this->m_Size = Vec2(windowSize.x, windowSize.y);
 				this->m_Position = Vec2(windowPos.x, windowPos.y);
 
-				for (auto& imGuiObject : this->m_ObjectDrawOrder)
-				{
-					if (imGuiObject->IsActive)
-					{
-						ImGui::PushID(imGuiObject->GetId().c_str());
-
-						imGuiObject->Procedure(e);
-
-						if (imGuiObject->GetDragDropSourceCallback() != nullptr)
-						{
-							if (ImGui::BeginDragDropSource())
-							{
-								imGuiObject->GetDragDropSourceCallback()();
-								ImGui::EndDragDropSource();
-							}
-						}
-						if (imGuiObject->GetDragDropTargetCallback() != nullptr)
-						{
-							if (ImGui::BeginDragDropTarget())
-							{
-								imGuiObject->GetDragDropTargetCallback()();
-								ImGui::EndDragDropTarget();
-							}
-						}
-
-						ImGui::PopID();
-					}
-				}
+				this->OnProcedure(e);
 			}	
 
 			ImGui::End();
 		}
 		break;
 		default:
-		{
-			for (auto& imGuiObject : this->m_ObjectDrawOrder)
-			{
-				imGuiObject->Procedure(e);
-			}
+		{		
+			this->OnProcedure(e);
 		}
 		break;
 		}
+	}
+
+	void ImGuiWindow::ImGuiStartCombo()
+	{
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, 100);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 2));
+	}
+
+	void ImGuiWindow::ImGuiNextColumn()
+	{
+		ImGui::NextColumn();
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+	}
+
+	void ImGuiWindow::ImGuiEndCombo()
+	{
+		ImGui::PopStyleVar();
+		ImGui::Columns(1);
+		ImGui::NextColumn();
+	}
+
+	void ImGuiWindow::ImGuiAlign(const std::string& text, float alignment)
+	{
+		ImGuiStyle& style = ImGui::GetStyle();
+
+		float size = ImGui::CalcTextSize(text.c_str()).x + style.FramePadding.x * 2.0f;
+		float avail = ImGui::GetContentRegionAvail().x;
+
+		float off = (avail - size) * alignment;
+		if (off > 0.0f)
+		{
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + off);
+		}
+	}
+
+	bool ImGuiWindow::ImGuiFile(const std::string& name, std::string& out)
+	{
+		bool outChanged = false;
+
+		ImGuiStartCombo();
+
+		ImGui::Text(name.c_str());
+		ImGuiNextColumn();
+
+		float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 ButtonSize(-FLT_MIN, LineHeight);
+
+		std::string fileName = std::filesystem::path(out).filename().string();
+		if (fileName.empty())
+		{
+			fileName = "Drag a file here!";
+		}
+
+		ImGui::Button(fileName.c_str(), ButtonSize);
+
+		if (ImGui::BeginDragDropTarget())
+		{
+			const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(VOLUND_IMGUI_FILE);
+
+			if (payload != nullptr)
+			{
+				const char* path = (const char*)payload->Data;
+
+				out = path;
+
+				outChanged = true;
+			}
+
+			ImGui::EndDragDropTarget();
+		}
+
+		ImGuiEndCombo();
+
+		return outChanged;
+	}
+
+	void ImGuiWindow::ImGuiString(const std::string& name, std::string& out)
+	{
+		ImGui::PushID(name.c_str());
+
+		ImGuiStartCombo();
+
+		ImGui::Text(name.data());
+		ImGuiNextColumn();
+
+		std::string newValue = out;
+		bool changed = ImGui::InputText("##ImGuiString", &newValue);
+
+		ImGuiEndCombo();
+
+		ImGui::PopID();
+
+		if (changed && ImGui::IsKeyPressed(ImGuiKey_Enter))
+		{
+			out = newValue;
+		}
+	}
+
+	void ImGuiWindow::ImGuiBool(const std::string& name, bool& value)
+	{
+		ImGuiStartCombo();
+
+		ImGui::PushID(name.c_str());
+
+		ImGui::Text(name.c_str());
+		ImGuiNextColumn();
+		ImGui::Checkbox("##", &value);
+
+		ImGui::PopID();
+
+		ImGuiEndCombo();
+	}
+
+	void ImGuiWindow::ImGuiFloat(const std::string& name, float& value)
+	{
+		ImGuiStartCombo();
+
+		ImGui::PushID(name.c_str());
+
+		ImGui::Text(name.c_str());
+		ImGuiNextColumn();
+		ImGui::DragFloat("##", &value);
+
+		ImGui::PopID();
+
+		ImGuiEndCombo();
+	}
+
+	void ImGuiWindow::ImGuiVec3(std::string_view Name, VL::Vec3* Value, float Speed, float DefaultValue)
+	{
+		ImGui::PushID((void*)Name.data());
+
+		ImGui::Columns(2);
+		ImGui::SetColumnWidth(0, 100);
+
+		ImGui::Text(Name.data());
+		ImGui::NextColumn();
+
+		float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+		ImVec2 ButtonSize(LineHeight + 3.0f, LineHeight);
+
+		float spacing = 2;
+
+		ImGui::PushMultiItemsWidths(3, ImGui::GetContentRegionAvail().x - (ButtonSize.x - spacing) * 3);
+		ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(spacing, 1));
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.9f, 0.2f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.8f, 0.1f, 0.15f, 1.0f));
+
+		if (ImGui::Button("X", ButtonSize))
+		{
+			Value->x = DefaultValue;
+		}
+
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##X", &Value->x, Speed);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.3f, 0.8f, 0.3f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.2f, 0.7f, 0.2f, 1.0f));
+
+		if (ImGui::Button("Y", ButtonSize))
+		{
+			Value->y = DefaultValue;
+		}
+
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Y", &Value->y, Speed);
+		ImGui::PopItemWidth();
+		ImGui::SameLine();
+
+		ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.35f, 0.9f, 1.0f));
+		ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.1f, 0.25f, 0.8f, 1.0f));
+
+		if (ImGui::Button("Z", ButtonSize))
+		{
+			Value->z = DefaultValue;
+		}
+
+		ImGui::PopStyleColor(3);
+
+		ImGui::SameLine();
+		ImGui::DragFloat("##Z", &Value->z, Speed);
+		ImGui::PopItemWidth();
+
+		ImGui::PopStyleVar();
+
+		ImGui::Columns(1);
+
+		ImGui::PopID();
+	}
+
+	void ImGuiWindow::ImGuiColoredText(const std::string& text)
+	{
+		ImGuiStyle* style = &ImGui::GetStyle();
+
+		const ImVec4 oldTextColor = style->Colors[ImGuiCol_Text];
+
+		std::string outputString;
+		outputString.reserve(text.size());
+		for (int i = 0; i < text.size(); i++)
+		{
+			if (i - text.size() > 5 && text[i] == '\033'
+				&& text[i + 1] == '[' && text[i + 2] == '3' && text[i + 4] == 'm')
+			{
+				if (!outputString.empty())
+				{
+					ImGui::Text(outputString.c_str());
+					ImGui::SameLine();
+					outputString.clear();
+				}
+
+				switch (text[i + 3])
+				{
+				case VOLUND_LOGGERCOLOR_BLACK[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.0f, 0.0f, 0.0f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_RED[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.8f, 0.1f, 0.1f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_GREEN[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.42f * 1.5f, 0.52f * 1.5f, 0.36f * 1.5f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_YELLOW[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.8f, 0.6f, 0.0f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_BLUE[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.36f, 0.68f, 0.93f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_MAGENTA[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.55f, 0.1f, 0.5f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_CYAN[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(0.1f, 0.6f, 0.9f, 1.00f);
+				}
+				break;
+				case VOLUND_LOGGERCOLOR_WHITE[3]:
+				{
+					style->Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.00f);
+				}
+				break;
+				}
+				i += 4;
+			}
+			else
+			{
+				outputString.push_back(text[i]);
+			}
+		}
+
+		if (!outputString.empty())
+		{
+			ImGui::Text(outputString.c_str());
+		}
+
+		style->Colors[ImGuiCol_Text] = oldTextColor;
+	}
+
+	void ImGuiWindow::ImGuiTextList(const std::string& name, const std::vector<std::string>& textList)
+	{
+		if (ImGui::BeginListBox(name.c_str(), ImVec2(-FLT_MIN, -FLT_MIN)))
+		{
+			for (auto& string : textList)
+			{
+				ImGuiColoredText(string);
+			}
+
+			ImGui::SameLine();
+
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::CalcTextSize("   ").x);
+
+			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
+			{
+				ImGui::SetScrollHereY(1.0f);
+			}
+
+			ImGui::EndListBox();
+		}
+	}
+
+	VL::Vec2 ImGuiWindow::ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize)
+	{
+		VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Position, 1.0f);
+		ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
+		return VL::Vec2(WindowPos.x + ScreenPosition.x * WindowSize.x, WindowPos.y + (1.0f - ScreenPosition.y) * WindowSize.y);
 	}
 
 	ImGuiWindow::ImGuiWindow()
