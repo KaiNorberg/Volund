@@ -4,6 +4,8 @@
 
 #include "EditorContext/EditorContext.h"
 
+#include "AddComponentPopup/AddComponentPopup.h"
+
 class InspectorWindow : public EditorWindow
 {
 public:
@@ -12,4 +14,5 @@ public:
 
 private:
 
+	VL::Ref<AddComponentPopup> m_AddComponentPopup;
 };

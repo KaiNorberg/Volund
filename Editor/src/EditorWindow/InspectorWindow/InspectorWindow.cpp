@@ -122,6 +122,13 @@ InspectorWindow::InspectorWindow(VL::Ref<EditorContext> context)
 
 	this->PushObject(VL::Ref<VL::ImGuiSeparator>(new VL::ImGuiSeparator()));
 
-	//this->PushObject(VL::Ref<VL::ImGuiButton>(new VL::ImGuiButton("AddComponentButton")));
+	this->m_AddComponentPopup = VL::Ref<AddComponentPopup>(new AddComponentPopup(this->m_Context));
+
+	this->PushObject(VL::Ref<VL::ImGuiButton>(new VL::ImGuiButton("Add Component", [this](VL::ImGuiButton* button) 
+	{
+		this->m_AddComponentPopup->Open();
+	}, 0.5f)));
+
+	this->PushObject(this->m_AddComponentPopup);
 }
 
