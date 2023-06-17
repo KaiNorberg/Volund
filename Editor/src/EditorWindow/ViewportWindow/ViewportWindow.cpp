@@ -95,8 +95,13 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 	cursorDelta.y = std::clamp(cursorDelta.y, -10, 10);
 	scrollDelta = std::clamp(scrollDelta, -10.0f, 10.0f);
 
-	if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT) || scrollDelta != 0.0f)
+	if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
 	{
+		if (scrollDelta != 0.0f)
+		{
+			this->m_Distance -= (scrollDelta)*this->ZoomSpeed * this->m_Distance;
+		}
+
 		VL::Vec3 front = glm::normalize(this->m_BallCenter - this->m_Position);
 		VL::Quat cameraQuaternion = glm::quatLookAt(front, -VL::Utils::UP);
 		VL::Vec3 right = cameraQuaternion * VL::Utils::RIGHT;
@@ -138,9 +143,7 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 		ballMatrix *= VL::Mat4x4(ballQuaternion);
 		ballMatrix = glm::scale(ballMatrix, VL::Vec3(this->m_Distance));
 
-		this->m_Distance -= (scrollDelta) * this->ZoomSpeed * this->m_Distance;
-
-		this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, m_Distance, 1.0);
+		this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, 1.0, 1.0);
 	}
 	/*else if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
 	{

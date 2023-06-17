@@ -31,6 +31,8 @@ namespace Volund
 		void SetShader(Ref<Shader> shader);
 		Ref<Shader> GetShader();
 
+		Ref<MaterialBlueprint> GetBlueprint();
+
 		static Ref<Material> Create();
 
 		static Ref<Material> Create(Ref<Shader> shader);

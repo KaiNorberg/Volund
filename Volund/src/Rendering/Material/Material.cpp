@@ -160,6 +160,18 @@ namespace Volund
 		return this->m_Shader;
 	}
 
+	Ref<MaterialBlueprint> Material::GetBlueprint()
+	{
+		if (this->m_Shader == nullptr)
+		{
+			return nullptr;
+		}
+		else
+		{
+			return this->m_Shader->GetMaterialBlueprint();
+		}
+	}
+
 	void Material::CompareBlueprint()
 	{
 		if (this->m_Shader == nullptr)

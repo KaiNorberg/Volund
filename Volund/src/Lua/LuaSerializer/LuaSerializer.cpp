@@ -71,7 +71,7 @@ namespace Volund
 	void LuaSerializer::Insert(std::string const& name, Vec2 const& value)
 	{
 		this->InsertName(name);
-		this->m_Output += "Vec3:new(" + std::to_string(value.x) +
+		this->m_Output += "Vec2:new(" + std::to_string(value.x) +
 			", " + std::to_string(value.y) + ")";
 	}
 
@@ -86,7 +86,7 @@ namespace Volund
 	void LuaSerializer::Insert(std::string const& name, Vec4 const& value)
 	{
 		this->InsertName(name);
-		this->m_Output += "Vec3:new(" + std::to_string(value.x) +
+		this->m_Output += "Vec4:new(" + std::to_string(value.x) +
 			", " + std::to_string(value.y) +
 			", " + std::to_string(value.z) +
 			", " + std::to_string(value.w) + ")";

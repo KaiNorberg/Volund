@@ -19,8 +19,8 @@ private:
 	public:
 
 		float LookSpeed = 1.0f;
-		float MoveSpeed = 5.0f;
-		float ZoomSpeed = 0.1f;
+		float MoveSpeed = 2.5f;
+		float ZoomSpeed = 0.2f;
 
 		float FOV = 80.0f;
 
