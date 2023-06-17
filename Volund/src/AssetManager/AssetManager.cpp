@@ -47,7 +47,9 @@ namespace Volund
 
         serializer.StartTable();
 
-        serializer.Insert("", this->FetchFilepath(material->GetShader()));
+        std::string shaderPath = this->FetchFilepath(material->GetShader());
+        std::replace(shaderPath.begin(), shaderPath.end(), '\\', '/');
+        serializer.Insert("", shaderPath);
 
         for (auto& [key, value] : material->IntMap())
         {

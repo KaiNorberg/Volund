@@ -34,12 +34,15 @@ void main()
 
 in vec2 Coord;
 
-//Material Uniforms
+#VOLUND_MATERIAL_START
+
 uniform int MaxIterations;
 uniform vec2 Position;
-uniform double Scale;
+uniform float Scale;
 uniform int Julia;
-uniform double JuliaC;
+uniform float JuliaC;
+
+#VOLUND_MATERIAL_END
 
 layout(location = 0) out vec4 FragColor;
 

@@ -27,7 +27,7 @@ private:
 		VL::Ref<VL::Framebuffer> GetSceneFramebuffer();
 		VL::Ref<VL::Framebuffer> GetEditorFramebuffer();
 
-		void Update(VL::Input& input, float timeStep);
+		void Update(VL::Input& input, float timeStep, bool isInWindow);
 
 		void Render(VL::Ref<VL::Scene> scene, ImVec2 viewportSize);
 

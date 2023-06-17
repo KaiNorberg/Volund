@@ -368,7 +368,7 @@ void InspectorWindow::MaterialInspector()
 		ImGui::EndPopup();
 	}
 
-	if (changed)
+	if (changed && this->m_Context->IsPaused())
 	{
 		assetManager->Serialize(this->m_SelectedMaterial, materialPath);
 	}

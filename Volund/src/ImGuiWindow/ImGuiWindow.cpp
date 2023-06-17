@@ -7,6 +7,11 @@
 
 namespace Volund
 {
+	bool ImGuiWindow::IsWindowHovered()
+	{
+		return this->m_IsWindowHovered;
+	}
+
 	void ImGuiWindow::SetSize(const Vec2& size)
 	{
 		this->m_Size = size;
@@ -73,6 +78,10 @@ namespace Volund
 				this->m_Position = Vec2(windowPos.x, windowPos.y);
 
 				this->OnProcedure(e);
+
+				ImVec2 rectMin = ImVec2(this->m_Position.x, this->m_Position.y);
+				ImVec2 rectMax = ImVec2(this->m_Position.x + this->m_Size.x, this->m_Position.y + this->m_Size.y);
+				this->m_IsWindowHovered = ImGui::IsMouseHoveringRect(rectMin, rectMax);
 			}	
 
 			ImGui::End();

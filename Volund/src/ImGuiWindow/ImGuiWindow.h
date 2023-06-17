@@ -14,6 +14,8 @@ namespace Volund
 
 		bool IsActive = true;
 
+		bool IsWindowHovered();
+
 		void SetSize(const Vec2& size);
 
 		void SetPosition(const Vec2& position);
@@ -79,6 +81,8 @@ namespace Volund
 		std::string m_Name;
 
 		std::string m_Id;
+
+		bool m_IsWindowHovered;
 
 		bool m_PositionChanged;
 

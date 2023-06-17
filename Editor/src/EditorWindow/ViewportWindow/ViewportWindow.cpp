@@ -59,10 +59,16 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		}
 		else
 		{
-			this->m_Camera.Update(this->m_Input, timeStep);
+			this->m_Camera.Update(this->m_Input, timeStep, this->IsWindowHovered());
 
 			this->m_Viewportbuffer = this->m_Camera.GetEditorFramebuffer();
 		}
+	}
+	break;
+	case EDITOR_EVENT_TYPE_NEW_SCENE:
+	{
+		this->m_Camera.GetEditorFramebuffer()->Invalidate();
+		this->m_Camera.GetSceneFramebuffer()->Invalidate();
 	}
 	break;
 	}
@@ -87,7 +93,7 @@ VL::Ref<VL::Framebuffer> ViewportWindow::ViewportCamera::GetEditorFramebuffer()
 	return this->m_EditorFramebuffer;
 }
 
-void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
+void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep, bool isInWindow)
 {
 	VL::IVec2 cursorDelta = input.GetMousePosition() - this->m_OldMousePosition;
 	float scrollDelta = input.GetScrollPosition() - this->m_OldScrollPosition;
@@ -95,7 +101,7 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep)
 	cursorDelta.y = std::clamp(cursorDelta.y, -10, 10);
 	scrollDelta = std::clamp(scrollDelta, -10.0f, 10.0f);
 
-	if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
+	if (isInWindow && input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
 	{
 		if (scrollDelta != 0.0f)
 		{
