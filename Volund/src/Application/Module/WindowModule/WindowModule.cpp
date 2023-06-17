@@ -27,7 +27,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Render:
+		case VOLUND_EVENT_TYPE_RENDER:
 		{
 			this->m_Window->Flush();
 			this->m_Window->Update();

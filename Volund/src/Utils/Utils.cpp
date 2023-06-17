@@ -4,9 +4,9 @@
 
 namespace Volund::Utils
 {
-	std::filesystem::path RelativePath(const std::filesystem::path& path, const std::filesystem::path& parentPath)
+	fs::path RelativePath(const fs::path& path, const fs::path& parentPath)
 	{
-		std::filesystem::path relativePath = std::filesystem::relative(path.parent_path(), parentPath);
+		fs::path relativePath = fs::relative(path.parent_path(), parentPath);
 		relativePath /= path.filename();
 		return relativePath.string();
 	}

@@ -14,8 +14,6 @@ public:
 
 private:
 	
-	std::string m_Filter;
-
 	VL::Ref<EditorContext> m_Context;
 
 	bool ImGuiEntity(VL::Entity Entity, const std::string& EntityName);

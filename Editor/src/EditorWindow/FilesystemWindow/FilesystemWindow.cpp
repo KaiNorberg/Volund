@@ -6,9 +6,9 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 {
 	switch (e.Type)
 	{
-	case VL::EventType::Render:
+	case VOLUND_EVENT_TYPE_RENDER:
 	{
-		std::filesystem::path parentDir = this->m_Context->GetParentPath();
+		fs::path parentDir = this->m_Context->GetParentPath();
 
 		if (parentDir != this->m_OldParentDir)
 		{
@@ -16,7 +16,7 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 		}
 		this->m_OldParentDir = parentDir;
 
-		if (!std::filesystem::is_directory(parentDir))
+		if (!fs::is_directory(parentDir))
 		{
 			break;
 		}
@@ -28,11 +28,56 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 		if (columnCount < 1)
 			columnCount = 1;
 
+		if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+		{
+			ImGui::OpenPopup("Filesystem manip");
+		}
+
+		if (ImGui::BeginPopup("Filesystem manip"))
+		{
+			if (ImGui::BeginMenu("Create"))
+			{
+				if (ImGui::MenuItem("Folder"))
+				{
+					if (!fs::exists(this->m_CurrentDirectory / "New Folder"))
+					{
+						fs::create_directory(this->m_CurrentDirectory / "New Folder");
+					}
+					else
+					{
+						int i = 2;
+						while (true)
+						{
+							fs::path filepath = this->m_CurrentDirectory / ("New Folder (" + std::to_string(i) + ")");
+							if (!fs::exists(filepath))
+							{
+								fs::create_directory(filepath);
+								break;
+							}
+							i++;
+						}
+					}
+
+					ImGui::CloseCurrentPopup();
+				}
+				if (ImGui::MenuItem("LuaFile"))
+				{
+					fs::create_directory(this->m_CurrentDirectory / "New Folder");
+
+					ImGui::CloseCurrentPopup();
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndPopup();
+		}
+
 		ImGui::Columns(columnCount, 0, false);
 
 		if (parentDir != this->m_CurrentDirectory && !this->m_ResourcesOpen)
 		{
-			this->ImGuiDirectory(this->m_CurrentDirectory.parent_path().string(), "../");
+			this->ImGuiFilesystemEntry(this->m_CurrentDirectory.parent_path().string(), "../", true);
 		}
 		else
 		{
@@ -70,12 +115,12 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 					fileName.erase(fileName.begin(), fileName.begin() + 3);
 				}
 
-				this->ImGuiFile(key, fileName);
+				this->ImGuiFilesystemEntry(key, fileName, false);
 			}
 		}
 		else
 		{
-			for (auto& directory : std::filesystem::directory_iterator(this->m_CurrentDirectory))
+			for (auto& directory : fs::directory_iterator(this->m_CurrentDirectory))
 			{
 				if (!directory.is_directory())
 				{
@@ -83,10 +128,10 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 				}
 
 				auto filepath = directory.path();
-				this->ImGuiDirectory(filepath.string(), filepath.filename().string());
+				this->ImGuiFilesystemEntry(filepath.string(), filepath.filename().string(), true);
 			}
 
-			for (auto& file : std::filesystem::directory_iterator(this->m_CurrentDirectory))
+			for (auto& file : fs::directory_iterator(this->m_CurrentDirectory))
 			{
 				if (file.is_directory())
 				{
@@ -94,7 +139,7 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 				}
 
 				auto filepath = file.path();
-				this->ImGuiFile(filepath.string(), filepath.filename().string());
+				this->ImGuiFilesystemEntry(filepath.string(), filepath.filename().string(), false);
 			}
 		}
 
@@ -104,80 +149,99 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 	}
 }
 
-void FilesystemWindow::ImGuiDirectory(const std::string& payloadPath, const std::string& name)
+void FilesystemWindow::ImGuiFilesystemEntry(const std::string& payloadPath, const std::string& name, bool isDirectory)
 {
 	ImGui::PushID(payloadPath.c_str());
 
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-	ImGui::ImageButton((ImTextureID)m_DirectoryIcon->GetID(), { this->m_ThumbnailSize, this->m_ThumbnailSize }, { 0, 1 }, { 1, 0 });
+	ImGui::ImageButton(isDirectory ? (ImTextureID)m_DirectoryIcon->GetID() : (ImTextureID)m_FileIcon->GetID(), { this->m_ThumbnailSize, this->m_ThumbnailSize }, { 0, 1 }, { 1, 0 });
 	ImGui::PopStyleColor();
 
-	if (ImGui::BeginDragDropSource())
+	if (isDirectory)
 	{
-		const char* itemPath = payloadPath.c_str();
-		ImGui::Text(itemPath);
-		ImGui::SetDragDropPayload(VOLUND_IMGUI_DIRECTORY, itemPath, (std::strlen(itemPath) + 1) * sizeof(char));
-		ImGui::EndDragDropSource();
+		ImGuiDragDropSource(VOLUND_IMGUI_DIRECTORY, payloadPath);
+	}
+	else
+	{
+		ImGuiDragDropSource(VOLUND_IMGUI_FILE, payloadPath);
 	}
 
-	if (ImGui::BeginDragDropTarget())
+	if (isDirectory)
 	{
-		const ImGuiPayload* filePayload = ImGui::AcceptDragDropPayload(VOLUND_IMGUI_FILE);
-		if (filePayload != nullptr)
+		std::string filePayload = ImGuiDragDropTarget(VOLUND_IMGUI_FILE);
+		if (!filePayload.empty())
 		{
-			std::filesystem::path sourcePath = (const char*)filePayload->Data;
-			std::filesystem::path targetPath = payloadPath + "/" + sourcePath.filename().string();
+			fs::path sourcePath = filePayload;
+			fs::path targetPath = fs::path(payloadPath) / sourcePath.filename().string();
+			VOLUND_INFO("%s, %s", sourcePath.string().c_str(), targetPath.string().c_str());
 
-			if (std::filesystem::exists(sourcePath) && std::filesystem::exists(targetPath))
+			if (fs::exists(sourcePath))
 			{
-				std::filesystem::rename(sourcePath, targetPath);
+				fs::rename(sourcePath, targetPath);
 			}
 		}
 
-		const ImGuiPayload* directoryPayload = ImGui::AcceptDragDropPayload(VOLUND_IMGUI_DIRECTORY);
-		if (directoryPayload != nullptr)
+		std::string directoryPayload = ImGuiDragDropTarget(VOLUND_IMGUI_DIRECTORY);
+		if (!directoryPayload.empty())
 		{
-			std::filesystem::path sourcePath = (const char*)directoryPayload->Data;
-			std::filesystem::path targetPath = payloadPath + "/" + sourcePath.filename().string();
+			fs::path sourcePath = directoryPayload;
+			fs::path targetPath = payloadPath + VOLUND_PATH_SEPERATOR + sourcePath.filename().string();
 
-			std::filesystem::create_directory(targetPath);
+			fs::create_directory(targetPath);	
 
-			for (std::filesystem::path p : std::filesystem::recursive_directory_iterator(sourcePath))
+			for (fs::path p : fs::recursive_directory_iterator(sourcePath))
 			{
-				std::filesystem::rename(p, targetPath / p.filename());
+				fs::rename(p, targetPath / p.filename());
 			}
 
-			std::filesystem::remove(sourcePath);
+			fs::remove(sourcePath);
 		}
-
-		ImGui::EndDragDropTarget();
 	}
 
-	if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+	if (isDirectory)
 	{
-		this->m_CurrentDirectory = payloadPath;
+		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
+		{
+			this->m_CurrentDirectory = payloadPath;
+		}
 	}
 
-	ImGui::TextWrapped(name.c_str());
-
-	ImGui::NextColumn();
-	ImGui::PopID();
-}
-
-void FilesystemWindow::ImGuiFile(const std::string& payloadPath, const std::string& name)
-{
-	ImGui::PushID(payloadPath.c_str());
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0, 0, 0, 0));
-	ImGui::ImageButton((ImTextureID)m_FileIcon->GetID(), { this->m_ThumbnailSize, this->m_ThumbnailSize }, { 0, 1 }, { 1, 0 });
-	ImGui::PopStyleColor();
-
-	if (ImGui::BeginDragDropSource())
+	if (ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 	{
-		const char* itemPath = payloadPath.c_str();
-		ImGui::Text(itemPath);
-		ImGui::SetDragDropPayload(VOLUND_IMGUI_FILE, itemPath, (std::strlen(itemPath) + 1) * sizeof(char));
-		ImGui::EndDragDropSource();
+		ImGui::OpenPopup("File manip");
+	}
+
+	if (ImGui::BeginPopup("File manip"))
+	{
+		if (ImGui::MenuItem("Delete"))
+		{
+			if (fs::exists(payloadPath))
+			{
+				if (isDirectory)
+				{
+					for (fs::path p : fs::recursive_directory_iterator(payloadPath))
+					{
+						fs::remove(p);
+					}
+					fs::remove(payloadPath);
+				}
+				else
+				{
+					fs::remove(payloadPath);
+				}
+			}
+			ImGui::CloseCurrentPopup();
+		}
+		if (ImGui::MenuItem("Rename"))
+		{
+			const std::string newName = VL::Dialog::InputBox("Rename", "Please specify a new name", "");
+			if (newName != "")
+			{
+				fs::rename(payloadPath, fs::path(payloadPath).parent_path() / newName);
+			}
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
 	}
 
 	ImGui::TextWrapped(name.c_str());

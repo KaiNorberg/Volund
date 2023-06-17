@@ -15,6 +15,7 @@ namespace Volund
 
 		void Insert(std::string const& name, int value);
 		void Insert(std::string const& name, float value);
+		void Insert(std::string const& name, double value);
 		void Insert(std::string const& name, Vec2 const& value);
 		void Insert(std::string const& name, Vec3 const& value);
 		void Insert(std::string const& name, Vec4 const& value);

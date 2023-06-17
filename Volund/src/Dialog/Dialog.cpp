@@ -7,12 +7,26 @@
 
 namespace Volund
 {
+    std::string Dialog::InputBox(const std::string& title, const std::string& message, const std::string& defaultInput)
+    {
+        const char* ret = tinyfd_inputBox(title.c_str(), message.c_str(), defaultInput.c_str());
+
+        if (ret != nullptr)
+        {
+            return ret;
+        }
+        else
+        {
+            return "";
+        }
+    }
+
     std::string Dialog::OpenFolder(Ref<Window> window)
     {        
         bool cursorEnabled = window->IsCursorEnabled();
 
         window->SetCursorEnabled(true);
-        const char* ret = tinyfd_selectFolderDialog("", std::filesystem::current_path().string().c_str());
+        const char* ret = tinyfd_selectFolderDialog("", fs::current_path().string().c_str());
         window->SetCursorEnabled(cursorEnabled);
 
         if (ret != nullptr)
@@ -30,7 +44,7 @@ namespace Volund
         bool cursorEnabled = window->IsCursorEnabled();
 
         window->SetCursorEnabled(true);
-        const char* ret = tinyfd_openFileDialog("", std::filesystem::current_path().string().c_str(), 0, 0, "", 0);
+        const char* ret = tinyfd_openFileDialog("", fs::current_path().string().c_str(), 0, 0, "", 0);
         window->SetCursorEnabled(cursorEnabled);
 
         if (ret != nullptr)

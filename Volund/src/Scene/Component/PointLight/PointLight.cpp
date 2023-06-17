@@ -15,7 +15,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Render:
+		case VOLUND_EVENT_TYPE_RENDER:
 		{
 			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 

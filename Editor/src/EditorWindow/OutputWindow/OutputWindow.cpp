@@ -13,9 +13,14 @@ void OutputWindow::OnProcedure(const VL::Event& e)
 {
 	switch (e.Type)
 	{
-	case VL::EventType::Render:
+	case VOLUND_EVENT_TYPE_RENDER:
 	{
 		ImGuiTextList("##outputWindow", m_TextList);
+	}
+	break;
+	case EDITOR_EVENT_TYPE_NEW_SCENE:
+	{
+		m_TextList.clear();
 	}
 	break;
 	}

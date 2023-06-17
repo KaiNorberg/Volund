@@ -51,6 +51,41 @@ namespace Volund
 		this->m_MaterialChanged = true;
 	}
 
+	std::map<std::string, int>& Material::IntMap()
+	{
+		return this->m_IntUniforms;
+	}
+
+	std::map<std::string, float>& Material::FloatMap()
+	{
+		return this->m_FloatUniforms;
+	}
+
+	std::map<std::string, double>& Material::DoubleMap()
+	{
+		return this->m_DoubleUniforms;
+	}
+
+	std::map<std::string, Vec2>& Material::Vec2Map()
+	{
+		return this->m_Vec2Uniforms;
+	}
+
+	std::map<std::string, Vec3>& Material::Vec3Map()
+	{
+		return this->m_Vec3Uniforms;
+	}
+
+	std::map<std::string, Vec4>& Material::Vec4Map()
+	{
+		return this->m_Vec4Uniforms;
+	}
+
+	std::map<std::string, Ref<Texture>>& Material::TextureMap()
+	{
+		return this->m_TextureUniforms;
+	}
+
 	void Material::UpdateShader()
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -99,14 +134,25 @@ namespace Volund
 		int textureUnit = 0;
 		for (auto& [name, value] : this->m_TextureUniforms)
 		{
-			this->m_Shader->SetTexture(name, value, textureUnit);
-			textureUnit++;
+			if (value != nullptr)
+			{
+				this->m_Shader->SetTexture(name, value, textureUnit);
+				textureUnit++;
+			}
 		}
 		for (auto& [name, value] : this->m_FramebufferUniforms)
 		{
-			this->m_Shader->SetFramebuffer(name, value, textureUnit);
-			textureUnit++;
+			if (value != nullptr)
+			{
+				this->m_Shader->SetFramebuffer(name, value, textureUnit);
+				textureUnit++;
+			}
 		}
+	}
+
+	void Material::SetShader(Ref<Shader> shader)
+	{
+		this->m_Shader = shader;
 	}
 
 	Ref<Shader> Material::GetShader()

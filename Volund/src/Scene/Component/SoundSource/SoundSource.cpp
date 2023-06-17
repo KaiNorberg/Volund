@@ -59,7 +59,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Update:
+		case VOLUND_EVENT_TYPE_UPDATE:
 		{				
 			if (this->AutoPlay && !this->m_HasAutoPlayed)
 			{

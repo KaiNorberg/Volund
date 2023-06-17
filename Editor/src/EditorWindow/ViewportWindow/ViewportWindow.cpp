@@ -8,7 +8,7 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 
 	switch (e.Type)
 	{
-	case VL::EventType::Render:
+	case VOLUND_EVENT_TYPE_RENDER:
 	{
 		auto scene = this->m_Context->GetScene();
 
@@ -49,7 +49,7 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		}
 	}
 	break;
-	case VL::EventType::Update:
+	case VOLUND_EVENT_TYPE_UPDATE:
 	{
 		float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 

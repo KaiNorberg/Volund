@@ -51,7 +51,7 @@ void Editor::OnRun()
 	hierarchyWindow->SetPosition(VL::Vec2(0, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
 
-	std::filesystem::create_directory(EDITOR_TEMP_FOLDER);
+	fs::create_directory(EDITOR_TEMP_FOLDER);
 }
 
 void Editor::OnTerminate()
@@ -69,7 +69,7 @@ void Editor::Procedure(const VL::Event& e)
 
 	switch (e.Type)
 	{
-	case VL::EventType::Render:
+	case VOLUND_EVENT_TYPE_RENDER:
 	{ 	
 		auto window = context->GetWindow();
 
@@ -171,7 +171,7 @@ void Editor::Procedure(const VL::Event& e)
 		return;
 	}
 	break;	
-	case VL::EventType::Key:
+	case VOLUND_EVENT_TYPE_KEY:
 	{	
 		auto window = context->GetWindow();
 
@@ -193,6 +193,30 @@ void Editor::Procedure(const VL::Event& e)
 					context->LoadScene(filepath);
 				}
 			}
+			else if (this->m_Input.IsPressed('N'))
+			{
+				const std::string filepath = VL::Dialog::OpenFolder(window);
+				
+				if (!filepath.empty())
+				{
+					VL::LuaSerializer serializer;
+					serializer.WriteToFile(filepath + "/scene.lua");
+
+					context->LoadScene(filepath + "/scene.lua");
+				}
+			}
+			else if (this->m_Input.IsPressed('A'))
+			{
+				if (!context->GetParentPath().empty())
+				{
+					const std::string filepath = VL::Dialog::OpenFile(window);
+
+					if (!filepath.empty())
+					{
+						fs::copy(filepath, context->GetParentPath());
+					}
+				}
+			}
 			else if (this->m_Input.IsPressed('S'))
 			{
 				context->SaveScene(context->GetScenePath());
@@ -200,9 +224,9 @@ void Editor::Procedure(const VL::Event& e)
 		}
 	}
 	break;
-	case VL::EventType::WindowClose:
+	case VOLUND_EVENT_TYPE_WINDOW_CLOSE:
 	{
-		std::filesystem::remove_all(EDITOR_TEMP_FOLDER);
+		fs::remove_all(EDITOR_TEMP_FOLDER);
 		this->Terminate();
 	}
 	break;

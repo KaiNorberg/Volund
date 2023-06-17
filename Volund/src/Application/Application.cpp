@@ -55,12 +55,12 @@ namespace Volund
 
 			this->m_ThreadPool.Submit([this, ts]()
 			{
-				Event updateEvent = Event(EventType::Update);
+				Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
 				VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 				this->m_EventDispatcher->Dispatch(updateEvent);
 			});
 
-			this->m_EventDispatcher->Dispatch(Event(EventType::Render));
+			this->m_EventDispatcher->Dispatch(Event(VOLUND_EVENT_TYPE_RENDER));
 
 			while (this->m_ThreadPool.Busy());
 

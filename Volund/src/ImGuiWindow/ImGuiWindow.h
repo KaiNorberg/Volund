@@ -48,17 +48,29 @@ namespace Volund
 
 		static bool ImGuiFile(const std::string& name, std::string& out);
 
-		static void ImGuiString(const std::string& name, std::string& out);
+		static bool ImGuiString(const std::string& name, std::string& out);
 
-		static void ImGuiBool(const std::string& name, bool& value);
+		static bool ImGuiInt(const std::string& name, int& value);
 
-		static void ImGuiFloat(const std::string& name, float& value);
+		static bool ImGuiBool(const std::string& name, bool& value);
 
-		static void ImGuiVec3(std::string_view Name, VL::Vec3* Value, float Speed = 0.1f, float DefaultValue = 0.0f);
+		static bool ImGuiFloat(const std::string& name, float& value);
+
+		static bool ImGuiDouble(const std::string& name, double& value);
+
+		static bool ImGuiVec2(const std::string& name, VL::Vec2& value, float speed = 0.1f, float defaultValue = 0.0f);
+
+		static bool ImGuiVec3(const std::string& name, VL::Vec3& value, float speed = 0.1f, float defaultValue = 0.0f);
+
+		static bool ImGuiVec4(const std::string& name, VL::Vec4& value, float speed = 0.1f, float defaultValue = 0.0f);
 
 		static void ImGuiColoredText(const std::string& text);
 
 		static void ImGuiTextList(const std::string& name, const std::vector<std::string>& textList);
+
+		static void ImGuiDragDropSource(const char* type, const std::string& payload);
+
+		static std::string ImGuiDragDropTarget(const char* type);
 
 		static VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
 

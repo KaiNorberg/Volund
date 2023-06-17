@@ -1,5 +1,7 @@
 #pragma once
 
+#define EDITOR_EVENT_TYPE_NEW_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 1)
+
 class EditorContext : public VL::Module
 {
 public:
@@ -37,6 +39,8 @@ private:
 	bool m_Paused = true;
 
 	std::mutex m_Mutex;
+
+	VL::Ref<VL::EventDispatcher> m_Dispatcher;
 
 	VL::Ref<VL::GameState> m_GameState;
 

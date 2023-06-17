@@ -7,7 +7,7 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		Event e = Event(EventType::WindowClose);
+		Event e = Event(VOLUND_EVENT_TYPE_WINDOW_CLOSE);
 		windowData->Dispatcher->Dispatch(e);
 	}
 
@@ -18,7 +18,7 @@ namespace Volund
 		windowData->Width = width;
 		windowData->Height = height;
 
-		Event e = Event(EventType::WindowSize);
+		Event e = Event(VOLUND_EVENT_TYPE_WINDOW_SIZE);
 		VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(e, windowData->Width);
 		VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(e, windowData->Height);
 		windowData->Dispatcher->Dispatch(e);
@@ -28,7 +28,7 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		Event e = Event(EventType::Key);
+		Event e = Event(VOLUND_EVENT_TYPE_KEY);
 		VOLUND_EVENT_KEY_SET_KEY(e, (uint32_t)key);
 
 		if (action == GLFW_PRESS)
@@ -51,7 +51,7 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		Event e = Event(EventType::MouseMove);
+		Event e = Event(VOLUND_EVENT_TYPE_MOUSE_MOVE);
 		VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, xpos);
 		VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, ypos);
 
@@ -62,7 +62,7 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		Event e = Event(EventType::MouseButton);
+		Event e = Event(VOLUND_EVENT_TYPE_MOUSE_BUTTON);
 		VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, button);
 		VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, (action != GLFW_RELEASE));
 
@@ -73,7 +73,7 @@ namespace Volund
 	{
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
-		Event e = Event(EventType::MouseWheel);
+		Event e = Event(VOLUND_EVENT_TYPE_MOUSE_WHEEL);
 		VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, (float)yoffset);
 
 		windowData->Dispatcher->Dispatch(e);

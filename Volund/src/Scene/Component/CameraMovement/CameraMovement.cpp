@@ -16,7 +16,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Update:
+		case VOLUND_EVENT_TYPE_UPDATE:
 		{
 			VOLUND_PROFILE_FUNCTION();
 

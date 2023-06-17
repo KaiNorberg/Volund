@@ -46,7 +46,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Render:
+		case VOLUND_EVENT_TYPE_RENDER:
 		{
 			auto scene = this->m_GameState->GetScene();
 
@@ -59,7 +59,7 @@ namespace Volund
 			}
 		}
 		break;
-		case EventType::WindowSize:
+		case VOLUND_EVENT_TYPE_WINDOW_SIZE:
 		{
 			uint32_t width = VOLUND_EVENT_WINDOW_SIZE_GET_WIDTH(e);
 			uint32_t height = VOLUND_EVENT_WINDOW_SIZE_GET_HEIGHT(e);

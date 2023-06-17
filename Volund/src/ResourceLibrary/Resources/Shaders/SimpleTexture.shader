@@ -52,7 +52,7 @@ layout(std140, binding = 1) uniform LightsUniform
 
 #VOLUND_MATERIAL_START
 
-uniform vec3 AmbientLighting;
+uniform vec3 Ambient;
 uniform sampler2D ColorTexture;
 
 #VOLUND_MATERIAL_END
@@ -63,7 +63,7 @@ void main()
 {
     vec3 TextureColor = texture(ColorTexture, FragTextureCoord).rgb;
 
-    vec3 Result = TextureColor * AmbientLighting;
+    vec3 Result = TextureColor * Ambient;
     for (int i = 0; i < LightAmount; i++)
     {  
         vec3 L = normalize(LightPositions[i] - FragPosition);

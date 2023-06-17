@@ -48,7 +48,7 @@ layout(std140, binding = 1) uniform LightsUniform
 
 #VOLUND_MATERIAL_START
 
-uniform vec3 AmbientLighting;
+uniform vec3 Ambient;
 uniform vec3 Color;
 
 #VOLUND_MATERIAL_END
@@ -57,7 +57,7 @@ layout(location = 0) out vec4 FragColor;
 
 void main()
 {
-    vec3 Result = Color * AmbientLighting;
+    vec3 Result = Color * Ambient;
     for (int i = 0; i < LightAmount; i++)
     {  
         vec3 L = normalize(LightPositions[i] - FragPosition);

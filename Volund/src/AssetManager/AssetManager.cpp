@@ -35,9 +35,68 @@ namespace Volund
     };
 
     template<>
+    void AssetManager::Serialize<Material>(Ref<Material> material, const std::string& destinationPath)
+    {
+        std::string absolutepath = this->GetAbsolutePath(destinationPath);
+
+        VOLUND_INFO("Serializing material to (%s)...", absolutepath.c_str());
+
+        LuaSerializer serializer = LuaSerializer();
+
+        //IMPORTANT: Remember to update the code below whenever a new component is implemented.
+
+        serializer.StartTable();
+
+        serializer.Insert("", this->FetchFilepath(material->GetShader()));
+
+        for (auto& [key, value] : material->IntMap())
+        {
+            serializer.Insert(key, value);
+        }
+
+        for (auto& [key, value] : material->FloatMap())
+        {
+            serializer.Insert(key, value);
+        }   
+
+        for (auto& [key, value] : material->DoubleMap())
+        {
+            serializer.Insert(key, value);
+        }
+
+        for (auto& [key, value] : material->Vec2Map())
+        {
+            serializer.Insert(key, value);
+        }
+
+        for (auto& [key, value] : material->Vec3Map())
+        {
+            serializer.Insert(key, value);
+        }
+
+        for (auto& [key, value] : material->Vec4Map())
+        {
+            serializer.Insert(key, value);
+        }
+
+        for (auto& [key, value] : material->TextureMap())
+        {
+            std::string texturePath = this->FetchFilepath(value);
+            std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
+            serializer.Insert(key, texturePath);
+        }
+
+        serializer.EndTable();
+
+        serializer.WriteToFile(absolutepath);
+    }
+
+    template<>
     void AssetManager::Serialize<Scene>(Ref<Scene> scene, const std::string& destinationPath)
     {
-        VOLUND_INFO("Serializing scene to (%s)...", destinationPath.c_str());
+        std::string absolutepath = this->GetAbsolutePath(destinationPath);
+
+        VOLUND_INFO("Serializing scene to (%s)...", absolutepath.c_str());
 
         LuaSerializer serializer = LuaSerializer();
 
@@ -148,7 +207,7 @@ namespace Volund
         }
         serializer.EndTable();
 
-        serializer.WriteToFile(destinationPath);
+        serializer.WriteToFile(absolutepath);
     }
 
     template<>
@@ -446,25 +505,31 @@ namespace Volund
 
     AssetManager::AssetManager(const std::string& parentPath)
     {
-        if (std::filesystem::is_directory(parentPath))
+        if (fs::is_directory(parentPath))
         {
             this->m_ParentPath = parentPath;
         }
         else
         {
-            this->m_ParentPath = std::filesystem::path(parentPath).parent_path().string();
+            this->m_ParentPath = fs::path(parentPath).parent_path().string();
         }
     }
 
     std::string AssetManager::GetRelativePath(const std::string& absolutePath)
     {
-        if (std::filesystem::exists(absolutePath))
+        if (!absolutePath.empty() && absolutePath[0] == ':')
         {
-            return std::filesystem::relative(absolutePath, this->m_ParentPath).string();
+            return absolutePath;
+        }
+        else if (fs::exists(absolutePath))
+        {
+            std::string cleanPath = this->CleanPath(absolutePath);
+            return fs::relative(cleanPath, this->m_ParentPath).string();
         }
         else
         {
-            return absolutePath;
+            std::string cleanPath = this->CleanPath(absolutePath);
+            return cleanPath;
         }
     }
 
@@ -474,13 +539,24 @@ namespace Volund
         {
             return relativePath;
         }        
-        else if (std::filesystem::exists(relativePath))
+        else if (fs::exists(relativePath))
         {
-            return relativePath;
+            std::string cleanPath = this->CleanPath(relativePath);
+            return cleanPath;
         }
         else
         {
-            return this->m_ParentPath + "/" + relativePath;
+            std::string cleanPath = this->CleanPath(relativePath);
+            return this->m_ParentPath + VOLUND_PATH_SEPERATOR + cleanPath;
         }
+    }
+
+    std::string AssetManager::CleanPath(const std::string& path)
+    {
+        std::string cleanPath = path;
+
+        std::replace(cleanPath.begin(), cleanPath.end(), VOLUND_INVALID_PATH_SEPERATOR, VOLUND_PATH_SEPERATOR);
+
+        return cleanPath;
     }
 }

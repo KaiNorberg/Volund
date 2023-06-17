@@ -163,7 +163,10 @@ namespace Volund
 
 		for (auto& model : this->Models)
 		{
-			model.Discriminated = !cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix)) || ((model.LayerMask & eye.LayerMask) == 0);
+			bool isInFrustum = model.mesh != nullptr && cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix));
+			bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
+
+			model.Discriminated = !isInFrustum || !isInMask;
 		}
 	}
 }

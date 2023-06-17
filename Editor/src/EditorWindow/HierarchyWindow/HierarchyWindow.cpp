@@ -5,7 +5,7 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 {
 	switch (e.Type)
 	{
-	case VL::EventType::Render:
+	case VOLUND_EVENT_TYPE_RENDER:
 	{
 		auto scene = this->m_Context->GetScene();
 
@@ -17,6 +17,20 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 
 		if (scene != nullptr)
 		{
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
+			ImGui::Separator();
+
+			if (ImGui::Button("+"))
+			{
+				scene->RegisterNewEntity();
+			}
+
+			ImGui::SameLine();
+			static char searchTerm[64];
+			ImGui::Text("Search: ");
+			ImGui::SameLine();
+			ImGui::InputText(" ", searchTerm, 64);
+
 			for (auto& [entity, container] : *scene)
 			{
 				std::string entityName = "#" + std::to_string(entity);
@@ -25,7 +39,7 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 					entityName += " | " + scene->GetComponent<VL::Tag>(entity)->String;
 				}
 
-				if (entityName.find(this->m_Filter) != std::string::npos)
+				if (entityName.find(searchTerm) != std::string::npos)
 				{
 					if (!this->ImGuiEntity(entity, entityName))
 					{

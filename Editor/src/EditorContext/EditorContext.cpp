@@ -11,6 +11,7 @@ void EditorContext::OnAttach(VL::Application* app)
 	}
 
 	this->m_GameWindow = app->GetModule<VL::WindowModule>()->GetWindow();
+	this->m_Dispatcher = app->GetDispatcher();
 
 	SetDefaultImGuiStyle();
 }
@@ -124,6 +125,9 @@ void EditorContext::LoadScene(const std::string& filepath)
 		VOLUND_WARNING("Cant load a new scene while paused!");
 		return;
 	}
+
+	this->SelectedEntity = 1;
+	this->m_Dispatcher->Dispatch(EDITOR_EVENT_TYPE_NEW_SCENE);
 
 	this->m_GameState = std::make_shared<VL::GameState>(filepath);
 }

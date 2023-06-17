@@ -1,8 +1,8 @@
-local material = 
+local table =
 {
-    "://Simple.shader",
-    Color = Vec3:new(0.0, 0.0, 1.0),
-    AmbientLighting = Vec3:new(0.0, 0.0, 0.0)
+	"://Simple.shader",
+	Ambient = Vec3:new(0.000000, 0.000000, 0.000000),
+	Color = Vec3:new(0.000000, 0.000000, 1.000000)
 }
 
-return material
+return table

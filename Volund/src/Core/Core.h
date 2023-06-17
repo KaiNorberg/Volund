@@ -23,6 +23,14 @@
 #define CHRONO_TIME_POINT std::chrono::_V2::system_clock::time_point
 #endif
 
+#ifdef _WIN32
+	#define VOLUND_PATH_SEPERATOR '\\'
+	#define VOLUND_INVALID_PATH_SEPERATOR '/'
+#else
+	#define VOLUND_PATH_SEPERATOR '/'
+	#define VOLUND_INVALID_PATH_SEPERATOR '\\'
+#endif
+
 namespace Volund
 {
 	/// <summary>
@@ -43,5 +51,7 @@ namespace Volund
 	template <typename T>
 	using WeakRef = std::weak_ptr<T>;
 }
+
+namespace fs = std::filesystem;
 
 namespace VL = Volund;

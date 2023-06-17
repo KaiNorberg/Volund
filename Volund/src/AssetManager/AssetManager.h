@@ -33,6 +33,8 @@ namespace Volund
 
         std::string GetAbsolutePath(const std::string& relativePath);
 
+        std::string CleanPath(const std::string& path);
+
         template<typename T>
         Ref<T> Load(const std::string& filepath);
 

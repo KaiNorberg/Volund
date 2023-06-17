@@ -14,7 +14,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Update:
+		case VOLUND_EVENT_TYPE_UPDATE:
 		{		
 			static Vec3 oldPosition = Vec3(0.0f);
 

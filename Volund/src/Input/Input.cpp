@@ -45,7 +45,7 @@ namespace Volund
 
 		switch (e.Type)
 		{
-		case EventType::Key:
+		case VOLUND_EVENT_TYPE_KEY:
 		{		
 			const bool isDown = (bool)VOLUND_EVENT_KEY_GET_ISDOWN(e);
 			const uint64_t key = VOLUND_EVENT_KEY_GET_KEY(e);
@@ -53,7 +53,7 @@ namespace Volund
 			this->m_Keys[key] = isDown;	
 		}
 		break;
-		case EventType::MouseButton:
+		case VOLUND_EVENT_TYPE_MOUSE_BUTTON:
 		{
 			const bool isDown = (bool)VOLUND_EVENT_MOUSE_BUTTON_GET_ISDOWN(e);
 			const uint64_t button = VOLUND_EVENT_MOUSE_BUTTON_GET_BUTTON(e);
@@ -61,14 +61,14 @@ namespace Volund
 			this->m_MouseButtons[button] = isDown;
 		}
 		break;
-		case EventType::MouseWheel:
+		case VOLUND_EVENT_TYPE_MOUSE_WHEEL:
 		{
 			const float delta = VOLUND_EVENT_MOUSE_WHEEL_GET_DELTA(e);
 
 			this->m_ScrollPosition += delta;
 		}
 		break;
-		case EventType::MouseMove:
+		case VOLUND_EVENT_TYPE_MOUSE_MOVE:
 		{
 			const uint64_t xPos = VOLUND_EVENT_MOUSE_MOVE_GET_XPOS(e);
 			const uint64_t yPos = VOLUND_EVENT_MOUSE_MOVE_GET_YPOS(e);

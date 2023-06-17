@@ -5,7 +5,7 @@ void Launcher::Procedure(const VL::Event& e)
 {
 	switch (e.Type)
 	{
-	case VL::EventType::WindowClose:
+	case VOLUND_EVENT_TYPE_WINDOW_CLOSE:
 	{
 		this->Terminate();
 	}

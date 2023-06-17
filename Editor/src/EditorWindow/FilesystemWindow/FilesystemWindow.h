@@ -20,12 +20,10 @@ private:
 	VL::Ref<VL::Texture> m_DirectoryIcon;
 	VL::Ref<VL::Texture> m_FileIcon;
 
-	std::filesystem::path m_CurrentDirectory;
-	std::filesystem::path m_OldParentDir;
+	fs::path m_CurrentDirectory;
+	fs::path m_OldParentDir;
 
 	bool m_ResourcesOpen = false;
 
-	void ImGuiDirectory(const std::string& payloadPath, const std::string& name);
-
-	void ImGuiFile(const std::string& payloadPath, const std::string& name);
+	void ImGuiFilesystemEntry(const std::string& payloadPath, const std::string& name, bool IsDirectory);
 };

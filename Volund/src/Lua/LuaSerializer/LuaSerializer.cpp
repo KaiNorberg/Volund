@@ -12,11 +12,18 @@ namespace Volund
 
 		if (!file)
 		{
-			VOLUND_WARNING("Failed to write to (%s)!");
+			VOLUND_WARNING("Failed to write to (%s)!", filepath.c_str());
 			return;
 		}
 
-		file << "local table =\n" + this->m_Output + "\n\nreturn table";
+		if (this->m_Output.empty())
+		{
+			file << "local table =\n{\n\n}\n\nreturn table";
+		}
+		else
+		{
+			file << "local table =\n" + this->m_Output + "\n\nreturn table";
+		}
 	}
 
 	std::string LuaSerializer::GetOutput()
@@ -50,6 +57,12 @@ namespace Volund
 	}
 
 	void LuaSerializer::Insert(std::string const& name, float value)
+	{
+		this->InsertName(name);
+		this->m_Output += std::to_string(value) + "";
+	}
+
+	void LuaSerializer::Insert(std::string const& name, double value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
