@@ -54,7 +54,7 @@ namespace Volund
 		VOLUND_PROFILE_FUNCTION();
 
 		this->m_SolState = std::make_shared<sol::state>();
-		this->m_SolState->open_libraries(sol::lib::base, sol::lib::table);
+		//this->m_SolState->open_libraries(sol::lib::base, sol::lib::table);
 
 		//Global Functions
 

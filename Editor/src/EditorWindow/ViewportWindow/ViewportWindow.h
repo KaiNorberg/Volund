@@ -54,6 +54,12 @@ private:
 	std::string m_Text;
 	VL::Ref<VL::Framebuffer> m_Viewportbuffer;
 
+	VL::Ref<VL::Texture> m_PlayIcon;
+	VL::Ref<VL::Texture> m_PauseIcon;
+
+	//VL::Ref<VL::Texture> m_DisabledPlayIcon;
+	//VL::Ref<VL::Texture> m_DisabledPauseIcon;
+
 	VL::Input m_Input;
 };
 

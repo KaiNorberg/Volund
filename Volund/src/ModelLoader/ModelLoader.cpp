@@ -133,9 +133,9 @@ namespace Volund
 						else
 						{
 							this->Indices.push_back((uint32_t)(this->Vertices.size() / 8));
-							for (uint64_t j = 0; j < 8; j++)
+							for (auto& scalar : vertex)
 							{
-								this->Vertices.push_back(vertex[j]);
+								this->Vertices.push_back(scalar);
 							}
 						}
 					}						

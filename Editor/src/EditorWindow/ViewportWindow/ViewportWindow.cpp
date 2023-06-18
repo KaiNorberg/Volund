@@ -14,18 +14,14 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 
 		this->m_Camera.Render(scene, ImVec2(this->m_Size.x, this->m_Size.y));
 
-		const char* buttonText;
-		if (this->m_Context->IsPaused())
-		{
-			buttonText = "Play";
-		}
-		else
-		{
-			buttonText = "Stop";
-		}
+		ImVec2 buttonSize = ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight());
+		bool isPaused = this->m_Context->IsPaused();
 
-		ImGuiAlign(buttonText, 0.5f);
-		if (ImGui::Button(buttonText))
+		ImGuiAlign("#######", 1.f);
+
+		ImGui::BeginDisabled(!isPaused);
+		if (ImGui::ImageButton("PlayButton", (ImTextureID)this->m_PlayIcon->GetID(),
+			buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
 		{
 			if (this->m_Context->GetScene() != nullptr)
 			{
@@ -33,12 +29,25 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 				{
 					this->m_Context->Play();
 				}
-				else
+			}
+		}
+		ImGui::EndDisabled();
+
+		ImGui::SameLine();
+
+		ImGui::BeginDisabled(isPaused);
+		if (ImGui::ImageButton("PauseButton", (ImTextureID)this->m_PauseIcon->GetID(),
+			buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
+		{
+			if (this->m_Context->GetScene() != nullptr)
+			{
+				if (!this->m_Context->IsPaused())
 				{
 					this->m_Context->Pause();
 				}
 			}
 		}
+		ImGui::EndDisabled();
 
 		if (ImGui::BeginChild(this->GetId().c_str()))
 		{
@@ -79,6 +88,9 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 	this->SetName("Viewport");
 
 	this->m_Context = context;
+
+	this->m_PlayIcon = VL::Texture::CreateAsync("data/icons/play.png");
+	this->m_PauseIcon = VL::Texture::CreateAsync("data/icons/pause.png");
 }
 
 ////////////////////////////////////////////////////////////
