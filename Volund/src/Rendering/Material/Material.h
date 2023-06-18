@@ -57,5 +57,7 @@ namespace Volund
 		bool m_MaterialChanged = true;
 
 		void CompareBlueprint();
+
+		void ConformToBlueprint();
 	};
 }

@@ -4,6 +4,34 @@
 
 namespace Volund::Utils
 {
+	fs::path GenerateUniquePath(const fs::path& basePath)
+	{
+		fs::path filepath = basePath;
+		if (fs::exists(filepath))
+		{
+			int i = 2;
+			while (true)
+			{
+				std::string basePathString = basePath.string();
+
+				uint64_t splitPoint = basePathString.find_first_of(".");
+				std::string pathNoExtension = basePathString.substr(0, splitPoint);
+				std::string pathExtension = basePathString.substr(splitPoint);
+
+				filepath = fs::path(pathNoExtension + " (" + std::to_string(i) + ")" + pathExtension);
+				if (!fs::exists(filepath))
+				{
+					return filepath;
+				}
+				i++;
+			}
+		}
+		else
+		{
+			return filepath;
+		}
+	}
+
 	fs::path RelativePath(const fs::path& path, const fs::path& parentPath)
 	{
 		fs::path relativePath = fs::relative(path.parent_path(), parentPath);

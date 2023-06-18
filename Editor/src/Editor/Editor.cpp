@@ -7,6 +7,7 @@
 #include "EditorWindow/InspectorWindow/InspectorWindow.h"
 #include "EditorWindow/HierarchyWindow/HierarchyWindow.h"
 #include "EditorWindow/FilesystemWindow/FilesystemWindow.h"
+#include "EditorWindow/MaterialEditor/MaterialEditor.h"
 
 #include "EditorContext/EditorContext.h"
 
@@ -27,29 +28,22 @@ void Editor::OnRun()
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
 	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
-	outputWindow->SetSize(VL::Vec2(1980, 300));
-	outputWindow->SetPosition(VL::Vec2(0, 1080 - outputWindow->GetSize().y));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
 
 	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(context));
-	viewportWindow->SetSize(VL::Vec2(1980 - 800, outputWindow->GetPosition().y - 25));
-	viewportWindow->SetPosition(VL::Vec2(400, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(viewportWindow);
 
 	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(context));
-	inspectorWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
-	inspectorWindow->SetPosition(VL::Vec2(viewportWindow->GetPosition().x + viewportWindow->GetSize().x, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
 
 	auto filesystemWindow = VL::Ref<FilesystemWindow>(new FilesystemWindow(context));
-	filesystemWindow->SetSize(VL::Vec2(500, outputWindow->GetSize().y));
-	filesystemWindow->SetPosition(VL::Vec2(0, 1080 - filesystemWindow->GetSize().y));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(filesystemWindow);
 
 	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(context));
-	hierarchyWindow->SetSize(VL::Vec2(500, outputWindow->GetPosition().y - 25));
-	hierarchyWindow->SetPosition(VL::Vec2(0, 25));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
+
+	auto materialWindow = VL::Ref<MaterialEditor>(new MaterialEditor(context));
+	this->GetModule<VL::ImGuiModule>()->AddWindow(materialWindow);
 
 	fs::create_directory(EDITOR_TEMP_FOLDER);
 }

@@ -39,34 +39,32 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 			{
 				if (ImGui::MenuItem("Folder"))
 				{
-					if (!fs::exists(this->m_CurrentDirectory / "New Folder"))
-					{
-						fs::create_directory(this->m_CurrentDirectory / "New Folder");
-					}
-					else
-					{
-						int i = 2;
-						while (true)
-						{
-							fs::path filepath = this->m_CurrentDirectory / ("New Folder (" + std::to_string(i) + ")");
-							if (!fs::exists(filepath))
-							{
-								fs::create_directory(filepath);
-								break;
-							}
-							i++;
-						}
-					}
+					fs::path filepath = VL::Utils::GenerateUniquePath(this->m_CurrentDirectory / "New Folder");
+					fs::create_directory(filepath);
 
 					ImGui::CloseCurrentPopup();
 				}
-				if (ImGui::MenuItem("LuaFile"))
+				if (ImGui::MenuItem("Material"))
 				{
-					fs::create_directory(this->m_CurrentDirectory / "New Folder");
+					fs::path filepath = VL::Utils::GenerateUniquePath(this->m_CurrentDirectory / "New.material.lua");
+
+					VL::LuaSerializer serializer;
+					serializer.Insert("Shader", "://Simple.shader");
+					serializer.WriteToFile(filepath.string());
 
 					ImGui::CloseCurrentPopup();
 				}
+				if (ImGui::MenuItem("Scene"))
+				{
+					fs::path filepath = VL::Utils::GenerateUniquePath(this->m_CurrentDirectory / "New.scene.lua");
 
+					VL::LuaSerializer serializer;
+					serializer.WriteToFile(filepath.string());
+
+					ImGui::CloseCurrentPopup();
+
+					ImGui::CloseCurrentPopup();
+				}
 				ImGui::EndMenu();
 			}
 

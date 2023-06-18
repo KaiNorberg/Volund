@@ -153,6 +153,8 @@ namespace Volund
 	void Material::SetShader(Ref<Shader> shader)
 	{
 		this->m_Shader = shader;
+
+		this->ConformToBlueprint();
 	}
 
 	Ref<Shader> Material::GetShader()
@@ -238,6 +240,51 @@ namespace Volund
 		}
 	}
 
+	void Material::ConformToBlueprint()
+	{
+		auto blueprint = this->GetBlueprint();
+
+		if (blueprint == nullptr)
+		{
+			return;
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
+		{
+			this->SetInt(blueprintUniform, 0);
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Float))
+		{
+			this->SetFloat(blueprintUniform, 0.0f);
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Double))
+		{
+			this->SetDouble(blueprintUniform, 0.0);
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec2))
+		{
+			this->SetVec2(blueprintUniform, Vec2(0.0f));
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec3))
+		{
+			this->SetVec3(blueprintUniform, Vec3(0.0f));
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec4))
+		{
+			this->SetVec4(blueprintUniform, Vec4(0.0f));
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Sampler))
+		{
+			this->SetTexture(blueprintUniform, nullptr);
+		}
+	}
+
 	Ref<Material> Material::Create()
 	{
 		return std::make_shared<Material>();
@@ -255,5 +302,7 @@ namespace Volund
 	Material::Material(Ref<Shader> shader)
 	{
 		this->m_Shader = shader;
+
+		this->ConformToBlueprint();
 	}
 }

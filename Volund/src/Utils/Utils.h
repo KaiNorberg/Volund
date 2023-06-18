@@ -41,6 +41,8 @@ namespace Volund::Utils
 	static inline const Vec3 ONE = Vec3(1, 1, 1);
 	static inline const Vec3 ZERO = Vec3(0, 0, 0);
 
+	fs::path GenerateUniquePath(const fs::path& basePath);
+
 	fs::path RelativePath(const fs::path& path, const fs::path& parentPath);
 
 	std::vector<std::string_view> SplitString(std::string_view string, const char delimiter);
