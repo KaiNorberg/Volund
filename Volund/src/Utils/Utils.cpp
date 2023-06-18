@@ -4,6 +4,11 @@
 
 namespace Volund::Utils
 {
+	bool CheckBit(uint32_t var, uint8_t pos)
+	{
+		return ((var) & (1 << (pos)));
+	}
+
 	fs::path GenerateUniquePath(const fs::path& basePath)
 	{
 		fs::path filepath = basePath;

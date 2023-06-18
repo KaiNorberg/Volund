@@ -11,7 +11,17 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->m_EventCallback(e);
+		if ((e.Type & VOLUND_EVENT_TYPE_FLAG_ASYNC) != 0)
+		{
+			VOLUND_THREADPOOL_SUBMIT([this, e]() 
+			{
+				this->m_EventCallback(e);
+			});
+		}
+		else
+		{
+			this->m_EventCallback(e);
+		}
 	}
 
 	EventDispatcher::EventDispatcher(std::function<void(const Event&)> eventCallback)

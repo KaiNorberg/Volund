@@ -30,9 +30,6 @@ namespace Volund
 
 		template<typename T>
 		bool HasModule();
-
-		void Dispatch(const Event& e);
-
 		virtual void OnRun() {}
 		virtual void OnTerminate() {}
 		virtual void Procedure(const Event& e) {}
@@ -46,6 +43,8 @@ namespace Volund
 		friend class EventDispatcher;
 
 		void Loop();
+
+		void Dispatch(const Event& e);
 
 		bool m_ShouldRun = true;
 

@@ -40,6 +40,19 @@ namespace Volund
 		this->m_ShouldRun = false;
 	}
 
+	void Application::Dispatch(const Event& e)
+	{
+		this->Procedure(e);
+
+		for (const auto& [typeId, view] : this->m_Modules)
+		{
+			for (const auto& module : view)
+			{
+				module->Procedure(e);
+			}
+		}
+	}
+
 	void Application::Loop()
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -53,31 +66,15 @@ namespace Volund
 			TimeStep ts = TimeStep(std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - startTime).count());
 			startTime = std::chrono::high_resolution_clock::now();
 
-			this->m_ThreadPool.Submit([this, ts]()
-			{
-				Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
-				VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
-				this->m_EventDispatcher->Dispatch(updateEvent);
-			});
+			Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
+			VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
+			this->m_EventDispatcher->Dispatch(updateEvent);
 
 			this->m_EventDispatcher->Dispatch(Event(VOLUND_EVENT_TYPE_RENDER));
 
 			while (this->m_ThreadPool.Busy());
 
 			DeferredTaskHandler::Execute();
-		}
-	}
-
-	void Application::Dispatch(const Event& e)
-	{
-		this->Procedure(e);
-
-		for (const auto& [typeId, view] : this->m_Modules)
-		{
-			for (const auto& module : view)
-			{
-				module->Procedure(e);
-			}
 		}
 	}
 

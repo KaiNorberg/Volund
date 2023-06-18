@@ -57,9 +57,6 @@ private:
 	VL::Ref<VL::Texture> m_PlayIcon;
 	VL::Ref<VL::Texture> m_PauseIcon;
 
-	//VL::Ref<VL::Texture> m_DisabledPlayIcon;
-	//VL::Ref<VL::Texture> m_DisabledPauseIcon;
-
 	VL::Input m_Input;
 };
 
