@@ -166,8 +166,8 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 	auto spec = this->m_SceneFramebuffer->GetSpec();
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
 	{
-		spec.Width = (uint32_t)viewportSize.x;
-		spec.Height = (uint32_t)viewportSize.y;
+		spec.Width = std::clamp((uint32_t)viewportSize.x, (uint32_t)1, (uint32_t)8000);
+		spec.Height = std::clamp((uint32_t)viewportSize.y, (uint32_t)1, (uint32_t)8000);
 		this->m_SceneFramebuffer->SetSpec(spec);
 		this->m_EditorFramebuffer->SetSpec(spec);
 	}
