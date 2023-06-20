@@ -6,48 +6,44 @@ layout(location = 0) in vec3 VertexPosition;
 layout(location = 1) in vec2 VertexTextureCoord;
 layout(location = 2) in vec3 VertexNormal;
 
-out vec3 FragPosition;
-out vec2 FragTextureCoord;
-out vec3 FragNormal;
+out vec3 fragPos;
+out vec2 fragTexCoord;
+out vec3 fragNormal;
 
 layout(std140, binding = 0) uniform Camera
 {
-    mat4 ViewProjMatrix;
-    vec3 EyePosition;
+	mat4 ViewMatrix;
+	mat4 ProjectionMatrix;
 };
 
 uniform mat4 _ModelMatrix;
 
 void main()
 {
-    FragPosition = (_ModelMatrix * vec4(VertexPosition, 1.0)).xyz;
-    FragTextureCoord = VertexTextureCoord;
-    FragNormal = normalize(mat3(_ModelMatrix) * VertexNormal);
-    gl_Position = ViewProjMatrix * vec4(FragPosition, 1.0f);
-};
+    fragPos = (_ModelMatrix * vec4(VertexPosition, 1.0)).xyz;
+    fragTexCoord = VertexTextureCoord;
+    fragNormal = normalize(mat3(_ModelMatrix) * VertexNormal);
+    gl_Position = ProjectionMatrix * ViewMatrix * vec4(fragPos, 1.0f);
+}
 
 #VOLUND_SHADER_TYPE FRAGMENT
 #version 460
 
-#VOLUND_MATERIAL_START
-
-in vec3 FragPosition;
-in vec2 FragTextureCoord;
-in vec3 FragNormal;
-
-#VOLUND_MATERIAL_END
+in vec3 fragPos;
+in vec2 fragTexCoord;
+in vec3 fragNormal;
 
 layout(std140, binding = 0) uniform Camera
-{    
-    mat4 ViewProjMatrix;
-    vec3 EyePosition;
+{
+	mat4 ViewMatrix;
+	mat4 ProjectionMatrix;
 };
 
-layout(std140, binding = 1) uniform LightsUniform
+layout(std140, binding = 1) uniform Lights
 {
-    int LightAmount;
-    vec3 LightPositions[64];    
-    vec3 LightColors[64];
+	int LightAmount;
+    vec4 LightColors[64];
+    vec4 LightPositions[64];
 };
 
 #VOLUND_MATERIAL_START
@@ -59,29 +55,39 @@ uniform sampler2D ColorTexture;
 
 layout(location = 0) out vec4 FragColor;
 
-void main()
+vec3 GetCameraPosition() 
 {
-    vec3 TextureColor = texture(ColorTexture, FragTextureCoord).rgb;
+    mat4 inverseViewMatrix = inverse(ViewMatrix);
+    
+    vec3 cameraPosition = vec3(inverseViewMatrix[3][0], inverseViewMatrix[3][1], inverseViewMatrix[3][2]);
+    
+    return cameraPosition;
+}
 
-    vec3 Result = TextureColor * Ambient;
+void main()
+{    
+    vec3 cameraPosition = GetCameraPosition();
+
+    vec3 color = texture(ColorTexture, fragTexCoord).rgb;
+
+    vec3 result = color * Ambient;
     for (int i = 0; i < LightAmount; i++)
     {  
-        vec3 L = normalize(LightPositions[i] - FragPosition);
+        vec3 l = normalize(LightPositions[i].xyz - fragPos);
 
-        // Lambert's cosine law
-        float Lambertian = max(dot(FragNormal, L), 0.0);
-        if (Lambertian > 0.0)
+        float lambertian = max(dot(fragNormal, l), 0.0);
+        if (lambertian > 0.0)
         {
-            vec3 R = reflect(-L, FragNormal);
-            vec3 V = normalize(EyePosition - FragPosition);
-            vec3 HalfV = normalize(L + V);
+            vec3 r = reflect(-l, fragNormal);
+            vec3 v = normalize(cameraPosition - fragPos);
+            vec3 halfV = normalize(l + v);
 
-            float Specular = pow(max(dot(FragNormal, HalfV), 0.0), 32.0f);
+            float specular = pow(max(dot(fragNormal, halfV), 0.0), 32.0f);
 
-            Result += vec3(Lambertian + Specular) * LightColors[i] * TextureColor;
+            result += vec3(lambertian + specular) * LightColors[i].xyz * color;
         }
     }
 
-    FragColor = vec4(Result, 1.0f);
+    FragColor = vec4(result, 1.0f);
 }
 )====="

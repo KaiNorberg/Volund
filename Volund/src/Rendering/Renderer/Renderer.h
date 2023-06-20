@@ -8,10 +8,6 @@
 
 #include "Scene/Scene.h"
 
-#define VOLUND_UNIFORM_BUFFER_BINDING_CAMERA 0
-#define VOLUND_UNIFORM_BUFFER_BINDING_LIGHTS 1
-#define VOLUND_MAX_LIGHTS 64
-
 #define VOLUND_UNIFORM_NAME_MODELMATRIX "_ModelMatrix"
 
 namespace Volund
@@ -22,16 +18,14 @@ namespace Volund
 		Ref<Mesh> mesh;
 		Ref<Material> material;
 
-		uint16_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
-
-		bool Discriminated = false;
+		uint32_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 	};
 
 	struct RendererLight
 	{
 		RGB Color;
-		Vec3 Position;
 		float Brightness;
+		Vec3 Position;
 	};
 
 	struct RendererEye
@@ -39,18 +33,16 @@ namespace Volund
 		Mat4x4 ViewMatrix = Mat4x4();
 		Mat4x4 ProjectionMatrix = Mat4x4();
 
-		Vec3 Position = Vec3();
-
-		uint16_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
-
 		Ref<Framebuffer> Target;
+
+		uint32_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 	};
 
 	class Renderer
 	{
 	public:
 
-		virtual void Begin(Ref<Framebuffer> defaultBuffer) = 0;
+		virtual void Begin(Ref<Framebuffer> targetBuffer) = 0;
 
 		void Submit(Ref<Scene> scene);
 
@@ -62,33 +54,18 @@ namespace Volund
 
 		virtual void End() = 0;
 
-		Renderer();
-
 		virtual ~Renderer() = default;
 
 	protected:
 
-		void UpdateLightUniforms();
-
-		void UpdateCameraUniforms(const RendererEye& eye);
-
 		struct Data
 		{
-			void Sort();
-
-			void Discriminate(const RendererEye& eye);
-
-			Ref<Framebuffer> DefaultBuffer;
+			Ref<Framebuffer> Target;
 
 			std::vector<RendererModel> Models;
-			std::vector<RendererLight> Lights;
 			std::vector<RendererEye> Eyes;
+			std::vector<RendererLight> Lights;
 		} m_Data;
-
-	private:
-
-		Ref<UniformBuffer> m_CameraUniforms;
-		Ref<UniformBuffer> m_LightsUniforms;
 	};
 }
 

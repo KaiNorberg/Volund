@@ -11,13 +11,13 @@ namespace Volund
 	void MeshRenderer::SetLayer(const uint8_t layer)
 	{
 		this->m_LayerMask = 0;
-		if (layer > 0 && layer <= 16)
+		if (layer > 0 && layer <= 32)
 		{
 			this->m_LayerMask |= 1UL << (layer - 1);
 		}
 	}
 
-	uint16_t MeshRenderer::GetLayerMask()
+	uint32_t MeshRenderer::GetLayerMask()
 	{
 		return this->m_LayerMask;
 	}
@@ -45,31 +45,6 @@ namespace Volund
 	void MeshRenderer::Procedure(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
-
-		switch (e.Type)
-		{
-		case VOLUND_EVENT_TYPE_RENDER:
-		{
-			if (this->m_Mesh != nullptr && this->m_Material != nullptr)
-			{
-				/*RendererModel model;
-				model.mesh = this->m_Mesh;
-				model.material = this->m_Material;
-				model.LayerMask = this->m_LayerMask;
-
-				const auto transformComponent = this->GetScene()->GetComponent<Transform>(this->GetEntity());
-				model.ModelMatrix = transformComponent != nullptr ? transformComponent->GetModelMatrix() : Mat4x4(1.0f);
-
-				Renderer::Submit(model);*/
-			}
-		}
-		break;
-		default:
-		{
-
-		}
-		break;
-		}
 	}
 
 	MeshRenderer::MeshRenderer(Ref<Mesh> mesh, Ref<Material> material)

@@ -5,34 +5,16 @@
 
 namespace Volund
 {
-	void OpenGLUniformBuffer::Set(const std::string& name, const void* data)
+	void OpenGLUniformBuffer::SetData(const void* data, uint32_t size, uint32_t offset)
 	{
-		if (this->m_Id != 0)
-		{
-			Uniform uniform = this->m_Uniforms[name];
-			glBindBuffer(GL_UNIFORM_BUFFER, this->m_Id);
-			glBufferSubData(GL_UNIFORM_BUFFER, uniform.Offset, uniform.DataSize, data);
-			glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		}
-		else
-		{
-			VOLUND_INFO("Uniform Buffer Not Allocated!");
-		}
+		glNamedBufferSubData(this->m_Id, offset, size, data);
 	}
 
-	void OpenGLUniformBuffer::Allocate()
+	OpenGLUniformBuffer::OpenGLUniformBuffer(uint32_t size, uint32_t binding)
 	{
-		glGenBuffers(1, &this->m_Id);
-		glBindBuffer(GL_UNIFORM_BUFFER, this->m_Id);
-		glBufferData(GL_UNIFORM_BUFFER, this->m_Size, nullptr, GL_DYNAMIC_DRAW);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	}
-
-	void OpenGLUniformBuffer::Assign(const uint32_t binding)
-	{
-		glBindBuffer(GL_UNIFORM_BUFFER, this->m_Id);
+		glCreateBuffers(1, &this->m_Id);
+		glNamedBufferData(this->m_Id, size, nullptr, GL_DYNAMIC_DRAW);
 		glBindBufferBase(GL_UNIFORM_BUFFER, binding, this->m_Id);
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	}
 
 	OpenGLUniformBuffer::~OpenGLUniformBuffer()

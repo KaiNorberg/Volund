@@ -8,11 +8,9 @@ namespace Volund
 	{
 	public:
 
-		void Set(const std::string& name, const void* data) override;
+		void SetData(const void* data, uint32_t size, uint32_t offset) override;
 
-		void Allocate() override;
-
-		void Assign(uint32_t binding) override;
+		OpenGLUniformBuffer(uint32_t size, uint32_t binding);
 
 		~OpenGLUniformBuffer();
 

@@ -32,7 +32,7 @@ local table =
 		{
 			ComponentType = 4,
 			Color = Vec3:new(1.000000, 1.000000, 1.000000),
-			Brightness = 1.000000
+			Brightness = 500.000000
 		}
 	},
 	{
@@ -49,7 +49,7 @@ local table =
 		{
 			ComponentType = 3,
 			Mesh = "://Cube.obj",
-			Material = "Materials/Texture.mat.lua"
+			Material = "Materials/Blue.mat.lua"
 		}
 	},
 	{
@@ -100,7 +100,7 @@ local table =
 		{
 			ComponentType = 3,
 			Mesh = "Models/Teapot.obj",
-			Material = "Materials/White.mat.lua"
+			Material = "Materials/Blue.mat.lua"
 		}
 	},
 	{

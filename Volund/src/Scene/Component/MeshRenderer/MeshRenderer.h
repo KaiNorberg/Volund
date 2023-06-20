@@ -13,7 +13,7 @@ namespace Volund
 
 		void SetLayer(uint8_t layer);
 
-		uint16_t GetLayerMask();
+		uint32_t GetLayerMask();
 
 		void SetMesh(Ref<Mesh> newMesh);
 
@@ -31,7 +31,7 @@ namespace Volund
 
 	private:
 
-		uint16_t m_LayerMask = 1;
+		uint32_t m_LayerMask = 1;
 
 		Ref<Mesh> m_Mesh;
 		Ref<Material> m_Material;

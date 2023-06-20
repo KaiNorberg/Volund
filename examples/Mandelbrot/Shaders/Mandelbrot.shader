@@ -11,8 +11,12 @@ out vec3 FragNormal;
 
 layout(std140, binding = 0) uniform Camera
 {
-    mat4 ViewProjMatrix;
-    vec3 EyePosition;
+	mat4 ViewMatrix;
+	mat4 ProjectionMatrix;
+
+	vec3 Position;
+
+    int LayerMask;
 };
 
 out vec2 Coord;

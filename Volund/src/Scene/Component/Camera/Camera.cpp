@@ -12,7 +12,7 @@ namespace Volund
 {
 	void Camera::SetLayerMask(const uint8_t index, const bool enabled)
 	{
-		if (index > 0 && index <= 16)
+		if (index > 0 && index <= 32)
 		{
 			if (enabled)
 			{
@@ -25,19 +25,9 @@ namespace Volund
 		}
 	}
 
-	uint16_t Camera::GetLayerMask()
+	uint32_t Camera::GetLayerMask()
 	{
 		return this->m_LayerMask;
-	}
-
-	void Camera::SetTargetBuffer(const Ref<Framebuffer> newTargetBuffer)
-	{
-		this->m_TargetBuffer = newTargetBuffer;
-	}
-
-	Ref<Framebuffer> Camera::GetTargetBuffer()
-	{
-		return this->m_TargetBuffer;
 	}
 
 	Mat4x4 Camera::GetViewMatrix() const

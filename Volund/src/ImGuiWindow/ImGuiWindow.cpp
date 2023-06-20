@@ -240,7 +240,7 @@ namespace Volund
 
 		ImGuiColoredText(name.c_str());
 		ImGuiNextColumn();
-		bool changed = ImGui::DragFloat("##", &value);
+		bool changed = ImGui::DragFloat("##", &value, 0.1f);
 
 		ImGui::PopID();
 
@@ -258,7 +258,7 @@ namespace Volund
 		ImGuiColoredText(name.c_str());
 		ImGuiNextColumn();
 
-		bool changed = ImGui::InputDouble("##", &value);
+		bool changed = ImGui::InputDouble("##", &value, 0.1);
 
 		ImGui::PopID();
 

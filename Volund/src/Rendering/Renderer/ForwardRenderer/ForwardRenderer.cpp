@@ -5,37 +5,47 @@
 
 namespace Volund
 {
-	void ForwardRenderer::Begin(Ref<Framebuffer> defaultBuffer)
+	void ForwardRenderer::Begin(Ref<Framebuffer> targetBuffer)
 	{
-		const uint64_t oldCommandSize = this->m_Data.Models.size();
-
-		this->m_Data = Data();
-		this->m_Data.DefaultBuffer = defaultBuffer;
-		this->m_Data.Models.reserve(oldCommandSize);
+		this->m_Data = Renderer::Data();
+		this->m_Data.Target = targetBuffer;
 	}
 
 	void ForwardRenderer::End()
 	{
-		this->m_Data.Sort();
+		std::sort(this->m_Data.Models.begin(), this->m_Data.Models.end(), [](const RendererModel& a, const RendererModel& b)
+		{
+			return a.material < b.material;
+		});
 
-		this->UpdateLightUniforms();
+		LightsBuffer lightsBuffer;
+		lightsBuffer.LightAmount = std::min(this->m_Data.Lights.size(), (size_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
+		for (int i = 0; i < lightsBuffer.LightAmount; i++)
+		{
+			Vec3 lightColor = this->m_Data.Lights[i].Color * this->m_Data.Lights[i].Brightness;
+			Vec3 lightPosition = this->m_Data.Lights[i].Position;
+
+			lightsBuffer.LightColors[i] = Vec4(lightColor.x, lightColor.y, lightColor.z, 0.0f);
+			lightsBuffer.LightPositions[i] = Vec4(lightPosition.x, lightPosition.y, lightPosition.z, 0.0f);
+		}
+		this->m_LightsUniformBuffer->SetData(&lightsBuffer, sizeof(LightsBuffer), 0);
 
 		for (const auto& eye : this->m_Data.Eyes)
 		{
+			CameraBuffer cameraBuffer;
+			cameraBuffer.ProjectionMatrix = eye.ProjectionMatrix;
+			cameraBuffer.ViewMatrix = eye.ViewMatrix;
+			this->m_CameraUniformBuffer->SetData(&cameraBuffer, sizeof(CameraBuffer), 0);
+
 			Ref<Framebuffer> targetBuffer;
-			if (eye.Target == nullptr)
-			{
-				targetBuffer = this->m_Data.DefaultBuffer;
-			}
-			else
+			if (eye.Target != nullptr)
 			{
 				targetBuffer = eye.Target;
 			}
-
-			this->m_Data.Discriminate(eye);
-
-			this->UpdateCameraUniforms(eye);
-
+			else
+			{
+				targetBuffer = this->m_Data.Target;
+			}
 			targetBuffer->Bind();
 			auto& targetSpec = targetBuffer->GetSpec();
 
@@ -45,7 +55,12 @@ namespace Volund
 			Ref<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)
 			{
-				if (!model.Discriminated)
+				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
+
+				bool isInFrustum = model.mesh != nullptr && cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix));
+				bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
+
+				if (isInFrustum && isInMask)
 				{
 					if (model.material != prevMaterial)
 					{
@@ -68,4 +83,35 @@ namespace Volund
 			targetBuffer->Unbind();
 		}
 	}
+
+	ForwardRenderer::ForwardRenderer()
+	{
+		this->m_CameraUniformBuffer = UniformBuffer::Create(sizeof(CameraBuffer), VOLUND_FORWARD_RENDERER_BINDING_CAMERA);
+		this->m_LightsUniformBuffer = UniformBuffer::Create(sizeof(LightsBuffer), VOLUND_FORWARD_RENDERER_BINDING_LIGHTS);
+	}
+
+	/*void Renderer::Data::Sort()
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		std::sort(this->Models.begin(), this->Models.end(), [](const RendererModel& a, const RendererModel& b)
+		{
+			return a.material < b.material;
+		});
+	}
+
+	void Renderer::Data::Discriminate(const RendererEye& eye)
+	{
+		VOLUND_PROFILE_FUNCTION();
+
+		const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
+
+		for (auto& model : this->Models)
+		{
+			bool isInFrustum = model.mesh != nullptr && cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix));
+			bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
+
+			model.Discriminated = !isInFrustum || !isInMask;
+		}
+	}*/
 }

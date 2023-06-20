@@ -19,11 +19,7 @@ namespace Volund
 
 		void SetLayerMask(uint8_t index, bool enabled);
 
-		uint16_t GetLayerMask();
-
-		void SetTargetBuffer(Ref<Framebuffer> newTargetBuffer);
-
-		Ref<Framebuffer> GetTargetBuffer();
+		uint32_t GetLayerMask();
 
 		Mat4x4 GetViewMatrix() const;
 
@@ -39,8 +35,6 @@ namespace Volund
 
 	private:
 
-		uint16_t m_LayerMask = std::numeric_limits<uint16_t>::max();
-
-		Ref<Framebuffer> m_TargetBuffer;
+		uint32_t m_LayerMask = std::numeric_limits<uint32_t>::max();
 	};
 }

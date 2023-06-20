@@ -7,13 +7,13 @@
 
 namespace Volund
 {
-	Ref<UniformBuffer> UniformBuffer::Create()
+	Ref<UniformBuffer> UniformBuffer::Create(uint32_t size, uint32_t binding)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLUniformBuffer>();
+			return std::make_shared<OpenGLUniformBuffer>(size, binding);
 		}
 		break;
 		default:

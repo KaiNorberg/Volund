@@ -68,11 +68,10 @@ namespace Volund
 
 			Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
 			VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
+
 			this->m_EventDispatcher->Dispatch(updateEvent);
 
 			this->m_EventDispatcher->Dispatch(Event(VOLUND_EVENT_TYPE_RENDER));
-
-			while (this->m_ThreadPool.Busy());
 
 			DeferredTaskHandler::Execute();
 		}

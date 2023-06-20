@@ -40,12 +40,6 @@ namespace Volund
 		CreateResource("://SimpleTexture.shader",
 			#include "Resources/Shaders/SimpleTexture.shader"
 		);
-		CreateResource("://PBR.shader",
-			#include "Resources/Shaders/PBR.shader"
-		);
-		CreateResource("://PBRTexture.shader",
-			#include "Resources/Shaders/PBRTexture.shader"
-		);
 		CreateResource("://Sphere.obj",
 			#include "Resources/Meshes/Sphere.obj"
 		);

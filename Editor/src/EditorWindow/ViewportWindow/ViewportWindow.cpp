@@ -191,19 +191,18 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 
 	this->m_Renderer->Begin(this->m_SceneFramebuffer);
 
-	VL::RendererEye eye;
-	eye.Target = this->m_EditorFramebuffer;
-	eye.ProjectionMatrix = projectionMatrix;
-	eye.ViewMatrix = viewMatrix;
-	eye.Position = this->m_Position;
-	eye.LayerMask = -1;
-
-	this->m_Renderer->Submit(eye);
-
 	if (scene != nullptr)
 	{
 		this->m_Renderer->Submit(scene);
 	}
+
+	VL::RendererEye eye;
+	eye.ProjectionMatrix = projectionMatrix;
+	eye.ViewMatrix = viewMatrix;
+	eye.Target = this->m_EditorFramebuffer;
+	eye.LayerMask = -1;
+
+	this->m_Renderer->Submit(eye);
 
 	this->m_Renderer->End();
 }

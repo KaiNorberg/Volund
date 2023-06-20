@@ -54,8 +54,6 @@ namespace Volund
 
 		void Terminate();
 
- 		ThreadPool m_ThreadPool;
-
 		PolyContainer<Module> m_Modules;
 	};
 
