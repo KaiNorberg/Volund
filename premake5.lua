@@ -171,13 +171,7 @@ project "Editor"
 			"Volund",
 			"OpenGL32",
 			"Glad",
-			"GLFW",
-			"OpenAL32",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
-			"winmm"
+			"GLFW"
 		}
 	filter "system:linux" 
 		postbuildcommands {
