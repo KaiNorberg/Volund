@@ -4,7 +4,7 @@
 
 #include "Rendering/Framebuffer/Framebuffer.h"
 
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 
 namespace Volund
 {
