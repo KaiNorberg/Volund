@@ -136,7 +136,7 @@ namespace Volund
                     {
                         uniformType = MaterialUniformType::Vec4;
                     }
-                    else if (words[1].contains("sampler"))
+                    else if (words[1].starts_with("sampler"))
                     {
                         uniformType = MaterialUniformType::Sampler;
                     }

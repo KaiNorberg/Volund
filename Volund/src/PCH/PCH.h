@@ -27,6 +27,7 @@
 #include <signal.h>
 #include <tuple>
 #include <ranges>
+#include <charconv>
 
 #include <sol/sol.hpp>
 
