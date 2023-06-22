@@ -220,7 +220,7 @@ namespace Volund
         auto scene = std::make_shared<Scene>();
 
         LuaDeserializer sceneData = LuaDeserializer(filepath);
-
+        
         if (!sceneData.Valid())
         {
             return scene;

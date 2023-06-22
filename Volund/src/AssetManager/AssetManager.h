@@ -79,11 +79,13 @@ namespace Volund
                 {
                     auto fetchedData = std::dynamic_pointer_cast<Asset<T>>(view[i])->Data;
                     if (fetchedData.expired())
-                    {
+                    {        
+                        VOLUND_INFO("Asset expired, retrieving new asset (%s)...", filepath.c_str());
                         this->m_Data.Erase<Asset<T>>(i);
                         return this->Fetch<T>(relativePath);
                     }
 
+                    VOLUND_INFO("Fetching cached asset (%s)...", filepath.c_str());
                     return fetchedData.lock();
                 }
             }
