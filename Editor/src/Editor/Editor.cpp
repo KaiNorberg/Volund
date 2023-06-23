@@ -14,40 +14,40 @@
 void Editor::OnRun()
 {
 	this->AttachModule(new VL::WindowModule());
-	this->AttachModule(new VL::AudioModule());
-	this->AttachModule(new VL::ImGuiModule());
+	auto windowModule = this->GetModule<VL::WindowModule>();
 
+	windowModule->GetWindow()->SetIcon("data/icons/logo.png");
+	windowModule->GetWindow()->SetTitle("Volund Editor");
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
+	this->AttachModule(new VL::AudioModule());
+	this->AttachModule(new VL::ImGuiModule());
 	this->AttachModule(new EditorContext());
 
 	auto context = this->GetModule<EditorContext>();
+	auto imGuiModule = this->GetModule<VL::ImGuiModule>();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "data/imgui.ini";
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
-	this->GetModule<VL::WindowModule>()->GetWindow()->SetIcon("data/icons/logo.png");
-
 	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
-	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
+	imGuiModule->AddWindow(outputWindow);
 
 	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(context));
-	this->GetModule<VL::ImGuiModule>()->AddWindow(viewportWindow);
+	imGuiModule->AddWindow(viewportWindow);
 
 	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(context));
-	this->GetModule<VL::ImGuiModule>()->AddWindow(inspectorWindow);
+	imGuiModule->AddWindow(inspectorWindow);
 
 	auto filesystemWindow = VL::Ref<FilesystemWindow>(new FilesystemWindow(context));
-	this->GetModule<VL::ImGuiModule>()->AddWindow(filesystemWindow);
+	imGuiModule->AddWindow(filesystemWindow);
 
 	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(context));
-	this->GetModule<VL::ImGuiModule>()->AddWindow(hierarchyWindow);
+	imGuiModule->AddWindow(hierarchyWindow);
 
 	auto materialWindow = VL::Ref<MaterialEditor>(new MaterialEditor(context));
-	this->GetModule<VL::ImGuiModule>()->AddWindow(materialWindow);
-
-	fs::create_directory(EDITOR_TEMP_FOLDER);
+	imGuiModule->AddWindow(materialWindow);
 }
 
 void Editor::OnTerminate()
@@ -222,7 +222,6 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case VOLUND_EVENT_TYPE_WINDOW_CLOSE:
 	{
-		fs::remove_all(EDITOR_TEMP_FOLDER);
 		this->Terminate();
 	}
 	break;

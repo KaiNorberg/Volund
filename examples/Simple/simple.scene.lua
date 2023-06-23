@@ -100,7 +100,7 @@ local table =
 		{
 			ComponentType = 3,
 			Mesh = "Models/Teapot.obj",
-			Material = "Materials/Blue.mat.lua"
+			Material = "Materials/White.mat.lua"
 		}
 	},
 	{

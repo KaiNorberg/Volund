@@ -53,9 +53,7 @@ namespace Volund
 
     sol::table LuaDeserializer::GetTable()
     {
-		auto object = (*this->m_SolState)[VOLUND_DESERIALIZER_TABLE];
-
-        return (sol::table)object;
+        return ((sol::object)(*this->m_SolState)[VOLUND_DESERIALIZER_TABLE]).as<sol::table>();
     }
 
     LuaDeserializer::LuaDeserializer(const std::string& filepath)
