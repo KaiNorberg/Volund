@@ -5,6 +5,8 @@
 
 #include "Lua/LuaUtils/LuaUtils.h"
 
+#define VOLUND_DESERIALIZER_TABLE "Data"
+
 namespace Volund
 {
 	void LuaPrint(sol::object object)
@@ -21,7 +23,7 @@ namespace Volund
 
 	uint64_t LuaDeserializer::Size()
 	{
-		return this->m_Table.size();
+		return this->GetTable().size();
 	}
 
 	bool LuaDeserializer::Valid()
@@ -31,31 +33,39 @@ namespace Volund
 
 	sol::object LuaDeserializer::operator[](uint64_t i)
 	{
-		return this->m_Table[i];
+		return this->GetTable()[i];
 	}
 
 	sol::object LuaDeserializer::operator[](const std::string& key)
 	{
-		return this->m_Table[key];
+		return this->GetTable()[key];
 	}
 
 	sol::table::iterator LuaDeserializer::begin()
 	{
-		return this->m_Table.begin();
+		return this->GetTable().begin();
 	}
 
 	sol::table::iterator LuaDeserializer::end()
 	{
-		return this->m_Table.end();
+		return this->GetTable().end();
 	}
 
-	LuaDeserializer::LuaDeserializer(const std::string& filepath)
+    sol::table LuaDeserializer::GetTable()
+    {
+		auto object = (*this->m_SolState)[VOLUND_DESERIALIZER_TABLE];
+
+        return (sol::table)object;
+    }
+
+    LuaDeserializer::LuaDeserializer(const std::string& filepath)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->m_SolState = std::make_shared<sol::state>();
 		//this->m_SolState->open_libraries(sol::lib::base, sol::lib::table);
 
+		
 		//Global Functions
 
 		(*this->m_SolState)["require"] = LuaRequire;
@@ -75,7 +85,7 @@ namespace Volund
 			{
 				this->m_Valid = true;
 
-				this->m_Table = object;
+				(*this->m_SolState)[VOLUND_DESERIALIZER_TABLE] = object;
 			}
 			else
 			{
@@ -87,7 +97,7 @@ namespace Volund
 		{
 			this->m_Valid = true;
 
-			this->m_Table = this->m_SolState->create_table();
+			this->m_SolState->create_named_table(VOLUND_DESERIALIZER_TABLE);
 		}
 	}
 

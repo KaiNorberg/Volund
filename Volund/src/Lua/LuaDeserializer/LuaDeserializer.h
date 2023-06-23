@@ -18,6 +18,8 @@ namespace Volund
 
 		sol::table::iterator end();
 
+		sol::table GetTable();
+
 		LuaDeserializer(const std::string& filepath = "");
 
 		virtual ~LuaDeserializer();
@@ -25,8 +27,6 @@ namespace Volund
 	private:
 
 		bool m_Valid = false;
-
-		sol::table m_Table;
 
 		Ref<sol::state> m_SolState;
 	};
