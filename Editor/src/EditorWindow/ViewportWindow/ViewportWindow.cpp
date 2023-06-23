@@ -226,9 +226,14 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	this->m_Renderer = std::make_shared<VL::ForwardRenderer>();
 
 	this->m_BallCenter = VL::Vec3(0, 1, 0);
-	this->m_BallRotation = VL::Vec3(0, 0, 0);
-	this->m_Position = VL::Vec3(0, 1, 1);
-	this->m_Distance = 1.0f;
+	this->m_BallRotation = VL::Vec3(-30, 45, 0);
+	this->m_Distance = 10.0f;
+
+	VL::Mat4x4 ballMatrix = VL::Mat4x4(1.0f);
+	ballMatrix = glm::translate(ballMatrix, this->m_BallCenter);
+	ballMatrix *= VL::Mat4x4(VL::Quat(glm::radians(this->m_BallRotation)));
+	ballMatrix = glm::scale(ballMatrix, VL::Vec3(this->m_Distance));
+	this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, 1.0, 1.0);
 
 	this->m_GridShader = VL::Shader::Create("data/shaders/grid.shader");
 }
