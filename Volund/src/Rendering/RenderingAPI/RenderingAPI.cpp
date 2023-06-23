@@ -24,11 +24,16 @@ namespace Volund
 		m_Instance->SetViewPort(x, y, width, height);
 	}
 
-	void RenderingAPI::DrawIndexed(const Ref<Mesh>& mesh)
+	void RenderingAPI::DrawIndexed(uint64_t indexCount)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		m_Instance->DrawIndexed(mesh);
+		m_Instance->DrawIndexed(indexCount);
+	}
+
+	void RenderingAPI::Draw(uint64_t first, uint64_t count)
+	{
+		m_Instance->Draw(first, count);
 	}
 
 	void RenderingAPI::BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer)

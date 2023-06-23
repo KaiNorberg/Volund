@@ -19,7 +19,7 @@ namespace Volund
 		glBindVertexArray(0);
 	}
 
-	void OpenGLMesh::SetVertexBuffer(Ref<VertexBuffer>& buffer)
+	void OpenGLMesh::SetVertexBuffer(Ref<VertexBuffer> buffer)
 	{
 		this->m_VertexBuffer = buffer;
 
@@ -42,7 +42,7 @@ namespace Volund
 		}
 	}
 
-	void OpenGLMesh::SetIndexBuffer(Ref<IndexBuffer>& buffer)
+	void OpenGLMesh::SetIndexBuffer(Ref<IndexBuffer> buffer)
 	{
 		this->m_IndexBuffer = buffer;
 
@@ -55,7 +55,7 @@ namespace Volund
 		glGenVertexArrays(1, &this->m_ID);
 	}
 
-	OpenGLMesh::OpenGLMesh(Ref<VertexBuffer>& VertexBuffer, Ref<IndexBuffer>& IndexBuffer)
+	OpenGLMesh::OpenGLMesh(Ref<VertexBuffer> VertexBuffer, Ref<IndexBuffer> IndexBuffer)
 	{
 		glGenVertexArrays(1, &this->m_ID);
 		this->SetVertexBuffer(VertexBuffer);

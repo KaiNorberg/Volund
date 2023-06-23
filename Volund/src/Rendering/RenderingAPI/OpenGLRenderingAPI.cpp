@@ -118,12 +118,14 @@ namespace Volund
 		glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	}
 
-	void OpenGLRenderingAPI::DrawIndexed(const Ref<Mesh>& mesh)
+	void OpenGLRenderingAPI::DrawIndexed(uint64_t indexCount)
 	{
-		if (mesh->GetIndexBuffer() != nullptr)
-		{
-			glDrawElements(GL_TRIANGLES, mesh->GetIndexBuffer()->GetCount(), GL_UNSIGNED_INT, nullptr);
-		}
+		glDrawElements(GL_TRIANGLES, indexCount, GL_UNSIGNED_INT, nullptr);
+	}
+
+	void OpenGLRenderingAPI::Draw(uint64_t first, uint64_t count)
+	{
+		glDrawArrays(GL_TRIANGLES, first, count);
 	}
 
 	void OpenGLRenderingAPI::BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer)
@@ -158,7 +160,7 @@ namespace Volund
 		VOLUND_ASSERT(gladLoadGL(), "Unable to load OpenGL");
 
 		glEnable(GL_DEPTH_TEST);
-		glDepthFunc(GL_LEQUAL);
+		glDepthFunc(GL_LESS);
 
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);

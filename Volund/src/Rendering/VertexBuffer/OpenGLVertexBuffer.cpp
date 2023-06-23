@@ -6,6 +6,11 @@
 
 namespace Volund
 {
+	AABB OpenGLVertexBuffer::GetAABB()
+	{
+		return this->m_AABB;
+	}
+
 	void OpenGLVertexBuffer::Bind()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
@@ -14,6 +19,11 @@ namespace Volund
 	void OpenGLVertexBuffer::Unbind()
 	{
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
+	}
+
+	uint32_t OpenGLVertexBuffer::GetCount()
+	{
+		return this->m_Count;
 	}
 
 	void OpenGLVertexBuffer::SetLayout(const VertexLayout& layout)

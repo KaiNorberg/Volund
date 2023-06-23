@@ -11,12 +11,8 @@ out vec3 FragNormal;
 
 layout(std140, binding = 0) uniform Camera
 {
-	mat4 ViewMatrix;
-	mat4 ProjectionMatrix;
-
-	vec3 Position;
-
-    int LayerMask;
+    mat4 ViewMatrix;
+    mat4 ProjectionMatrix;
 };
 
 out vec2 Coord;
@@ -30,7 +26,7 @@ void main()
     FragPosition = (_ModelMatrix * vec4(VertexPosition, 1.0)).xyz;
     FragTextureCoord = VertexTextureCoord;
     FragNormal = normalize(mat3(_ModelMatrix) * VertexNormal);
-    gl_Position = ViewProjMatrix * vec4(FragPosition, 1.0f);
+    gl_Position = ProjectionMatrix * ViewMatrix * vec4(FragPosition, 1.0f);
 };
 
 #VOLUND_SHADER_TYPE FRAGMENT

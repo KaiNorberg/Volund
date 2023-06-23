@@ -9,13 +9,10 @@ namespace Volund
 
 		virtual void Unbind() = 0;
 
-		uint32_t GetCount() const;
+		virtual uint32_t GetCount() const = 0;
 
-		static Ref<IndexBuffer> Create(const uint32_t indices[], uint32_t size);
+		static Ref<IndexBuffer> Create(const uint32_t indices[], uint32_t count);
 
 		virtual ~IndexBuffer() = default;
-
-	protected:
-		uint32_t m_Count = 0;
 	};
 }

@@ -7,9 +7,14 @@ namespace Volund
 	class OpenGLVertexBuffer : public VertexBuffer
 	{
 	public:
+		
+		AABB GetAABB() override;
+
 		void Bind() override;
 
 		void Unbind() override;
+
+		uint32_t GetCount() override;
 
 		void SetLayout(const VertexLayout& layout) override;
 
@@ -20,7 +25,12 @@ namespace Volund
 		~OpenGLVertexBuffer() override;
 
 	private:
+
+		AABB m_AABB = {};
+
 		VertexLayout m_Layout;
+		
+		uint32_t m_Count;
 
 		uint32_t m_ID;
 	};

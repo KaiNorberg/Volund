@@ -18,8 +18,8 @@ namespace Volund
 		virtual void Bind() const = 0;
 		virtual void Unbind() const = 0;
 
-		virtual void SetVertexBuffer(Ref<VertexBuffer>& buffer) = 0;
-		virtual void SetIndexBuffer(Ref<IndexBuffer>& buffer) = 0;
+		virtual void SetVertexBuffer(Ref<VertexBuffer> buffer) = 0;
+		virtual void SetIndexBuffer(Ref<IndexBuffer> buffer) = 0;
 
 		Ref<VertexBuffer> GetVertexBuffer();
 		Ref<IndexBuffer> GetIndexBuffer();
@@ -31,7 +31,7 @@ namespace Volund
 
 		static Ref<Mesh> Create(const std::string& filepath);
 
-		static Ref<Mesh> Create(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer);
+		static Ref<Mesh> Create(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer);
 
 		static Ref<Mesh> CreateAsync(const std::string& filepath);
 

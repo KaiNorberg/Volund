@@ -21,7 +21,9 @@ namespace Volund
 
 		virtual void SetViewPort(int32_t x, int32_t y, int32_t width, int32_t height) = 0;
 
-		virtual void DrawIndexed(const Ref<Mesh>& mesh) = 0;
+		virtual void DrawIndexed(uint64_t indexCount) = 0;
+
+		virtual void Draw(uint64_t first, uint64_t count) = 0;
 
 		virtual void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer) = 0;
 
@@ -38,8 +40,10 @@ namespace Volund
 
 		static void SetViewPort(int32_t x, int32_t y, int32_t width, int32_t height);
 
-		static void DrawIndexed(const Ref<Mesh>& mesh);
-		
+		static void DrawIndexed(uint64_t indexCount);
+
+		static void Draw(uint64_t first, uint64_t count);
+
 		static void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer);
 
 		static void Init(GraphicsAPI api);

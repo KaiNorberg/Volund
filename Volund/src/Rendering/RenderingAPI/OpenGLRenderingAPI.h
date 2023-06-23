@@ -17,7 +17,9 @@ namespace Volund
 
 		void Clear(const RGBA color) override;
 
-		void DrawIndexed(const Ref<Mesh>& mesh) override;
+		void DrawIndexed(uint64_t indexCount) override;
+
+		void Draw(uint64_t first, uint64_t count) override;
 
 		void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer) override;
 

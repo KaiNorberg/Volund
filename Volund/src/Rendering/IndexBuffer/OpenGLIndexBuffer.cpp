@@ -16,6 +16,11 @@ namespace Volund
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	}
 
+	uint32_t OpenGLIndexBuffer::GetCount() const
+	{
+		return this->m_Count;
+	}
+
 	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t indices[], uint32_t count)
 	{
 		this->m_Count = count;

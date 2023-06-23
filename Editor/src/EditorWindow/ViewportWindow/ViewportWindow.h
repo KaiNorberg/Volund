@@ -46,6 +46,8 @@ private:
 
 		VL::Ref<VL::Renderer> m_Renderer;
 
+		VL::Ref<VL::Shader> m_GridShader;
+
 		VL::Ref<VL::Framebuffer> m_SceneFramebuffer;
 		VL::Ref<VL::Framebuffer> m_EditorFramebuffer;
 	} m_Camera;

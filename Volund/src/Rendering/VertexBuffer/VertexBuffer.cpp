@@ -10,11 +10,6 @@
 
 namespace Volund
 {
-	AABB VertexBuffer::GetAABB()
-	{
-		return this->m_AABB;
-	}
-
 	Ref<VertexBuffer> VertexBuffer::Create(const float vertices[], uint32_t count)
 	{
 		switch (RenderingAPI::GetSelectedAPI())

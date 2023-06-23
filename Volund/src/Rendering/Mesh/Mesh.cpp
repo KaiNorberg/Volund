@@ -91,7 +91,7 @@ namespace Volund
 		return newMesh;
 	}
 
-	Ref<Mesh> Mesh::Create(Ref<VertexBuffer>& vertexBuffer, Ref<IndexBuffer>& indexBuffer)
+	Ref<Mesh> Mesh::Create(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer)
 	{
 		Ref<Mesh> newMesh = Mesh::Create();
 		newMesh->SetVertexBuffer(vertexBuffer);

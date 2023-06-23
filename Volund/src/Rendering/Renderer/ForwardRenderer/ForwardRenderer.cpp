@@ -75,8 +75,22 @@ namespace Volund
 						materialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}
 
-					model.mesh->Bind();
-					VL::RenderingAPI::DrawIndexed(model.mesh);
+					model.mesh->Bind();		
+					auto indexBuffer = model.mesh->GetIndexBuffer();
+					auto vertexBuffer = model.mesh->GetVertexBuffer();
+					
+					if (indexBuffer != nullptr)
+					{
+						VL::RenderingAPI::DrawIndexed(indexBuffer->GetCount());
+					}
+					else if (vertexBuffer != nullptr)
+					{
+						VL::RenderingAPI::Draw(0, vertexBuffer->GetCount());
+					}
+					else
+					{
+						//Not loaded
+					}
 				}
 			}
 

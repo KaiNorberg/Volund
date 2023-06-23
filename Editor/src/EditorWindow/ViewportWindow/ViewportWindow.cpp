@@ -201,10 +201,16 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 	eye.ViewMatrix = viewMatrix;
 	eye.Target = this->m_EditorFramebuffer;
 	eye.LayerMask = -1;
-
 	this->m_Renderer->Submit(eye);
 
 	this->m_Renderer->End();
+
+	this->m_EditorFramebuffer->Bind();
+	this->m_GridShader->Bind();
+	this->m_GridShader->SetMat4x4("ViewMatrix", viewMatrix);
+	this->m_GridShader->SetMat4x4("ProjectionMatrix", projectionMatrix);
+	VL::RenderingAPI::Draw(0, 6);
+	this->m_EditorFramebuffer->Unbind();
 }
 
 ViewportWindow::ViewportCamera::ViewportCamera()
@@ -223,4 +229,6 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	this->m_BallRotation = VL::Vec3(0, 0, 0);
 	this->m_Position = VL::Vec3(0, 1, 1);
 	this->m_Distance = 1.0f;
+
+	this->m_GridShader = VL::Shader::Create("data/shaders/grid.shader");
 }
