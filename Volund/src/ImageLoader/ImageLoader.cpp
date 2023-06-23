@@ -25,9 +25,10 @@ namespace Volund
 		return this->m_Data;
 	}
 
-	ImageLoader::ImageLoader(const std::string& filepath, int32_t desiredChannels)
+	ImageLoader::ImageLoader(const std::string& filepath, bool flip, int32_t desiredChannels)
 	{
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(flip);
+
 		this->m_Data = stbi_load(filepath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, desiredChannels);
 
 		if (this->m_Data == nullptr)

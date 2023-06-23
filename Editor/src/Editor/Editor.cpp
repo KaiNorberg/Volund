@@ -27,6 +27,8 @@ void Editor::OnRun()
 	io.IniFilename = "data/imgui.ini";
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
+	this->GetModule<VL::WindowModule>()->GetWindow()->SetIcon("data/icons/logo.png");
+
 	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
 	this->GetModule<VL::ImGuiModule>()->AddWindow(outputWindow);
 

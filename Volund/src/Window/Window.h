@@ -52,6 +52,8 @@ namespace Volund
 
 		void Flush();
 
+		void SetIcon(const std::string& filepath);
+
 		void ConnectWindowFocusCallback(GLFWwindowfocusfun callback);		
 		void ConnectCursorEnterCallback(GLFWcursorenterfun callback);
 		void ConnectWindowCloseCallback(GLFWwindowclosefun callback);
