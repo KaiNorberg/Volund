@@ -53,11 +53,11 @@ vec4 Grid(vec3 worldPos, float scale)
 
     if (abs(worldPos.z) < minimumz)
     {
-        return vec4(40.0 / 255.0, 140.0 / 255.0, 244.0 / 255.0, alpha);
+        return vec4(244.0 / 255.0, 51.0 / 255.0, 81.0 / 255.0, alpha);
     }
     else if (abs(worldPos.x) < minimumx)
     {
-        return vec4(244.0 / 255.0, 51.0 / 255.0, 81.0 / 255.0, alpha);
+        return vec4(40.0 / 255.0, 140.0 / 255.0, 244.0 / 255.0, alpha);
     }
     else
     {
