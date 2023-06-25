@@ -196,21 +196,15 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 		this->m_Renderer->Submit(scene);
 	}
 
-	VL::RendererEye eye;
-	eye.ProjectionMatrix = projectionMatrix;
-	eye.ViewMatrix = viewMatrix;
-	eye.Target = this->m_EditorFramebuffer;
-	eye.LayerMask = -1;
-	this->m_Renderer->Submit(eye);
+	VL::RendererEye editorEye;
+	editorEye.ProjectionMatrix = projectionMatrix;
+	editorEye.ViewMatrix = viewMatrix;
+	editorEye.Target = this->m_EditorFramebuffer;
+	editorEye.LayerMask = -1;
+	editorEye.Effects.push_back(this->m_GridEffect);
+	this->m_Renderer->Submit(editorEye);
 
 	this->m_Renderer->End();
-
-	this->m_EditorFramebuffer->Bind();
-	this->m_GridShader->Bind();
-	this->m_GridShader->SetMat4x4("ViewMatrix", viewMatrix);
-	this->m_GridShader->SetMat4x4("ProjectionMatrix", projectionMatrix);
-	VL::RenderingAPI::Draw(0, 6);
-	this->m_EditorFramebuffer->Unbind();
 }
 
 ViewportWindow::ViewportCamera::ViewportCamera()
@@ -235,5 +229,5 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	ballMatrix = glm::scale(ballMatrix, VL::Vec3(this->m_Distance));
 	this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, 1.0, 1.0);
 
-	this->m_GridShader = VL::Shader::Create("data/shaders/grid.shader");
+	this->m_GridEffect = VL::Effect::Create(VL::Shader::Create("data/shaders/grid.shader"));
 }

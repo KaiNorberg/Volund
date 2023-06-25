@@ -18,6 +18,8 @@ namespace Volund
 		void SetTexture(const std::string& name, Ref<Texture> value);
 		void SetFramebuffer(const std::string& name, Ref<Framebuffer> value);
 
+		void SetMatrix(const std::string& name, const Mat4x4& value);
+
 		std::map<std::string, int>& IntMap();
 		std::map<std::string, float>& FloatMap();
 		std::map<std::string, double>& DoubleMap();
@@ -51,6 +53,8 @@ namespace Volund
 		std::map<std::string, Vec4> m_Vec4Uniforms;
 		std::map<std::string, Ref<Texture>> m_TextureUniforms;
 		std::map<std::string, Ref<Framebuffer>> m_FramebufferUniforms;
+
+		std::map<std::string, Mat4x4> m_MatrixUniforms;
 
 		Ref<Shader> m_Shader;
 

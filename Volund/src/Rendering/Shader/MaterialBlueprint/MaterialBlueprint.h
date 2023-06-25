@@ -11,6 +11,7 @@ namespace Volund
 		Vec3,
 		Vec4,
 		Sampler,
+		Matrix,
 		AMOUNT
 	};
 

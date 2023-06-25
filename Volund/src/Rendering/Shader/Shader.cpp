@@ -140,6 +140,10 @@ namespace Volund
                     {
                         uniformType = MaterialUniformType::Sampler;
                     }
+                    else if (words[1].starts_with("mat4"))
+                    {
+                        uniformType = MaterialUniformType::Matrix;
+                    }
                     else
                     {
                         VOLUND_WARNING("Corrupt uniform type detected in shader file (%s)!", filepath.c_str());

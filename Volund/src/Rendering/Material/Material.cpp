@@ -51,6 +51,11 @@ namespace Volund
 		this->m_MaterialChanged = true;
 	}
 
+	void Material::SetMatrix(const std::string& name, const Mat4x4& value)
+	{
+		this->m_MatrixUniforms[name] = value;
+	}
+
 	std::map<std::string, int>& Material::IntMap()
 	{
 		return this->m_IntUniforms;
@@ -148,6 +153,11 @@ namespace Volund
 				textureUnit++;
 			}
 		}
+
+		for (auto& [name, value] : this->m_MatrixUniforms)
+		{
+			this->m_Shader->SetMat4x4(name, value);
+		}
 	}
 
 	void Material::SetShader(Ref<Shader> shader)
@@ -234,6 +244,14 @@ namespace Volund
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Sampler))
 		{
 			if (!this->m_TextureUniforms.contains(blueprintUniform) && !this->m_FramebufferUniforms.contains(blueprintUniform))
+			{
+				VOLUND_WARNING("Material does not contain blueprint uniform (sampler, %s)", blueprintUniform.c_str());
+			}
+		}
+
+		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Matrix))
+		{
+			if (!this->m_MatrixUniforms.contains(blueprintUniform) && !this->m_FramebufferUniforms.contains(blueprintUniform))
 			{
 				VOLUND_WARNING("Material does not contain blueprint uniform (sampler, %s)", blueprintUniform.c_str());
 			}

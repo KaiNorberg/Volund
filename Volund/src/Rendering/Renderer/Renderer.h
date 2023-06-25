@@ -2,6 +2,7 @@
 
 #include "Rendering/Mesh/Mesh.h"
 #include "Rendering/Material/Material.h"
+#include "Rendering/Effect/Effect.h"
 #include "Rendering/RenderingAPI/RenderingAPI.h"
 #include "Rendering/UniformBuffer/UniformBuffer.h"
 #include "Rendering/Framebuffer/Framebuffer.h"
@@ -36,6 +37,8 @@ namespace Volund
 		Ref<Framebuffer> Target;
 
 		uint32_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
+
+		std::vector<Ref<Effect>> Effects;
 	};
 
 	class Renderer

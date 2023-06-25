@@ -64,7 +64,12 @@ namespace Volund
 				{
 					if (model.material != prevMaterial)
 					{
-						model.material->UpdateShader();
+						auto shader = model.material->GetShader();
+						if (shader != nullptr)
+						{
+							shader->Bind();
+							model.material->UpdateShader();
+						}
 						prevMaterial = model.material;
 					}
 
@@ -91,6 +96,19 @@ namespace Volund
 					{
 						//Not loaded
 					}
+				}
+
+			}
+
+			for (auto& effect : eye.Effects)
+			{
+				auto shader = effect->GetShader();
+
+				if (shader != nullptr)
+				{
+					shader->Bind();
+					effect->UpdateShader();
+					VL::RenderingAPI::Draw(0, 6);
 				}
 			}
 

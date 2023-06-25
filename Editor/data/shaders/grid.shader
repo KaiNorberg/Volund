@@ -1,8 +1,11 @@
 #VOLUND_SHADER_TYPE VERTEX
 #version 460
 
-uniform mat4 ViewMatrix;
-uniform mat4 ProjectionMatrix;
+layout(std140, binding = 0) uniform Camera
+{
+    mat4 ViewMatrix;
+    mat4 ProjectionMatrix;
+};
 
 layout(location = 1) out vec3 NearPoint;
 layout(location = 2) out vec3 FarPoint;
@@ -30,9 +33,11 @@ void main()
 #VOLUND_SHADER_TYPE FRAGMENT
 #version 460
 
-uniform mat4 ViewMatrix;
-uniform mat4 ProjectionMatrix;
-uniform float CameraDistance;
+layout(std140, binding = 0) uniform Camera
+{
+    mat4 ViewMatrix;
+    mat4 ProjectionMatrix;
+};
 
 layout(location = 1) in vec3 NearPoint;
 layout(location = 2) in vec3 FarPoint;
