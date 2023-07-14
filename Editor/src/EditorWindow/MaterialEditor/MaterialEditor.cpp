@@ -22,7 +22,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		}
 
 		std::string materialPath = assetManager->FetchFilepath<VL::Material>(this->m_SelectedMaterial);
-		if (ImGuiFile("Material", materialPath))
+		if (ImGuiFile("Material/Effect", materialPath))
 		{
 			this->m_SelectedMaterial = assetManager->Fetch<VL::Material>(materialPath);
 		}
@@ -177,7 +177,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 
 MaterialEditor::MaterialEditor(VL::Ref<EditorContext> context)
 {
-	this->SetName("MaterialEditor");
+	this->SetName("Material/Effect Editor");
 
 	this->m_Context = context;
 }

@@ -211,6 +211,11 @@ void FilesystemWindow::ImGuiFilesystemEntry(const std::string& payloadPath, cons
 
 	if (ImGui::BeginPopup("File manip"))
 	{
+		if (isDirectory)
+		{
+
+		}
+
 		if (ImGui::MenuItem("Delete"))
 		{
 			if (fs::exists(payloadPath))
