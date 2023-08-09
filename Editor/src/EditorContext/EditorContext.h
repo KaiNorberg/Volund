@@ -40,7 +40,7 @@ private:
 
 	std::mutex m_Mutex;
 
-	VL::Ref<VL::EventDispatcher> m_Dispatcher;
+	VL::Ref<VL::Dispatcher> m_Dispatcher;
 
 	VL::Ref<VL::GameState> m_GameState;
 

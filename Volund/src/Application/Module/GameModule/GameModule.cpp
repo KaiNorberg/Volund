@@ -5,8 +5,6 @@
 
 #include "Application/Module/WindowModule/WindowModule.h"
 
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
-
 namespace Volund
 {
 	void GameModule::OnAttach(Application* app)
@@ -99,13 +97,10 @@ namespace Volund
 	{
 		std::unique_lock lock(this->m_Mutex);
 
-		DeferredTaskHandler::DeferTask([this, filepath]()
-		{
-			this->m_Filepath = filepath;
+		this->m_Filepath = filepath;
 
-			this->m_GameState.reset();
+		this->m_GameState.reset();
 
-			this->m_GameState = std::make_shared<VL::GameState>(this->m_Filepath);
-		});
+		//this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, this->m_Filepath);
 	}
 }

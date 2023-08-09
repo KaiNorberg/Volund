@@ -5,6 +5,7 @@ namespace Volund
 	class ImageLoader
 	{
 	public:
+
 		int32_t GetWidth() const;
 
 		int32_t GetHeight() const;
@@ -13,17 +14,22 @@ namespace Volund
 
 		unsigned char* GetData() const;
 
+		void Load(const std::string& filepath, bool flip = true, int32_t desiredChannels = 4);
+
+		ImageLoader() = default;
+
 		ImageLoader(const std::string& filepath, bool flip = true, int32_t desiredChannels = 4);
 
 		~ImageLoader();
 
 	private:
+
 		int32_t m_Width;
 
 		int32_t m_Height;
 
 		int32_t m_Channels;
 
-		unsigned char* m_Data;
+		unsigned char* m_Data = nullptr;
 	};
 }

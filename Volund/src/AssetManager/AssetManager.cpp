@@ -8,11 +8,12 @@
 
 #include "ThreadPool/ThreadPool.h"
 #include "ModelLoader/ModelLoader.h"
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
 
 #include "Scene/Component/Components.h"
 
 #include "Scene/Scene.h"
+
+#include "ImageLoader/ImageLoader.h"
 
 #include "Lua/LuaDeserializer/LuaDeserializer.h"
 #include "Lua/LuaSerializer/LuaSerializer.h"
@@ -462,7 +463,38 @@ namespace Volund
     {
         VOLUND_INFO("Loading Mesh (%s)...", filepath.c_str());
 
-        Ref<Mesh> newMesh = Mesh::CreateAsync(filepath);
+        Ref<Mesh> newMesh = Mesh::Create();
+        Ref<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
+
+        Task task = [newMesh, modelLoader, filepath]()
+        {
+            if (ResourceLibrary::IsResource(filepath))
+            {
+                modelLoader->ParseOBJ(ResourceLibrary::Fetch(filepath));
+            }
+            else
+            {
+                modelLoader->LoadFile(filepath);
+
+                if (!modelLoader->Valid())
+                {
+                    VOLUND_WARNING("Failed to load mesh %s!", filepath.c_str());
+                }
+            }
+        };
+
+        Task cleanupTask = [newMesh, modelLoader]()
+        {            
+            Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(modelLoader->Vertices.data(), modelLoader->Vertices.size());
+            vertexBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
+
+            Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(modelLoader->Indices.data(), modelLoader->Indices.size());
+
+            newMesh->SetVertexBuffer(vertexBuffer);
+            newMesh->SetIndexBuffer(indexBuffer);
+        };
+
+        this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
 
         return newMesh;
     }
@@ -472,7 +504,21 @@ namespace Volund
     {
         VOLUND_INFO("Loading Texture (%s)...", filepath.c_str());
 
-        Ref<Texture> newTexture = Texture::CreateAsync(filepath);
+        Ref<Texture> newTexture = Texture::Create();
+
+        Ref<ImageLoader> loader = std::make_shared<ImageLoader>();
+
+        Task task = [newTexture, filepath]()
+        {
+            Ref<ImageLoader> loader = std::make_shared<ImageLoader>(filepath);
+        };
+
+        Task cleanupTask = [newTexture, loader]()
+        {
+            newTexture->SetData(loader->GetData(), loader->GetWidth(), loader->GetHeight());
+        };
+
+        this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
 
         return newTexture;
     }
@@ -500,12 +546,12 @@ namespace Volund
         return this->m_ParentPath;
     }
 
-    Ref<AssetManager> AssetManager::Create(const std::string& parentPath)
+    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> dispatcher, const std::string& parentPath)
     {
-        return Ref<AssetManager>(new AssetManager(parentPath));
+        return Ref<AssetManager>(new AssetManager(dispatcher, parentPath));
     }
 
-    AssetManager::AssetManager(const std::string& parentPath)
+    AssetManager::AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath)
     {
         if (fs::is_directory(parentPath))
         {
@@ -515,6 +561,8 @@ namespace Volund
         {
             this->m_ParentPath = fs::path(parentPath).parent_path().string();
         }
+
+        this->m_Dispatcher = dispatcher;
     }
 
     std::string AssetManager::GetRelativePath(const std::string& absolutePath)

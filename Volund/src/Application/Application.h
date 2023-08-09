@@ -4,7 +4,7 @@
 
 #include "Time/Time.h"
 #include "PolyContainer/PolyContainer.h"
-#include "EventDispatcher/EventDispatcher.h"
+#include "Dispatcher/Dispatcher.h"
 #include "ThreadPool/ThreadPool.h"
 
 namespace Volund
@@ -17,7 +17,7 @@ namespace Volund
 
 		bool ShouldRun() const;
 
-		Ref<EventDispatcher> GetDispatcher();
+		Ref<Dispatcher> GetDispatcher();
 
 		template<typename T>
 		void AttachModule(T* newModule);
@@ -40,7 +40,7 @@ namespace Volund
 
 	private:
 
-		friend class EventDispatcher;
+		friend class Dispatcher;
 
 		void Loop();
 
@@ -48,7 +48,7 @@ namespace Volund
 
 		bool m_ShouldRun = true;
 
-		Ref<EventDispatcher> m_EventDispatcher;
+		Ref<Dispatcher> m_Dispatcher;
 
 	protected:
 

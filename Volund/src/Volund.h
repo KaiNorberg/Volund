@@ -14,8 +14,6 @@
 #include "Rendering/Framebuffer/Framebuffer.h"
 #include "Rendering/Texture/Texture.h"
 
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
-
 #include "Scene/Scene.h"
 #include "Scene/Component/Components.h"
 #include "Window/Window.h"

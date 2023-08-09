@@ -5,7 +5,6 @@
 #include "ImageLoader/ImageLoader.h"
 
 #include "ThreadPool/ThreadPool.h"
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
 
 #include "OpenGLTexture.h"
 
@@ -55,22 +54,5 @@ namespace Volund
 		auto texture = Texture::Create();
 		texture->SetData(data, width, height);
 		return texture;
-	}
-
-	Ref<Texture> Texture::CreateAsync(const std::string& filepath)
-	{
-		Ref<Texture> newTexture = Texture::Create();
-
-		VOLUND_THREADPOOL_SUBMIT([newTexture, filepath]()
-		{
-			Ref<ImageLoader> loader = std::make_shared<ImageLoader>(filepath);
-
-			DeferredTaskHandler::DeferTask([newTexture, loader]()
-			{
-				newTexture->SetData(loader->GetData(), loader->GetWidth(), loader->GetHeight());
-			});
-		});
-
-		return newTexture;
 	}
 }

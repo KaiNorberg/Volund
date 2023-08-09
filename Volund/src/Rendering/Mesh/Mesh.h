@@ -29,11 +29,11 @@ namespace Volund
 
 		static Ref<Mesh> Create();
 
-		static Ref<Mesh> Create(const std::string& filepath);
+		//static Ref<Mesh> Create(const std::string& filepath);
 
 		static Ref<Mesh> Create(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer);
 
-		static Ref<Mesh> CreateAsync(const std::string& filepath);
+		//static Ref<Mesh> CreateAsync(const std::string& filepath);
 
 		virtual ~Mesh() = default;
 

@@ -40,23 +40,14 @@ namespace Volund
 		this->m_Scene->Procedure(e);
 	}
 
-	GameState::GameState(Ref<Scene> scene)
-	{
-		while (VOLUND_THREADPOOL_BUSY());
-
-		this->m_AssetManager = AssetManager::Create(".");
-		this->m_Input = std::make_shared<Input>();
-		this->m_Scene = scene;
-	}
-
-	GameState::GameState(const std::string& filepath)
+	GameState::GameState(Ref<Dispatcher> dispatcher, const std::string& filepath)
 	{	
 		while (VOLUND_THREADPOOL_BUSY());	
 
         this->m_ScenePath = filepath;
 
 		this->m_Input = std::make_shared<Input>();
-		this->m_AssetManager = AssetManager::Create(this->m_ScenePath);
+		this->m_AssetManager = AssetManager::Create(dispatcher, this->m_ScenePath);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(this->m_ScenePath);
 	}
 

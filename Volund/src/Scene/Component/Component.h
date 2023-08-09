@@ -2,7 +2,7 @@
 
 #include "Time/Time.h"
 
-#include "EventDispatcher/Event.h"
+#include "Dispatcher/Event/Event.h"
 
 namespace Volund
 {

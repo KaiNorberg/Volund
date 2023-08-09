@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EventDispatcher/EventDispatcher.h"
+#include "Dispatcher/Dispatcher.h"
 
 #include "Rendering/Framebuffer/Framebuffer.h"
 
@@ -17,7 +17,7 @@ namespace Volund
 
 		bool IsCursorEnabled = true;
 
-		Ref<EventDispatcher> Dispatcher;
+		Ref<Dispatcher> Dispatcher;
 
 		std::vector<GLFWwindowfocusfun> WindowFocusCallbacks;
 		std::vector<GLFWcursorenterfun> CursorEnterCallbacks;
@@ -64,7 +64,7 @@ namespace Volund
 		void ConnectScrollCallback(GLFWscrollfun callback);
 		void ConnectCharCallback(GLFWcharfun callback);
 
-		Window(Ref<EventDispatcher> dispatcher, uint64_t width, uint64_t height, bool fullScreen);
+		Window(Ref<Dispatcher> dispatcher, uint64_t width, uint64_t height, bool fullScreen);
 
 		~Window();
 

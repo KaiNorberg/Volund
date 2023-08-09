@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EventDispatcher/Event.h"
+#include "Dispatcher/Event/Event.h"
 #include "PolyContainer/PolyContainer.h"
 
 #define VOLUND_IMGUI_FILE "VOLUND_IMGUI_FILE"

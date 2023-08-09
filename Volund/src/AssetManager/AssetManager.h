@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Dispatcher/Dispatcher.h"
+
 #include "PolyContainer/PolyContainer.h"
 
 namespace Volund
@@ -19,15 +21,11 @@ namespace Volund
 
         std::string GetParentPath();
 
-        static Ref<AssetManager> Create(const std::string& parentPath);
+        static Ref<AssetManager> Create(Ref<Dispatcher> dispatcher, const std::string& parentPath);
 
     private:
 
-        AssetManager(const std::string& parentPath);
-
-        std::mutex m_Mutex;
-
-        std::string m_ParentPath;
+        AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath);
 
         std::string GetRelativePath(const std::string& absolutePath);
 
@@ -59,6 +57,12 @@ namespace Volund
         };
 
         PolyContainer<PrimitiveAsset> m_Data;
+
+        std::mutex m_Mutex;
+
+        std::string m_ParentPath;
+
+        Ref<Dispatcher> m_Dispatcher;
     };
     
     template<typename T>

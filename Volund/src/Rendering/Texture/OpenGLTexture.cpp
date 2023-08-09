@@ -7,7 +7,6 @@
 
 #include "ImageLoader/ImageLoader.h"
 
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
 #include "ThreadPool/ThreadPool.h"
 
 namespace Volund

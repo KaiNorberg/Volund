@@ -6,15 +6,13 @@
 
 #include "ThreadPool/ThreadPool.h"
 
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
-
 #include <glad/glad.h>
 
 namespace Volund
 {
 	void Application::Run()
 	{
-		if (this->m_EventDispatcher == nullptr)
+		if (this->m_Dispatcher == nullptr)
 		{
 			VOLUND_ERROR("App not connected!");
 			return;
@@ -29,9 +27,9 @@ namespace Volund
 		return this->m_ShouldRun;
 	}
 
-	Ref<EventDispatcher> Application::GetDispatcher()
+	Ref<Dispatcher> Application::GetDispatcher()
 	{
-		return this->m_EventDispatcher;
+		return this->m_Dispatcher;
 	}
 
 	void Application::Terminate()
@@ -69,11 +67,10 @@ namespace Volund
 			Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
 			VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 
-			this->m_EventDispatcher->Dispatch(updateEvent);
+			this->m_Dispatcher->Dispatch(updateEvent);
+			this->m_Dispatcher->Dispatch(Event(VOLUND_EVENT_TYPE_RENDER));
 
-			this->m_EventDispatcher->Dispatch(Event(VOLUND_EVENT_TYPE_RENDER));
-
-			DeferredTaskHandler::Execute();
+			this->m_Dispatcher->Execute();
 		}
 	}
 
@@ -89,7 +86,7 @@ namespace Volund
 		VOLUND_WARNING("Initializing application (Unknown)...");
 #endif	
 
-		this->m_EventDispatcher = std::make_shared<EventDispatcher>([this](const Event& e)
+		this->m_Dispatcher = std::make_shared<Dispatcher>([this](const Event& e)
 		{
 			this->Dispatch(e);
 		});

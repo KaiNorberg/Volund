@@ -322,7 +322,7 @@ namespace Volund
 		this->m_WindowData->CharCallbacks.push_back(callback);
     }
 
-    Window::Window(Ref<EventDispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
+    Window::Window(Ref<Dispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
 	{
 		VOLUND_INFO("Creating window...");
 

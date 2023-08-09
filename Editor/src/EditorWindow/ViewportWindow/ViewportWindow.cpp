@@ -89,8 +89,8 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 
 	this->m_Context = context;
 
-	this->m_PlayIcon = VL::Texture::CreateAsync("data/icons/play.png");
-	this->m_PauseIcon = VL::Texture::CreateAsync("data/icons/pause.png");
+	this->m_PlayIcon = VL::Texture::Create("data/icons/play.png");
+	this->m_PauseIcon = VL::Texture::Create("data/icons/pause.png");
 }
 
 ////////////////////////////////////////////////////////////

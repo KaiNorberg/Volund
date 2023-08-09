@@ -8,7 +8,6 @@
 #include "ModelLoader/ModelLoader.h"
 
 #include "ThreadPool/ThreadPool.h"
-#include "DeferredTaskHandler/DeferredTaskHandler.h"
 
 namespace Volund
 {
@@ -60,7 +59,7 @@ namespace Volund
 		}
 	}
 
-	Ref<Mesh> Mesh::Create(const std::string& filepath)
+	/*Ref<Mesh> Mesh::Create(const std::string& filepath)
 	{
 		ModelLoader modelLoader;
 
@@ -89,7 +88,7 @@ namespace Volund
 		newMesh->SetIndexBuffer(indexBuffer);
 
 		return newMesh;
-	}
+	}*/
 
 	Ref<Mesh> Mesh::Create(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer)
 	{
@@ -100,7 +99,7 @@ namespace Volund
 		return newMesh;
 	}
 
-	Ref<Mesh> Mesh::CreateAsync(const std::string& filepath)
+	/*Ref<Mesh> Mesh::CreateAsync(const std::string& filepath)
 	{
 		Ref<Mesh> newMesh = Mesh::Create();
 
@@ -135,5 +134,5 @@ namespace Volund
 		});
 
 		return newMesh;
-	}
+	}*/
 }

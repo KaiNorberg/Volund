@@ -5,14 +5,14 @@ namespace Volund
 {
 	ThreadPool ThreadPool::m_GlobalPool = ThreadPool();
 
-	void ThreadPool::Submit(ThreadJob job)
+	void ThreadPool::Submit(Task task)
 	{
 #ifdef VOLUND_DISABLE_MULTITHREADING
 		job();
 #else
 		{
 			std::unique_lock lock(m_Mutex);
-			this->m_JobQueue.push(job);
+			this->m_TaskQueue.push(task);
 		}
 		this->m_Condition.notify_one();
 #endif
@@ -20,7 +20,7 @@ namespace Volund
 
 	bool ThreadPool::Busy()
 	{
-		return !this->m_JobQueue.empty() || this->m_ActiveThreads != 0;
+		return !this->m_TaskQueue.empty() || this->m_ActiveThreads != 0;
 	}
 
 	ThreadPool::ThreadPool()
@@ -60,23 +60,23 @@ namespace Volund
 	{		
 		while (true)
 		{
-			ThreadJob job;
+			Task task;
 			{
 				std::unique_lock lock(this->m_Mutex);
-				this->m_Condition.wait(lock, [this]() { return this->m_ShouldTerminate || !this->m_JobQueue.empty(); });
+				this->m_Condition.wait(lock, [this]() { return this->m_ShouldTerminate || !this->m_TaskQueue.empty(); });
 
-				if (this->m_ShouldTerminate && this->m_JobQueue.empty())
+				if (this->m_ShouldTerminate && this->m_TaskQueue.empty())
 				{
 					return;
 				}
 
 				this->m_ActiveThreads++;
 
-				job = this->m_JobQueue.front();
-				this->m_JobQueue.pop();
+				task = this->m_TaskQueue.front();
+				this->m_TaskQueue.pop();
 			}
 
-			job();
+			task();
 
 			this->m_ActiveThreads--;
 		}

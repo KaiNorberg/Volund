@@ -25,8 +25,13 @@ namespace Volund
 		return this->m_Data;
 	}
 
-	ImageLoader::ImageLoader(const std::string& filepath, bool flip, int32_t desiredChannels)
+	void ImageLoader::Load(const std::string& filepath, bool flip, int32_t desiredChannels)
 	{
+		if (this->m_Data != nullptr)
+		{
+			stbi_image_free(this->m_Data);
+		}
+
 		stbi_set_flip_vertically_on_load(flip);
 
 		this->m_Data = stbi_load(filepath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, desiredChannels);
@@ -35,6 +40,11 @@ namespace Volund
 		{
 			VOLUND_WARNING("Unable to load image (%s)!", filepath.c_str());
 		}
+	}
+
+	ImageLoader::ImageLoader(const std::string& filepath, bool flip, int32_t desiredChannels)
+	{
+		this->Load(filepath, flip, desiredChannels);
 	}
 
 	ImageLoader::~ImageLoader()

@@ -22,8 +22,6 @@ namespace Volund
 
 		static Ref<Texture> Create(unsigned char* data, uint32_t width, uint32_t height);
 
-		static Ref<Texture> CreateAsync(const std::string& filepath);
-
 		virtual ~Texture() = default;
 
 	protected:

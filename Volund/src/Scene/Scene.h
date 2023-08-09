@@ -1,6 +1,6 @@
  #pragma once
 
-#include "EventDispatcher/Event.h"
+#include "Dispatcher/Event/Event.h"
 #include "Component/Component.h"
 #include "PolyContainer/PolyContainer.h"
 

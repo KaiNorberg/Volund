@@ -259,6 +259,6 @@ FilesystemWindow::FilesystemWindow(VL::Ref<EditorContext> context)
 
 	this->m_Context = context;
 
-	this->m_DirectoryIcon = VL::Texture::CreateAsync("data/icons/directory.png");
-	this->m_FileIcon = VL::Texture::CreateAsync("data/icons/file.png");
+	this->m_DirectoryIcon = VL::Texture::Create("data/icons/directory.png");
+	this->m_FileIcon = VL::Texture::Create("data/icons/file.png");
 }

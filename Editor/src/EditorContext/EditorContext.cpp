@@ -129,7 +129,7 @@ void EditorContext::LoadScene(const std::string& filepath)
 	this->SelectedEntity = 1;
 	this->m_Dispatcher->Dispatch(EDITOR_EVENT_TYPE_NEW_SCENE);
 
-	this->m_GameState = std::make_shared<VL::GameState>(filepath);
+	this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, filepath);
 }
 
 void EditorContext::SaveScene(const std::string& filepath)
@@ -139,9 +139,6 @@ void EditorContext::SaveScene(const std::string& filepath)
 		VOLUND_WARNING("No scene is loaded!");
 		return;
 	}
-
-	VL::DeferredTaskHandler::DeferTask([this, filepath]()
-	{
-		this->GetAssetmanager()->Serialize(this->GetScene(), filepath);
-	});
+	
+	this->GetAssetmanager()->Serialize(this->GetScene(), filepath);
 }
