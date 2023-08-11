@@ -18,13 +18,9 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->m_ThreadPool->Submit([this, job]() 
-		{			
-			std::unique_lock lock(this->m_Mutex);
+		std::unique_lock lock(this->m_Mutex);
 
-			job.m_Task();
-			this->m_CleanupQueue.push(job.m_CleanupTask);
-		});
+		this->m_JobQueue.push(job);
 	}
 
 	void Dispatcher::Execute()
@@ -35,10 +31,10 @@ namespace Volund
 
 			if ((e.Type & VOLUND_EVENT_TYPE_FLAG_ASYNC) != 0)
 			{
-				this->Dispatch(Job([this, e]()
+				this->m_ThreadPool->Submit([this, e]() 
 				{
 					this->m_EventCallback(e);
-				}, nullptr));
+				});
 			}
 			else
 			{
@@ -48,14 +44,33 @@ namespace Volund
 			this->m_EventQueue.pop();
 		}
 
+		while (!this->m_JobQueue.empty())
+		{
+			Job job = this->m_JobQueue.front();
+
+			this->m_ThreadPool->Submit([this, job]()
+			{
+				std::unique_lock lock(this->m_Mutex);
+
+				if (job.m_Task != nullptr)
+				{
+					job.m_Task();
+				}
+
+				if (job.m_CleanupTask != nullptr)
+				{
+					this->m_CleanupQueue.push(job.m_CleanupTask);
+				}
+			});
+
+			this->m_JobQueue.pop();
+		}
+
 		while (!this->m_CleanupQueue.empty())
 		{
 			Task cleanupTask = this->m_CleanupQueue.front();
-		
-			if (cleanupTask != nullptr)
-			{
-				cleanupTask();
-			}
+
+			cleanupTask();
 
 			this->m_CleanupQueue.pop();
 		}

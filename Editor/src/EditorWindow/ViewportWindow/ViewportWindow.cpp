@@ -53,7 +53,11 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		{
 			ImVec2 viewportSize = ImGui::GetContentRegionAvail();
 			this->m_Size = VL::Vec2(viewportSize.x, viewportSize.y);
-			ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_Viewportbuffer->GetAttachment(0)), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
+
+			if (this->m_Viewportbuffer != nullptr)
+			{
+				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_Viewportbuffer->GetAttachment(0)), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
+			}
 		}
 		ImGui::EndChild();
 	}
@@ -214,6 +218,7 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
 	spec.Height = 1080;
 	spec.Width = 1920;
+
 	this->m_SceneFramebuffer = VL::Framebuffer::Create(spec);
 	this->m_EditorFramebuffer = VL::Framebuffer::Create(spec);
 

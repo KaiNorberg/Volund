@@ -49,7 +49,7 @@ local table =
 		{
 			ComponentType = 3,
 			Mesh = "://Cube.obj",
-			Material = "Materials/Blue.mat.lua"
+			Material = "Materials/Texture.material.lua"
 		}
 	},
 	{

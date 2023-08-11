@@ -27,6 +27,7 @@ namespace Volund
 
 		Ref<ThreadPool> m_ThreadPool;
 
+		std::queue<Job> m_JobQueue;
 		std::queue<Task> m_CleanupQueue;
 		std::queue<Event> m_EventQueue;
 	};
