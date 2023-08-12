@@ -34,7 +34,7 @@ namespace Volund
         std::string ShortPath(const std::string& path);
 
         template<typename T>
-        Ref<T> Load(const std::string& filepath);
+        Ref<T> Load(const std::string& filepath, uint64_t lineId);
 
         template<typename T>
         void Push(const std::string& filepath, Ref<T> assetData);
@@ -101,10 +101,8 @@ namespace Volund
 
         uint64_t lineId = VOLUND_INFO("Loading Asset (%s)... ", relativePath.c_str());
 
-        Ref<T> newAssetData = this->Load<T>(absolutePath);
+        Ref<T> newAssetData = this->Load<T>(absolutePath, lineId);
         this->Push(relativePath, newAssetData);
-
-        VOLUND_UPDATE_LINE(lineId, "Done");
 
         return newAssetData;
     }

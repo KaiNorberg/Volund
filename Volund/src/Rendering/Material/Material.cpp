@@ -269,37 +269,58 @@ namespace Volund
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
 		{
-			this->SetInt(blueprintUniform, 0);
+			if (!this->m_IntUniforms.contains(blueprintUniform))
+			{
+				this->SetInt(blueprintUniform, 0);
+			}
 		}
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Float))
 		{
-			this->SetFloat(blueprintUniform, 0.0f);
+			if (!this->m_FloatUniforms.contains(blueprintUniform))
+			{
+				this->SetFloat(blueprintUniform, 0.0f);
+			}
 		}
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Double))
 		{
-			this->SetDouble(blueprintUniform, 0.0);
+			if (!this->m_DoubleUniforms.contains(blueprintUniform))
+			{
+				this->SetDouble(blueprintUniform, 0.0);
+			}
 		}
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec2))
 		{
-			this->SetVec2(blueprintUniform, Vec2(0.0f));
+			if (!this->m_Vec2Uniforms.contains(blueprintUniform))
+			{
+				this->SetVec2(blueprintUniform, Vec2(0.0f));
+			}
 		}
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec3))
 		{
-			this->SetVec3(blueprintUniform, Vec3(0.0f));
+			if (!this->m_Vec3Uniforms.contains(blueprintUniform))
+			{
+				this->SetVec3(blueprintUniform, Vec3(0.0f));
+			}
 		}
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec4))
 		{
-			this->SetVec4(blueprintUniform, Vec4(0.0f));
+			if (!this->m_Vec4Uniforms.contains(blueprintUniform))
+			{
+				this->SetVec4(blueprintUniform, Vec4(0.0f));
+			}
 		}
 
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Sampler))
 		{
-			this->SetTexture(blueprintUniform, nullptr);
+			if (!this->m_TextureUniforms.contains(blueprintUniform))
+			{
+				this->SetTexture(blueprintUniform, nullptr);
+			}
 		}
 	}
 

@@ -31,6 +31,16 @@ namespace Volund
 		UpdateConsole();
 	}
 
+	std::vector<LogLine>::iterator Logger::begin()
+	{
+		return this->m_Lines.begin();
+	}
+
+	std::vector<LogLine>::iterator Logger::end()
+	{
+		return this->m_Lines.end();
+	}
+
 	uint64_t Logger::Print(LogSeverity severity, const std::string& string)
 	{
 		if (severity == LogSeverity::Error)

@@ -9,8 +9,16 @@ void OutputWindow::OnProcedure(const VL::Event& e)
 	case VOLUND_EVENT_TYPE_RENDER:
 	{
 		std::vector<std::string> textList;
-	
-		ImGuiTextList("##outputWindow", textList);
+		
+		if (ImGuiListBegin("##outputWindow"))
+		{
+			for (const auto& line : VOLUND_LOGGER)
+			{
+				ImGuiColoredText(line.Text);
+			}
+
+			ImGuiListEnd();
+		}
 	}
 	break;
 	case EDITOR_EVENT_TYPE_NEW_SCENE:

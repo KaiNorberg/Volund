@@ -8,37 +8,37 @@ namespace Volund
 	{
 	public:
 
-		void Submit(Task task);
+		template<typename Func, typename... Args>
+		void Submit(Func&& func, Args&&... args);
 		
 		bool Busy();
 
-		ThreadPool();
+		ThreadPool(uint8_t threadCount);
 
 		~ThreadPool();
 
-		static ThreadPool& GetGlobalPool();
-
 	private:
 
-		static ThreadPool m_GlobalPool;
+		void Loop();
 
 		bool m_ShouldTerminate = false;
 
-		int m_ActiveThreads = 0;
+		int m_ActiveWorkers = 0;
 
 		std::queue<Task> m_TaskQueue;
-
-		std::vector<std::thread> m_Threads;
+		std::vector<std::thread> m_Workers;
 
 		std::condition_variable m_Condition;
 		std::mutex m_Mutex;
-
-		void Loop();
 	};
+
+	template<typename Func, typename ...Args>
+	inline void ThreadPool::Submit(Func&& func, Args && ...args)
+	{
+		{
+			std::unique_lock<std::mutex> lock(this->m_Mutex);
+			this->m_TaskQueue.emplace([=] { func(std::forward<Args>(args)...); });
+		}
+		this->m_Condition.notify_one();
+	}
 }
-
-
-/// The global threadpool is only supposed to be used for temporary jobs, for example loading a file.
-/// Any job submited to the globalpool must not wait for any external signal, it must allays finish on its own without external changes.
-#define VOLUND_THREADPOOL_SUBMIT(...) ::Volund::ThreadPool::GetGlobalPool().Submit(__VA_ARGS__)
-#define VOLUND_THREADPOOL_BUSY() ::Volund::ThreadPool::GetGlobalPool().Busy()

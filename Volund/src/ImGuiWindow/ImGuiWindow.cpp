@@ -572,26 +572,23 @@ namespace Volund
 		style->Colors[ImGuiCol_Text] = oldTextColor;
 	}
 
-	void ImGuiWindow::ImGuiTextList(const std::string& name, const std::vector<std::string>& textList)
+	bool ImGuiWindow::ImGuiListBegin(const std::string& name)
 	{
-		if (ImGui::BeginListBox(name.c_str(), ImVec2(-FLT_MIN, -FLT_MIN)))
+		return ImGui::BeginListBox(name.c_str(), ImVec2(-FLT_MIN, -FLT_MIN));
+	}
+
+	void ImGuiWindow::ImGuiListEnd()
+	{
+		ImGui::SameLine();
+
+		ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::CalcTextSize("   ").x);
+
+		if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
 		{
-			for (auto& string : textList)
-			{
-				ImGuiColoredText(string);
-			}
-
-			ImGui::SameLine();
-
-			ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::CalcTextSize("   ").x);
-
-			if (ImGui::GetScrollY() >= ImGui::GetScrollMaxY())
-			{
-				ImGui::SetScrollHereY(1.0f);
-			}
-
-			ImGui::EndListBox();
+			ImGui::SetScrollHereY(1.0f);
 		}
+
+		ImGui::EndListBox();
 	}
 
 	void ImGuiWindow::ImGuiDragDropSource(const char* type, const std::string& payload)

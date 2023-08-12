@@ -53,6 +53,9 @@ namespace Volund
 
 		void UpdateLine(uint64_t lineId, const char* format);
 
+		std::vector<LogLine>::iterator begin();
+		std::vector<LogLine>::iterator end();
+
 	private:
 
 		Logger(std::string_view name);

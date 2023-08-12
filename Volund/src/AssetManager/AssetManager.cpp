@@ -216,7 +216,7 @@ namespace Volund
     }
 
     template<>
-    Ref<Scene> AssetManager::Load<Scene>(const std::string& filepath)
+    Ref<Scene> AssetManager::Load<Scene>(const std::string& filepath, uint64_t lineId)
     {
         auto scene = std::make_shared<Scene>();
 
@@ -386,15 +386,17 @@ namespace Volund
             }
         }
 
+        VOLUND_UPDATE_LINE(lineId, "Done ");
+
         return scene;
     }
 
     template<>
-    Ref<Material> AssetManager::Load<Material>(const std::string& filepath)
+    Ref<Material> AssetManager::Load<Material>(const std::string& filepath, uint64_t lineId)
     {
         auto material = Material::Create();
 
-        Task task = [this, material, filepath]()
+        Task task = [this, material, filepath, lineId]()
         {
             auto materialData = LuaDeserializer(filepath);
 
@@ -405,7 +407,6 @@ namespace Volund
             }
 
             auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
-            material->SetShader(shader);
 
             bool first = true;
 
@@ -455,6 +456,10 @@ namespace Volund
                 break;
                 }
             }
+
+            material->SetShader(shader);
+
+            VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
         this->m_Dispatcher->Dispatch(Job(task, nullptr));
@@ -463,7 +468,7 @@ namespace Volund
     }
 
     template<>
-    Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath)
+    Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath, uint64_t lineId)
     {
         Ref<Mesh> newMesh = Mesh::Create();
         Ref<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
@@ -485,7 +490,7 @@ namespace Volund
             }
         };
 
-        Task cleanupTask = [newMesh, modelLoader]()
+        Task cleanupTask = [newMesh, modelLoader, lineId]()
         {            
             Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(modelLoader->Vertices.data(), modelLoader->Vertices.size());
             vertexBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
@@ -494,6 +499,8 @@ namespace Volund
 
             newMesh->SetVertexBuffer(vertexBuffer);
             newMesh->SetIndexBuffer(indexBuffer);
+
+            VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
         this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
@@ -502,7 +509,7 @@ namespace Volund
     }
 
     template<>
-    Ref<Texture> AssetManager::Load<Texture>(const std::string& filepath)
+    Ref<Texture> AssetManager::Load<Texture>(const std::string& filepath, uint64_t lineId)
     {
         Ref<Texture> newTexture = Texture::Create();
 
@@ -513,9 +520,11 @@ namespace Volund
             loader->Load(filepath);
         };
 
-        Task cleanupTask = [newTexture, loader]()
+        Task cleanupTask = [newTexture, loader, lineId]()
         {
             newTexture->SetData(loader->GetData(), loader->GetWidth(), loader->GetHeight());
+
+            VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
         this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
@@ -524,7 +533,7 @@ namespace Volund
     }
 
     template<>
-    Ref<Shader> AssetManager::Load<Shader>(const std::string& filepath)
+    Ref<Shader> AssetManager::Load<Shader>(const std::string& filepath, uint64_t lineId)
     {           
         Ref<Shader> newShader = Shader::Create();
 
@@ -535,9 +544,11 @@ namespace Volund
             loader->Load(filepath);
         };
 
-        Task cleanupTask = [newShader, loader]()
+        Task cleanupTask = [newShader, loader, lineId]()
         {
             newShader->Init(loader->GetSource(), loader->GetBlueprint());
+
+            VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
         this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
@@ -546,7 +557,7 @@ namespace Volund
     }
 
     template<>
-    Ref<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath)
+    Ref<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath, uint64_t lineId)
     {
         auto newAudioBuffer = std::make_shared<AudioBuffer>(filepath);
 

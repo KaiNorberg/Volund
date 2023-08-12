@@ -68,7 +68,9 @@ namespace Volund
 
 		static void ImGuiColoredText(const std::string& text);
 
-		static void ImGuiTextList(const std::string& name, const std::vector<std::string>& textList);
+		static bool ImGuiListBegin(const std::string& name);
+
+		static void ImGuiListEnd();
 
 		static void ImGuiDragDropSource(const char* type, const std::string& payload);
 
