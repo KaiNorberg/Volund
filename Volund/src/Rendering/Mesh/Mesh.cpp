@@ -7,8 +7,6 @@
 
 #include "ModelLoader/ModelLoader.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 namespace Volund
 {
 	AABB Mesh::GetAABB(const Mat4x4& modelMatrix)

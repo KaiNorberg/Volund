@@ -4,8 +4,6 @@
 #include "Rendering/RenderingAPI/RenderingAPI.h"
 #include "ImageLoader/ImageLoader.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 #include "OpenGLTexture.h"
 
 namespace Volund

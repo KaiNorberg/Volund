@@ -5,7 +5,6 @@
 #include "Time/Time.h"
 #include "PolyContainer/PolyContainer.h"
 #include "Dispatcher/Dispatcher.h"
-#include "ThreadPool/ThreadPool.h"
 
 namespace Volund
 {

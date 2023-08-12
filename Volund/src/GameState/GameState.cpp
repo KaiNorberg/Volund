@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "GameState.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 #include "Lua/LuaDeserializer/LuaDeserializer.h"
 
 namespace Volund

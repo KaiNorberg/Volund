@@ -19,7 +19,11 @@ namespace Volund
 
 		Dispatcher(std::function<void(const Event&)> eventCallback);
 
+		~Dispatcher();
+
 	private:
+
+		bool m_Executing;
 
 		std::mutex m_Mutex;
 

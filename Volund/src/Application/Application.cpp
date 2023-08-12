@@ -4,8 +4,6 @@
 
 #include "Time/Time.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 #include <glad/glad.h>
 
 namespace Volund
@@ -99,7 +97,11 @@ namespace Volund
 			for (auto& module : View)
 			{
 				module->OnDetach();
+				
+				module.reset();
 			}
 		}
+
+		VOLUND_INFO("Application terminated");
 	}
 }

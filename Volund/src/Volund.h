@@ -4,8 +4,6 @@
 
 #include "Core/Core.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 #include "Application/Application.h"
 #include "Application/Module/Modules.h"
 

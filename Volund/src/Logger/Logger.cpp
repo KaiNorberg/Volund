@@ -88,7 +88,7 @@ namespace Volund
 	{
 		std::cout << "\x1b[H";
 
-		for (const auto& line : m_Lines) 
+		for (const auto& line : m_Lines)
 		{
 			std::cout << line.Text << std::endl;
 		}

@@ -6,8 +6,6 @@
 
 #include "Component/Components.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 namespace Volund
 {
 	CHRONO_TIME_POINT Scene::GetStartTime()

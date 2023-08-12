@@ -29,6 +29,7 @@ namespace Volund
 		{
 			worker.join();
 		}
+		this->m_Workers.clear();
 	}
 
 	void ThreadPool::Loop()

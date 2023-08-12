@@ -7,8 +7,6 @@
 
 #include "ImageLoader/ImageLoader.h"
 
-#include "ThreadPool/ThreadPool.h"
-
 namespace Volund
 {
 	void OpenGLTexture::Bind(uint32_t unit)

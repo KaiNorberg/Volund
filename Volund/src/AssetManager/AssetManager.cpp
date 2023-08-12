@@ -6,7 +6,6 @@
 
 #include "Audio/AudioBuffer/AudioBuffer.h"
 
-#include "ThreadPool/ThreadPool.h"
 #include "ModelLoader/ModelLoader.h"
 
 #include "Scene/Component/Components.h"
@@ -403,7 +402,7 @@ namespace Volund
             if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
             {
                 VOLUND_WARNING("Material data is not valid!");
-                return material;
+                return;
             }
 
             auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
@@ -463,6 +462,7 @@ namespace Volund
         };
 
         this->m_Dispatcher->Dispatch(Job(task, nullptr));
+        //task();
 
         return material;
     }
@@ -504,6 +504,7 @@ namespace Volund
         };
 
         this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
+        //task(); cleanupTask();
 
         return newMesh;
     }
@@ -528,6 +529,7 @@ namespace Volund
         };
 
         this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
+        //task(); cleanupTask();
 
         return newTexture;
     }
@@ -552,6 +554,7 @@ namespace Volund
         };
 
         this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
+        //task(); cleanupTask();
 
         return newShader;
     }
