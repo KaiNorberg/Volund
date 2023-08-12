@@ -8,7 +8,7 @@ namespace Volund
 {
 	void OpenGLIndexBuffer::Bind()
 	{
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_ID);
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, this->m_Id);
 	}
 
 	void OpenGLIndexBuffer::Unbind()
@@ -24,13 +24,13 @@ namespace Volund
 	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t indices[], uint32_t count)
 	{
 		this->m_Count = count;
-		glCreateBuffers(1, &this->m_ID);
-		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
+		glCreateBuffers(1, &this->m_Id);
+		glBindBuffer(GL_ARRAY_BUFFER, this->m_Id);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(uint32_t), indices, GL_STATIC_DRAW);
 	}
 
 	OpenGLIndexBuffer::~OpenGLIndexBuffer()
 	{
-		glDeleteBuffers(1, &this->m_ID);
+		glDeleteBuffers(1, &this->m_Id);
 	}
 }

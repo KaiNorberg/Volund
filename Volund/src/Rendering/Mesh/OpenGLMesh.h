@@ -21,6 +21,6 @@ namespace Volund
 		~OpenGLMesh() override;
 
 	private:
-		uint32_t m_ID;
+		uint32_t m_Id;
 	};
 }

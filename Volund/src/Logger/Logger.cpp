@@ -18,75 +18,94 @@ namespace Volund
 		return m_ClientLogger;
 	}
 
-	void Logger::SetCallback(const LoggerCallback newCallback)
-	{
-		this->m_Callback = newCallback;
-	}
-
-	void Logger::Info(const char* format)
-	{
-		this->Print(LogSeverity::Info, format);
-	}
-
-	void Logger::Warning(const char* format)
-	{
-		this->Print(LogSeverity::Warning, format);
-	}
-
-	void Logger::Error(const char* format)
-	{
-		this->Print(LogSeverity::Error, format);
-
-		abort();
-	}
-
-	void Logger::Print(LogSeverity severity, const std::string& string )
+	uint64_t Logger::Log(LogSeverity severity, const char* format)
 	{		
-		std::unique_lock lock(this->m_Mutex);
+		std::string formatedString = this->FormatString(severity, format);
+		return Print(severity, formatedString);
+	}
 
-		std::string output = VOLUND_LOGGERCOLOR_RED;
-		output += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " +*/ this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
+	void Logger::UpdateLine(uint64_t lineId, const char* format)
+	{
+		m_Lines[FindLine(lineId)].Text += format;
 
+		UpdateConsole();
+	}
+
+	uint64_t Logger::Print(LogSeverity severity, const std::string& string)
+	{
+		if (severity == LogSeverity::Error)
+		{
+			std::cout << string << '\n';
+
+			#ifdef VOLUND_DIST
+				Dialog::Message("ERROR!", format, "ok", "error");
+			#endif
+
+			abort();
+		}
+
+		std::string line = VOLUND_LOGGERCOLOR_RED;
+		line += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " +*/ this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 		switch (severity)
 		{
 		case LogSeverity::Info:
 		{
-			output += VOLUND_LOGGERCOLOR_GREEN;
+			line += VOLUND_LOGGERCOLOR_GREEN;
 		}
 		break;
 		case LogSeverity::Warning:
 		{
-			output += VOLUND_LOGGERCOLOR_YELLOW;
+			line += VOLUND_LOGGERCOLOR_YELLOW;
 		}
 		break;
 		case LogSeverity::Error:
 		{
-			output += VOLUND_LOGGERCOLOR_RED;
+			line += VOLUND_LOGGERCOLOR_RED;
 		}
 		break;
 		}
+		line += string;
 
-		output += string;
-	
-		if (this->m_Callback != nullptr)
+		std::cout << line << '\n';
+
+		m_NewLineId++;
+		m_Lines.push_back({m_NewLineId, severity, line});
+
+		return m_NewLineId;
+	}
+
+	void Logger::UpdateConsole()
+	{
+		std::cout << "\x1b[H";
+
+		for (const auto& line : m_Lines) 
 		{
-			this->m_Callback(output);
+			std::cout << line.Text << std::endl;
 		}
+	}
 
-		#ifdef VOLUND_DIST
-			if (severity == LogSeverity::Error)
-			{
-				Dialog::Message("ERROR!", string, "ok", "error");
-			}
-		#endif
+	uint64_t Logger::FindLine(uint64_t lineId)
+	{
+		VOLUND_PROFILE_FUNCTION();
 
-		std::cout << output << '\n';
+		auto it = std::lower_bound(m_Lines.begin(), m_Lines.end(), lineId, [](const LogLine& a, uint64_t lineId)
+		{
+			return a.Id < lineId;
+		});
+
+		if (it != m_Lines.end())
+		{
+			return it - m_Lines.begin();
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	Logger::Logger(std::string_view name)
 	{
 		this->m_Name = name;
-		this->m_Callback = nullptr;
 	}
-	
+
 } //namespace Volund

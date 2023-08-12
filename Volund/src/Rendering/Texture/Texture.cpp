@@ -12,7 +12,7 @@ namespace Volund
 {
 	uint32_t Texture::GetID() const
 	{
-		return this->m_ID;
+		return this->m_Id;
 	}
 
 	uint32_t Texture::GetWidth() const

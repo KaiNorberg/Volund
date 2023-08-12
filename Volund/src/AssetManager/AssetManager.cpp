@@ -39,11 +39,7 @@ namespace Volund
     void AssetManager::Serialize<Material>(Ref<Material> material, const std::string& destinationPath)
     {
         Task task = [this, material, destinationPath]()
-        {    
-            std::string absolutepath = this->GetAbsolutePath(destinationPath);
-
-            VOLUND_INFO("Serializing material to (%s)...", absolutepath.c_str());
-
+        {   
             LuaSerializer serializer = LuaSerializer();
 
             //IMPORTANT: Remember to update the code below whenever a new component is implemented.
@@ -93,7 +89,7 @@ namespace Volund
 
             serializer.EndTable();
 
-            serializer.WriteToFile(absolutepath);
+            serializer.WriteToFile(destinationPath);
         };
 
         this->m_Dispatcher->Dispatch(Job(task, nullptr));
@@ -104,10 +100,6 @@ namespace Volund
     {
         Task task = [this, scene, destinationPath]()
         {
-            std::string absolutepath = this->GetAbsolutePath(destinationPath);
-
-            VOLUND_INFO("Serializing scene to (%s)...", absolutepath.c_str());
-
             LuaSerializer serializer = LuaSerializer();
 
             //IMPORTANT: Remember to update the code below whenever a new component is implemented.
@@ -217,7 +209,7 @@ namespace Volund
             }
             serializer.EndTable();
 
-            serializer.WriteToFile(absolutepath);
+            serializer.WriteToFile(destinationPath);
         };
 
         this->m_Dispatcher->Dispatch(Job(task, nullptr));
@@ -226,12 +218,10 @@ namespace Volund
     template<>
     Ref<Scene> AssetManager::Load<Scene>(const std::string& filepath)
     {
-        VOLUND_INFO("Loading Scene (%s)...", filepath.c_str());
-
         auto scene = std::make_shared<Scene>();
 
         LuaDeserializer sceneData = LuaDeserializer(filepath);
-        
+
         if (!sceneData.Valid())
         {
             return scene;
@@ -402,68 +392,72 @@ namespace Volund
     template<>
     Ref<Material> AssetManager::Load<Material>(const std::string& filepath)
     {
-        VOLUND_INFO("Loading Material (%s)...", filepath.c_str());
+        auto material = Material::Create();
 
-        auto materialData = LuaDeserializer(filepath);
-
-        if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
+        Task task = [this, material, filepath]()
         {
-            VOLUND_WARNING("Material data is not valid!");
-            return Material::Create();
-        }
+            auto materialData = LuaDeserializer(filepath);
 
-        auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
-
-        auto material = Material::Create(shader);
-
-        bool first = true;
-
-        for (auto& [key, value] : materialData)
-        {
-            if (first)
+            if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
             {
-                first = false;
-                continue;
+                VOLUND_WARNING("Material data is not valid!");
+                return material;
             }
 
-            switch (value.get_type())
+            auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
+            material->SetShader(shader);
+
+            bool first = true;
+
+            for (auto& [key, value] : materialData)
             {
-            case sol::type::number:
-            {
-                if (value.is<int64_t>())
+                if (first)
                 {
-                    material->SetInt(key.as<std::string>(), (int)value.as<int64_t>());
+                    first = false;
+                    continue;
                 }
-                else if (value.is<double>())
+
+                switch (value.get_type())
                 {
-                    material->SetFloat(key.as<std::string>(), (float)value.as<double>());
+                case sol::type::number:
+                {
+                    if (value.is<int64_t>())
+                    {
+                        material->SetInt(key.as<std::string>(), (int)value.as<int64_t>());
+                    }
+                    else if (value.is<double>())
+                    {
+                        material->SetFloat(key.as<std::string>(), (float)value.as<double>());
+                    }
+                }
+                break;
+                case sol::type::userdata:
+                {
+                    if (value.is<Vec2>())
+                    {
+                        material->SetVec2(key.as<std::string>(), value.as<Vec2>());
+                    }
+                    else if (value.is<Vec3>())
+                    {
+                        material->SetVec3(key.as<std::string>(), value.as<Vec3>());
+                    }
+                    else if (value.is<Vec4>())
+                    {
+                        material->SetVec4(key.as<std::string>(), value.as<Vec4>());
+                    }
+                }
+                break;
+                case sol::type::string:
+                {
+                    auto texture = this->Fetch<Texture>(value.as<std::string>());
+                    material->SetTexture(key.as<std::string>(), texture);
+                }
+                break;
                 }
             }
-            break;
-            case sol::type::userdata:
-            {
-                if (value.is<Vec2>())
-                {
-                    material->SetVec2(key.as<std::string>(), value.as<Vec2>());
-                }
-                else if (value.is<Vec3>())
-                {
-                    material->SetVec3(key.as<std::string>(), value.as<Vec3>());
-                }
-                else if (value.is<Vec4>())
-                {
-                    material->SetVec4(key.as<std::string>(), value.as<Vec4>());
-                }
-            }
-            break;
-            case sol::type::string:
-            {
-                auto texture = this->Fetch<Texture>(value.as<std::string>());
-                material->SetTexture(key.as<std::string>(), texture);
-            }
-            break;
-            }
-        }
+        };
+
+        this->m_Dispatcher->Dispatch(Job(task, nullptr));
 
         return material;
     }
@@ -471,8 +465,6 @@ namespace Volund
     template<>
     Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath)
     {
-        VOLUND_INFO("Loading Mesh (%s)...", filepath.c_str());
-
         Ref<Mesh> newMesh = Mesh::Create();
         Ref<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
 
@@ -512,8 +504,6 @@ namespace Volund
     template<>
     Ref<Texture> AssetManager::Load<Texture>(const std::string& filepath)
     {
-        VOLUND_INFO("Loading Texture (%s)...", filepath.c_str());
-
         Ref<Texture> newTexture = Texture::Create();
 
         Ref<ImageLoader> loader = std::make_shared<ImageLoader>();
@@ -536,9 +526,21 @@ namespace Volund
     template<>
     Ref<Shader> AssetManager::Load<Shader>(const std::string& filepath)
     {           
-        VOLUND_INFO("Loading Shader (%s)...", filepath.c_str());
+        Ref<Shader> newShader = Shader::Create();
 
-        Ref<Shader> newShader = Shader::Create(filepath);
+        Ref<ShaderLoader> loader = std::make_shared<ShaderLoader>();
+
+        Task task = [newShader, loader, filepath]()
+        {
+            loader->Load(filepath);
+        };
+
+        Task cleanupTask = [newShader, loader]()
+        {
+            newShader->Init(loader->GetSource(), loader->GetBlueprint());
+        };
+
+        this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
 
         return newShader;
     }
@@ -546,9 +548,9 @@ namespace Volund
     template<>
     Ref<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath)
     {
-        VOLUND_INFO("Loading AudioBuffer (%s)...", filepath.c_str());
+        auto newAudioBuffer = std::make_shared<AudioBuffer>(filepath);
 
-        return std::make_shared<AudioBuffer>(filepath);
+        return newAudioBuffer;
     }
 
     std::string AssetManager::GetParentPath()
@@ -583,12 +585,12 @@ namespace Volund
         }
         else if (fs::exists(absolutePath))
         {
-            std::string cleanPath = this->CleanPath(absolutePath);
+            std::string cleanPath = this->ShortPath(absolutePath);
             return fs::relative(cleanPath, this->m_ParentPath).string();
         }
         else
         {
-            std::string cleanPath = this->CleanPath(absolutePath);
+            std::string cleanPath = this->ShortPath(absolutePath);
             return cleanPath;
         }
     }
@@ -601,22 +603,22 @@ namespace Volund
         }        
         else if (fs::exists(relativePath))
         {
-            std::string cleanPath = this->CleanPath(relativePath);
+            std::string cleanPath = this->ShortPath(relativePath);
             return cleanPath;
         }
         else
         {
-            std::string cleanPath = this->CleanPath(relativePath);
+            std::string cleanPath = this->ShortPath(relativePath);
             return this->m_ParentPath + VOLUND_PATH_SEPERATOR + cleanPath;
         }
     }
 
-    std::string AssetManager::CleanPath(const std::string& path)
+    std::string AssetManager::ShortPath(const std::string& path)
     {
-        std::string cleanPath = path;
+        std::string shortPath = path;
 
-        std::replace(cleanPath.begin(), cleanPath.end(), VOLUND_INVALID_PATH_SEPERATOR, VOLUND_PATH_SEPERATOR);
+        std::replace(shortPath.begin(), shortPath.end(), VOLUND_INVALID_PATH_SEPERATOR, VOLUND_PATH_SEPERATOR);
 
-        return cleanPath;
+        return shortPath;
     }
 }

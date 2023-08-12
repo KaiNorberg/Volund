@@ -11,6 +11,8 @@
 
 namespace Volund
 {
+	using LogCallback = void(*)(const std::string&);
+
 	enum class LogColor
 	{
 		Black,
@@ -30,99 +32,82 @@ namespace Volund
 		Error
 	};
 
-	using LoggerCallback = void(*)(const std::string&);
+	struct LogLine
+	{
+		uint64_t Id;
+		LogSeverity Severity;
+		std::string Text;
+	};
 
 	class Logger
 	{
 	public:
 
 		static Logger& GetCoreLogger();
-
 		static Logger& GetClientLogger();
 
 		template<typename... Args>
-		void Info(const char* format, Args&&... args);
+		uint64_t Log(LogSeverity severity, const char* format, Args&&... args);
 
-		template<typename... Args>
-		void Warning(const char* format, Args&&... args);
+		uint64_t Log(LogSeverity severity, const char* format);
 
-		template<typename... Args>
-		void Error(const char* format, Args&&... args);
-		
-		void Info(const char* format);
+		void UpdateLine(uint64_t lineId, const char* format);
 
-		void Warning(const char* format);
-
-		void Error(const char* format);
-
-		void Print(LogSeverity severity, const std::string& string);
-
-		void SetCallback(LoggerCallback newCallback);
+	private:
 
 		Logger(std::string_view name);
 
-	private:
+		template<typename... Args>
+		std::string FormatString(LogSeverity severity, const char* format, Args&&... args);
+
+		uint64_t Print(LogSeverity severity, const std::string& string);
+
+		static void UpdateConsole();
+
+		static uint64_t FindLine(uint64_t lineId);
 
 		static Logger m_CoreLogger;
 		static Logger m_ClientLogger;
 
-		std::mutex m_Mutex;
-
-		template<typename... Args>
-		std::string FormatString(const char* format, Args&&... args)
-		{
-			int size_s = std::snprintf( nullptr, 0, format, args... ) + 1;
-			if( size_s <= 0 )
-			{ 
-				throw std::runtime_error( "Error during formatting." ); 
-			}
-
-			auto size = static_cast<size_t>( size_s );
-			std::unique_ptr<char[]> buf( new char[ size ] );
-
-			std::snprintf( buf.get(), size, format, args ... );
-			return std::string( buf.get(), buf.get() + size - 1 );
-		}
-
-		LoggerCallback m_Callback;
+		static inline std::vector<LogLine> m_Lines; 
+		static inline uint64_t m_NewLineId;
 
 		std::string m_Name;
 	};
 
 	template<typename... Args>
-	inline void Logger::Info(const char* format, Args&&... args)
+	inline uint64_t Logger::Log(LogSeverity severity, const char* format, Args&&... args)
 	{
-		std::string formatedString = this->FormatString(format, std::forward<Args>(args)...);
-		this->Print(LogSeverity::Info, formatedString);
+		std::string formatedString = this->FormatString(severity, format, std::forward<Args>(args)...);
+		return Print(severity, formatedString);
 	}
 
 	template<typename... Args>
-	inline void Logger::Warning(const char* format, Args&&... args)
+	inline std::string Logger::FormatString(LogSeverity severity, const char* format, Args&&... args)
 	{
-		std::string formatedString = this->FormatString(format, std::forward<Args>(args)...);
-		this->Print(LogSeverity::Warning, formatedString);
-	}
+		int size_s = std::snprintf(nullptr, 0, format, args...) + 1;
+		if (size_s <= 0)
+		{
+			throw std::runtime_error("Error during formatting.");
+		}
 
-	template<typename... Args>
-	inline void Logger::Error(const char* format, Args&&... args)
-	{
-		std::string formatedString = this->FormatString(format, std::forward<Args>(args)...);
-		this->Print(LogSeverity::Error, formatedString);
+		auto size = static_cast<size_t>(size_s);
+		std::unique_ptr<char[]> buf(new char[size]);
 
-		abort();
+		std::snprintf(buf.get(), size, format, args ...);
+		return std::string(buf.get(), buf.get() + size - 1);
 	}
 }
 
 #ifdef VOLUND_CORE
-	#define VOLUND_INFO(...) ::Volund::Logger::GetCoreLogger().Info(__VA_ARGS__)
-	#define VOLUND_WARNING(...) ::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__)
-	#define VOLUND_ERROR(...) ::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__)
-	#define VOLUND_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetCoreLogger().Error(__VA_ARGS__);}
-	#define VOLUND_SOFT_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetCoreLogger().Warning(__VA_ARGS__);}
+#define VOLUND_LOGGER ::Volund::Logger::GetCoreLogger()
 #else
-    #define VOLUND_INFO(...) ::Volund::Logger::GetClientLogger().Info(__VA_ARGS__)
-    #define VOLUND_WARNING(...) ::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__)
-    #define VOLUND_ERROR(...) ::Volund::Logger::GetClientLogger().Error(__VA_ARGS__)
-	#define VOLUND_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetClientLogger().Error(__VA_ARGS__);}
-	#define VOLUND_SOFT_ASSERT(condition, ...) if (!(condition)) {::Volund::Logger::GetClientLogger().Warning(__VA_ARGS__);}
+#define VOLUND_LOGGER ::Volund::Logger::GetClientLogger()
 #endif
+
+#define VOLUND_INFO(...) VOLUND_LOGGER.Log(::Volund::LogSeverity::Info, __VA_ARGS__)
+#define VOLUND_WARNING(...) VOLUND_LOGGER.Log(::Volund::LogSeverity::Warning, __VA_ARGS__)
+#define VOLUND_ERROR(...) VOLUND_LOGGER.Log(::Volund::LogSeverity::Error, __VA_ARGS__)
+#define VOLUND_UPDATE_LINE(...) VOLUND_LOGGER.UpdateLine(__VA_ARGS__)
+#define VOLUND_ASSERT(condition, ...) if (!(condition)) {VOLUND_LOGGER.Log(::Volund::LogSeverity::Error, __VA_ARGS__);}
+#define VOLUND_SOFT_ASSERT(condition, ...) if (!(condition)) {VOLUND_LOGGER.Log(::Volund::LogSeverity::Warning, __VA_ARGS__);}

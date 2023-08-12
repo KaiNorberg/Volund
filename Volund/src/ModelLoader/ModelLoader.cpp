@@ -57,6 +57,7 @@ namespace Volund
 		std::stringstream stringStream;
 		stringStream << content;
 		std::string line;
+		int x = 0;
 		while (std::getline(stringStream, line))
 		{
 			auto words = Utils::SplitString(line, ' ');

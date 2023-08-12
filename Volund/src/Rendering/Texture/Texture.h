@@ -30,6 +30,6 @@ namespace Volund
 
 		uint32_t m_Width = 5;
 
-		uint32_t m_ID = 0;
+		uint32_t m_Id = 0;
 	};
 }

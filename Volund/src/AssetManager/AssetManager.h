@@ -31,7 +31,7 @@ namespace Volund
 
         std::string GetAbsolutePath(const std::string& relativePath);
 
-        std::string CleanPath(const std::string& path);
+        std::string ShortPath(const std::string& path);
 
         template<typename T>
         Ref<T> Load(const std::string& filepath);
@@ -84,19 +84,27 @@ namespace Volund
                     auto fetchedData = std::dynamic_pointer_cast<Asset<T>>(view[i])->Data;
                     if (fetchedData.expired())
                     {        
-                        VOLUND_INFO("Asset expired, retrieving new asset (%s)...", filepath.c_str());
+                        uint64_t lineId = VOLUND_INFO("Asset expired, retrieving new asset (%s)... ", relativePath.c_str());
+
                         this->m_Data.Erase<Asset<T>>(i);
-                        return this->Fetch<T>(relativePath);
+                        auto asset = this->Fetch<T>(relativePath);
+
+                        VOLUND_UPDATE_LINE(lineId, "Done");
+
+                        return asset;
                     }
 
-                    VOLUND_INFO("Fetching cached asset (%s)...", filepath.c_str());
                     return fetchedData.lock();
                 }
             }
         }
 
+        uint64_t lineId = VOLUND_INFO("Loading Asset (%s)... ", relativePath.c_str());
+
         Ref<T> newAssetData = this->Load<T>(absolutePath);
         this->Push(relativePath, newAssetData);
+
+        VOLUND_UPDATE_LINE(lineId, "Done");
 
         return newAssetData;
     }

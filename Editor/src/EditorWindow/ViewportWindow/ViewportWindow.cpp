@@ -234,5 +234,6 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	ballMatrix = glm::scale(ballMatrix, VL::Vec3(this->m_Distance));
 	this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, 1.0, 1.0);
 
+
 	this->m_GridEffect = VL::Effect::Create(VL::Shader::Create("data/shaders/grid.shader"));
 }

@@ -10,13 +10,18 @@ namespace Volund
 	bool OpenGLShader::HasUniform(const std::string& name)
 	{
 		VOLUND_PROFILE_FUNCTION();
-		return m_UniformLocations.contains(name.data()) || glGetUniformLocation(this->m_ID, name.data()) != -1;
+		return m_UniformLocations.contains(name.data()) || glGetUniformLocation(this->m_Id, name.data()) != -1;
 	}
 
 	void OpenGLShader::Bind()
 	{
 		VOLUND_PROFILE_FUNCTION();
-		glUseProgram(this->m_ID);
+		glUseProgram(this->m_Id);
+	}
+
+	uint32_t OpenGLShader::GetId()
+	{
+		return this->m_Id;
 	}
 
 	void OpenGLShader::SetInt(const std::string& name, int32_t value)
@@ -101,6 +106,54 @@ namespace Volund
 		this->SetInt(name, textureUnit);
 	}
 
+	void OpenGLShader::Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint)
+	{
+		this->m_MaterialBlueprint = materialBlueprint;
+
+		uint32_t program = glCreateProgram();
+
+		uint32_t vs = 0;
+		if (source[(int)ShaderSourceType::Vertex].length() > 1)
+		{
+			vs = CompileShader(GL_VERTEX_SHADER, source[(int)ShaderSourceType::Vertex].data());
+			glAttachShader(program, vs);
+		}
+
+		uint32_t fs = 0;
+		if (source[(int)ShaderSourceType::Fragment].length() > 1)
+		{
+			fs = CompileShader(GL_FRAGMENT_SHADER, source[(int)ShaderSourceType::Fragment].data());
+			glAttachShader(program, fs);
+		}
+
+		uint32_t gs = 0;
+		if (source[(int)ShaderSourceType::Geometry].length() > 1)
+		{
+			gs = CompileShader(GL_GEOMETRY_SHADER, source[(int)ShaderSourceType::Geometry].data());
+			glAttachShader(program, gs);
+		}
+
+		glLinkProgram(program);
+		glValidateProgram(program);
+
+		if (vs != 0)
+		{
+			glDeleteShader(vs);
+		}
+
+		if (fs != 0)
+		{
+			glDeleteShader(fs);
+		}
+
+		if (gs != 0)
+		{
+			glDeleteShader(gs);
+		}
+
+		this->m_Id = program;
+	}
+
 	uint32_t OpenGLShader::CompileShader(uint32_t type, const std::string& source)
 	{
 		uint32_t id = glCreateShader(type);
@@ -132,7 +185,7 @@ namespace Volund
 		{
 			return m_UniformLocations[name.data()];
 		}
-		int32_t uniformLocation = glGetUniformLocation(this->m_ID, name.data());
+		int32_t uniformLocation = glGetUniformLocation(this->m_Id, name.data());
 
 		if (uniformLocation == -1)
 		{
@@ -143,57 +196,16 @@ namespace Volund
 		return uniformLocation;
 	}
 
-	OpenGLShader::OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource)
+	OpenGLShader::OpenGLShader(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint)
 	{
-		uint32_t program = glCreateProgram();
-
-		uint32_t vs = 0;
-		if (vertexSource.length() > 1)
-		{
-			vs = CompileShader(GL_VERTEX_SHADER, vertexSource.data());
-			glAttachShader(program, vs);
-		}
-
-		uint32_t fs = 0;
-		if (fragmentSource.length() > 1)
-		{
-			fs = CompileShader(GL_FRAGMENT_SHADER, fragmentSource.data());
-			glAttachShader(program, fs);
-		}
-
-		uint32_t gs = 0;
-		if (geometrySource.length() > 1)
-		{
-			gs = CompileShader(GL_GEOMETRY_SHADER, geometrySource.data());
-			glAttachShader(program, gs);
-		}
-
-		glLinkProgram(program);
-		glValidateProgram(program);
-
-		if (vs != 0)
-		{
-			glDeleteShader(vs);
-		}
-
-		if (fs != 0)
-		{
-			glDeleteShader(fs);
-		}
-
-		if (gs != 0)
-		{
-			glDeleteShader(gs);
-		}
-
-		this->m_ID = program;
+		this->Init(source, materialBlueprint);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
-		if (this->m_ID != 0)
+		if (this->m_Id != 0)
 		{
-			glDeleteProgram(this->m_ID);
+			glDeleteProgram(this->m_Id);
 		}
 	}
 } //namespace Volund

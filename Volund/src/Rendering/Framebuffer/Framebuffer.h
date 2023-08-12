@@ -44,7 +44,7 @@ namespace Volund
 
 	protected:
 
-		uint32_t m_ID;
+		uint32_t m_Id;
 
 		FramebufferSpec m_Spec;		
 		

@@ -7,6 +7,8 @@
 
 #include "MaterialBlueprint/MaterialBlueprint.h"
 
+#include "ShaderLoader/ShaderLoader.h"
+
 namespace Volund
 {
 	class Shader
@@ -16,6 +18,8 @@ namespace Volund
 		virtual void Bind() = 0;
 
 		virtual bool HasUniform(const std::string& name) = 0;
+
+		virtual uint32_t GetId() = 0;
 
 		virtual void SetInt(const std::string& name, int32_t value) = 0;
 
@@ -37,19 +41,21 @@ namespace Volund
 
 		virtual void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit) = 0;
 
+		virtual void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) = 0;
+
 		const Ref<MaterialBlueprint> GetMaterialBlueprint();
+
+		static Ref<Shader> Create();
 
 		static Ref<Shader> Create(const std::string& filepath);
 
-		static Ref<Shader> Create(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource);
+		static Ref<Shader> Create(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint);
 
 		virtual ~Shader() = default;
 
 	protected:
 
 		Shader();
-
-	private:
 
 		Ref<MaterialBlueprint> m_MaterialBlueprint;
 	};

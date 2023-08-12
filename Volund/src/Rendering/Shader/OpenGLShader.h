@@ -7,7 +7,10 @@ namespace Volund
 	class OpenGLShader : public Shader
 	{
 	public:
+
 		void Bind() override;
+
+		uint32_t GetId() override;
 
 		/// <summary>
 		/// Returns if the shader has the specified uniform.
@@ -58,9 +61,11 @@ namespace Volund
 
 		void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit) override;
 
+		void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) override;
+
 		OpenGLShader() = default;
 
-		OpenGLShader(const std::string& vertexSource, const std::string& fragmentSource, const std::string& geometrySource);
+		OpenGLShader(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint);
 
 		~OpenGLShader() override;
 
@@ -71,6 +76,6 @@ namespace Volund
 
 		std::unordered_map<std::string, uint32_t> m_UniformLocations;
 
-		uint32_t m_ID = 0;
+		uint32_t m_Id = 0;
 	};
 } //namespace Volund

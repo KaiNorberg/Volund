@@ -10,7 +10,7 @@ namespace Volund
 {
 	void OpenGLFramebuffer::Bind()
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, this->m_ID);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->m_Id);
 	}
 
 	void OpenGLFramebuffer::Unbind()
@@ -20,9 +20,9 @@ namespace Volund
 
 	void OpenGLFramebuffer::Invalidate()
 	{
-		if (this->m_ID != 0)
+		if (this->m_Id != 0)
 		{
-			glDeleteFramebuffers(1, &this->m_ID);
+			glDeleteFramebuffers(1, &this->m_Id);
 
 			for (int i = 0; i < this->m_ColorAttachments.size(); i++)
 			{
@@ -38,8 +38,8 @@ namespace Volund
 			this->m_DepthAttachment = 0;
 		}
 
-		glGenFramebuffers(1, &this->m_ID);
-		glBindFramebuffer(GL_FRAMEBUFFER, this->m_ID);
+		glGenFramebuffers(1, &this->m_Id);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->m_Id);
 
 		std::vector<GLenum> buffers;
 		for (int i = 0; i < this->m_Spec.ColorAttachments.size(); i++)
@@ -116,7 +116,7 @@ namespace Volund
 
 	void OpenGLFramebuffer::BlitTo(const Ref<Framebuffer>& drawFramebuffer)
 	{
-		glBlitNamedFramebuffer(this->m_ID, drawFramebuffer->GetID(),
+		glBlitNamedFramebuffer(this->m_Id, drawFramebuffer->GetID(),
 			0, 0, this->m_Spec.Width, this->m_Spec.Height,
 			0, 0, drawFramebuffer->GetSpec().Width, drawFramebuffer->GetSpec().Height,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
@@ -134,9 +134,9 @@ namespace Volund
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
-		if (this->m_ID != 0)
+		if (this->m_Id != 0)
 		{
-			glDeleteFramebuffers(1, &this->m_ID);
+			glDeleteFramebuffers(1, &this->m_Id);
 
 			for (int i = 0; i < this->m_ColorAttachments.size(); i++)
 			{

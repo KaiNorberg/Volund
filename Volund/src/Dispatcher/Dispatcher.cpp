@@ -18,7 +18,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		std::unique_lock lock(this->m_Mutex);
+		//std::unique_lock lock(this->m_Mutex);
 
 		this->m_JobQueue.push(job);
 	}

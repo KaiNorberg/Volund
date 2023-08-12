@@ -55,6 +55,13 @@ namespace Volund
 			Ref<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)
 			{
+				auto shader = model.material->GetShader();
+
+				if (shader == nullptr || shader->GetId() == 0)
+				{
+					continue;
+				}
+
 				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
 
 				bool isInFrustum = model.mesh != nullptr && cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix));
@@ -64,20 +71,15 @@ namespace Volund
 				{
 					if (model.material != prevMaterial)
 					{
-						auto shader = model.material->GetShader();
-						if (shader != nullptr)
-						{
-							shader->Bind();
-							model.material->UpdateShader();
-						}
+						shader->Bind();
+						model.material->UpdateShader();
+
 						prevMaterial = model.material;
 					}
 
-					Ref<Shader> materialShader = model.material->GetShader();
-
-					if (materialShader != nullptr && materialShader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
+					if (shader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
 					{
-						materialShader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
+						shader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}
 
 					model.mesh->Bind();		
@@ -104,7 +106,7 @@ namespace Volund
 			{
 				auto shader = effect->GetShader();
 
-				if (shader != nullptr)
+				if (shader != nullptr && shader->GetId() != 0)
 				{
 					shader->Bind();
 					effect->UpdateShader();

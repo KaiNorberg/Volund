@@ -13,7 +13,7 @@ namespace Volund
 
 	void OpenGLVertexBuffer::Bind()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
+		glBindBuffer(GL_ARRAY_BUFFER, this->m_Id);
 	}
 
 	void OpenGLVertexBuffer::Unbind()
@@ -38,8 +38,8 @@ namespace Volund
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const float vertices[], const uint32_t count)
 	{
-		glCreateBuffers(1, &this->m_ID);
-		glBindBuffer(GL_ARRAY_BUFFER, this->m_ID);
+		glCreateBuffers(1, &this->m_Id);
+		glBindBuffer(GL_ARRAY_BUFFER, this->m_Id);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), vertices, GL_STATIC_DRAW);
 
 		this->m_AABB = AABB(vertices, count);
@@ -47,6 +47,6 @@ namespace Volund
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(1, &this->m_ID);
+		glDeleteBuffers(1, &this->m_Id);
 	}
 }
