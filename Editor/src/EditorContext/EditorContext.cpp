@@ -127,7 +127,7 @@ void EditorContext::LoadScene(const std::string& filepath)
 	}
 
 	this->SelectedEntity = 1;
-	this->m_Dispatcher->Dispatch(EDITOR_EVENT_TYPE_NEW_SCENE);
+	this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_NEW_SCENE);
 
 	this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, filepath);
 }

@@ -36,7 +36,7 @@ namespace Volund
 		this->m_ShouldRun = false;
 	}
 
-	void Application::Dispatch(const Event& e)
+	void Application::Enqueue(const Event& e)
 	{
 		this->Procedure(e);
 
@@ -65,10 +65,10 @@ namespace Volund
 			Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
 			VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 
-			this->m_Dispatcher->Dispatch(updateEvent);
-			this->m_Dispatcher->Dispatch(Event(VOLUND_EVENT_TYPE_RENDER));
+			this->m_Dispatcher->Enqueue(updateEvent);
+			this->m_Dispatcher->Enqueue(Event(VOLUND_EVENT_TYPE_RENDER));
 
-			this->m_Dispatcher->Execute();
+			this->m_Dispatcher->Dispatch();
 		}
 	}
 
@@ -86,7 +86,7 @@ namespace Volund
 
 		this->m_Dispatcher = std::make_shared<Dispatcher>([this](const Event& e)
 		{
-			this->Dispatch(e);
+			this->Enqueue(e);
 		});
 	}
 

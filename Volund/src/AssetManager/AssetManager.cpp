@@ -91,7 +91,7 @@ namespace Volund
             serializer.WriteToFile(destinationPath);
         };
 
-        this->m_Dispatcher->Dispatch(Job(task, nullptr));
+        this->m_Dispatcher->Enqueue(Job(task, nullptr));
     }
 
     template<>
@@ -211,7 +211,7 @@ namespace Volund
             serializer.WriteToFile(destinationPath);
         };
 
-        this->m_Dispatcher->Dispatch(Job(task, nullptr));
+        this->m_Dispatcher->Enqueue(Job(task, nullptr));
     }
 
     template<>
@@ -461,7 +461,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Dispatch(Job(task, nullptr));
+        this->m_Dispatcher->Enqueue(Job(task, nullptr));
         //task();
 
         return material;
@@ -503,7 +503,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
+        this->m_Dispatcher->Enqueue(Job(task, cleanupTask));
         //task(); cleanupTask();
 
         return newMesh;
@@ -528,7 +528,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
+        this->m_Dispatcher->Enqueue(Job(task, cleanupTask));
         //task(); cleanupTask();
 
         return newTexture;
@@ -553,7 +553,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Dispatch(Job(task, cleanupTask));
+        this->m_Dispatcher->Enqueue(Job(task, cleanupTask));
         //task(); cleanupTask();
 
         return newShader;
@@ -572,12 +572,12 @@ namespace Volund
         return this->m_ParentPath;
     }
 
-    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> dispatcher, const std::string& parentPath)
+    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath)
     {
-        return Ref<AssetManager>(new AssetManager(dispatcher, parentPath));
+        return Ref<AssetManager>(new AssetManager(Dispatcher, parentPath));
     }
 
-    AssetManager::AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath)
+    AssetManager::AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath)
     {
         if (fs::is_directory(parentPath))
         {
@@ -588,7 +588,7 @@ namespace Volund
             this->m_ParentPath = fs::path(parentPath).parent_path().string();
         }
 
-        this->m_Dispatcher = dispatcher;
+        this->m_Dispatcher = Dispatcher;
     }
 
     std::string AssetManager::GetRelativePath(const std::string& absolutePath)

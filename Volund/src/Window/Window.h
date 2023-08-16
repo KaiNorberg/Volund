@@ -64,7 +64,7 @@ namespace Volund
 		void ConnectScrollCallback(GLFWscrollfun callback);
 		void ConnectCharCallback(GLFWcharfun callback);
 
-		Window(Ref<Dispatcher> dispatcher, uint64_t width, uint64_t height, bool fullScreen);
+		Window(Ref<Dispatcher> Dispatcher, uint64_t width, uint64_t height, bool fullScreen);
 
 		~Window();
 

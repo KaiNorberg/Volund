@@ -21,7 +21,7 @@ namespace Volund
 
 		void Procedure(const Event& e);
 
-		GameState(Ref<Dispatcher> dispatcher, const std::string& filepath);
+		GameState(Ref<Dispatcher> Dispatcher, const std::string& filepath);
 
 		~GameState();
 

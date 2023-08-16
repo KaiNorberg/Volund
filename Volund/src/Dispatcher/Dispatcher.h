@@ -11,11 +11,11 @@ namespace Volund
 	{
 	public:
 
-		void Dispatch(const Event& e);
+		void Enqueue(const Event& e);
 
-		void Dispatch(const Job& job);
+		void Enqueue(const Job& job);
 
-		void Execute();
+		void Dispatch();
 
 		Dispatcher(std::function<void(const Event&)> eventCallback);
 

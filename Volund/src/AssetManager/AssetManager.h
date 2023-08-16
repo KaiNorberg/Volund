@@ -21,11 +21,11 @@ namespace Volund
 
         std::string GetParentPath();
 
-        static Ref<AssetManager> Create(Ref<Dispatcher> dispatcher, const std::string& parentPath);
+        static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath);
 
     private:
 
-        AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath);
+        AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath);
 
         std::string GetRelativePath(const std::string& absolutePath);
 

@@ -13,19 +13,16 @@
 
 void Editor::OnRun()
 {
-	this->AttachModule(new VL::WindowModule());
-	auto windowModule = this->GetModule<VL::WindowModule>();
+	auto windowModule = this->AttachModule<VL::WindowModule>();
 
 	windowModule->GetWindow()->SetIcon("data/icons/logo.png");
 	windowModule->GetWindow()->SetTitle("Volund Editor");
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
-	this->AttachModule(new VL::AudioModule());
-	this->AttachModule(new VL::ImGuiModule());
-	this->AttachModule(new EditorContext());
+	this->AttachModule<VL::AudioModule>();
 
-	auto context = this->GetModule<EditorContext>();
-	auto imGuiModule = this->GetModule<VL::ImGuiModule>();
+	auto imGuiModule = this->AttachModule<VL::ImGuiModule>();
+	auto context = this->AttachModule<EditorContext>();
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "data/imgui.ini";

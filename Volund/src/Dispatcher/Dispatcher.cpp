@@ -7,21 +7,21 @@
 
 namespace Volund
 {
-	void Dispatcher::Dispatch(const Event& e)
+	void Dispatcher::Enqueue(const Event& e)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->m_EventQueue.push(e);
 	}
 
-	void Dispatcher::Dispatch(const Job& job)
+	void Dispatcher::Enqueue(const Job& job)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		this->m_JobQueue.push(job);
 	}
 
-	void Dispatcher::Execute()
+	void Dispatcher::Dispatch()
 	{
 		this->m_Executing = true;
 
@@ -85,6 +85,6 @@ namespace Volund
 
 	Dispatcher::~Dispatcher()
 	{
-		this->Execute();
+		this->Dispatch();
 	}
 }

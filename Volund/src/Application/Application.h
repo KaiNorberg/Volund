@@ -18,11 +18,8 @@ namespace Volund
 
 		Ref<Dispatcher> GetDispatcher();
 
-		template<typename T>
-		void AttachModule(T* newModule);
-
-		template<typename T>
-		void AttachModule(Ref<T> newModule);
+		template <typename T, typename... Args>
+		Ref<T> AttachModule(Args&&... args);
 
 		template<typename T>
 		Ref<T> GetModule();
@@ -43,7 +40,7 @@ namespace Volund
 
 		void Loop();
 
-		void Dispatch(const Event& e);
+		void Enqueue(const Event& e);
 
 		bool m_ShouldRun = true;
 
@@ -56,28 +53,19 @@ namespace Volund
 		PolyContainer<Module> m_Modules;
 	};
 
-	template<typename T>
-	void Application::AttachModule(T* newModule)
+
+	template<typename T, typename ...Args>
+	inline Ref<T> Application::AttachModule(Args && ...args)
 	{
 		if (this->HasModule<T>())
 		{
 			VOLUND_ERROR("Module of specifed type already attached!");
 		}
 
+		Ref<T> newModule = std::make_shared<T>(args...);
 		this->m_Modules.PushBack(newModule);
 		newModule->OnAttach(this);
-	}
-
-	template<typename T>
-	void Application::AttachModule(Ref<T> newModule)
-	{
-		if (this->HasModule<T>())
-		{
-			VOLUND_ERROR("Module of specifed type already attached!");
-		}
-
-		this->m_Modules.PushBack(newModule);
-		newModule->OnAttach(this);
+		return newModule;
 	}
 
 	template<typename T>
