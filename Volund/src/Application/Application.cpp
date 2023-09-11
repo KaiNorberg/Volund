@@ -36,7 +36,7 @@ namespace Volund
 		this->m_ShouldRun = false;
 	}
 
-	void Application::Enqueue(const Event& e)
+	void Application::EventCallback(const Event& e)
 	{
 		this->Procedure(e);
 
@@ -86,7 +86,7 @@ namespace Volund
 
 		this->m_Dispatcher = std::make_shared<Dispatcher>([this](const Event& e)
 		{
-			this->Enqueue(e);
+			this->EventCallback(e);
 		});
 	}
 

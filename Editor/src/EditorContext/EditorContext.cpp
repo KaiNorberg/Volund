@@ -24,12 +24,59 @@ void EditorContext::Procedure(const VL::Event& e)
 {
 	VOLUND_PROFILE_FUNCTION();
 
-	if (this->m_GameState == nullptr || this->m_Paused)
+	switch (e.Type)
 	{
-		return;
+	case EDITOR_EVENT_TYPE_RELOAD_SCENE:
+	{
+		const auto scene = this->GetScene();
+		if (scene != nullptr)
+		{
+			this->LoadScene(this->GetScenePath());
+		}
 	}
+	break;
+	case EDITOR_EVENT_TYPE_LOAD_SCENE:
+	{
+		const std::string filepath = VL::Dialog::OpenFile(this->m_GameWindow);
+		if (!filepath.empty())
+		{
+			this->LoadScene(filepath);
+		}
+	}
+	break;
+	case EDITOR_EVENT_TYPE_SAVE_SCENE:
+	{		
+		const std::string filepath = this->GetScenePath();
+		if (!filepath.empty())
+		{
+			this->SaveScene(filepath);
+		}
+	}
+	break;
+	case EDITOR_EVENT_TYPE_NEW_SCENE:
+	{
+		const std::string filepath = VL::Dialog::OpenFolder(this->m_GameWindow);
 
-	this->m_GameState->Procedure(e);
+		if (!filepath.empty())
+		{
+			VL::LuaSerializer serializer;
+			serializer.WriteToFile(filepath + "/scene.lua");
+
+			this->LoadScene(filepath + "/scene.lua");
+		}
+	}
+	break;
+	default:
+	{
+		if (this->m_GameState == nullptr || this->m_Paused)
+		{
+			return;
+		}
+
+		this->m_GameState->Procedure(e);
+	}
+	break;
+	}
 }
 
 bool EditorContext::IsPaused()
@@ -127,8 +174,6 @@ void EditorContext::LoadScene(const std::string& filepath)
 	}
 
 	this->SelectedEntity = 1;
-	this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_NEW_SCENE);
-
 	this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, filepath);
 }
 

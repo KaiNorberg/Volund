@@ -24,6 +24,11 @@ void Editor::OnRun()
 	auto imGuiModule = this->AttachModule<VL::ImGuiModule>();
 	auto context = this->AttachModule<EditorContext>();
 
+	imGuiModule->SetBackgroundCallback([this]() 
+	{
+		this->BackgroundCallback(); 
+	});
+
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "data/imgui.ini";
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
@@ -44,7 +49,7 @@ void Editor::OnRun()
 	imGuiModule->AddWindow(hierarchyWindow);
 
 	auto materialWindow = VL::Ref<MaterialEditor>(new MaterialEditor(context));
-	imGuiModule->AddWindow(materialWindow);
+	imGuiModule->AddWindow(materialWindow);	
 }
 
 void Editor::OnTerminate()
@@ -71,97 +76,6 @@ void Editor::Procedure(const VL::Event& e)
 			ImGui::LoadIniSettingsFromDisk("imgui.ini");
 			this->m_iniLoaded = true;
 		}
-
-		/*VL::ImGuiModule::BeginFrame();
-
-		if (VL::ImGuiModule::BeginDockSpace())
-		{
-			//TODO: Improve readability of menu bar code
-			if (ImGui::BeginMenuBar())
-			{
-				if (ImGui::BeginMenu("File"))
-				{
-					if (ImGui::BeginMenu("Load"))
-					{
-						if (ImGui::MenuItem("Scene", "Ctrl + E"))
-						{
-							const std::string filepath = VL::Dialog::OpenFile(window);
-							if (!filepath.empty())
-							{
-								this->m_Context->LoadNewScene(filepath);
-							}
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Save"))
-					{
-						if (ImGui::MenuItem("Scene", "Ctrl + S"))
-						{
-							this->m_Context->SaveScene(this->m_Context->GetSceneFilepath());
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Save As"))
-					{
-						if (ImGui::MenuItem("Scene"))
-						{
-							const std::string filepath = VL::Dialog::OpenFile(window);
-							if (!filepath.empty())
-							{
-								this->m_Context->SaveScene(filepath);
-							}
-						}
-
-						ImGui::EndMenu();
-					}
-
-					if (ImGui::BeginMenu("Reload"))
-					{
-						if (ImGui::MenuItem("Scene", "Ctrl + R"))
-						{
-							this->m_Context->LoadNewScene(this->m_Context->GetSceneFilepath());
-						}
-
-						ImGui::EndMenu();
-					}
-
-					ImGui::EndMenu();
-				}
-
-				if (ImGui::BeginMenu("Widget"))
-				{
-					for (const auto& widget : this->m_Widgets)
-					{
-						if (ImGui::MenuItem(widget->GetName()))
-						{
-							widget->IsActive = true;
-						}
-					}
-
-					ImGui::EndMenu();
-				}
-
-				ImGui::EndMenuBar();
-			}
-
-			for (const auto& widget : this->m_Widgets)
-			{
-				if (widget->IsActive)
-				{
-					widget->Procedure(e);
-				}
-			}
-		}
-
-		ImGui::End();
-
-		VL::ImGuiModule::EndFrame();*/
-
-		return;
 	}
 	break;	
 	case VOLUND_EVENT_TYPE_KEY:
@@ -172,47 +86,19 @@ void Editor::Procedure(const VL::Event& e)
 		{
 			if (this->m_Input.IsPressed('R'))
 			{
-				const auto scene = context->GetScene();
-				if (scene != nullptr)
-				{
-					context->LoadScene(context->GetScenePath());
-				}
+				this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_RELOAD_SCENE);
 			}
 			else if (this->m_Input.IsPressed('E'))
 			{
-				const std::string filepath = VL::Dialog::OpenFile(window);
-				if (!filepath.empty())
-				{
-					context->LoadScene(filepath);
-				}
+				this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_LOAD_SCENE);
 			}
 			else if (this->m_Input.IsPressed('N'))
 			{
-				const std::string filepath = VL::Dialog::OpenFolder(window);
-				
-				if (!filepath.empty())
-				{
-					VL::LuaSerializer serializer;
-					serializer.WriteToFile(filepath + "/scene.lua");
-
-					context->LoadScene(filepath + "/scene.lua");
-				}
-			}
-			else if (this->m_Input.IsPressed('A'))
-			{
-				if (!context->GetParentPath().empty())
-				{
-					const std::string filepath = VL::Dialog::OpenFile(window);
-
-					if (!filepath.empty())
-					{
-						fs::copy(filepath, context->GetParentPath());
-					}
-				}
+				this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_NEW_SCENE);
 			}
 			else if (this->m_Input.IsPressed('S'))
 			{
-				context->SaveScene(context->GetScenePath());
+				this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_SAVE_SCENE);
 			}
 		}
 	}
@@ -227,5 +113,58 @@ void Editor::Procedure(const VL::Event& e)
 
 	}
 	break;
+	}
+}
+
+void Editor::BackgroundCallback()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		if (ImGui::BeginMenu("File"))
+		{
+			if (ImGui::BeginMenu("Load"))
+			{
+				if (ImGui::MenuItem("Scene", "Ctrl + E"))
+				{
+					this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_LOAD_SCENE);
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Save"))
+			{
+				if (ImGui::MenuItem("Scene", "Ctrl + S"))
+				{
+					this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_SAVE_SCENE);
+				}
+
+				ImGui::EndMenu();
+			}
+
+			if (ImGui::BeginMenu("Reload"))
+			{
+				if (ImGui::MenuItem("Scene", "Ctrl + R"))
+				{
+					this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_RELOAD_SCENE);
+				}
+
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Widget"))
+		{
+			if (ImGui::MenuItem("Not implemented"))
+			{
+
+			}
+
+			ImGui::EndMenu();
+		}
+
+		ImGui::EndMenuBar();
 	}
 }

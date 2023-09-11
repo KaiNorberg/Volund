@@ -23,8 +23,6 @@ namespace Volund
 
 	private:
 
-		bool m_Executing;
-
 		std::mutex m_Mutex;
 
 		std::function<void(const Event&)> m_EventCallback;

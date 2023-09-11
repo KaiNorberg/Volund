@@ -78,7 +78,7 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		}
 	}
 	break;
-	case EDITOR_EVENT_TYPE_NEW_SCENE:
+	case EDITOR_EVENT_TYPE_LOAD_SCENE:
 	{
 		this->m_Camera.GetEditorFramebuffer()->Invalidate();
 		this->m_Camera.GetSceneFramebuffer()->Invalidate();

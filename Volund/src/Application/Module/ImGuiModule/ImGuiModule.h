@@ -18,18 +18,22 @@ namespace Volund
 
         void Procedure(const Event& e) override;
 
+        void SetBackgroundCallback(std::function<void()> callback);
+          
         template<typename T>
         void AddWindow(Ref<T> imGuiWindow);
 
     private:
-
-        PolyContainer<ImGuiWindow> m_ImGuiWindows;
 
         bool BeginDockSpace();
 
         void BeginFrame();
 
         void EndFrame();
+
+        std::function<void()> m_BackgroundCallback;
+
+        PolyContainer<ImGuiWindow> m_ImGuiWindows;
     };
 
     template<typename T>

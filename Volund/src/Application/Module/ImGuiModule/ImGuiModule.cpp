@@ -57,6 +57,11 @@ namespace Volund
 
 			if (this->BeginDockSpace())
 			{
+				if (this->m_BackgroundCallback != nullptr)
+				{
+					this->m_BackgroundCallback();
+				}
+
 				for (auto& [typeID, imGuiWindows] : this->m_ImGuiWindows)
 				{
 					for (const auto& imGuiWindow : imGuiWindows)
@@ -83,6 +88,11 @@ namespace Volund
 			}
 		}
 		}
+	}
+
+	void ImGuiModule::SetBackgroundCallback(std::function<void()> callback)
+	{
+		this->m_BackgroundCallback = callback;
 	}
 
 	bool ImGuiModule::BeginDockSpace()

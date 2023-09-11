@@ -40,7 +40,7 @@ namespace Volund
 
 		void Loop();
 
-		void Enqueue(const Event& e);
+		void EventCallback(const Event& e);
 
 		bool m_ShouldRun = true;
 

@@ -9,12 +9,6 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 	{
 		auto scene = this->m_Context->GetScene();
 
-		std::string scenePath = this->m_Context->GetScenePath();
-		if (ImGuiFile("Scene", scenePath))
-		{
-			this->m_Context->LoadScene(scenePath);
-		}
-
 		if (scene != nullptr)
 		{
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);

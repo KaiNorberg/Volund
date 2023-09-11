@@ -16,6 +16,8 @@ public:
 
 private:
 
+	void BackgroundCallback();
+
 	bool m_iniLoaded = false;
 
 	VL::Input m_Input;

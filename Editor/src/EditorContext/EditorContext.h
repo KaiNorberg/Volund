@@ -1,6 +1,9 @@
 #pragma once
 
-#define EDITOR_EVENT_TYPE_NEW_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 1)
+#define EDITOR_EVENT_TYPE_LOAD_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 1)
+#define EDITOR_EVENT_TYPE_RELOAD_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 2)
+#define EDITOR_EVENT_TYPE_SAVE_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 3)
+#define EDITOR_EVENT_TYPE_NEW_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 4)
 
 class EditorContext : public VL::Module
 {
@@ -30,12 +33,12 @@ public:
 
 	VL::Ref<VL::Window> GetWindow();
 
+private:	
+
 	void LoadScene(const std::string& filepath);
 
 	void SaveScene(const std::string& filepath);
 
-private:		
-	
 	bool m_Paused = true;
 
 	std::mutex m_Mutex;

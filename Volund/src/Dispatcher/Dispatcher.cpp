@@ -23,8 +23,6 @@ namespace Volund
 
 	void Dispatcher::Dispatch()
 	{
-		this->m_Executing = true;
-
 		while (!this->m_EventQueue.empty())
 		{
 			Event e = this->m_EventQueue.front();
@@ -73,8 +71,6 @@ namespace Volund
 
 			cleanupTask();
 		}
-
-		this->m_Executing = false;
 	}
 
 	Dispatcher::Dispatcher(std::function<void(const Event&)> eventCallback)
