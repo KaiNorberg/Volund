@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Lua/LuaUtils/LuaUtils.h"
+
 namespace Volund
 {
 	class LuaSerializer
@@ -21,13 +23,17 @@ namespace Volund
 		void Insert(std::string const& name, Vec4 const& value);
 		void Insert(std::string const& name, std::string const& value, bool asString = true);
 
+		LuaSerializer(const std::string& fileType);
+
 	private:
 
 		void InsertName(std::string const& name);
 
 		void Indent();
 
-		uint8_t m_Indentation = 0;
+		uint8_t m_Indentation = 1;
+
+		std::string m_FileType;
 
 		std::string m_Output = "";
 	};

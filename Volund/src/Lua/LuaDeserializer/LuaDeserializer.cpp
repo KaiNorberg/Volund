@@ -1,12 +1,6 @@
 #include "PCH/PCH.h"
 #include "LuaDeserializer.h"
 
-#include <sol/sol.hpp>
-
-#include "Lua/LuaUtils/LuaUtils.h"
-
-#define VOLUND_DESERIALIZER_TABLE "Data"
-
 namespace Volund
 {
 	void LuaDeserializerPrint(sol::object object)
@@ -23,7 +17,7 @@ namespace Volund
 
 	uint64_t LuaDeserializer::Size()
 	{
-		return this->GetTable().size();
+		return this->GetData().size();
 	}
 
 	bool LuaDeserializer::Valid()
@@ -33,30 +27,30 @@ namespace Volund
 
 	sol::object LuaDeserializer::operator[](uint64_t i)
 	{
-		return this->GetTable()[i];
+		return this->GetData()[i];
 	}
 
 	sol::object LuaDeserializer::operator[](const std::string& key)
 	{
-		return this->GetTable()[key];
+		return this->GetData()[key];
 	}
 
 	sol::table::iterator LuaDeserializer::begin()
 	{
-		return this->GetTable().begin();
+		return this->GetData().begin();
 	}
 
 	sol::table::iterator LuaDeserializer::end()
 	{
-		return this->GetTable().end();
+		return this->GetData().end();
 	}
 
-    sol::table LuaDeserializer::GetTable()
+    sol::table LuaDeserializer::GetData()
     {
-        return ((sol::object)(*this->m_SolState)[VOLUND_DESERIALIZER_TABLE]).as<sol::table>();
+		return this->m_Table[VOLUND_SERIAL_DATA];
     }
 
-    LuaDeserializer::LuaDeserializer(const std::string& filepath)
+    LuaDeserializer::LuaDeserializer(const std::string& filepath, const std::string& fileType)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -77,13 +71,24 @@ namespace Volund
 
 		if (!filepath.empty())
 		{
-			sol::object object = LuaUtils::ScriptFile(this->m_SolState, filepath);
+			sol::object returnVal = LuaUtils::ScriptFile(this->m_SolState, filepath);
 
-			if (object.is<sol::table>())
+			if (returnVal.is<sol::table>())
 			{
-				this->m_Valid = true;
+				sol::table table = returnVal;
 
-				(*this->m_SolState)[VOLUND_DESERIALIZER_TABLE] = object;
+				std::string recivedFileType = table[VOLUND_SERIAL_FILE_TYPE];
+
+				if (recivedFileType == fileType)
+				{
+					this->m_Valid = true;
+
+					this->m_Table = returnVal;
+				}
+				else
+				{
+					VOLUND_WARNING("Lua file type mismatch %s, expected %s recived %s!", filepath.c_str(), fileType.c_str(), recivedFileType.c_str());
+				}
 			}
 			else
 			{
@@ -95,7 +100,9 @@ namespace Volund
 		{
 			this->m_Valid = true;
 
-			this->m_SolState->create_named_table(VOLUND_DESERIALIZER_TABLE);
+			this->m_Table = this->m_SolState->create_table();
+			this->m_Table[VOLUND_SERIAL_FILE_TYPE] = fileType;
+			this->m_Table[VOLUND_SERIAL_DATA] = this->m_SolState->create_table();
 		}
 	}
 

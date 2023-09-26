@@ -23,14 +23,19 @@
 
 #define VOLUND_SET_COMPONENT(table, member, name) if (table[name] != sol::nil) {member = table[name];}
 
+#define VOLUND_SERIAL_MATERIAL_SHADER "Shader"
+#define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
+
 namespace Volund
 {    
     template<>
     void AssetManager::Serialize<Material>(Ref<Material> material, const std::string& destinationPath)
     {
-        Task task = [this, material, destinationPath]()
+        std::string absolutePath = this->GetAbsolutePath(destinationPath);
+
+        Task task = [this, material, absolutePath]()
         {   
-            LuaSerializer serializer = LuaSerializer();
+            LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 
             //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
@@ -38,7 +43,9 @@ namespace Volund
 
             std::string shaderPath = this->FetchFilepath(material->GetShader());
             std::replace(shaderPath.begin(), shaderPath.end(), '\\', '/');
-            serializer.Insert("", shaderPath);
+            serializer.Insert(VOLUND_SERIAL_MATERIAL_SHADER, shaderPath);
+
+            serializer.StartTable(VOLUND_SERIAL_MATERIAL_UNIFORMS);
 
             for (auto& [key, value] : material->IntMap())
             {
@@ -79,7 +86,9 @@ namespace Volund
 
             serializer.EndTable();
 
-            serializer.WriteToFile(destinationPath);
+            serializer.EndTable();
+
+            serializer.WriteToFile(absolutePath);
         };
 
         this->m_Dispatcher->Enqueue(Job(task, nullptr));
@@ -88,9 +97,11 @@ namespace Volund
     template<>
     void AssetManager::Serialize<Scene>(Ref<Scene> scene, const std::string& destinationPath)
     {
-        Task task = [this, scene, destinationPath]()
+        std::string absolutePath = this->GetAbsolutePath(destinationPath);
+
+        Task task = [this, scene, absolutePath]()
         {
-            LuaSerializer serializer = LuaSerializer();
+            LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 
             //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
@@ -130,7 +141,6 @@ namespace Volund
                     serializer.Insert("FOV", component->FOV);
                     serializer.Insert("NearPlane", component->NearPlane);
                     serializer.Insert("FarPlane", component->FarPlane);
-                    //TODO: Insert targetbuffer
                     serializer.EndTable();
                 }
 
@@ -236,7 +246,7 @@ namespace Volund
             }
             serializer.EndTable();
 
-            serializer.WriteToFile(destinationPath);
+            serializer.WriteToFile(absolutePath);
         };
 
         this->m_Dispatcher->Enqueue(Job(task, nullptr));
@@ -247,7 +257,7 @@ namespace Volund
     {
         auto scene = std::make_shared<Scene>();
 
-        LuaDeserializer sceneData = LuaDeserializer(filepath);
+        LuaDeserializer sceneData = LuaDeserializer(filepath, VOLUND_SERIAL_FILE_TYPE_SCENE);
 
         if (!sceneData.Valid())
         {
@@ -414,18 +424,12 @@ namespace Volund
                     sol::table publicVars = componentTable["PublicVars"];
                     for (auto& [key, value] : publicVars)
                     {
-                        if (!script->IsPublicVariable(key.as<std::string>()))
-                        {
-                            continue;
-                        }
-
                         switch (value.get_type())
                         {
                         case sol::type::number:
                         {
                             if (value.is<int64_t>())
                             {
-                                VOLUND_INFO("%s, %s", key.as<std::string>().c_str(), value.as<std::string>().c_str());
                                 script->SetVariable(key.as<std::string>(), value.as<uint64_t>());
                             }
                             else if (value.is<double>())
@@ -464,26 +468,21 @@ namespace Volund
 
         Task task = [this, material, filepath, lineId]()
         {
-            auto materialData = LuaDeserializer(filepath);
+            auto materialData = LuaDeserializer(filepath, VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 
-            if (!materialData.Valid() || materialData.Size() < 1 || !materialData[1].is<std::string>())
+            if (!materialData.Valid())
             {
                 VOLUND_WARNING("Material data is not valid!");
                 return;
             }
 
-            auto shader = this->Fetch<Shader>(materialData[1].as<std::string>());
+            std::string shaderFilepath = materialData[VOLUND_SERIAL_MATERIAL_SHADER].as<std::string>();
+            sol::table uniforms = materialData[VOLUND_SERIAL_MATERIAL_UNIFORMS];
 
-            bool first = true;
+            auto shader = this->Fetch<Shader>(shaderFilepath);
 
-            for (auto& [key, value] : materialData)
+            for (auto& [key, value] : uniforms)
             {
-                if (first)
-                {
-                    first = false;
-                    continue;
-                }
-
                 switch (value.get_type())
                 {
                 case sol::type::number:

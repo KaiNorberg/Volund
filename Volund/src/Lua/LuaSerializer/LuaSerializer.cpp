@@ -22,7 +22,14 @@ namespace Volund
 		}
 		else
 		{
-			file << "local table =\n" + this->m_Output + "\n\nreturn table";
+			file <<
+				(std::string)"local table =\n" +
+				"{\n" +
+				"	" + VOLUND_SERIAL_FILE_TYPE + " = \"" + this->m_FileType + "\",\n" +
+				"	" + VOLUND_SERIAL_DATA + " = \n" +
+					this->m_Output + 
+				"\n}" +
+				"\n\nreturn table";
 		}
 	}
 
@@ -112,6 +119,11 @@ namespace Volund
 		{
 			this->m_Output += formatedValue;
 		}
+	}
+
+	LuaSerializer::LuaSerializer(const std::string& fileType)
+	{
+		this->m_FileType = fileType;
 	}
 
 	void LuaSerializer::InsertName(std::string const& name)

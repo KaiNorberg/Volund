@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Lua/LuaUtils/LuaUtils.h"
+
 namespace Volund 
 {
 	class LuaDeserializer
@@ -18,15 +20,17 @@ namespace Volund
 
 		sol::table::iterator end();
 
-		sol::table GetTable();
-
-		LuaDeserializer(const std::string& filepath = "");
+		LuaDeserializer(const std::string& filepath, const std::string& fileType);
 
 		virtual ~LuaDeserializer();
 
 	private:
 
+		sol::table GetData();
+
 		bool m_Valid = false;
+
+		sol::table m_Table;
 
 		Ref<sol::state> m_SolState;
 	};

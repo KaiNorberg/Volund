@@ -180,6 +180,8 @@ namespace Volund
 		ImGuiNextColumn();
 
 		std::string newValue = out;
+
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		bool changed = ImGui::InputText("##ImGuiString", &newValue);
 
 		ImGuiEndCombo();
@@ -206,6 +208,7 @@ namespace Volund
 		ImGuiColoredText(name.c_str());
 		ImGuiNextColumn();
 
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		bool changed = ImGui::DragInt("##", &value);
 
 		ImGui::PopID();
@@ -240,6 +243,8 @@ namespace Volund
 
 		ImGuiColoredText(name.c_str());
 		ImGuiNextColumn();
+
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		bool changed = ImGui::DragFloat("##", &value, 0.1f);
 
 		ImGui::PopID();
@@ -258,6 +263,7 @@ namespace Volund
 		ImGuiColoredText(name.c_str());
 		ImGuiNextColumn();
 
+		ImGui::SetNextItemWidth(-FLT_MIN);
 		bool changed = ImGui::InputDouble("##", &value, 0.1);
 
 		ImGui::PopID();

@@ -59,7 +59,7 @@ void EditorContext::Procedure(const VL::Event& e)
 
 		if (!filepath.empty())
 		{
-			VL::LuaSerializer serializer;
+			VL::LuaSerializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 			serializer.WriteToFile(filepath + "/scene.lua");
 
 			this->LoadScene(filepath + "/scene.lua");

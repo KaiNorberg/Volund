@@ -65,14 +65,17 @@ namespace Volund
 		{
 			auto lock = this->m_ScriptingEngine.lock();
 
-			sol::protected_function_result result;
-			try
+			if (this->m_Table[name] != sol::nil)
 			{
-				result = this->m_Table[name](this->m_Table, args...);
-			}
-			catch (const sol::error& e)
-			{
-				VOLUND_WARNING(e.what());
+				sol::protected_function_result result;
+				try
+				{
+					result = this->m_Table[name](this->m_Table, args...);
+				}
+				catch (const sol::error& e)
+				{
+					VOLUND_WARNING(e.what());
+				}
 			}
 		}
 	}

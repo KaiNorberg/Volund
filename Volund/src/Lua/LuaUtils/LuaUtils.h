@@ -1,8 +1,12 @@
 #pragma once
 
-//This file should not be included by a .h file, only by .cpp files.
-
 #include "Scene/Scene.h"
+
+#define VOLUND_SERIAL_FILE_TYPE "FileType"
+#define VOLUND_SERIAL_DATA "Data"
+
+#define VOLUND_SERIAL_FILE_TYPE_MATERIAL "Material"
+#define VOLUND_SERIAL_FILE_TYPE_SCENE "Scene"
 
 namespace Volund
 {
