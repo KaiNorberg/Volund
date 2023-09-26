@@ -8,3 +8,4 @@
 #include "Tag/Tag.h"
 #include "SoundSource/SoundSource.h"
 #include "SoundListener/SoundListener.h"
+#include "ScriptComponent/ScriptComponent.h"

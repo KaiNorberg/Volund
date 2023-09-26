@@ -141,6 +141,54 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 		{
 		});
 
+		this->ImGuiComponent<VL::ScriptComponent>("Script", selectedEntity, [this, selectedEntity, scene, assetManager](int i)
+		{
+			auto scriptComponent = scene->GetComponent<VL::ScriptComponent>(selectedEntity, i);
+			VL::Ref<VL::Script> script = scriptComponent->GetScript();
+
+			std::string scriptPath;
+			if (script != nullptr)
+			{
+				scriptPath = script->GetFilepath();
+			}
+			if (ImGuiFile("Script", scriptPath))
+			{
+				auto script = assetManager->LoadScript(scriptPath);
+				scriptComponent->SetScript(script);
+			}
+
+			if (script != nullptr)
+			{
+				for (const std::string& identifier : script->GetPublicVariables())
+				{
+					if (script->IsVariable<int>(identifier))
+					{
+						auto rawValue = script->GetVariable<int>(identifier);
+						if (ImGuiInt(identifier, rawValue))
+						{
+							script->SetVariable(identifier, rawValue);
+						}
+					}
+					else if (script->IsVariable<double>(identifier))
+					{
+						auto rawValue = script->GetVariable<double>(identifier);
+						if (ImGuiDouble(identifier, rawValue))
+						{
+							script->SetVariable(identifier, rawValue);
+						}
+					}
+					else if (script->IsVariable<std::string>(identifier))
+					{
+						auto rawValue = script->GetVariable<std::string>(identifier);
+						if (ImGuiString(identifier, rawValue))
+						{
+							script->SetVariable(identifier, rawValue);
+						}
+					}
+				}
+			}
+		});
+
 		ImGuiAlign("Add Component", 0.5f);
 		if (ImGui::Button("Add Component"))
 		{
@@ -187,6 +235,11 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 			if (ImGui::MenuItem("SoundListener"))
 			{
 				scene->CreateComponent<VL::SoundListener>(selectedEntity);
+				ImGui::CloseCurrentPopup();
+			}
+			if (ImGui::MenuItem("Script"))
+			{
+				scene->CreateComponent<VL::ScriptComponent>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 

@@ -10,7 +10,7 @@ namespace Volund
 
 		std::string GetOutput();
 
-		void StartTable();
+		void StartTable(std::string const& name = "");
 		void EndTable();
 
 		void Insert(std::string const& name, int value);

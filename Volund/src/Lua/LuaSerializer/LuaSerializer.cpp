@@ -31,11 +31,16 @@ namespace Volund
 		return this->m_Output;
 	}
 
-	void LuaSerializer::StartTable()
+	void LuaSerializer::StartTable(std::string const& name)
 	{
-		if (!this->m_Output.empty() && this->m_Output.back() == '}')
+		if (!this->m_Output.empty() && !this->m_Output.ends_with("{\n"))
 		{
 			this->m_Output += ",\n";
+		}
+		if (name != "")
+		{
+			this->Indent();
+			this->m_Output += name + " =\n";
 		}
 		this->Indent();
 		this->m_Output += "{\n";
@@ -95,13 +100,17 @@ namespace Volund
 	void LuaSerializer::Insert(std::string const& name, std::string const& value, bool asString)
 	{
 		this->InsertName(name);
+
+		std::string formatedValue = value;
+		std::replace(formatedValue.begin(), formatedValue.end(), '\\', '/');
+
 		if (asString)
 		{
-			this->m_Output += "\"" + value + "\"";
+			this->m_Output += "\"" + formatedValue + "\"";
 		}
 		else
 		{
-			this->m_Output += value;
+			this->m_Output += formatedValue;
 		}
 	}
 

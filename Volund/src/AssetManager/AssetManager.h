@@ -4,11 +4,15 @@
 
 #include "PolyContainer/PolyContainer.h"
 
+#include "Lua/ScriptingEngine/ScriptingEngine.h"
+
 namespace Volund
 {
     class AssetManager : public std::enable_shared_from_this<AssetManager>
     {
     public:
+
+        Ref<Script> LoadScript(const std::string& filepath);
 
         template<typename T>
         Ref<T> Fetch(const std::string& filepath);
@@ -21,11 +25,11 @@ namespace Volund
 
         std::string GetParentPath();
 
-        static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath);
+        static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
 
     private:
 
-        AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath);
+        AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
 
         std::string GetRelativePath(const std::string& absolutePath);
 
@@ -63,6 +67,8 @@ namespace Volund
         std::string m_ParentPath;
 
         Ref<Dispatcher> m_Dispatcher;
+
+        WeakRef<ScriptingEngine> m_ScriptingEngine;
     };
     
     template<typename T>

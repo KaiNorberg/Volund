@@ -16,6 +16,15 @@ local table =
 			FOV = 80.000000,
 			NearPlane = 0.100000,
 			FarPlane = 100.000000
+		},
+		{
+			ComponentType = 10,
+			Filepath = "Scripts/Rotate.lua",
+			PublicVars =
+			{
+				Text = "Hello, World!",
+				Number = 10
+			}
 		}
 	},
 	{

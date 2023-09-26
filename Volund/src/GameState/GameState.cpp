@@ -43,7 +43,8 @@ namespace Volund
         this->m_ScenePath = filepath;
 
 		this->m_Input = std::make_shared<Input>();
-		this->m_AssetManager = AssetManager::Create(Dispatcher, this->m_ScenePath);
+		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
+		this->m_AssetManager = AssetManager::Create(Dispatcher, this->m_ScenePath, this->m_ScriptingEngine);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(this->m_ScenePath);
 	}
 

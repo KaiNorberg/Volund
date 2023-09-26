@@ -5,6 +5,8 @@
 #include "Window/Window.h"
 #include "AssetManager/AssetManager.h"
 
+#include "Lua/ScriptingEngine/ScriptingEngine.h"
+
 namespace Volund
 {
 	class GameState
@@ -33,6 +35,7 @@ namespace Volund
 		Ref<Scene> m_Scene;
 		Ref<Dispatcher> m_Dispatcher;
 		Ref<AssetManager> m_AssetManager;	
+		Ref<ScriptingEngine> m_ScriptingEngine;
 	};
 }
 

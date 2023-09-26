@@ -12,28 +12,19 @@
 
 #include "Scene/Scene.h"
 
+#include "Lua/ScriptingEngine/ScriptingEngine.h"
+
 #include "ImageLoader/ImageLoader.h"
 
 #include "Lua/LuaDeserializer/LuaDeserializer.h"
 #include "Lua/LuaSerializer/LuaSerializer.h"
 
+#include "Lua/LuaUtils/LuaUtils.h"
+
 #define VOLUND_SET_COMPONENT(table, member, name) if (table[name] != sol::nil) {member = table[name];}
 
 namespace Volund
 {    
-    enum class LuaComponentID
-    {
-        Camera = 1,
-        CameraMovement = 2,
-        MeshRenderer = 3,
-        PointLight = 4,
-        //Script = 5,
-        Tag = 6,
-        Transform = 7,
-        SoundSource = 8,
-        SoundListener = 9
-    };
-
     template<>
     void AssetManager::Serialize<Material>(Ref<Material> material, const std::string& destinationPath)
     {
@@ -201,6 +192,43 @@ namespace Volund
 
                     serializer.StartTable();
                     serializer.Insert("ComponentType", (int)LuaComponentID::SoundListener);
+                    serializer.EndTable();
+                }
+
+                for (int i = 0; i < scene->ComponentAmount<ScriptComponent>(entity); i++)
+                {
+                    auto component = scene->GetComponent<ScriptComponent>(entity, i);
+                    Ref<Script> script = component->GetScript();
+
+                    serializer.StartTable();
+                    serializer.Insert("ComponentType", (int)LuaComponentID::ScriptComponent);
+
+                    if (script != nullptr)
+                    {
+                        serializer.Insert("Filepath", this->GetRelativePath(script->GetFilepath()));
+
+                        serializer.StartTable("PublicVars");
+                        for (const auto& publicVariable : script->GetPublicVariables())
+                        {
+                            if (script->IsVariable<int>(publicVariable))
+                            {
+                                auto rawValue = script->GetVariable<int>(publicVariable);
+                                serializer.Insert(publicVariable, rawValue);
+                            }
+                            else if (script->IsVariable<double>(publicVariable))
+                            {
+                                auto rawValue = script->GetVariable<double>(publicVariable);
+                                serializer.Insert(publicVariable, rawValue);
+                            }
+                            else if (script->IsVariable<std::string>(publicVariable))
+                            {
+                                auto rawValue = script->GetVariable<std::string>(publicVariable);
+                                serializer.Insert(publicVariable, rawValue);
+                            }
+                        }
+                        serializer.EndTable();
+                    }
+
                     serializer.EndTable();
                 }
 
@@ -374,6 +402,45 @@ namespace Volund
                 case LuaComponentID::SoundListener:
                 {
                     auto newComponent = scene->CreateComponent<SoundListener>(entity);
+                }
+                break;
+                case LuaComponentID::ScriptComponent:
+                {
+                    auto newComponent = scene->CreateComponent<ScriptComponent>(entity);
+
+                    auto script = this->LoadScript(this->GetAbsolutePath(componentTable["Filepath"]));
+                    newComponent->SetScript(script);
+
+                    sol::table publicVars = componentTable["PublicVars"];
+                    for (auto& [key, value] : publicVars)
+                    {
+                        if (!script->IsPublicVariable(key.as<std::string>()))
+                        {
+                            continue;
+                        }
+
+                        switch (value.get_type())
+                        {
+                        case sol::type::number:
+                        {
+                            if (value.is<int64_t>())
+                            {
+                                VOLUND_INFO("%s, %s", key.as<std::string>().c_str(), value.as<std::string>().c_str());
+                                script->SetVariable(key.as<std::string>(), value.as<uint64_t>());
+                            }
+                            else if (value.is<double>())
+                            {
+                                script->SetVariable(key.as<std::string>(), value.as<double>());
+                            }
+                        }
+                        break;
+                        case sol::type::string:
+                        {
+                            script->SetVariable(key.as<std::string>(), value.as<std::string>());
+                        }
+                        break;
+                        }
+                    }
                 }
                 break;
                 default:
@@ -567,28 +634,25 @@ namespace Volund
         return newAudioBuffer;
     }
 
+    Ref<Script> AssetManager::LoadScript(const std::string& filepath)
+    {
+        uint64_t lineId = VOLUND_INFO("Loading Script (%s)... ", filepath.c_str());
+
+        auto newScript = std::make_shared<Script>(this->GetAbsolutePath(filepath), this->m_ScriptingEngine.lock());
+
+        VOLUND_UPDATE_LINE(lineId, "Done ");
+
+        return newScript;
+    }
+
     std::string AssetManager::GetParentPath()
     {
         return this->m_ParentPath;
     }
 
-    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath)
+    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine)
     {
-        return Ref<AssetManager>(new AssetManager(Dispatcher, parentPath));
-    }
-
-    AssetManager::AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath)
-    {
-        if (fs::is_directory(parentPath))
-        {
-            this->m_ParentPath = parentPath;
-        }
-        else
-        {
-            this->m_ParentPath = fs::path(parentPath).parent_path().string();
-        }
-
-        this->m_Dispatcher = Dispatcher;
+        return Ref<AssetManager>(new AssetManager(Dispatcher, parentPath, scriptingEngine));
     }
 
     std::string AssetManager::GetRelativePath(const std::string& absolutePath)
@@ -634,5 +698,20 @@ namespace Volund
         std::replace(shortPath.begin(), shortPath.end(), VOLUND_INVALID_PATH_SEPERATOR, VOLUND_PATH_SEPERATOR);
 
         return shortPath;
+    }
+
+    AssetManager::AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine)
+    {
+        if (fs::is_directory(parentPath))
+        {
+            this->m_ParentPath = parentPath;
+        }
+        else
+        {
+            this->m_ParentPath = fs::path(parentPath).parent_path().string();
+        }
+
+        this->m_Dispatcher = Dispatcher;
+        this->m_ScriptingEngine = scriptingEngine;
     }
 }

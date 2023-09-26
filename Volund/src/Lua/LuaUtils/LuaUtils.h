@@ -16,7 +16,8 @@ namespace Volund
         Tag = 6,
         Transform = 7,
         SoundSource = 8,
-        SoundListener = 9
+        SoundListener = 9,
+        ScriptComponent = 10
     };
 }
 

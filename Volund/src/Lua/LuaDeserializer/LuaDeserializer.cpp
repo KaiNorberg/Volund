@@ -9,12 +9,12 @@
 
 namespace Volund
 {
-	void LuaPrint(sol::object object)
+	void LuaDeserializerPrint(sol::object object)
 	{
 		VOLUND_INFO(object.as<std::string>().c_str());
 	}
 
-	void LuaRequire(sol::this_state s, std::string filepath)
+	void LuaDeserializerRequire(sol::this_state s, std::string filepath)
 	{
 		VOLUND_WARNING("Data files are not allowed to require other files!");
 	}
@@ -66,8 +66,8 @@ namespace Volund
 		
 		//Global Functions
 
-		(*this->m_SolState)["require"] = LuaRequire;
-		(*this->m_SolState)["print"] = LuaPrint;
+		(*this->m_SolState)["require"] = LuaDeserializerRequire;
+		(*this->m_SolState)["print"] = LuaDeserializerPrint;
 
 		//Global UserTypes
 

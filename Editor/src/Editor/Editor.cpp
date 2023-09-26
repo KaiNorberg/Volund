@@ -19,8 +19,7 @@ void Editor::OnRun()
 	windowModule->GetWindow()->SetTitle("Volund Editor");
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
-	this->AttachModule<VL::AudioModule>();
-
+	auto audioModule = this->AttachModule<VL::AudioModule>();
 	auto imGuiModule = this->AttachModule<VL::ImGuiModule>();
 	auto context = this->AttachModule<EditorContext>();
 
@@ -28,10 +27,6 @@ void Editor::OnRun()
 	{
 		this->BackgroundCallback(); 
 	});
-
-	ImGuiIO& io = ImGui::GetIO();
-	io.IniFilename = "data/imgui.ini";
-	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
 	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
 	imGuiModule->AddWindow(outputWindow);
@@ -50,6 +45,10 @@ void Editor::OnRun()
 
 	auto materialWindow = VL::Ref<MaterialEditor>(new MaterialEditor(context));
 	imGuiModule->AddWindow(materialWindow);	
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.IniFilename = "data/imgui.ini";
+	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 }
 
 void Editor::OnTerminate()
@@ -155,7 +154,7 @@ void Editor::BackgroundCallback()
 			ImGui::EndMenu();
 		}
 
-		if (ImGui::BeginMenu("Widget"))
+		if (ImGui::BeginMenu("Window"))
 		{
 			if (ImGui::MenuItem("Not implemented"))
 			{

@@ -1,7 +1,5 @@
 #include "PCH/PCH.h"
 
-#include "Lua/LuaVec/LuaVec.h"
-
 #include "Scene/Component/Components.h"
 
 #include "Audio/AudioBuffer/AudioBuffer.h"
