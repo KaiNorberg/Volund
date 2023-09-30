@@ -89,7 +89,22 @@ namespace Volund
 		this->m_ScriptingEngine = scriptingEngine;
 
 		auto luaState = scriptingEngine->GetLuaState();
-		this->m_Table = luaState->script_file(filepath);
+		
+		sol::protected_function_result result;
+		try
+		{
+			this->m_Table = luaState->script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
+			{
+				sol::error err = pfr;
+				VOLUND_ERROR(err.what());
+
+				return pfr;
+			});
+		}
+		catch (const sol::error& e)
+		{
+			VOLUND_ERROR(e.what());
+		}
 
 		for (auto& publicVar : this->m_Table)
 		{

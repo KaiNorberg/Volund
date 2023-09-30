@@ -90,11 +90,12 @@ void EditorContext::Play()
 	{
 		return;
 	}
-	this->m_Paused = false;
 
 	this->SaveScene(this->m_GameState->GetScenePath());
 
 	SetDarkImGuiStyle();
+
+	this->m_Paused = false;
 }
 
 void EditorContext::Pause()
@@ -103,6 +104,7 @@ void EditorContext::Pause()
 	{
 		return;
 	}	
+
 	this->m_Paused = true;
 
 	this->LoadScene(this->m_GameState->GetScenePath());

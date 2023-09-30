@@ -33,65 +33,60 @@ namespace Volund
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
-        Task task = [this, material, absolutePath]()
-        {   
-            LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
+        LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 
-            //IMPORTANT: Remember to update the code below whenever a new component is implemented.
+        //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
-            serializer.StartTable();
+        serializer.StartTable();
 
-            std::string shaderPath = this->FetchFilepath(material->GetShader());
-            std::replace(shaderPath.begin(), shaderPath.end(), '\\', '/');
-            serializer.Insert(VOLUND_SERIAL_MATERIAL_SHADER, shaderPath);
+        std::string shaderPath = this->FetchFilepath(material->GetShader());
+        std::replace(shaderPath.begin(), shaderPath.end(), '\\', '/');
+        serializer.Insert(VOLUND_SERIAL_MATERIAL_SHADER, shaderPath);
 
-            serializer.StartTable(VOLUND_SERIAL_MATERIAL_UNIFORMS);
+        serializer.StartTable(VOLUND_SERIAL_MATERIAL_UNIFORMS);
 
-            for (auto& [key, value] : material->IntMap())
-            {
-                serializer.Insert(key, value);
-            }
+        for (auto& [key, value] : material->IntMap())
+        {
+            serializer.Insert(key, value);
+        }
 
-            for (auto& [key, value] : material->FloatMap())
-            {
-                serializer.Insert(key, value);
-            }
+        for (auto& [key, value] : material->FloatMap())
+        {
+            serializer.Insert(key, value);
+        }
 
-            for (auto& [key, value] : material->DoubleMap())
-            {
-                serializer.Insert(key, value);
-            }
+        for (auto& [key, value] : material->DoubleMap())
+        {
+            serializer.Insert(key, value);
+        }
 
-            for (auto& [key, value] : material->Vec2Map())
-            {
-                serializer.Insert(key, value);
-            }
+        for (auto& [key, value] : material->Vec2Map())
+        {
+            serializer.Insert(key, value);
+        }
 
-            for (auto& [key, value] : material->Vec3Map())
-            {
-                serializer.Insert(key, value);
-            }
+        for (auto& [key, value] : material->Vec3Map())
+        {
+            serializer.Insert(key, value);
+        }
 
-            for (auto& [key, value] : material->Vec4Map())
-            {
-                serializer.Insert(key, value);
-            }
+        for (auto& [key, value] : material->Vec4Map())
+        {
+            serializer.Insert(key, value);
+        }
 
-            for (auto& [key, value] : material->TextureMap())
-            {
-                std::string texturePath = this->FetchFilepath(value);
-                std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
-                serializer.Insert(key, texturePath);
-            }
+        for (auto& [key, value] : material->TextureMap())
+        {
+            std::string texturePath = this->FetchFilepath(value);
+            std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
+            serializer.Insert(key, texturePath);
+        }
 
-            serializer.EndTable();
+        serializer.EndTable();
 
-            serializer.EndTable();
+        serializer.EndTable();
 
-            serializer.WriteToFile(absolutePath);
-        };
-
-        this->m_Dispatcher->Enqueue(Job(task, nullptr));
+        serializer.WriteToFile(absolutePath);
     }
 
     template<>
@@ -99,157 +94,152 @@ namespace Volund
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
-        Task task = [this, scene, absolutePath]()
+        LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
+
+        //IMPORTANT: Remember to update the code below whenever a new component is implemented.
+
+        serializer.StartTable();
+        for (auto& [entity, polyContainer] : (*scene))
         {
-            LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
-
-            //IMPORTANT: Remember to update the code below whenever a new component is implemented.
-
             serializer.StartTable();
-            for (auto& [entity, polyContainer] : (*scene))
+
+            for (int i = 0; i < scene->ComponentAmount<Tag>(entity); i++)
             {
+                auto component = scene->GetComponent<Tag>(entity, i);
+
                 serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::Tag);
+                serializer.Insert("String", component->String);
+                serializer.EndTable();
+            }
 
-                for (int i = 0; i < scene->ComponentAmount<Tag>(entity); i++)
+            for (int i = 0; i < scene->ComponentAmount<Transform>(entity); i++)
+            {
+                auto component = scene->GetComponent<Transform>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::Transform);
+                serializer.Insert("Position", component->Position);
+                serializer.Insert("Rotation", component->GetRotation());
+                serializer.Insert("Scale", component->Scale);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<Camera>(entity); i++)
+            {
+                auto component = scene->GetComponent<Camera>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::Camera);
+                serializer.Insert("FOV", component->FOV);
+                serializer.Insert("NearPlane", component->NearPlane);
+                serializer.Insert("FarPlane", component->FarPlane);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<CameraMovement>(entity); i++)
+            {
+                auto component = scene->GetComponent<CameraMovement>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::CameraMovement);
+                serializer.Insert("Speed", component->Speed);
+                serializer.Insert("Sensitivity", component->Sensitivity);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<MeshRenderer>(entity); i++)
+            {
+                auto component = scene->GetComponent<MeshRenderer>(entity, i);
+
+                std::string meshPath = this->FetchFilepath(component->GetMesh());
+                std::replace(meshPath.begin(), meshPath.end(), '\\', '/');
+
+                std::string materialPath = this->FetchFilepath(component->GetMaterial());
+                std::replace(materialPath.begin(), materialPath.end(), '\\', '/');
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::MeshRenderer);
+                serializer.Insert("Mesh", meshPath);
+                serializer.Insert("Material", materialPath);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<PointLight>(entity); i++)
+            {
+                auto component = scene->GetComponent<PointLight>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::PointLight);
+                serializer.Insert("Color", component->Color);
+                serializer.Insert("Brightness", component->Brightness);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<SoundSource>(entity); i++)
+            {
+                auto component = scene->GetComponent<SoundSource>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::SoundSource);
+                serializer.Insert("Looping", component->GetLooping());
+                serializer.Insert("Pitch", component->GetPitch());
+                serializer.Insert("Gain", component->GetGain());
+                serializer.Insert("AutoPlay", component->AutoPlay);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<SoundListener>(entity); i++)
+            {
+                auto component = scene->GetComponent<SoundListener>(entity, i);
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::SoundListener);
+                serializer.EndTable();
+            }
+
+            for (int i = 0; i < scene->ComponentAmount<ScriptComponent>(entity); i++)
+            {
+                auto component = scene->GetComponent<ScriptComponent>(entity, i);
+                Ref<Script> script = component->GetScript();
+
+                serializer.StartTable();
+                serializer.Insert("ComponentType", (int)LuaComponentID::ScriptComponent);
+
+                if (script != nullptr)
                 {
-                    auto component = scene->GetComponent<Tag>(entity, i);
+                    serializer.Insert("Filepath", this->GetRelativePath(script->GetFilepath()));
 
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::Tag);
-                    serializer.Insert("String", component->String);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<Transform>(entity); i++)
-                {
-                    auto component = scene->GetComponent<Transform>(entity, i);
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::Transform);
-                    serializer.Insert("Position", component->Position);
-                    serializer.Insert("Rotation", component->GetRotation());
-                    serializer.Insert("Scale", component->Scale);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<Camera>(entity); i++)
-                {
-                    auto component = scene->GetComponent<Camera>(entity, i);
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::Camera);
-                    serializer.Insert("FOV", component->FOV);
-                    serializer.Insert("NearPlane", component->NearPlane);
-                    serializer.Insert("FarPlane", component->FarPlane);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<CameraMovement>(entity); i++)
-                {
-                    auto component = scene->GetComponent<CameraMovement>(entity, i);
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::CameraMovement);
-                    serializer.Insert("Speed", component->Speed);
-                    serializer.Insert("Sensitivity", component->Sensitivity);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<MeshRenderer>(entity); i++)
-                {
-                    auto component = scene->GetComponent<MeshRenderer>(entity, i);
-
-                    std::string meshPath = this->FetchFilepath(component->GetMesh());
-                    std::replace(meshPath.begin(), meshPath.end(), '\\', '/');
-
-                    std::string materialPath = this->FetchFilepath(component->GetMaterial());
-                    std::replace(materialPath.begin(), materialPath.end(), '\\', '/');
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::MeshRenderer);
-                    serializer.Insert("Mesh", meshPath);
-                    serializer.Insert("Material", materialPath);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<PointLight>(entity); i++)
-                {
-                    auto component = scene->GetComponent<PointLight>(entity, i);
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::PointLight);
-                    serializer.Insert("Color", component->Color);
-                    serializer.Insert("Brightness", component->Brightness);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<SoundSource>(entity); i++)
-                {
-                    auto component = scene->GetComponent<SoundSource>(entity, i);
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::SoundSource);
-                    serializer.Insert("Looping", component->GetLooping());
-                    serializer.Insert("Pitch", component->GetPitch());
-                    serializer.Insert("Gain", component->GetGain());
-                    serializer.Insert("AutoPlay", component->AutoPlay);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<SoundListener>(entity); i++)
-                {
-                    auto component = scene->GetComponent<SoundListener>(entity, i);
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::SoundListener);
-                    serializer.EndTable();
-                }
-
-                for (int i = 0; i < scene->ComponentAmount<ScriptComponent>(entity); i++)
-                {
-                    auto component = scene->GetComponent<ScriptComponent>(entity, i);
-                    Ref<Script> script = component->GetScript();
-
-                    serializer.StartTable();
-                    serializer.Insert("ComponentType", (int)LuaComponentID::ScriptComponent);
-
-                    if (script != nullptr)
+                    serializer.StartTable("PublicVars");
+                    for (const auto& publicVariable : script->GetPublicVariables())
                     {
-                        serializer.Insert("Filepath", this->GetRelativePath(script->GetFilepath()));
-
-                        serializer.StartTable("PublicVars");
-                        for (const auto& publicVariable : script->GetPublicVariables())
+                        if (script->IsVariable<int>(publicVariable))
                         {
-                            if (script->IsVariable<int>(publicVariable))
-                            {
-                                auto rawValue = script->GetVariable<int>(publicVariable);
-                                serializer.Insert(publicVariable, rawValue);
-                            }
-                            else if (script->IsVariable<double>(publicVariable))
-                            {
-                                auto rawValue = script->GetVariable<double>(publicVariable);
-                                serializer.Insert(publicVariable, rawValue);
-                            }
-                            else if (script->IsVariable<std::string>(publicVariable))
-                            {
-                                auto rawValue = script->GetVariable<std::string>(publicVariable);
-                                serializer.Insert(publicVariable, rawValue);
-                            }
+                            auto rawValue = script->GetVariable<int>(publicVariable);
+                            serializer.Insert(publicVariable, rawValue);
                         }
-                        serializer.EndTable();
+                        else if (script->IsVariable<double>(publicVariable))
+                        {
+                            auto rawValue = script->GetVariable<double>(publicVariable);
+                            serializer.Insert(publicVariable, rawValue);
+                        }
+                        else if (script->IsVariable<std::string>(publicVariable))
+                        {
+                            auto rawValue = script->GetVariable<std::string>(publicVariable);
+                            serializer.Insert(publicVariable, rawValue);
+                        }
                     }
-
                     serializer.EndTable();
                 }
 
                 serializer.EndTable();
             }
+
             serializer.EndTable();
+        }
+        serializer.EndTable();
 
-            serializer.WriteToFile(absolutePath);
-        };
-
-        this->m_Dispatcher->Enqueue(Job(task, nullptr));
+        serializer.WriteToFile(absolutePath);
     }
 
     template<>

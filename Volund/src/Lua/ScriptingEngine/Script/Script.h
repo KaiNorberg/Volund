@@ -2,6 +2,8 @@
 
 #include "../LuaVec/LuaVec.h"
 
+#include "Lua/LuaUtils/LuaUtils.h"
+
 namespace Volund
 {
 	class ScriptingEngine;

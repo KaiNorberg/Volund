@@ -13,6 +13,12 @@ namespace Volund
 		ScriptingEngine();
 
 	private:
+		
+		static void LuaPrint(sol::object object);
+
+		static void LuaRequire(sol::this_state s, std::string filepath);
+
+		static inline Logger m_LuaLogger = Logger("LUA");
 
 		Ref<sol::state> m_LuaState;
 	};

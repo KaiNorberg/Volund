@@ -13,6 +13,8 @@ namespace Volund
 		
 		bool Busy();
 
+		uint8_t GetActiveWorkerCount();
+
 		ThreadPool(uint8_t threadCount);
 
 		~ThreadPool();
@@ -23,7 +25,7 @@ namespace Volund
 
 		bool m_ShouldTerminate = false;
 
-		int m_ActiveWorkers = 0;
+		uint8_t m_ActiveWorkerCount = 0;
 
 		std::queue<Task> m_TaskQueue;
 		std::vector<std::thread> m_Workers;

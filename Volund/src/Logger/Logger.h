@@ -56,9 +56,9 @@ namespace Volund
 		std::vector<LogLine>::iterator begin();
 		std::vector<LogLine>::iterator end();
 
-	private:
+		Logger(std::string const& name);
 
-		Logger(std::string_view name);
+	private:
 
 		template<typename... Args>
 		std::string FormatString(LogSeverity severity, const char* format, Args&&... args);

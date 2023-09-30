@@ -12,10 +12,7 @@ namespace Volund
 	{
 		this->m_Script = script;		
 		
-		if (this->m_Script != nullptr)
-		{
-			this->m_Script->CallFunction("OnCreate");
-		}
+		this->m_ScriptStarted = false;
 	}
 
 	Ref<Script> ScriptComponent::GetScript()
@@ -43,6 +40,12 @@ namespace Volund
 		case VOLUND_EVENT_TYPE_UPDATE:
 		{	
 			float TS = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
+
+			if (!this->m_ScriptStarted)
+			{
+				this->m_Script->CallFunction("OnStart");
+				this->m_ScriptStarted = true;
+			}
 
 			this->m_Script->CallFunction("OnUpdate", TS);
 		}

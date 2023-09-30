@@ -81,6 +81,11 @@ namespace Volund
 		m_NewLineId++;
 		m_Lines.push_back({m_NewLineId, severity, line});
 
+		if (m_Lines.size() > 100)
+		{
+			m_Lines.erase(m_Lines.begin(), m_Lines.begin() + 50);
+		}
+
 		return m_NewLineId;
 	}
 
@@ -113,7 +118,7 @@ namespace Volund
 		}
 	}
 
-	Logger::Logger(std::string_view name)
+	Logger::Logger(std::string const& name)
 	{
 		this->m_Name = name;
 	}

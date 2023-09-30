@@ -21,8 +21,24 @@ namespace Volund
 		this->m_JobQueue.push(job);
 	}
 
+	void Dispatcher::Enqueue(const Task& deferredTask)
+	{
+		this->m_DeferredQueue.push(deferredTask);
+	}
+
 	void Dispatcher::Dispatch()
 	{
+		if (this->m_JobQueue.empty() && this->m_CleanupQueue.empty() && this->m_ThreadPool->GetActiveWorkerCount() == 0)
+		{
+			while (!this->m_DeferredQueue.empty())
+			{
+				Task deferredTask = this->m_DeferredQueue.front();
+				this->m_DeferredQueue.pop();
+
+				deferredTask();
+			}
+		}
+
 		while (!this->m_EventQueue.empty())
 		{
 			Event e = this->m_EventQueue.front();
@@ -70,7 +86,7 @@ namespace Volund
 			this->m_CleanupQueue.pop();
 
 			cleanupTask();
-		}
+		}		
 	}
 
 	Dispatcher::Dispatcher(std::function<void(const Event&)> eventCallback)

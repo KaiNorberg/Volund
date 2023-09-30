@@ -15,6 +15,8 @@ namespace Volund
 
 		void Enqueue(const Job& job);
 
+		void Enqueue(const Task& deferredTask);
+
 		void Dispatch();
 
 		Dispatcher(std::function<void(const Event&)> eventCallback);
@@ -32,5 +34,6 @@ namespace Volund
 		std::queue<Job> m_JobQueue;
 		std::queue<Task> m_CleanupQueue;
 		std::queue<Event> m_EventQueue;
+		std::queue<Task> m_DeferredQueue;
 	};
 }

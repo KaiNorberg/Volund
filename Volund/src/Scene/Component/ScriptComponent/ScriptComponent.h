@@ -26,6 +26,8 @@ namespace Volund
 
 	private:
 
+		bool m_ScriptStarted = false;
+
 		Ref<Script> m_Script;
 	};
 }
