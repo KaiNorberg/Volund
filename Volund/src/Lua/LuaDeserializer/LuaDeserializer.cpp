@@ -108,6 +108,6 @@ namespace Volund
 
 	LuaDeserializer::~LuaDeserializer()
 	{
-
+		this->m_Table.reset();
 	}
 }

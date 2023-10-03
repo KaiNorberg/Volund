@@ -5,62 +5,6 @@
 
 namespace Volund
 {
-	template<>
-	inline void Script::SetVariable<Vec4>(const std::string& identifier, Vec4 value)
-	{
-		this->m_Table[identifier] = LuaVec4(value);
-	}
-
-	template<>
-	inline bool Script::IsVariable<Vec4>(const std::string& identifier)
-	{
-		return this->m_Table[identifier].is<LuaVec4>();
-	}
-
-	template<>
-	inline Vec4 Script::GetVariable<Vec4>(const std::string& identifier)
-	{
-		return ((LuaVec4)this->m_Table[identifier]).GLM();
-	}
-
-
-	template<>
-	inline void Script::SetVariable<Vec3>(const std::string& identifier, Vec3 value)
-	{
-		this->m_Table[identifier] = LuaVec3(value);
-	}
-
-	template<>
-	inline bool Script::IsVariable<Vec3>(const std::string& identifier)
-	{
-		return this->m_Table[identifier].is<LuaVec3>();
-	}
-
-	template<>
-	inline Vec3 Script::GetVariable<Vec3>(const std::string& identifier)
-	{
-		return ((LuaVec3)this->m_Table[identifier]).GLM();
-	}
-
-
-	template<>
-	inline void Script::SetVariable<Vec2>(const std::string& identifier, Vec2 value)
-	{
-		this->m_Table[identifier] = LuaVec2(value);
-	}
-
-	template<>
-	inline bool Script::IsVariable<Vec2>(const std::string& identifier)
-	{
-		return this->m_Table[identifier].is<LuaVec2>();
-	}
-
-	template<>
-	inline Vec2 Script::GetVariable<Vec2>(const std::string& identifier)
-	{
-		return ((LuaVec2)this->m_Table[identifier]).GLM();
-	}
-
 	std::string Script::GetFilepath()
 	{
 		return this->m_Filepath;

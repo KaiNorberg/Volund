@@ -228,6 +228,21 @@ namespace Volund
                             auto rawValue = script->GetVariable<std::string>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
+                        else if (script->IsVariable<Vec2>(publicVariable))
+                        {
+                            auto rawValue = script->GetVariable<Vec2>(publicVariable);
+                            serializer.Insert(publicVariable, rawValue);
+                        }
+                        else if (script->IsVariable<Vec3>(publicVariable))
+                        {
+                            auto rawValue = script->GetVariable<Vec3>(publicVariable);
+                            serializer.Insert(publicVariable, rawValue);
+                        }
+                        else if (script->IsVariable<Vec4>(publicVariable))
+                        {
+                            auto rawValue = script->GetVariable<Vec4>(publicVariable);
+                            serializer.Insert(publicVariable, rawValue);
+                        }
                     }
                     serializer.EndTable();
                 }
@@ -414,25 +429,29 @@ namespace Volund
                     sol::table publicVars = componentTable["PublicVars"];
                     for (auto& [key, value] : publicVars)
                     {
-                        switch (value.get_type())
+                        if (value.is<int64_t>())
                         {
-                        case sol::type::number:
-                        {
-                            if (value.is<int64_t>())
-                            {
-                                script->SetVariable(key.as<std::string>(), value.as<uint64_t>());
-                            }
-                            else if (value.is<double>())
-                            {
-                                script->SetVariable(key.as<std::string>(), value.as<double>());
-                            }
+                            script->SetVariable(key.as<std::string>(), value.as<uint64_t>());
                         }
-                        break;
-                        case sol::type::string:
+                        else if (value.is<double>())
+                        {
+                            script->SetVariable(key.as<std::string>(), value.as<double>());
+                        }
+                        else if (value.is<std::string>())
                         {
                             script->SetVariable(key.as<std::string>(), value.as<std::string>());
                         }
-                        break;
+                        else if (value.is<Vec2>())
+                        {
+                            script->SetVariable(key.as<std::string>(), value.as<Vec2>());
+                        }
+                        else if (value.is<Vec3>())
+                        {
+                            script->SetVariable(key.as<std::string>(), value.as<Vec3>());
+                        }
+                        else if (value.is<Vec4>())
+                        {
+                            script->SetVariable(key.as<std::string>(), value.as<Vec4>());
                         }
                     }
                 }
@@ -627,11 +646,20 @@ namespace Volund
     {
         uint64_t lineId = VOLUND_INFO("Loading Script (%s)... ", filepath.c_str());
 
-        auto newScript = std::make_shared<Script>(this->GetAbsolutePath(filepath), this->m_ScriptingEngine.lock());
+        if (!this->m_ScriptingEngine.expired())
+        {
+            auto newScript = std::make_shared<Script>(this->GetAbsolutePath(filepath), this->m_ScriptingEngine.lock());
 
-        VOLUND_UPDATE_LINE(lineId, "Done ");
+            VOLUND_UPDATE_LINE(lineId, "Done ");
 
-        return newScript;
+            return newScript;
+        }
+        else
+        {
+            VOLUND_UPDATE_LINE(lineId, "ERROR ");
+
+            return nullptr;
+        }
     }
 
     std::string AssetManager::GetParentPath()

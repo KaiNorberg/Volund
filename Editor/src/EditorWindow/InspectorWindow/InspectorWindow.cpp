@@ -185,6 +185,30 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 							script->SetVariable(identifier, rawValue);
 						}
 					}
+					else if (script->IsVariable<VL::Vec2>(identifier))
+					{
+						auto rawValue = script->GetVariable<VL::Vec2>(identifier);
+						if (ImGuiVec2(identifier, rawValue))
+						{
+							script->SetVariable(identifier, rawValue);
+						}
+					}
+					else if (script->IsVariable<VL::Vec3>(identifier))
+					{
+						auto rawValue = script->GetVariable<VL::Vec3>(identifier);
+						if (ImGuiVec3(identifier, rawValue))
+						{
+							script->SetVariable(identifier, rawValue);
+						}
+					}
+					else if (script->IsVariable<VL::Vec4>(identifier))
+					{
+						auto rawValue = script->GetVariable<VL::Vec4>(identifier);
+						if (ImGuiVec4(identifier, rawValue))
+						{
+							script->SetVariable(identifier, rawValue);
+						}
+					}
 				}
 			}
 		});
