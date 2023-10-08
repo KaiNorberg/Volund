@@ -27,11 +27,14 @@ void EditorContext::Procedure(const VL::Event& e)
 	switch (e.Type)
 	{
 	case EDITOR_EVENT_TYPE_RELOAD_SCENE:
-	{
-		const auto scene = this->GetScene();
-		if (scene != nullptr)
+	{		
+		if (this->m_GameState != nullptr)
 		{
-			this->LoadScene(this->GetScenePath());
+			const auto scene = this->GetScene();
+			if (scene != nullptr)
+			{
+				this->LoadScene(this->m_GameState->GetScenePath());
+			}
 		}
 	}
 	break;
@@ -46,10 +49,13 @@ void EditorContext::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_EVENT_TYPE_SAVE_SCENE:
 	{		
-		const std::string filepath = this->GetScenePath();
-		if (!filepath.empty())
+		if (this->m_GameState != nullptr)
 		{
-			this->SaveScene(filepath);
+			const std::string filepath = this->m_GameState->GetScenePath();
+			if (!filepath.empty())
+			{
+				this->SaveScene(filepath);
+			}
 		}
 	}
 	break;
@@ -110,30 +116,6 @@ void EditorContext::Pause()
 	this->LoadScene(this->m_GameState->GetScenePath());
 
 	SetDefaultImGuiStyle();
-}
-
-std::string EditorContext::GetScenePath()
-{
-	if (this->m_GameState != nullptr)
-	{
-		return this->m_GameState->GetScenePath();
-	}
-	else
-	{
-		return "";
-	}
-}
-
-std::string EditorContext::GetParentPath()
-{
-	if (this->m_GameState != nullptr)
-	{
-		return this->m_GameState->GetParentPath();
-	}
-	else
-	{
-		return "";
-	}
 }
 
 VL::Ref<VL::AssetManager> EditorContext::GetAssetmanager()

@@ -7,8 +7,14 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 	switch (e.Type)
 	{
 	case VOLUND_EVENT_TYPE_RENDER:
-	{
-		fs::path parentDir = this->m_Context->GetParentPath();
+	{		
+		auto assetManager = this->m_Context->GetAssetmanager();
+
+		fs::path parentDir;
+		if (assetManager != nullptr)
+		{
+			parentDir = assetManager->GetParentPath();
+		}
 
 		if (parentDir != this->m_OldParentDir)
 		{

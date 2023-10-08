@@ -14,9 +14,10 @@
 void Editor::OnRun()
 {
 	auto windowModule = this->AttachModule<VL::WindowModule>();
+	auto window = windowModule->GetWindow();
 
-	windowModule->GetWindow()->SetIcon("data/icons/logo.png");
-	windowModule->GetWindow()->SetTitle("Volund Editor");
+	window->SetIcon("data/icons/logo.png");
+	window->SetTitle("Volund Editor");
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
 	auto audioModule = this->AttachModule<VL::AudioModule>();

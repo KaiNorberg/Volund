@@ -23,10 +23,6 @@ public:
 
 	void Pause();
 
-	std::string GetScenePath();
-
-	std::string GetParentPath();
-
 	VL::Ref<VL::AssetManager> GetAssetmanager();
 
 	VL::Ref<VL::Scene> GetScene();
