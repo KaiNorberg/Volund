@@ -48,7 +48,7 @@ namespace Volund
 			std::cout << string << '\n';
 
 			#ifdef VOLUND_DIST
-				Dialog::Message("ERROR!", format, "ok", "error");
+				Dialog::Message("ERROR!", string, "ok", "error");
 			#endif
 
 			abort();
