@@ -43,17 +43,6 @@ namespace Volund
 
 	uint64_t Logger::Print(LogSeverity severity, const std::string& string)
 	{
-		if (severity == LogSeverity::Error)
-		{
-			std::cout << string << '\n';
-
-			#ifdef VOLUND_DIST
-				Dialog::Message("ERROR!", string, "ok", "error");
-			#endif
-
-			abort();
-		}
-
 		std::string line = VOLUND_LOGGERCOLOR_RED;
 		line += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " +*/ this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 		switch (severity)
@@ -77,6 +66,15 @@ namespace Volund
 		line += string;
 
 		std::cout << line << '\n';
+
+		if (severity == LogSeverity::Error)
+		{
+			#ifdef VOLUND_DIST
+				Dialog::Message("ERROR!", string, "ok", "error");
+			#endif
+
+			abort();
+		}
 
 		m_NewLineId++;
 		m_Lines.push_back({m_NewLineId, severity, line});

@@ -1,10 +1,10 @@
 #include "PCH/PCH.h"
 
-#include "LuaSerializer.h"
+#include "Serializer.h"
 
 namespace Volund
 {
-	void LuaSerializer::WriteToFile(std::string const& filepath)
+	void Serializer::WriteToFile(const std::string& filepath)
 	{
 		VOLUND_INFO("Writing serialized table to (%s)...", filepath.c_str());
 
@@ -33,12 +33,12 @@ namespace Volund
 		}
 	}
 
-	std::string LuaSerializer::GetOutput()
+	std::string Serializer::GetOutput()
 	{
 		return this->m_Output;
 	}
 
-	void LuaSerializer::StartTable(std::string const& name)
+	void Serializer::StartTable(std::string const& name)
 	{
 		if (!this->m_Output.empty() && !this->m_Output.ends_with("{\n"))
 		{
@@ -54,7 +54,7 @@ namespace Volund
 		this->m_Indentation += 1;
 	}
 
-	void LuaSerializer::EndTable()
+	void Serializer::EndTable()
 	{
 		this->m_Indentation -= 1;
 		this->m_Output += "\n";
@@ -62,32 +62,32 @@ namespace Volund
 		this->m_Output += "}";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, int value)
+	void Serializer::Insert(const std::string& name, LuaInt value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, float value)
+	void Serializer::Insert(const std::string& name, LuaBool value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, double value)
+	void Serializer::Insert(const std::string& name, LuaFloat value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, Vec2 const& value)
+	void Serializer::Insert(const std::string& name, const Vec2& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec2:new(" + std::to_string(value.x) +
 			", " + std::to_string(value.y) + ")";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, Vec3 const& value)
+	void Serializer::Insert(const std::string& name, const Vec3& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec3:new(" + std::to_string(value.x) +
@@ -95,7 +95,7 @@ namespace Volund
 			", " + std::to_string(value.z) + ")";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, Vec4 const& value)
+	void Serializer::Insert(const std::string& name, const Vec4& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec4:new(" + std::to_string(value.x) +
@@ -104,7 +104,7 @@ namespace Volund
 			", " + std::to_string(value.w) + ")";
 	}
 
-	void LuaSerializer::Insert(std::string const& name, std::string const& value, bool asString)
+	void Serializer::Insert(const std::string& name, const LuaString& value, bool asString)
 	{
 		this->InsertName(name);
 
@@ -121,12 +121,12 @@ namespace Volund
 		}
 	}
 
-	LuaSerializer::LuaSerializer(const std::string& fileType)
+	Serializer::Serializer(const std::string& fileType)
 	{
 		this->m_FileType = fileType;
 	}
 
-	void LuaSerializer::InsertName(std::string const& name)
+	void Serializer::InsertName(const std::string& name)
 	{
 		if (!this->m_Output.empty() && this->m_Output.back() != '\n')
 		{
@@ -139,7 +139,7 @@ namespace Volund
 		}
 	}
 
-	void LuaSerializer::Indent()
+	void Serializer::Indent()
 	{
 		for (int i = 0; i < this->m_Indentation; i++)
 		{

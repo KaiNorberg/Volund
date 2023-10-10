@@ -10,7 +10,6 @@ namespace Volund
 	public:
 
 		void SetInt(const std::string& name, int value);
-		void SetFloat(const std::string& name, float value);
 		void SetDouble(const std::string& name, double value);
 		void SetVec2(const std::string& name, const Vec2& value);
 		void SetVec3(const std::string& name, const Vec3& value);
@@ -21,7 +20,6 @@ namespace Volund
 		void SetMatrix(const std::string& name, const Mat4x4& value);
 
 		std::map<std::string, int>& IntMap();
-		std::map<std::string, float>& FloatMap();
 		std::map<std::string, double>& DoubleMap();
 		std::map<std::string, Vec2>& Vec2Map();
 		std::map<std::string, Vec3>& Vec3Map();
@@ -46,7 +44,6 @@ namespace Volund
 	private:
 
 		std::map<std::string, int> m_IntUniforms;
-		std::map<std::string, float> m_FloatUniforms;
 		std::map<std::string, double> m_DoubleUniforms;
 		std::map<std::string, Vec2> m_Vec2Uniforms;
 		std::map<std::string, Vec3> m_Vec3Uniforms;

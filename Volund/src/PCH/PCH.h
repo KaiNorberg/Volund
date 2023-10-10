@@ -29,6 +29,8 @@
 #include <ranges>
 #include <charconv>
 
+#include <sol/sol.hpp>
+
 #include <glm/glm/glm.hpp>
 #include <glm/glm/vec2.hpp>
 #include <glm/glm/gtx/norm.hpp>

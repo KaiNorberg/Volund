@@ -1,7 +1,7 @@
 #include "PCH/PCH.h"
 #include "GameState.h"
 
-#include "Lua/LuaDeserializer/LuaDeserializer.h"
+#include "Lua/Deserializer/Deserializer.h"
 
 namespace Volund
 {

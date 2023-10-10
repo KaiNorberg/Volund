@@ -16,12 +16,13 @@
 
 #include "ImageLoader/ImageLoader.h"
 
-#include "Lua/LuaDeserializer/LuaDeserializer.h"
-#include "Lua/LuaSerializer/LuaSerializer.h"
+#include "Lua/Deserializer/Deserializer.h"
+#include "Lua/Serializer/Serializer.h"
 
 #include "Lua/LuaUtils/LuaUtils.h"
 
-#define VOLUND_SET_COMPONENT(table, member, name) if (table[name] != sol::nil) {member = table[name];}
+#define VOLUND_SET_COMPONENT(table, member, name, type) if (table.Contains<type>(name)) {member = ((type)table[name]);}
+#define VOLUND_SET_COMPONENT_VIA_FUNC(table, func, name, type) if (table.Contains<type>(name)) {func((type)table[name]);}
 
 #define VOLUND_SERIAL_MATERIAL_SHADER "Shader"
 #define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
@@ -33,7 +34,7 @@ namespace Volund
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
-        LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
+        Serializer serializer = Serializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 
         //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
@@ -47,12 +48,7 @@ namespace Volund
 
         for (auto& [key, value] : material->IntMap())
         {
-            serializer.Insert(key, value);
-        }
-
-        for (auto& [key, value] : material->FloatMap())
-        {
-            serializer.Insert(key, value);
+            serializer.Insert(key, (LuaInt)value);
         }
 
         for (auto& [key, value] : material->DoubleMap())
@@ -94,7 +90,7 @@ namespace Volund
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
-        LuaSerializer serializer = LuaSerializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
+        Serializer serializer = Serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 
         //IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
@@ -108,7 +104,7 @@ namespace Volund
                 auto component = scene->GetComponent<Tag>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::Tag);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::Tag);
                 serializer.Insert("String", component->String);
                 serializer.EndTable();
             }
@@ -118,7 +114,7 @@ namespace Volund
                 auto component = scene->GetComponent<Transform>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::Transform);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::Transform);
                 serializer.Insert("Position", component->Position);
                 serializer.Insert("Rotation", component->GetRotation());
                 serializer.Insert("Scale", component->Scale);
@@ -130,7 +126,7 @@ namespace Volund
                 auto component = scene->GetComponent<Camera>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::Camera);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::Camera);
                 serializer.Insert("FOV", component->FOV);
                 serializer.Insert("NearPlane", component->NearPlane);
                 serializer.Insert("FarPlane", component->FarPlane);
@@ -142,7 +138,7 @@ namespace Volund
                 auto component = scene->GetComponent<CameraMovement>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::CameraMovement);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::CameraMovement);
                 serializer.Insert("Speed", component->Speed);
                 serializer.Insert("Sensitivity", component->Sensitivity);
                 serializer.EndTable();
@@ -159,7 +155,7 @@ namespace Volund
                 std::replace(materialPath.begin(), materialPath.end(), '\\', '/');
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::MeshRenderer);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::MeshRenderer);
                 serializer.Insert("Mesh", meshPath);
                 serializer.Insert("Material", materialPath);
                 serializer.EndTable();
@@ -170,7 +166,7 @@ namespace Volund
                 auto component = scene->GetComponent<PointLight>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::PointLight);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::PointLight);
                 serializer.Insert("Color", component->Color);
                 serializer.Insert("Brightness", component->Brightness);
                 serializer.EndTable();
@@ -181,7 +177,7 @@ namespace Volund
                 auto component = scene->GetComponent<SoundSource>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::SoundSource);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::SoundSource);
                 serializer.Insert("Looping", component->GetLooping());
                 serializer.Insert("Pitch", component->GetPitch());
                 serializer.Insert("Gain", component->GetGain());
@@ -194,7 +190,7 @@ namespace Volund
                 auto component = scene->GetComponent<SoundListener>(entity, i);
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::SoundListener);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::SoundListener);
                 serializer.EndTable();
             }
 
@@ -204,7 +200,7 @@ namespace Volund
                 Ref<Script> script = component->GetScript();
 
                 serializer.StartTable();
-                serializer.Insert("ComponentType", (int)LuaComponentID::ScriptComponent);
+                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::ScriptComponent);
 
                 if (script != nullptr)
                 {
@@ -213,19 +209,19 @@ namespace Volund
                     serializer.StartTable("PublicVars");
                     for (const auto& publicVariable : script->GetPublicVariables())
                     {
-                        if (script->IsVariable<int>(publicVariable))
+                        if (script->IsVariable<LuaInt>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<int>(publicVariable);
+                            auto rawValue = script->GetVariable<LuaInt>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<double>(publicVariable))
+                        else if (script->IsVariable<LuaFloat>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<double>(publicVariable);
+                            auto rawValue = script->GetVariable<LuaFloat>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<std::string>(publicVariable))
+                        else if (script->IsVariable<LuaString>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<std::string>(publicVariable);
+                            auto rawValue = script->GetVariable<LuaString>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
                         else if (script->IsVariable<Vec2>(publicVariable))
@@ -262,7 +258,7 @@ namespace Volund
     {
         auto scene = std::make_shared<Scene>();
 
-        LuaDeserializer sceneData = LuaDeserializer(filepath, VOLUND_SERIAL_FILE_TYPE_SCENE);
+        Deserializer sceneData = Deserializer(filepath, VOLUND_SERIAL_FILE_TYPE_SCENE);
 
         if (!sceneData.Valid())
         {
@@ -273,27 +269,27 @@ namespace Volund
 
         for (auto& [key, value] : sceneData)
         {
-            if (!value.is<sol::table>())
+            if (!value->Is<SerialTable>())
             {
                 VOLUND_WARNING("Invalid entity found in scene file!");
                 return scene;
             }
 
-            sol::table entityTable = value.as<sol::table>();
+            SerialTable entityTable = value->As<SerialTable>();
 
             Entity entity = scene->RegisterNewEntity();
 
             for (auto& [key, value] : entityTable)
             {
-                if (!value.is<sol::table>())
+                if (!value->Is<SerialTable>())
                 {
                     VOLUND_WARNING("Invalid component found in scene file!");
                     return scene;
                 }
 
-                sol::table componentTable = value.as<sol::table>();
+                SerialTable componentTable = value->As<SerialTable>();
 
-                int64_t componentId = componentTable["ComponentType"];
+                LuaInt componentId = componentTable["ComponentType"];
 
                 switch ((LuaComponentID)componentId)
                 {
@@ -301,47 +297,37 @@ namespace Volund
                 {
                     auto newComponent = scene->CreateComponent<Transform>(entity);
 
-                    if (componentTable["Position"] != sol::lua_nil)
-                    {
-                        newComponent->Position = componentTable["Position"];
-                    }
-                    if (componentTable["Scale"] != sol::lua_nil)
-                    {
-                        newComponent->Scale = componentTable["Scale"];
-                    }
-                    if (componentTable["Rotation"] != sol::lua_nil)
-                    {
-                        Vec3 rotation = componentTable["Rotation"];
-                        newComponent->SetRotation(rotation);
-                    }
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Position, "Position", Vec3);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Scale, "Scale", Vec3);
+                    VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetRotation, "Rotation", Vec3);
                 }
                 break;
                 case LuaComponentID::Camera:
                 {
                     auto newComponent = scene->CreateComponent<Camera>(entity);
 
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->FOV, "FOV");
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->NearPlane, "NearPlane");
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->FarPlane, "FarPlane");
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->FOV, "FOV", LuaFloat);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->NearPlane, "NearPlane", LuaFloat);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->FarPlane, "FarPlane", LuaFloat);
 
-                    if (componentTable["TargetBuffer"] != sol::lua_nil)
+                    /*if (componentTable["TargetBuffer"] != sol::lua_nil)
                     {
                         //TODO: Add framebuffer asset
                         //newComponent->SetTargetBuffer(componentTable["TargetBuffer"].get<LuaFramebuffer>().Get());
-                    }
+                    }*/
                 }
                 break;
                 case LuaComponentID::CameraMovement:
                 {
                     auto newComponent = scene->CreateComponent<CameraMovement>(entity);
 
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->Speed, "Speed");
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->Sensitivity, "Sensitivity");
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Speed, "Speed", LuaFloat);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Sensitivity, "Sensitivity", LuaFloat);
                 }
                 break;
                 case LuaComponentID::MeshRenderer:
                 {
-                    if (componentTable["Mesh"] != sol::lua_nil && componentTable["Material"] != sol::lua_nil)
+                    if (componentTable.Contains<std::string>("Mesh") && componentTable.Contains<std::string>("Material"))
                     {
                         std::string meshFilepath = componentTable["Mesh"];
                         std::string materialFilepath = componentTable["Material"];
@@ -350,11 +336,6 @@ namespace Volund
                         Ref<Material> material = this->Fetch<Material>(materialFilepath);
 
                         auto newComponent = scene->CreateComponent<MeshRenderer>(entity, mesh, material);
-
-                        if (componentTable["Layer"] != sol::lua_nil)
-                        {
-                            newComponent->SetLayer(componentTable["Layer"]);
-                        }
                     }
                     else
                     {
@@ -366,12 +347,8 @@ namespace Volund
                 {
                     auto newComponent = scene->CreateComponent<PointLight>(entity);
 
-                    if (componentTable["Color"] != sol::lua_nil)
-                    {
-                        newComponent->Color = componentTable["Color"];
-                    }
-
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->Brightness, "Brightness");
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Color, "Color", Vec3);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->Brightness, "Brightness", LuaFloat);
                 }
                 break;
                 case LuaComponentID::Tag:
@@ -384,33 +361,15 @@ namespace Volund
                 {
                     auto newComponent = scene->CreateComponent<SoundSource>(entity);
 
-                    if (componentTable["Looping"] != sol::lua_nil)
-                    {
-                        bool looping = componentTable["Looping"];
-                        newComponent->SetLooping(looping);
-                    }
+                    VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetLooping, "Looping", LuaBool);
+                    VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetPitch, "Pitch", LuaFloat);
+                    VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetGain, "Gain", LuaFloat);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->AutoPlay, "AutoPlay", LuaBool);
 
-                    if (componentTable["Pitch"] != sol::lua_nil)
-                    {
-                        float pitch = componentTable["Pitch"];
-                        newComponent->SetPitch(pitch);
-                    }
-
-                    if (componentTable["Gain"] != sol::lua_nil)
-                    {
-                        float gain = componentTable["Gain"];
-                        newComponent->SetGain(gain);
-                    }
-
-                    if (componentTable["Sound"] != sol::lua_nil)
+                    if (componentTable.Contains<std::string>("Sound"))
                     {
                         Ref<AudioBuffer> sound = this->Fetch<AudioBuffer>(componentTable["Sound"]);
                         newComponent->SetBuffer(sound);
-                    }
-
-                    if (componentTable["AutoPlay"] != sol::lua_nil)
-                    {
-                        newComponent->AutoPlay = componentTable["AutoPlay"];
                     }
                 }
                 break;
@@ -426,32 +385,35 @@ namespace Volund
                     auto script = this->LoadScript(this->GetAbsolutePath(componentTable["Filepath"]));
                     newComponent->SetScript(script);
 
-                    sol::table publicVars = componentTable["PublicVars"];
-                    for (auto& [key, value] : publicVars)
+                    if (componentTable.Contains<SerialTable>("PublicVars"))
                     {
-                        if (value.is<int64_t>())
+                        SerialTable publicVars = componentTable["PublicVars"];
+                        for (auto& [key, value] : publicVars)
                         {
-                            script->SetVariable(key.as<std::string>(), value.as<uint64_t>());
-                        }
-                        else if (value.is<double>())
-                        {
-                            script->SetVariable(key.as<std::string>(), value.as<double>());
-                        }
-                        else if (value.is<std::string>())
-                        {
-                            script->SetVariable(key.as<std::string>(), value.as<std::string>());
-                        }
-                        else if (value.is<Vec2>())
-                        {
-                            script->SetVariable(key.as<std::string>(), value.as<Vec2>());
-                        }
-                        else if (value.is<Vec3>())
-                        {
-                            script->SetVariable(key.as<std::string>(), value.as<Vec3>());
-                        }
-                        else if (value.is<Vec4>())
-                        {
-                            script->SetVariable(key.as<std::string>(), value.as<Vec4>());
+                            if (value->Is<LuaInt>())
+                            {
+                                script->SetVariable(key, value->As<LuaInt>());
+                            }
+                            else if (value->Is<LuaFloat>())
+                            {
+                                script->SetVariable(key, value->As<LuaFloat>());
+                            }
+                            else if (value->Is<LuaString>())
+                            {
+                                script->SetVariable(key, value->As<LuaString>());
+                            }
+                            else if (value->Is<Vec2>())
+                            {
+                                script->SetVariable(key, value->As<Vec2>());
+                            }
+                            else if (value->Is<Vec3>())
+                            {
+                                script->SetVariable(key, value->As<Vec3>());
+                            }
+                            else if (value->Is<Vec4>())
+                            {
+                                script->SetVariable(key, value->As<Vec4>());
+                            }
                         }
                     }
                 }
@@ -477,7 +439,7 @@ namespace Volund
 
         Task task = [this, material, filepath, lineId]()
         {
-            auto materialData = LuaDeserializer(filepath, VOLUND_SERIAL_FILE_TYPE_MATERIAL);
+            auto materialData = Deserializer(filepath, VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 
             if (!materialData.Valid())
             {
@@ -485,49 +447,37 @@ namespace Volund
                 return;
             }
 
-            std::string shaderFilepath = materialData[VOLUND_SERIAL_MATERIAL_SHADER].as<std::string>();
-            sol::table uniforms = materialData[VOLUND_SERIAL_MATERIAL_UNIFORMS];
+            std::string shaderFilepath = materialData[VOLUND_SERIAL_MATERIAL_SHADER];
+            SerialTable uniforms = materialData[VOLUND_SERIAL_MATERIAL_UNIFORMS];
 
             auto shader = this->Fetch<Shader>(shaderFilepath);
 
             for (auto& [key, value] : uniforms)
             {
-                switch (value.get_type())
+                if (value->Is<LuaInt>())
                 {
-                case sol::type::number:
-                {
-                    if (value.is<int64_t>())
-                    {
-                        material->SetInt(key.as<std::string>(), (int)value.as<int64_t>());
-                    }
-                    else if (value.is<double>())
-                    {
-                        material->SetFloat(key.as<std::string>(), (float)value.as<double>());
-                    }
+                    material->SetInt(key, value->As<LuaInt>());
                 }
-                break;
-                case sol::type::userdata:
+                else if (value->Is<LuaFloat>())
                 {
-                    if (value.is<Vec2>())
-                    {
-                        material->SetVec2(key.as<std::string>(), value.as<Vec2>());
-                    }
-                    else if (value.is<Vec3>())
-                    {
-                        material->SetVec3(key.as<std::string>(), value.as<Vec3>());
-                    }
-                    else if (value.is<Vec4>())
-                    {
-                        material->SetVec4(key.as<std::string>(), value.as<Vec4>());
-                    }
+                    material->SetDouble(key, value->As<LuaFloat>());
                 }
-                break;
-                case sol::type::string:
+                else if (value->Is<Vec2>())
                 {
-                    auto texture = this->Fetch<Texture>(value.as<std::string>());
-                    material->SetTexture(key.as<std::string>(), texture);
+                    material->SetVec2(key, value->As<Vec2>());
                 }
-                break;
+                else if (value->Is<Vec3>())
+                {
+                    material->SetVec3(key, value->As<Vec3>());
+                }
+                else if (value->Is<Vec4>())
+                {
+                    material->SetVec4(key, value->As<Vec4>());
+                }
+                else if (value->Is<LuaString>())
+                {
+                    auto texture = this->Fetch<Texture>(value->As<LuaString>());
+                    material->SetTexture(key, texture);
                 }
             }
 

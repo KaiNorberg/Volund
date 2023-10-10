@@ -62,11 +62,6 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			changed = true;
 		}
 
-		if (ImGuiMaterialMap<float>(this->m_SelectedMaterial->FloatMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Float), ImGuiFloat))
-		{
-			changed = true;
-		}
-
 		if (ImGuiMaterialMap<double>(this->m_SelectedMaterial->DoubleMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Double), ImGuiDouble))
 		{
 			changed = true;
@@ -120,12 +115,6 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			{
 				changed = true;
 				this->m_SelectedMaterial->SetInt("NewInt", 0);
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Float"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetFloat("NewFloat", 0.0f);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Double"))

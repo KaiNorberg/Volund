@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Scene/Scene.h"
+#include "Lua/Deserializer/SerialTable/SerialTable.h"
 
 #define VOLUND_SERIAL_FILE_TYPE "FileType"
 #define VOLUND_SERIAL_DATA "Data"
@@ -27,9 +27,7 @@ namespace Volund
 
 namespace Volund::LuaUtils
 {
-    //Entity DeserializeEntity(Ref<Scene> scene, sol::table entityTable);
-
-    //void DeserializeScene(Ref<Scene> scene, sol::table sceneTable);
+    SerialTable DeserializeTable(sol::table table);
 
     sol::protected_function_result ScriptFile(Ref<sol::state> state, const std::string& filepath);
 }

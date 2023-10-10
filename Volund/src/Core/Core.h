@@ -50,6 +50,14 @@ namespace Volund
 	/// </summary>
 	template <typename T>
 	using WeakRef = std::weak_ptr<T>;
+
+	using LuaInt = int64_t;
+	using LuaFloat = double;
+	using LuaBool = bool;
+	using LuaString = std::string;
+	/*using LuaVec2 = Vec2;
+	using LuaVec3 = Vec3;
+	using LuaVec4 = Vec4;*/
 }
 
 namespace fs = std::filesystem;

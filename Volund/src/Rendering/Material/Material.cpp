@@ -9,12 +9,6 @@ namespace Volund
 		this->m_MaterialChanged = true;
 	}
 
-	void Material::SetFloat(const std::string& name, float value)
-	{
-		this->m_FloatUniforms[name] = value;
-		this->m_MaterialChanged = true;
-	}
-
 	void Material::SetDouble(const std::string& name, double value)
 	{
 		this->m_DoubleUniforms[name] = value;
@@ -61,11 +55,6 @@ namespace Volund
 		return this->m_IntUniforms;
 	}
 
-	std::map<std::string, float>& Material::FloatMap()
-	{
-		return this->m_FloatUniforms;
-	}
-
 	std::map<std::string, double>& Material::DoubleMap()
 	{
 		return this->m_DoubleUniforms;
@@ -109,11 +98,6 @@ namespace Volund
 		for (auto& [name, value] : this->m_IntUniforms)
 		{
 			this->m_Shader->SetInt(name, value);
-		}
-
-		for (auto& [name, value] : this->m_FloatUniforms)
-		{
-			this->m_Shader->SetFloat(name, value);
 		}
 
 		for (auto& [name, value] : this->m_DoubleUniforms)
@@ -201,14 +185,6 @@ namespace Volund
 			}
 		}
 
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Float))
-		{
-			if (!this->m_FloatUniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (float, %s)", blueprintUniform.c_str());
-			}
-		}
-
 		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Double))
 		{
 			if (!this->m_DoubleUniforms.contains(blueprintUniform))
@@ -272,14 +248,6 @@ namespace Volund
 			if (!this->m_IntUniforms.contains(blueprintUniform))
 			{
 				this->SetInt(blueprintUniform, 0);
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Float))
-		{
-			if (!this->m_FloatUniforms.contains(blueprintUniform))
-			{
-				this->SetFloat(blueprintUniform, 0.0f);
 			}
 		}
 

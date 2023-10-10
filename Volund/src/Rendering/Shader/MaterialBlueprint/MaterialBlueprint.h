@@ -5,7 +5,6 @@ namespace Volund
 	enum class MaterialUniformType
 	{
 		Int,
-		Float,
 		Double,
 		Vec2,
 		Vec3,
@@ -20,6 +19,8 @@ namespace Volund
 	public:
 
 		void AddUniform(const std::string& name, MaterialUniformType type);
+
+		bool ContainsUniform(const std::string& name, MaterialUniformType type);
 
 		const std::vector<std::string>& GetUniforms(MaterialUniformType type) const;
 

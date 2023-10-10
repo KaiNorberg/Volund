@@ -108,10 +108,6 @@ namespace Volund
                     {
                         uniformType = MaterialUniformType::Int;
                     }
-                    else if (words[1] == "float")
-                    {
-                        uniformType = MaterialUniformType::Float;
-                    }
                     else if (words[1] == "double")
                     {
                         uniformType = MaterialUniformType::Double;
@@ -135,6 +131,10 @@ namespace Volund
                     else if (words[1].starts_with("mat4"))
                     {
                         uniformType = MaterialUniformType::Matrix;
+                    }
+                    else if (words[1] == "float")
+                    {
+                        VOLUND_WARNING("Float is temporarily not a supported uniform type, for now use double instead (%s)!", filepath.c_str());
                     }
                     else
                     {

@@ -24,7 +24,7 @@ namespace Volund
 		return this->m_Id;
 	}
 
-	void OpenGLShader::SetInt(const std::string& name, int32_t value)
+	void OpenGLShader::SetInt(const std::string& name, int value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
