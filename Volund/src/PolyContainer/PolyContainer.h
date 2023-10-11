@@ -11,6 +11,9 @@ namespace Volund
 	public:
 
 		template<typename D>
+		void PushBack(const D& entry);
+
+		template<typename D>
 		void PushBack(Ref<D> entry);
 
 		template<typename D>
@@ -41,6 +44,15 @@ namespace Volund
 
 		std::unordered_map<uint64_t, std::vector<Ref<T>>> m_Data;
 	};
+
+	template<typename T>
+	template<typename D>
+	inline void PolyContainer<T>::PushBack(const D& entry)
+	{
+		static uint64_t typeId = typeid(D).hash_code();
+
+		this->m_Data[typeId].push_back(std::make_shared<D>(entry));
+	}
 
 	template<typename T>
 	template<typename D>

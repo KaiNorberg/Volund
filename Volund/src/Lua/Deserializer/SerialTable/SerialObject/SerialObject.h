@@ -13,14 +13,8 @@ namespace Volund
 	{
 	public:
 
-		virtual void operator=(LuaInt data);
-		virtual void operator=(LuaFloat data);
-		virtual void operator=(LuaBool data);
-		virtual void operator=(LuaString data);
-		virtual void operator=(Vec2 data);
-		virtual void operator=(Vec3 data);
-		virtual void operator=(Vec4 data);
-		virtual void operator=(SerialTable data);
+		template<typename T>
+		void operator=(T data);
 
 		template<typename T>
 		operator T();
@@ -44,13 +38,13 @@ namespace Volund
 		
 		VOLUND_SERIAL_TYPE_ASSERT(T);
 
-		const T& Get() const;
+		void Set(const T& data);
 
 		T& Get();
 
-		uint64_t GetTypeHash() const override;
+		const T& Get() const;
 
-		void operator=(T data) override;
+		uint64_t GetTypeHash() const override;
 
 		SerialObject(const T& data);
 
@@ -67,7 +61,20 @@ namespace Volund
 		return this->GetTypeHash() == typeid(T).hash_code();
 	}	
 
-	template<typename T>		
+	template<typename T>
+	inline void PrimitiveSerialObject::operator=(T data)
+	{
+		VOLUND_SERIAL_TYPE_ASSERT(T);
+
+		if (!this->Is<T>())
+		{
+			VOLUND_ERROR("Attempt to set PrimitiveSerialObject with incorrect type!");
+		}
+
+		((SerialObject<T>*)this)->Set(data);
+	}
+
+	template<typename T>
 	PrimitiveSerialObject::operator T()
 	{
 		VOLUND_SERIAL_TYPE_ASSERT(T);
@@ -97,6 +104,12 @@ namespace Volund
 	}
 
 	template<typename T>
+	inline void SerialObject<T>::Set(const T& data)
+	{
+		this->m_Data = data;
+	}
+
+	template<typename T>
 	inline T& SerialObject<T>::Get()
 	{
 		VOLUND_SERIAL_TYPE_ASSERT(T);
@@ -110,14 +123,6 @@ namespace Volund
 		VOLUND_SERIAL_TYPE_ASSERT(T);
 
 		return typeid(T).hash_code();
-	}
-
-	template<typename T>
-	inline void SerialObject<T>::operator=(T data)
-	{
-		VOLUND_SERIAL_TYPE_ASSERT(T);
-
-		this->m_Data = data;
 	}
 
 	template<typename T>
