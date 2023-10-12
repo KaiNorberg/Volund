@@ -39,7 +39,7 @@ namespace Volund
 	template<typename T>
 	inline bool Deserializer::Is(const std::string& key) const
 	{
-		return false;
+		return this->m_Table.Is<T>(key);
 	}
 }
 

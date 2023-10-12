@@ -76,11 +76,8 @@ local table =
 				Filepath = "Scripts/Rotate.lua",
 				PublicVars =
 				{
-					Text = "Hello, World!",
-					Vector4 = Vec4:new(6.000000, 7.000000, 8.000000, 12.800000),
-					Vector3 = Vec3:new(3.000000, 6.500000, 5.000000),
 					Number = 5,
-					Vector2 = Vec2:new(3.900000, 2.000000)
+					Text = "Hello, World!"
 				}
 			}
 		},

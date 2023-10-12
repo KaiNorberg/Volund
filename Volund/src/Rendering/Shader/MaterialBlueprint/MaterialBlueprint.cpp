@@ -3,16 +3,26 @@
 
 namespace Volund
 {
-	void MaterialBlueprint::AddUniform(const std::string& name, MaterialUniformType type)
+	uint64_t MaterialBlueprint::BlueprintUniform::GetTypeHash() const
 	{
-		this->m_Uniforms[(int)type].push_back(name);
+		return this->m_TypeHash;
+	}
+	const std::string& MaterialBlueprint::BlueprintUniform::GetName() const
+	{
+		return this->m_Name;
 	}
 
-	bool MaterialBlueprint::ContainsUniform(const std::string& name, MaterialUniformType type)
+	MaterialBlueprint::BlueprintUniform::BlueprintUniform(uint64_t typeHash, const std::string& name)
 	{
-		for (auto& value : this->m_Uniforms[(int)type])
+		this->m_TypeHash = typeHash;
+		this->m_Name = name;
+	}
+
+	bool MaterialBlueprint::Exists(const std::string& name)
+	{
+		for (auto& uniform : this->m_Uniforms)
 		{
-			if (value == name)
+			if (uniform.GetName() == name)
 			{
 				return true;
 			}
@@ -21,13 +31,13 @@ namespace Volund
 		return false;
 	}
 
-	const std::vector<std::string>& MaterialBlueprint::GetUniforms(MaterialUniformType type) const
+	const std::vector<MaterialBlueprint::BlueprintUniform>::const_iterator MaterialBlueprint::begin() const
 	{
-		return this->m_Uniforms[(int)type];
+		return this->m_Uniforms.begin();
 	}
 
-	MaterialBlueprint::MaterialBlueprint()
+	const std::vector<MaterialBlueprint::BlueprintUniform>::const_iterator MaterialBlueprint::end() const
 	{
-		this->m_Uniforms.resize((int)MaterialUniformType::AMOUNT);
+		return this->m_Uniforms.end();
 	}
 }

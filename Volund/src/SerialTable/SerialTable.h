@@ -11,6 +11,10 @@ namespace Volund
 		using iterator = std::unordered_map<std::string, Ref<PrimitiveSerialObject>>::iterator;
 		using const_iterator = std::unordered_map<std::string, Ref<PrimitiveSerialObject>>::const_iterator;
 
+		void Erase(const std::string& key);
+
+		void Rename(const std::string& key, const std::string& newKey);
+
 		template<typename T>
 		void Insert(const std::string& key, const T& value);
 

@@ -50,8 +50,8 @@ layout(std140, binding = 1) uniform Lights
 
 uniform vec3 Ambient;
 uniform sampler2D AlbedoTexture;
-uniform double Roughness;
-uniform double Metallic;
+uniform float Roughness;
+uniform float Metallic;
 
 #VOLUND_MATERIAL_END
 
@@ -118,7 +118,7 @@ void main()
     vec3 V = normalize(camPos - FragPos);
 
     vec3 F0 = vec3(0.04); 
-    F0 = mix(F0, Albedo, float(Metallic));
+    F0 = mix(F0, Albedo, Metallic);
 	           
     // reflectance equation
     vec3 Lo = vec3(0.0);
@@ -127,22 +127,22 @@ void main()
         // calculate per-light radiance
         vec3 L = normalize(LightPositions[i].xyz - FragPos);
         vec3 H = normalize(V + L);
-        float distance = length(LightPositions[i].xyz - FragPos);
+        float distance    = length(LightPositions[i].xyz - FragPos);
         float attenuation = 1.0 / (distance * distance);
-        vec3 radiance = LightColors[i].xyz * attenuation;        
+        vec3 radiance     = LightColors[i].xyz * attenuation;        
         
         // cook-torrance brdf
-        float NDF = DistributionGGX(N, H, float(Roughness));        
-        float G = GeometrySmith(N, V, L, float(Roughness));      
-        vec3 F = FresnelSchlick(max(dot(H, V), 0.0), F0);       
+        float NDF = DistributionGGX(N, H, Roughness);        
+        float G   = GeometrySmith(N, V, L, Roughness);      
+        vec3 F    = FresnelSchlick(max(dot(H, V), 0.0), F0);       
         
         vec3 kS = F;
         vec3 kD = vec3(1.0) - kS;
-        kD *= 1.0 - float(Metallic);	  
+        kD *= 1.0 - Metallic;	  
         
-        vec3 numerator = NDF * G * F;
+        vec3 numerator    = NDF * G * F;
         float denominator = 4.0 * max(dot(N, V), 0.0) * max(dot(N, L), 0.0) + 0.0001;
-        vec3 specular = numerator / denominator;  
+        vec3 specular     = numerator / denominator;  
             
         // add to outgoing radiance Lo
         float NdotL = max(dot(N, L), 0.0);                

@@ -24,7 +24,7 @@ namespace Volund
 		return this->m_Id;
 	}
 
-	void OpenGLShader::SetInt(const std::string& name, int value)
+	void OpenGLShader::SetInt(const std::string& name, UniformInt value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -32,7 +32,7 @@ namespace Volund
 		glUniform1i(this->GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetFloat(const std::string& name, float value)
+	void OpenGLShader::SetFloat(const std::string& name, UniformFloat value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -40,7 +40,7 @@ namespace Volund
 		glUniform1f(this->GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetDouble(const std::string& name, double value)
+	void OpenGLShader::SetDouble(const std::string& name, UniformDouble value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -48,7 +48,7 @@ namespace Volund
 		glUniform1d(this->GetUniformLocation(name), value);
 	}
 
-	void OpenGLShader::SetVec2(const std::string& name, const Vec2& value)
+	void OpenGLShader::SetVec2(const std::string& name, const UniformVec2& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -56,7 +56,7 @@ namespace Volund
 		glUniform2fv(this->GetUniformLocation(name), 1, value_ptr(value));
 	}
 
-	void OpenGLShader::SetVec3(const std::string& name, const Vec3& value)
+	void OpenGLShader::SetVec3(const std::string& name, const UniformVec3& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -64,7 +64,7 @@ namespace Volund
 		glUniform3fv(this->GetUniformLocation(name), 1, value_ptr(value));
 	}
 
-	void OpenGLShader::SetVec4(const std::string& name, const Vec4& value)
+	void OpenGLShader::SetVec4(const std::string& name, const UniformVec4& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -72,7 +72,7 @@ namespace Volund
 		glUniform4fv(this->GetUniformLocation(name), 1, value_ptr(value));
 	}
 
-	void OpenGLShader::SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose)
+	void OpenGLShader::SetMat3x3(const std::string& name, const UniformMat3x3& value, bool transpose)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -80,7 +80,7 @@ namespace Volund
 		glUniformMatrix3fv(this->GetUniformLocation(name), 1, transpose, value_ptr(value));
 	}
 
-	void OpenGLShader::SetMat4x4(const std::string& name, const Mat4x4& value, bool transpose)
+	void OpenGLShader::SetMat4x4(const std::string& name, const UniformMat4x4& value, bool transpose)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -88,7 +88,7 @@ namespace Volund
 		glUniformMatrix4fv(this->GetUniformLocation(name), 1, transpose, value_ptr(value));
 	}
 
-	void OpenGLShader::SetTexture(const std::string& name, const Ref<Texture>& value, uint32_t textureUnit)
+	void OpenGLShader::SetTexture(const std::string& name, const UniformTexture& value, uint32_t textureUnit)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
@@ -97,7 +97,7 @@ namespace Volund
 		this->SetInt(name, textureUnit);
 	}
 
-	void OpenGLShader::SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit)
+	void OpenGLShader::SetFramebuffer(const std::string& name, const UniformFramebuffer& value, uint32_t textureUnit)
 	{
 		VOLUND_PROFILE_FUNCTION();
 

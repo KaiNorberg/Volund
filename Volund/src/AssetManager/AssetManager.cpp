@@ -46,38 +46,38 @@ namespace Volund
 
         serializer.StartTable(VOLUND_SERIAL_MATERIAL_UNIFORMS);
 
-        for (auto& [key, value] : material->IntMap())
+        for (auto& [key, uniform] : (*material))
         {
-            serializer.Insert(key, (LuaInt)value);
+            if (uniform->Is<UniformInt>())
+            {
+                serializer.Insert(key, (LuaInt)uniform->As<UniformInt>());
+            }
+            else if (uniform->Is<UniformFloat>())
+            {
+                serializer.Insert(key, uniform->As<UniformFloat>());
+            }
+            else if (uniform->Is<UniformDouble>())
+            {
+                serializer.Insert(key, uniform->As<UniformDouble>());
+            }
+            else if (uniform->Is<UniformVec2>())
+            {
+                serializer.Insert(key, uniform->As<UniformVec2>());
+            }
+            else if (uniform->Is<UniformVec3>())
+            {
+                serializer.Insert(key, uniform->As<UniformVec3>());
+            }
+            else if (uniform->Is<UniformVec4>())
+            {
+                serializer.Insert(key, uniform->As<UniformVec4>());
+            }
+            else if (uniform->Is<UniformTexture>())
+            {
+                std::string texturePath = this->FetchFilepath(uniform->As<UniformTexture>());
+                serializer.Insert(key, texturePath);
+            }
         }
-
-        for (auto& [key, value] : material->DoubleMap())
-        {
-            serializer.Insert(key, value);
-        }
-
-        for (auto& [key, value] : material->Vec2Map())
-        {
-            serializer.Insert(key, value);
-        }
-
-        for (auto& [key, value] : material->Vec3Map())
-        {
-            serializer.Insert(key, value);
-        }
-
-        for (auto& [key, value] : material->Vec4Map())
-        {
-            serializer.Insert(key, value);
-        }
-
-        for (auto& [key, value] : material->TextureMap())
-        {
-            std::string texturePath = this->FetchFilepath(value);
-            std::replace(texturePath.begin(), texturePath.end(), '\\', '/');
-            serializer.Insert(key, texturePath);
-        }
-
         serializer.EndTable();
 
         serializer.EndTable();
@@ -460,7 +460,7 @@ namespace Volund
                 }
                 else if (value->Is<LuaFloat>())
                 {
-                    material->SetDouble(key, value->As<LuaFloat>());
+                    material->SetFloat(key, value->As<LuaFloat>());
                 }
                 else if (value->Is<Vec2>())
                 {

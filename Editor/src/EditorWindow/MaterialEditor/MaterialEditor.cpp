@@ -57,7 +57,118 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			return;
 		}
 
-		if (ImGuiMaterialMap<int>(this->m_SelectedMaterial->IntMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Int), ImGuiInt))
+		for (auto& [key, uniform] : (*this->m_SelectedMaterial))
+		{
+			bool isInBlueprint = materialBlueprint->Exists(key);
+
+			ImVec2 itemRectMin;
+			ImVec2 itemRectMax;
+			ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
+			if (ImGui::BeginListBox((std::string("##ListBox") + key).c_str(), listBoxSize))
+			{
+				itemRectMin = ImVec2(this->GetPosition().x, ImGui::GetItemRectMin().y);
+				itemRectMax = ImVec2(this->GetPosition().x + this->GetSize().x, itemRectMin.y + listBoxSize.y);
+
+				std::string name;
+				if (!isInBlueprint)
+				{
+					name = key;
+				}
+				else
+				{
+					name = VOLUND_LOGGERCOLOR_BLUE + key;
+				}
+
+				if (uniform->Is<VL::UniformInt>())
+				{
+					if (ImGuiInt(name, *uniform->Get<VL::UniformInt>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformFloat>())
+				{
+					if (ImGuiFloat(name, *uniform->Get<VL::UniformFloat>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformDouble>())
+				{
+					if (ImGuiDouble(name, *uniform->Get<VL::UniformDouble>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformVec2>())
+				{
+					if (ImGuiVec2(name, *uniform->Get<VL::UniformVec2>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformVec3>())
+				{
+					if (ImGuiVec3(name, *uniform->Get<VL::UniformVec3>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformVec4>())
+				{
+					if (ImGuiVec4(name, *uniform->Get<VL::UniformVec4>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformTexture>())
+				{
+					std::string texturePath = assetManager->FetchFilepath<VL::Texture>(uniform->As<VL::UniformTexture>());
+					if (ImGuiFile(name, texturePath))
+					{
+						this->m_SelectedMaterial->SetTexture(key, assetManager->Fetch<VL::Texture>(texturePath));
+						changed = true;
+					}
+				}
+
+				ImGui::EndListBox();
+			}
+
+			if (!isInBlueprint)
+			{
+				std::string popupName = (std::string("Material entry") + key);
+
+				if (ImGui::IsMouseHoveringRect(itemRectMin, itemRectMax) && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+				{
+					ImGui::OpenPopup(popupName.c_str());
+				}
+
+				if (ImGui::BeginPopup(popupName.c_str()))
+				{
+					if (ImGui::MenuItem("Delete"))
+					{
+						changed = true;
+						this->m_SelectedMaterial->Erase(key);
+						ImGui::CloseCurrentPopup();
+					}
+					if (ImGui::MenuItem("Rename"))
+					{
+						changed = true;
+						std::string newKey = VL::Dialog::InputBox("Rename Material Entry", "Please specify a new name");
+						if (!newKey.empty())
+						{
+							this->m_SelectedMaterial->Rename(key, newKey);
+						}
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
+		}
+
+		/*if (ImGuiMaterialMap<int>(this->m_SelectedMaterial->IntMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Int), ImGuiInt))
 		{
 			changed = true;
 		}
@@ -101,7 +212,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			}))
 		{
 			changed = true;
-		}
+		}*/
 
 		ImGuiAlign("Add Entry", 0.5f);
 		if (ImGui::Button("Add Entry"))
@@ -117,10 +228,10 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 				this->m_SelectedMaterial->SetInt("NewInt", 0);
 				ImGui::CloseCurrentPopup();
 			}
-			if (ImGui::MenuItem("Double"))
+			if (ImGui::MenuItem("Float"))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetDouble("NewDouble", 0.0);
+				this->m_SelectedMaterial->SetFloat("NewDouble", 0.0);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Vec2"))
@@ -144,7 +255,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			if (ImGui::MenuItem("Texture"))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetTexture("NewTexture", nullptr);
+				this->m_SelectedMaterial->SetTexture("NewTexture", VL::Ref<VL::Texture>(nullptr));
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();

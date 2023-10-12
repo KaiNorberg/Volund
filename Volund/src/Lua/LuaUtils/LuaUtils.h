@@ -1,12 +1,17 @@
 #pragma once
 
-#include "Lua/Deserializer/SerialTable/SerialTable.h"
+#include "SerialTable/SerialTable.h"
 
 #define VOLUND_SERIAL_FILE_TYPE "FileType"
 #define VOLUND_SERIAL_DATA "Data"
 
 #define VOLUND_SERIAL_FILE_TYPE_MATERIAL "Material"
 #define VOLUND_SERIAL_FILE_TYPE_SCENE "Scene"
+
+#define VOLUND_SERIAL_TYPE_ASSERT(SERIAL_TYPE) static_assert(std::is_same<SERIAL_TYPE, LuaInt>::value || std::is_same<SERIAL_TYPE, LuaFloat>::value || \
+std::is_same<SERIAL_TYPE, LuaBool>::value || std::is_same<SERIAL_TYPE, LuaString>::value || \
+std::is_same<SERIAL_TYPE, Vec2>::value || std::is_same<SERIAL_TYPE, Vec3>::value || \
+std::is_same<SERIAL_TYPE, Vec4>::value || std::is_same<SERIAL_TYPE, SerialTable>::value, "Invalid type for SerialObject!") \
 
 namespace Volund
 {
