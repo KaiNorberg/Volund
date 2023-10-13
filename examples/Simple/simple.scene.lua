@@ -76,8 +76,7 @@ local table =
 				Filepath = "Scripts/Rotate.lua",
 				PublicVars =
 				{
-					Number = 5,
-					Text = "Hello, World!"
+
 				}
 			}
 		},

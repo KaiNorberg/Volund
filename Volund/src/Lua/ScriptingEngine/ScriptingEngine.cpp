@@ -3,22 +3,128 @@
 
 #include "LuaVec/LuaVec.h"
 
+#include "Script/Script.h"
+
+#include <sol/sol.hpp>
+
 namespace Volund
 {
-	void ScriptingEngine::LuaPrint(sol::object object)
+	void LuaPrint(sol::object object)
 	{
 		std::string string = object.as<std::string>();
-		m_LuaLogger.Log(LogSeverity::Info, string.c_str());
+		ScriptingEngine::m_LuaLogger.Log(LogSeverity::Info, string.c_str());
 	}
 
-	void ScriptingEngine::LuaRequire(sol::this_state s, std::string filepath)
+	void LuaRequire(sol::this_state s, std::string filepath)
 	{
 		VOLUND_WARNING("Require not implemented!");
 	}
 
-	Ref<sol::state> ScriptingEngine::GetLuaState()
+	template<typename T>
+	T ScriptingEngine::GetVariable(uint64_t scriptId, const std::string& key)
 	{
-		return this->m_LuaState;
+		return (*this->m_LuaState)[scriptId][key];
+	}
+
+	template<typename T>
+	void ScriptingEngine::SetVariable(uint64_t scriptId, const std::string& key, const T& value)
+	{
+		(*this->m_LuaState)[scriptId][key] = value;
+	}
+
+	template<typename T>
+	bool ScriptingEngine::IsVariable(uint64_t scriptId, const std::string& key)
+	{
+		return (*this->m_LuaState)[scriptId].is<T>();
+	}
+
+	Ref<Script> ScriptingEngine::LoadScript(const std::string& filepath)
+	{		
+		sol::table scriptTable;
+		sol::protected_function_result result;
+		try
+		{
+			scriptTable = this->m_LuaState->script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
+			{
+				sol::error err = pfr;
+				VOLUND_ERROR(err.what());
+
+				return pfr;
+			});
+		}
+		catch (const sol::error& e)
+		{
+			VOLUND_ERROR(e.what());
+		}
+
+		std::vector<std::string> publicVars;
+		for (auto& publicVar : scriptTable)
+		{
+			if (!publicVar.second.is<sol::function>())
+			{
+				publicVars.push_back(publicVar.first.as<std::string>());
+			}
+		}
+
+		uint64_t scriptId = this->m_UnusedScriptId;
+		this->m_UnusedScriptId++;
+
+		(*this->m_LuaState)[scriptId] = scriptTable;
+
+		m_UnstartedScripts.push_back(scriptId);
+
+		Ref<Script> script = Ref<Script>(new Script(this->shared_from_this(), scriptId, filepath, publicVars));
+
+		return script;
+	}
+
+	Ref<ScriptingEngine> ScriptingEngine::Create()
+	{
+		return std::make_shared<ScriptingEngine>();
+	}
+
+	void ScriptingEngine::ScriptProcedure(uint64_t scriptId, const Event& e)
+	{
+		switch (e.Type)
+		{
+		case VOLUND_EVENT_TYPE_UPDATE:
+		{
+			float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
+
+			sol::table script = (*this->m_LuaState)[scriptId];
+
+			for (int i = 0; i < this->m_UnstartedScripts.size(); i++)
+			{
+				if (this->m_UnstartedScripts[i] == scriptId)
+				{
+					if (script["OnStart"] != sol::nil)
+					{
+						script["OnStart"](script);
+					}
+					this->m_UnstartedScripts.erase(this->m_UnstartedScripts.begin() + i);
+					break;
+				}
+			}
+
+			if (script["OnUpdate"] != sol::nil)
+			{
+				script["OnUpdate"](script, timeStep);
+			}
+		}
+		break;
+		}
+	}
+
+	void ScriptingEngine::DestroyScript(uint64_t scriptId)
+	{
+		sol::table script = (*this->m_LuaState)[scriptId];
+
+		if (script["OnDestroy"] != sol::nil)
+		{
+			script["OnDestroy"](script);
+		}
+
+		(*this->m_LuaState)[scriptId] = sol::nil;
 	}
 
 	ScriptingEngine::ScriptingEngine()
@@ -75,4 +181,28 @@ namespace Volund
 			sol::meta_function::division, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator/), sol::resolve<LuaVec2(float)>(&LuaVec2::operator/))
 		);
 	}
+
+	template LuaInt ScriptingEngine::GetVariable<LuaInt>(uint64_t, const std::string&);
+	template LuaFloat ScriptingEngine::GetVariable<LuaFloat>(uint64_t, const std::string&);
+	template LuaBool ScriptingEngine::GetVariable<LuaBool>(uint64_t, const std::string&);
+	template LuaString ScriptingEngine::GetVariable<LuaString>(uint64_t, const std::string&);
+	template Vec2 ScriptingEngine::GetVariable<Vec2>(uint64_t, const std::string&);
+	template Vec3 ScriptingEngine::GetVariable<Vec3>(uint64_t, const std::string&);
+	template Vec4 ScriptingEngine::GetVariable<Vec4>(uint64_t, const std::string&);
+
+	template void ScriptingEngine::SetVariable<LuaInt>(uint64_t, const std::string&, const LuaInt&);
+	template void ScriptingEngine::SetVariable<LuaFloat>(uint64_t, const std::string&, const LuaFloat&);
+	template void ScriptingEngine::SetVariable<LuaBool>(uint64_t, const std::string&, const LuaBool&);
+	template void ScriptingEngine::SetVariable<LuaString>(uint64_t, const std::string&, const LuaString&);
+	template void ScriptingEngine::SetVariable<Vec2>(uint64_t, const std::string&, const Vec2&);
+	template void ScriptingEngine::SetVariable<Vec3>(uint64_t, const std::string&, const Vec3&);
+	template void ScriptingEngine::SetVariable<Vec4>(uint64_t, const std::string&, const Vec4&);
+
+	template bool ScriptingEngine::IsVariable<LuaInt>(uint64_t, const std::string&);
+	template bool ScriptingEngine::IsVariable<LuaFloat>(uint64_t, const std::string&);
+	template bool ScriptingEngine::IsVariable<LuaBool>(uint64_t, const std::string&);
+	template bool ScriptingEngine::IsVariable<LuaString>(uint64_t, const std::string&);
+	template bool ScriptingEngine::IsVariable<Vec2>(uint64_t, const std::string&);
+	template bool ScriptingEngine::IsVariable<Vec3>(uint64_t, const std::string&);
+	template bool ScriptingEngine::IsVariable<Vec4>(uint64_t, const std::string&);
 }

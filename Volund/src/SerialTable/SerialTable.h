@@ -35,6 +35,7 @@ namespace Volund
 		SerialTable::iterator end();
 
 	private:
+
 		std::unordered_map<std::string, Ref<PrimitiveSerialObject>> m_Table;
 	};
 

@@ -1,6 +1,10 @@
 #include "PCH/PCH.h"
 #include "Deserializer.h"
 
+#include <sol/sol.hpp>
+
+#include "Lua/LuaUtils/LuaUtils.h"
+
 namespace Volund
 {
 	void DeserializerPrint(sol::object object)

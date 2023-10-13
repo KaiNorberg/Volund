@@ -9,7 +9,11 @@ function Rotate:OnStart()
 end
 
 function Rotate:OnUpdate(TS)
-    --print(self.Vector3.y)
+    print("Rotate OnUpdate")
+end
+
+function Rotate:OnDestroy()
+    print("Rotate OnDestroy")
 end
 
 return Rotate

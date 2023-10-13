@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Lua/LuaUtils/LuaUtils.h"
-
 #include "SerialTable/SerialTable.h"
 
 namespace Volund 
@@ -18,11 +16,9 @@ namespace Volund
 		PrimitiveSerialObject& operator[](const std::string& key);
 
 		const SerialTable::const_iterator begin() const;
-
 		const SerialTable::const_iterator end() const;
 
 		SerialTable::iterator begin();
-
 		SerialTable::iterator end();
 
 		Deserializer(const std::string& filepath, const std::string& fileType);

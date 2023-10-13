@@ -161,20 +161,20 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 			{
 				for (const std::string& identifier : script->GetPublicVariables())
 				{
-					if (script->IsVariable<int>(identifier))
+					if (script->IsVariable<VL::LuaInt>(identifier))
 					{
-						auto rawValue = script->GetVariable<int>(identifier);
+						int rawValue = script->GetVariable<VL::LuaInt>(identifier);
 						if (ImGuiInt(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->SetVariable(identifier, (VL::LuaInt)rawValue);
 						}
 					}
-					else if (script->IsVariable<double>(identifier))
+					else if (script->IsVariable<VL::LuaFloat>(identifier))
 					{
-						auto rawValue = script->GetVariable<double>(identifier);
+						auto rawValue = script->GetVariable<VL::LuaFloat>(identifier);
 						if (ImGuiDouble(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->SetVariable(identifier, (VL::LuaFloat)rawValue);
 						}
 					}
 					else if (script->IsVariable<std::string>(identifier))

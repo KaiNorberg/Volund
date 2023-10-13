@@ -19,8 +19,6 @@
 #include "Lua/Deserializer/Deserializer.h"
 #include "Lua/Serializer/Serializer.h"
 
-#include "Lua/LuaUtils/LuaUtils.h"
-
 #define VOLUND_SET_COMPONENT(table, member, name, type) if (table.Contains<type>(name)) {member = ((type)table[name]);}
 #define VOLUND_SET_COMPONENT_VIA_FUNC(table, func, name, type) if (table.Contains<type>(name)) {func((type)table[name]);}
 
@@ -28,7 +26,21 @@
 #define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
 
 namespace Volund
-{    
+{
+    enum class LuaComponentID
+    {
+        Camera = 1,
+        CameraMovement = 2,
+        MeshRenderer = 3,
+        PointLight = 4,
+        //Script = 5,
+        Tag = 6,
+        Transform = 7,
+        SoundSource = 8,
+        SoundListener = 9,
+        ScriptComponent = 10
+    };
+
     template<>
     void AssetManager::Serialize<Material>(Ref<Material> material, const std::string& destinationPath)
     {
@@ -598,7 +610,9 @@ namespace Volund
 
         if (!this->m_ScriptingEngine.expired())
         {
-            auto newScript = std::make_shared<Script>(this->GetAbsolutePath(filepath), this->m_ScriptingEngine.lock());
+            auto scriptingEngine = this->m_ScriptingEngine.lock();
+
+            auto newScript = scriptingEngine->LoadScript(filepath);
 
             VOLUND_UPDATE_LINE(lineId, "Done ");
 

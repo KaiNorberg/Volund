@@ -168,52 +168,6 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
 
-		/*if (ImGuiMaterialMap<int>(this->m_SelectedMaterial->IntMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Int), ImGuiInt))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<double>(this->m_SelectedMaterial->DoubleMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Double), ImGuiDouble))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Vec2>(this->m_SelectedMaterial->Vec2Map(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Vec2),
-			[](const std::string& key, VL::Vec2& value) { return ImGuiVec2(key, value); }))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Vec3>(this->m_SelectedMaterial->Vec3Map(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Vec3),
-			[](const std::string& key, VL::Vec3& value) { return ImGuiVec3(key, value); }))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Vec4>(this->m_SelectedMaterial->Vec4Map(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Vec4),
-			[](const std::string& key, VL::Vec4& value) { return ImGuiVec4(key, value); }))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Ref<VL::Texture>>(this->m_SelectedMaterial->TextureMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Sampler),
-			[assetManager](const std::string& key, VL::Ref<VL::Texture>& value)
-			{
-				std::string texturePath = assetManager->FetchFilepath<VL::Texture>(value);
-				if (ImGuiFile(key, texturePath))
-				{
-					value = assetManager->Fetch<VL::Texture>(texturePath);
-					return true;
-				}
-				else
-				{
-					return false;
-				}
-			}))
-		{
-			changed = true;
-		}*/
-
 		ImGuiAlign("Add Entry", 0.5f);
 		if (ImGui::Button("Add Entry"))
 		{
@@ -267,7 +221,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		}
 	}
 	break;
-	case EDITOR_EVENT_TYPE_LOAD_SCENE:
+	case EDITOR_EVENT_TYPE_RESET:
 	{
 		this->m_SelectedMaterial = nullptr;
 	}

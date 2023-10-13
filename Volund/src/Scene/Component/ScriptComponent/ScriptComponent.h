@@ -16,17 +16,11 @@ namespace Volund
 
 		Ref<Script> GetScript();
 
-		void OnCreate() override;
-
-		void OnDestroy() override;
-
 		void Procedure(const Event& e) override;
 
 		ScriptComponent();
 
 	private:
-
-		bool m_ScriptStarted = false;
 
 		Ref<Script> m_Script;
 	};

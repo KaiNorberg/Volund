@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Lua/LuaUtils/LuaUtils.h"
-
 namespace Volund
 {
 	class Serializer

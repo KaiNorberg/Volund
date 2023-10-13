@@ -2,10 +2,6 @@
 
 #define _CRT_SECURE_NO_WARNINGS
 
-#define SOL_NO_EXCEPTIONS 0
-#define SOL_PRINT_ERRORS 0
-#define SOL_SAFE_NUMERICS 1
-
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -28,8 +24,6 @@
 #include <tuple>
 #include <ranges>
 #include <charconv>
-
-#include <sol/sol.hpp>
 
 #include <glm/glm/glm.hpp>
 #include <glm/glm/vec2.hpp>

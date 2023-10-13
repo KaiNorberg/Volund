@@ -36,6 +36,7 @@ void EditorContext::Procedure(const VL::Event& e)
 				this->LoadScene(this->m_GameState->GetScenePath());
 			}
 		}
+		this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_RESET);
 	}
 	break;
 	case EDITOR_EVENT_TYPE_LOAD_SCENE:
@@ -45,6 +46,7 @@ void EditorContext::Procedure(const VL::Event& e)
 		{
 			this->LoadScene(filepath);
 		}
+		this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_RESET);
 	}
 	break;
 	case EDITOR_EVENT_TYPE_SAVE_SCENE:
@@ -70,6 +72,7 @@ void EditorContext::Procedure(const VL::Event& e)
 
 			this->LoadScene(filepath + "/scene.lua");
 		}
+		this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_RESET);
 	}
 	break;
 	default:
