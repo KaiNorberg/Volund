@@ -11,23 +11,15 @@ namespace Volund
 	{
 	public:
 
-		void SetInt(const std::string& name, UniformInt value);
-		void SetFloat(const std::string& name, UniformFloat value);
-		void SetDouble(const std::string& name, UniformDouble value);
-		void SetVec2(const std::string& name, const UniformVec2& value);
-		void SetVec3(const std::string& name, const UniformVec3& value);
-		void SetVec4(const std::string& name, const UniformVec4& value);
-		void SetMat3x3(const std::string& name, const UniformMat3x3& value);
-		void SetMat4x4(const std::string& name, const UniformMat4x4& value);
-		void SetTexture(const std::string& name, const Ref<Texture>& value);
-		void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value);
+		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
+		void Set(const std::string& name, const T& value);
 		
+		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
+		bool Is(const std::string& key) const;
+
 		void Erase(const std::string& key);
 
 		void Rename(const std::string& key, const std::string& newKey);
-
-		template<typename T>
-		bool Is(const std::string& key) const;
 
 		const SerialTable::const_iterator begin() const;
 		const SerialTable::const_iterator end() const;
@@ -64,7 +56,20 @@ namespace Volund
 		void ConformToBlueprint();
 	};
 
-	template<typename T>
+	template<typename T, typename>
+	inline void Material::Set(const std::string& name, const T& value)
+	{
+		if (this->m_Table.Contains<T>(name))
+		{
+			this->m_Table[name] = value;
+		}
+		else
+		{
+			this->m_Table.Insert(name, value);
+		}
+	}
+
+	template<typename T, typename>
 	inline bool Material::Is(const std::string& key) const
 	{
 		return this->m_Table.Is<T>(key);

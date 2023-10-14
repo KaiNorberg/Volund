@@ -9,19 +9,10 @@
 
 #include "ShaderLoader/ShaderLoader.h"
 
+#include "../UniformTypes.h"
+
 namespace Volund
 {
-	using UniformInt = int;
-	using UniformFloat = float;
-	using UniformDouble = double;
-	using UniformVec2 = Vec2;
-	using UniformVec3 = Vec3;
-	using UniformVec4 = Vec4;
-	using UniformMat3x3 = Mat3x3;
-	using UniformMat4x4 = Mat4x4;
-	using UniformTexture = Ref<Texture>;
-	using UniformFramebuffer = Ref<Framebuffer>;
-
 	class Shader
 	{
 	public:

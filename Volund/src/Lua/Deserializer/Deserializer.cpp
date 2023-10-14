@@ -4,6 +4,7 @@
 #include <sol/sol.hpp>
 
 #include "Lua/LuaUtils/LuaUtils.h"
+#include "Lua/LuaTypes.h"
 
 namespace Volund
 {
@@ -65,7 +66,7 @@ namespace Volund
 
 		luaState->new_usertype<Vec4>("Vec4", sol::constructors<void(float, float, float, float)>());
 		luaState->new_usertype<Vec3>("Vec3", sol::constructors<void(float, float, float)>());
-		luaState->new_usertype<Vec2>("Vec2", sol::constructors<void(float, float)>());
+		luaState->new_usertype<LuaVec2>("Vec2", sol::constructors<void(float, float)>());
 
 		if (!filepath.empty())
 		{

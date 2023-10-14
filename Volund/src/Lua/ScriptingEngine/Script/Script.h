@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../LuaVec/LuaVec.h"
-
 #include "../ScriptingEngine.h"
 
 #include "Dispatcher/Event/Event.h"
@@ -18,14 +16,14 @@ namespace Volund
 
 		const std::vector<std::string>& GetPublicVariables();
 
-		template<typename T>
-		T GetVariable(const std::string& identifier);
+		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
+		T Get(const std::string& identifier);
 
-		template<typename T>
-		void SetVariable(const std::string& identifier, T value);
+		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
+		void Set(const std::string& identifier, T value);
 
-		template<typename T>
-		bool IsVariable(const std::string& identifier);
+		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
+		bool Is(const std::string& identifier);
 
 		void Procedure(const Event& e);
 
@@ -43,21 +41,21 @@ namespace Volund
 		Ref<ScriptingEngine> m_ScriptingEngine;
 	};
 
-	template<typename T>
-	inline void Script::SetVariable(const std::string& identifier, T value)
+	template<typename T, typename>
+	inline void Script::Set(const std::string& identifier, T value)
 	{
-		this->m_ScriptingEngine->SetVariable<T>(this->m_ScriptId, identifier, value);
+		this->m_ScriptingEngine->Set<T>(this->m_ScriptId, identifier, value);
 	}
 
-	template<typename T>
-	inline bool Script::IsVariable(const std::string& identifier)
+	template<typename T, typename>
+	inline bool Script::Is(const std::string& identifier)
 	{
-		return this->m_ScriptingEngine->IsVariable<T>(this->m_ScriptId, identifier);
+		return this->m_ScriptingEngine->Is<T>(this->m_ScriptId, identifier);
 	}
 
-	template<typename T>
-	inline T Script::GetVariable(const std::string& identifier)
+	template<typename T, typename>
+	inline T Script::Get(const std::string& identifier)
 	{
-		return this->m_ScriptingEngine->GetVariable<T>(this->m_ScriptId, identifier);
+		return this->m_ScriptingEngine->Get<T>(this->m_ScriptId, identifier);
 	}
 }

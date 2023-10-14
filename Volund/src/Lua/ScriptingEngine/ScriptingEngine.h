@@ -2,6 +2,8 @@
 
 #include "Dispatcher/Event/Event.h"
 
+#include "Lua/LuaTypes.h"
+
 namespace sol
 {
 	class state;
@@ -17,14 +19,14 @@ namespace Volund
 
 		static inline Logger m_LuaLogger = Logger("LUA");
 
-		template<typename T>
-		T GetVariable(uint64_t scriptId, const std::string& key);
+		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
+		T Get(uint64_t scriptId, const std::string& key);
 
-		template<typename T>
-		void SetVariable(uint64_t scriptId, const std::string& key, const T& value);
+		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
+		void Set(uint64_t scriptId, const std::string& key, const T& value);
 
-		template<typename T>
-		bool IsVariable(uint64_t scriptId, const std::string& key);
+		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
+		bool Is(uint64_t scriptId, const std::string& key);
 		
 		void ScriptProcedure(uint64_t scriptId, const Event& e);
 

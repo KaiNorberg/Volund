@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Lua/LuaTypes.h"
+
 namespace Volund
 {
 	class Serializer
@@ -17,7 +19,7 @@ namespace Volund
 		void Insert(const std::string& name, LuaFloat value);
 		void Insert(const std::string& name, LuaBool value);
 		void Insert(const std::string& name, const LuaString& value, bool asString = true);
-		void Insert(const std::string& name, const Vec2& value);
+		void Insert(const std::string& name, const LuaVec2& value);
 		void Insert(const std::string& name, const Vec3& value);
 		void Insert(const std::string& name, const Vec4& value);
 

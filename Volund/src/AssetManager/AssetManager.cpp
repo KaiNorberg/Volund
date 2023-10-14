@@ -66,15 +66,15 @@ namespace Volund
             }
             else if (uniform->Is<UniformFloat>())
             {
-                serializer.Insert(key, uniform->As<UniformFloat>());
+                serializer.Insert(key, (LuaFloat)uniform->As<UniformFloat>());
             }
             else if (uniform->Is<UniformDouble>())
             {
-                serializer.Insert(key, uniform->As<UniformDouble>());
+                serializer.Insert(key, (LuaFloat)uniform->As<UniformDouble>());
             }
             else if (uniform->Is<UniformVec2>())
             {
-                serializer.Insert(key, uniform->As<UniformVec2>());
+                serializer.Insert(key, (LuaVec2)uniform->As<UniformVec2>());
             }
             else if (uniform->Is<UniformVec3>())
             {
@@ -221,34 +221,34 @@ namespace Volund
                     serializer.StartTable("PublicVars");
                     for (const auto& publicVariable : script->GetPublicVariables())
                     {
-                        if (script->IsVariable<LuaInt>(publicVariable))
+                        if (script->Is<LuaInt>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<LuaInt>(publicVariable);
+                            auto rawValue = script->Get<LuaInt>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<LuaFloat>(publicVariable))
+                        else if (script->Is<LuaFloat>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<LuaFloat>(publicVariable);
+                            auto rawValue = script->Get<LuaFloat>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<LuaString>(publicVariable))
+                        else if (script->Is<LuaString>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<LuaString>(publicVariable);
+                            auto rawValue = script->Get<LuaString>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<Vec2>(publicVariable))
+                        else if (script->Is<LuaVec2>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<Vec2>(publicVariable);
+                            auto rawValue = script->Get<LuaVec2>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<Vec3>(publicVariable))
+                        else if (script->Is<Vec3>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<Vec3>(publicVariable);
+                            auto rawValue = script->Get<Vec3>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->IsVariable<Vec4>(publicVariable))
+                        else if (script->Is<Vec4>(publicVariable))
                         {
-                            auto rawValue = script->GetVariable<Vec4>(publicVariable);
+                            auto rawValue = script->Get<Vec4>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
                     }
@@ -404,27 +404,27 @@ namespace Volund
                         {
                             if (value->Is<LuaInt>())
                             {
-                                script->SetVariable(key, value->As<LuaInt>());
+                                script->Set(key, value->As<LuaInt>());
                             }
                             else if (value->Is<LuaFloat>())
                             {
-                                script->SetVariable(key, value->As<LuaFloat>());
+                                script->Set(key, value->As<LuaFloat>());
                             }
                             else if (value->Is<LuaString>())
                             {
-                                script->SetVariable(key, value->As<LuaString>());
+                                script->Set(key, value->As<LuaString>());
                             }
-                            else if (value->Is<Vec2>())
+                            else if (value->Is<LuaVec2>())
                             {
-                                script->SetVariable(key, value->As<Vec2>());
+                                script->Set(key, value->As<LuaVec2>());
                             }
                             else if (value->Is<Vec3>())
                             {
-                                script->SetVariable(key, value->As<Vec3>());
+                                script->Set(key, value->As<Vec3>());
                             }
                             else if (value->Is<Vec4>())
                             {
-                                script->SetVariable(key, value->As<Vec4>());
+                                script->Set(key, value->As<Vec4>());
                             }
                         }
                     }
@@ -460,36 +460,36 @@ namespace Volund
             }
 
             std::string shaderFilepath = materialData[VOLUND_SERIAL_MATERIAL_SHADER];
-            SerialTable uniforms = materialData[VOLUND_SERIAL_MATERIAL_UNIFORMS];
+            SerialTable luaUniforms = materialData[VOLUND_SERIAL_MATERIAL_UNIFORMS];
 
             auto shader = this->Fetch<Shader>(shaderFilepath);
 
-            for (auto& [key, value] : uniforms)
+            for (auto& [key, luaUniform] : luaUniforms)
             {
-                if (value->Is<LuaInt>())
+                if (luaUniform->Is<LuaInt>())
                 {
-                    material->SetInt(key, value->As<LuaInt>());
+                    material->Set(key, (UniformInt)luaUniform->As<LuaInt>());
                 }
-                else if (value->Is<LuaFloat>())
+                else if (luaUniform->Is<LuaFloat>())
                 {
-                    material->SetFloat(key, value->As<LuaFloat>());
+                    material->Set(key, (UniformFloat)luaUniform->As<LuaFloat>());
                 }
-                else if (value->Is<Vec2>())
+                else if (luaUniform->Is<LuaVec2>())
                 {
-                    material->SetVec2(key, value->As<Vec2>());
+                    material->Set(key, (UniformVec2)luaUniform->As<LuaVec2>());
                 }
-                else if (value->Is<Vec3>())
+                else if (luaUniform->Is<Vec3>())
                 {
-                    material->SetVec3(key, value->As<Vec3>());
+                    material->Set(key, luaUniform->As<Vec3>());
                 }
-                else if (value->Is<Vec4>())
+                else if (luaUniform->Is<Vec4>())
                 {
-                    material->SetVec4(key, value->As<Vec4>());
+                    material->Set(key, luaUniform->As<Vec4>());
                 }
-                else if (value->Is<LuaString>())
+                else if (luaUniform->Is<LuaString>())
                 {
-                    auto texture = this->Fetch<Texture>(value->As<LuaString>());
-                    material->SetTexture(key, texture);
+                    auto texture = this->Fetch<Texture>(luaUniform->As<LuaString>());
+                    material->Set(key, texture);
                 }
             }
 

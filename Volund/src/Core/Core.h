@@ -61,10 +61,6 @@ namespace Volund
 	template <typename T>
 	using WeakRef = std::weak_ptr<T>;
 
-	using Vec2 = glm::vec<2, float>;
-	using DVec2 = glm::vec<2, double>;
-	using IVec2 = glm::vec<2, int32_t>;
-	using I64Vec2 = glm::vec<2, int64_t>;
 	using Vec3 = glm::vec<3, float>;
 	using DVec3 = glm::vec<3, double>;
 	using IVec3 = glm::vec<3, int32_t>;
@@ -85,14 +81,6 @@ namespace Volund
 	using I64Mat4x4 = glm::mat<4, 4, int64_t>;
 	using Quat = glm::qua<float>;
 	using DQuat = glm::qua<double>;
-
-	using LuaInt = int64_t;
-	using LuaFloat = double;
-	using LuaBool = bool;
-	using LuaString = std::string;
-	/*using LuaVec2 = Vec2;
-	using LuaVec3 = Vec3;
-	using LuaVec4 = Vec4;*/
 }
 
 namespace fs = std::filesystem;

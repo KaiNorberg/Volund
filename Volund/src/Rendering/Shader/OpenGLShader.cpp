@@ -53,7 +53,7 @@ namespace Volund
 		VOLUND_PROFILE_FUNCTION();
 
 		this->Bind();
-		glUniform2fv(this->GetUniformLocation(name), 1, value_ptr(value));
+		glUniform2fv(this->GetUniformLocation(name), 1, &(value.x));
 	}
 
 	void OpenGLShader::SetVec3(const std::string& name, const UniformVec3& value)
