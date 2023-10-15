@@ -33,6 +33,6 @@
 #include <glm/glm/gtc/type_ptr.hpp>
 
 #include "Core/Core.h"
-#include "Utils/Utils.h"
 #include "Logger/Logger.h"
+#include "Utils/Utils.h"
 #include "Instrumentor/Instrumentor.h"

@@ -8,7 +8,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->Quaternion = Quat(glm::radians(rotation));
+		this->Quaternion = Quat(Math::Radians(rotation).GLM());
 	}
 
 	Vec3 Transform::GetRotation() const
@@ -22,28 +22,28 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->Quaternion *= Quat(glm::radians(rotation));
+		this->Quaternion *= Quat(Math::Radians(rotation).GLM());
 	}
 
 	Vec3 Transform::GetFront() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return this->Quaternion * Utils::BACK;
+		return this->Quaternion * Math::BACK.GLM();
 	}
 
 	Vec3 Transform::GetRight() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return this->Quaternion * Utils::RIGHT;
+		return this->Quaternion * Math::RIGHT.GLM();
 	}
 
 	Vec3 Transform::GetUp() const
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		return this->Quaternion * Utils::UP;
+		return this->Quaternion * Math::UP.GLM();
 	}
 
 	Mat4x4 Transform::GetModelMatrix() const
@@ -52,9 +52,11 @@ namespace Volund
 
 		Mat4x4 modelMatrix = Mat4x4(1.0f);
 
-		modelMatrix = translate(modelMatrix, this->Position);
-		modelMatrix *= Mat4x4(this->Quaternion);
-		modelMatrix = scale(modelMatrix, this->Scale);
+		auto test = glm::mat<4, 4, float>(1.0) * glm::vec<4, float>();
+
+		modelMatrix = Math::Translate(modelMatrix, this->Position);
+		//modelMatrix *= Mat4x4(this->Quaternion);
+		modelMatrix = Math::Scale(modelMatrix, this->Scale);
 
 		return modelMatrix;
 	}

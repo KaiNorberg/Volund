@@ -1,18 +1,9 @@
 #pragma once
 
-#define PI 3.14159265359f
+#include "Math/Math.h"
 
 namespace Volund::Utils
 {
-	static inline const Vec3 UP = Vec3(0, 1, 0);
-	static inline const Vec3 DOWN = Vec3(0, -1, 0);
-	static inline const Vec3 FORWARD = Vec3(0, 0, 1);
-	static inline const Vec3 BACK = Vec3(0, 0, -1);
-	static inline const Vec3 LEFT = Vec3(-1, 0, 0);
-	static inline const Vec3 RIGHT = Vec3(1, 0, 0);
-	static inline const Vec3 ONE = Vec3(1, 1, 1);
-	static inline const Vec3 ZERO = Vec3(0, 0, 0);
-
 	bool CheckBit(uint32_t var, uint8_t pos);
 
 	fs::path GenerateUniquePath(const fs::path& basePath);

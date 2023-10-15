@@ -630,7 +630,7 @@ namespace Volund
 
 	VL::Vec2 ImGuiWindow::ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize)
 	{
-		VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Position, 1.0f);
+		VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Position.x, Position.y, Position.z, 1.0f).GLM();
 		ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
 		return VL::Vec2(WindowPos.x + ScreenPosition.x * WindowSize.x, WindowPos.y + (1.0f - ScreenPosition.y) * WindowSize.y);
 	}

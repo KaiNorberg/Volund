@@ -78,7 +78,7 @@ namespace Volund
             }
             else if (uniform->Is<UniformVec3>())
             {
-                serializer.Insert(key, uniform->As<UniformVec3>());
+                serializer.Insert(key, (LuaVec3)uniform->As<UniformVec3>());
             }
             else if (uniform->Is<UniformVec4>())
             {
@@ -127,9 +127,9 @@ namespace Volund
 
                 serializer.StartTable();
                 serializer.Insert("ComponentType", (LuaInt)LuaComponentID::Transform);
-                serializer.Insert("Position", component->Position);
-                serializer.Insert("Rotation", component->GetRotation());
-                serializer.Insert("Scale", component->Scale);
+                serializer.Insert("Position", (LuaVec3)component->Position);
+                serializer.Insert("Rotation", (LuaVec3)component->GetRotation());
+                serializer.Insert("Scale", (LuaVec3)component->Scale);
                 serializer.EndTable();
             }
 
@@ -179,7 +179,7 @@ namespace Volund
 
                 serializer.StartTable();
                 serializer.Insert("ComponentType", (LuaInt)LuaComponentID::PointLight);
-                serializer.Insert("Color", component->Color);
+                serializer.Insert("Color", (LuaVec3)component->Color);
                 serializer.Insert("Brightness", component->Brightness);
                 serializer.EndTable();
             }
@@ -241,9 +241,9 @@ namespace Volund
                             auto rawValue = script->Get<LuaVec2>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
-                        else if (script->Is<Vec3>(publicVariable))
+                        else if (script->Is<LuaVec3>(publicVariable))
                         {
-                            auto rawValue = script->Get<Vec3>(publicVariable);
+                            auto rawValue = script->Get<LuaVec3>(publicVariable);
                             serializer.Insert(publicVariable, rawValue);
                         }
                         else if (script->Is<Vec4>(publicVariable))
@@ -418,9 +418,9 @@ namespace Volund
                             {
                                 script->Set(key, value->As<LuaVec2>());
                             }
-                            else if (value->Is<Vec3>())
+                            else if (value->Is<LuaVec3>())
                             {
-                                script->Set(key, value->As<Vec3>());
+                                script->Set(key, value->As<LuaVec3>());
                             }
                             else if (value->Is<Vec4>())
                             {

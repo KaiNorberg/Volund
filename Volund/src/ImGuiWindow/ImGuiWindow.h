@@ -6,7 +6,7 @@
 #define VOLUND_IMGUI_FILE "VOLUND_IMGUI_FILE"
 #define VOLUND_IMGUI_DIRECTORY "VOLUND_IMGUI_DIRECTORY"
 
-#include "Math/Vec/Vec.h"
+#include "Math/Math.h"
 
 namespace Volund
 {

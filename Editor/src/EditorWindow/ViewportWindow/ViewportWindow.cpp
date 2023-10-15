@@ -124,48 +124,48 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep, bo
 			this->m_Distance -= (scrollDelta)*this->ZoomSpeed * this->m_Distance;
 		}
 
-		VL::Vec3 front = glm::normalize(this->m_BallCenter - this->m_Position);
-		VL::Quat cameraQuaternion = glm::quatLookAt(front, -VL::Utils::UP);
-		VL::Vec3 right = cameraQuaternion * VL::Utils::RIGHT;
+		VL::Vec3 front = VL::Math::Normalize(this->m_BallCenter - this->m_Position);
+		VL::Quat cameraQuaternion = glm::quatLookAt(front.GLM(), -VL::Math::UP.GLM());
+		VL::Vec3 right = cameraQuaternion * VL::Math::RIGHT.GLM();
 
 		if (input.IsHeld('W'))
 		{
-			this->m_BallCenter += glm::normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_BallCenter += VL::Math::Normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
 		}
 		if (input.IsHeld('S'))
 		{
-			this->m_BallCenter -= glm::normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_BallCenter -= VL::Math::Normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
 		}
 		if (input.IsHeld('A'))
 		{
-			this->m_BallCenter += glm::normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_BallCenter += VL::Math::Normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
 		}
 		if (input.IsHeld('D'))
 		{
-			this->m_BallCenter -= glm::normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_BallCenter -= VL::Math::Normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
 		}
 		if (input.IsHeld(VOLUND_KEY_SPACE))
 		{
-			this->m_BallCenter += VL::Utils::UP * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_BallCenter += VL::Math::UP * float(timeStep) * this->MoveSpeed * this->m_Distance;
 		}
 		if (input.IsHeld(VOLUND_KEY_SHIFT))
 		{
-			this->m_BallCenter -= VL::Utils::UP * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_BallCenter -= VL::Math::UP * float(timeStep) * this->MoveSpeed * this->m_Distance;
 		}
 
 		this->m_BallRotation -= VL::Vec3(cursorDelta.y, cursorDelta.x, 0.0f) * this->LookSpeed;
 		this->m_BallRotation.x = std::clamp(this->m_BallRotation.x, -89.0f, 89.0f);
 
-		VL::Quat ballQuaternion = VL::Quat(glm::radians(this->m_BallRotation));
+		VL::Quat ballQuaternion = VL::Quat(VL::Math::Radians(this->m_BallRotation).GLM());
 
 		this->m_Rotation = glm::eulerAngles(cameraQuaternion);
 
 		VL::Mat4x4 ballMatrix = VL::Mat4x4(1.0f);
-		ballMatrix = glm::translate(ballMatrix, this->m_BallCenter);
-		ballMatrix *= VL::Mat4x4(ballQuaternion);
-		ballMatrix = glm::scale(ballMatrix, VL::Vec3(this->m_Distance));
+		ballMatrix = VL::Math::Translate(ballMatrix, this->m_BallCenter);
+		//ballMatrix *= VL::Mat4x4(ballQuaternion);
+		ballMatrix = VL::Math::Scale(ballMatrix, VL::Vec3(this->m_Distance));
 
-		this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, 1.0, 1.0);
+		this->m_Position = ballMatrix * VL::Vec3(0.0, 0.0, 1.0);
 	}
 	/*else if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
 	{
@@ -188,10 +188,10 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 		this->m_EditorFramebuffer->SetSpec(spec);
 	}
 
-	VL::Vec3 front = glm::normalize(this->m_BallCenter - this->m_Position);
+	VL::Vec3 front = VL::Math::Normalize(this->m_BallCenter - this->m_Position);
 
-	VL::Mat4x4 viewMatrix = glm::lookAt(this->m_Position, this->m_Position + front, -VL::Utils::UP);
-	VL::Mat4x4 projectionMatrix = glm::perspective(this->FOV, (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
+	VL::Mat4x4 viewMatrix = VL::Math::ViewMatrix(this->m_Position, this->m_Position + front, VL::Math::UP * -1);
+	VL::Mat4x4 projectionMatrix = VL::Math::ProjectionMatrix(this->FOV, (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
 
 	this->m_Renderer->Begin(this->m_SceneFramebuffer);
 
@@ -229,10 +229,10 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	this->m_Distance = 10.0f;
 
 	VL::Mat4x4 ballMatrix = VL::Mat4x4(1.0f);
-	ballMatrix = glm::translate(ballMatrix, this->m_BallCenter);
-	ballMatrix *= VL::Mat4x4(VL::Quat(glm::radians(this->m_BallRotation)));
-	ballMatrix = glm::scale(ballMatrix, VL::Vec3(this->m_Distance));
-	this->m_Position = ballMatrix * VL::Vec4(0.0, 0.0, 1.0, 1.0);
+	ballMatrix = VL::Math::Translate(ballMatrix, this->m_BallCenter);
+	//ballMatrix *= VL::Mat4x4(VL::Quat(VL::Math::Radians(this->m_BallRotation).GLM()));
+	ballMatrix = VL::Math::Scale(ballMatrix, VL::Vec3(this->m_Distance));
+	this->m_Position = ballMatrix * VL::Vec3(0.0, 0.0, 1.0);
 
 
 	this->m_GridEffect = VL::Effect::Create(VL::Shader::Create("data/shaders/grid.shader"));

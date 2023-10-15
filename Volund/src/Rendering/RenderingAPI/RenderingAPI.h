@@ -3,7 +3,7 @@
 #include "Rendering/Mesh/Mesh.h"
 #include "Rendering/Framebuffer/Framebuffer.h"
 
-#include "Math/Vec/Vec.h"
+#include "Math/Math.h"
 
 namespace Volund
 {

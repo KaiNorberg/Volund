@@ -93,7 +93,7 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 			auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
 
 			std::string label = "##Color" + std::to_string((uint64_t)pointLight.get());
-			ImGui::ColorPicker3(label.c_str(), glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
+			ImGui::ColorPicker3(label.c_str(), &pointLight->Color.x, ImGuiColorEditFlags_Float);
 
 			ImGuiFloat("Brightness", pointLight->Brightness);
 		});
@@ -193,12 +193,12 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 							script->Set(identifier, (VL::LuaVec2)rawValue);
 						}
 					}
-					else if (script->Is<VL::Vec3>(identifier))
+					else if (script->Is<VL::LuaVec3>(identifier))
 					{
-						auto rawValue = script->Get<VL::Vec3>(identifier);
+						auto rawValue = (VL::Vec3)script->Get<VL::LuaVec3>(identifier);
 						if (ImGuiVec3(identifier, rawValue))
 						{
-							script->Set(identifier, rawValue);
+							script->Set(identifier, (VL::LuaVec3)rawValue);
 						}
 					}
 					else if (script->Is<VL::Vec4>(identifier))

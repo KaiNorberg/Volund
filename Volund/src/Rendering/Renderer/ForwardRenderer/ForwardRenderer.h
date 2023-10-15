@@ -32,8 +32,8 @@ namespace Volund
 
 		struct alignas(16) CameraBuffer
 		{
-			Mat4x4 ViewMatrix = Mat4x4();
-			Mat4x4 ProjectionMatrix = Mat4x4();
+			Mat4x4 ViewMatrix = Mat4x4(1.0f);
+			Mat4x4 ProjectionMatrix = Mat4x4(1.0f);
 		};
 
 		Ref<UniformBuffer> m_CameraUniformBuffer;

@@ -23,11 +23,13 @@ namespace Volund
 	{
 		return (*this->m_LuaState)[scriptId][key];
 	}
+
 	template<typename T, typename>
 	void ScriptingEngine::Set(uint64_t scriptId, const std::string& key, const T& value)
 	{
 		(*this->m_LuaState)[scriptId][key] = value;
 	}
+
 	template<typename T, typename>
 	bool ScriptingEngine::Is(uint64_t scriptId, const std::string& key)
 	{
@@ -183,7 +185,7 @@ namespace Volund
 	template LuaBool ScriptingEngine::Get<LuaBool>(uint64_t, const std::string&);
 	template LuaString ScriptingEngine::Get<LuaString>(uint64_t, const std::string&);
 	template LuaVec2 ScriptingEngine::Get<LuaVec2>(uint64_t, const std::string&);
-	template Vec3 ScriptingEngine::Get<Vec3>(uint64_t, const std::string&);
+	template LuaVec3 ScriptingEngine::Get<LuaVec3>(uint64_t, const std::string&);
 	template Vec4 ScriptingEngine::Get<Vec4>(uint64_t, const std::string&);
 
 	template void ScriptingEngine::Set<LuaInt>(uint64_t, const std::string&, const LuaInt&);
@@ -191,7 +193,7 @@ namespace Volund
 	template void ScriptingEngine::Set<LuaBool>(uint64_t, const std::string&, const LuaBool&);
 	template void ScriptingEngine::Set<LuaString>(uint64_t, const std::string&, const LuaString&);
 	template void ScriptingEngine::Set<LuaVec2>(uint64_t, const std::string&, const LuaVec2&);
-	template void ScriptingEngine::Set<Vec3>(uint64_t, const std::string&, const Vec3&);
+	template void ScriptingEngine::Set<LuaVec3>(uint64_t, const std::string&, const LuaVec3&);
 	template void ScriptingEngine::Set<Vec4>(uint64_t, const std::string&, const Vec4&);
 
 	template bool ScriptingEngine::Is<LuaInt>(uint64_t, const std::string&);
@@ -199,6 +201,6 @@ namespace Volund
 	template bool ScriptingEngine::Is<LuaBool>(uint64_t, const std::string&);
 	template bool ScriptingEngine::Is<LuaString>(uint64_t, const std::string&);
 	template bool ScriptingEngine::Is<LuaVec2>(uint64_t, const std::string&);
-	template bool ScriptingEngine::Is<Vec3>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaVec3>(uint64_t, const std::string&);
 	template bool ScriptingEngine::Is<Vec4>(uint64_t, const std::string&);
 }

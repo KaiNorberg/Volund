@@ -20,7 +20,7 @@ namespace Volund
 		void Insert(const std::string& name, LuaBool value);
 		void Insert(const std::string& name, const LuaString& value, bool asString = true);
 		void Insert(const std::string& name, const LuaVec2& value);
-		void Insert(const std::string& name, const Vec3& value);
+		void Insert(const std::string& name, const LuaVec3& value);
 		void Insert(const std::string& name, const Vec4& value);
 
 		Serializer(const std::string& fileType);

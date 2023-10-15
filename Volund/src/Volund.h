@@ -4,6 +4,8 @@
 
 #include "Core/Core.h"
 
+#include "Math/Math.h"
+
 #include "Application/Application.h"
 #include "Application/Module/Modules.h"
 

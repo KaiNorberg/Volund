@@ -7,7 +7,7 @@ namespace Volund
 {
 	AABB AABB::ToWorldSpace(const Mat4x4& modelMatrix)
 	{
-		VOLUND_PROFILE_FUNCTION();
+		/*VOLUND_PROFILE_FUNCTION();
 
 		glm::vec3 scale;
 		glm::quat rotation;
@@ -29,7 +29,8 @@ namespace Volund
 			}
 		}
 
-		return newAABB;
+		return newAABB;*/
+		return AABB();
 	}
 
 	AABB::AABB(const float points[], const uint32_t count)

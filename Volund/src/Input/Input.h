@@ -2,7 +2,7 @@
 
 #include "Dispatcher/Event/Event.h"
 
-#include "Math/Vec/Vec.h"
+#include "Math/Math.h"
 
 namespace Volund
 {

@@ -26,6 +26,6 @@ namespace Volund
 
 		Vec3 m_Rotation = Vec3(0.0f);
 
-		IVec2 m_OldMousePosition = IVec2(0.0);
+		IVec2 m_OldMousePosition = IVec2(0);
 	};
 } //namespace Volund
