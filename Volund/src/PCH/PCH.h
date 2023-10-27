@@ -31,6 +31,7 @@
 #include <glm/glm/gtc/matrix_transform.hpp>
 #include <glm/glm/gtc/quaternion.hpp>
 #include <glm/glm/gtc/type_ptr.hpp>
+#include <glm/glm/gtx/euler_angles.hpp>
 
 #include "Core/Core.h"
 #include "Logger/Logger.h"
