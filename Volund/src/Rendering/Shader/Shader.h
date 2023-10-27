@@ -29,7 +29,7 @@ namespace Volund
 		virtual void SetVec2(const std::string& name, const UniformVec2& value) = 0;
 		virtual void SetVec3(const std::string& name, const UniformVec3& value) = 0;
 		virtual void SetVec4(const std::string& name, const UniformVec4& value) = 0;
-		virtual void SetMat3x3(const std::string& name, const UniformMat3x3& value, bool transpose = false) = 0;
+		//virtual void SetMat3x3(const std::string& name, const UniformMat3x3& value, bool transpose = false) = 0;
 		virtual void SetMat4x4(const std::string& name, const UniformMat4x4& value, bool transpose = false) = 0;
 		virtual void SetTexture(const std::string& name, const UniformTexture& value, uint32_t textureUnit) = 0;
 		virtual void SetFramebuffer(const std::string& name, const UniformFramebuffer& value, uint32_t textureUnit) = 0;

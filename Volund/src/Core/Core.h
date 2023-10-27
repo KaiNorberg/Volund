@@ -60,13 +60,6 @@ namespace Volund
 	/// </summary>
 	template <typename T>
 	using WeakRef = std::weak_ptr<T>;
-
-	using Mat3x3 = glm::mat<3, 3, float>;
-	using DMat3x3 = glm::mat<3, 3, double>;
-	using IMat3x3 = glm::mat<3, 3, int32_t>;
-	using I64Mat3x3 = glm::mat<3, 3, int64_t>;
-	//using Quat = glm::qua<float>;
-	//using DQuat = glm::qua<double>;
 }
 
 namespace fs = std::filesystem;

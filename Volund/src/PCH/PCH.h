@@ -25,14 +25,6 @@
 #include <ranges>
 #include <charconv>
 
-#include <glm/glm/glm.hpp>
-#include <glm/glm/vec2.hpp>
-#include <glm/glm/gtx/norm.hpp>
-#include <glm/glm/gtc/matrix_transform.hpp>
-#include <glm/glm/gtc/quaternion.hpp>
-#include <glm/glm/gtc/type_ptr.hpp>
-#include <glm/glm/gtx/euler_angles.hpp>
-
 #include "Core/Core.h"
 #include "Logger/Logger.h"
 #include "Utils/Utils.h"

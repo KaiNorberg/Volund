@@ -22,7 +22,6 @@ namespace Volund
 			(*this)[3] + matrix[3]);
 	}
 
-
 	Mat4x4 Mat4x4::operator+(const float& scalar) const
 	{
 		return Mat4x4(
@@ -31,7 +30,6 @@ namespace Volund
 			(*this)[2] + scalar,
 			(*this)[3] + scalar);
 	}
-
 
 	Mat4x4 Mat4x4::operator-(const Mat4x4& matrix) const
 	{
@@ -42,7 +40,6 @@ namespace Volund
 			(*this)[3] - matrix[3]);
 	}
 
-
 	Mat4x4 Mat4x4::operator-(const float& scalar) const
 	{
 		return Mat4x4(
@@ -51,7 +48,6 @@ namespace Volund
 			(*this)[2] - scalar,
 			(*this)[3] - scalar);
 	}
-
 
 	Mat4x4 Mat4x4::operator*(const Mat4x4& matrix) const
 	{
@@ -73,7 +69,6 @@ namespace Volund
 		return Result;
 	}
 
-
 	Mat4x4 Mat4x4::operator*(const float& scalar) const
 	{
 		return Mat4x4(
@@ -82,7 +77,6 @@ namespace Volund
 			(*this)[2] * scalar,
 			(*this)[3] * scalar);
 	}
-
 
 	Vec4 Mat4x4::operator*(const Vec4& vector) const
 	{
@@ -100,13 +94,11 @@ namespace Volund
 		return add2;
 	}
 
-
 	Vector<3, float> Mat4x4::operator*(const Vector<3, float>& vector) const
 	{
 		Vec4 result = (*this) * Vec4(vector.x, vector.y, vector.z, 1.0f);
 		return Vector<3, float>(result.x, result.y, result.z);
 	}
-
 
 	void Mat4x4::operator+=(const Mat4x4& matrix)
 	{
@@ -116,7 +108,6 @@ namespace Volund
 		this->m_Data[3] += matrix[3];
 	}
 
-
 	void Mat4x4::operator+=(const float& scalar)
 	{
 		this->m_Data[0] += scalar;
@@ -124,7 +115,6 @@ namespace Volund
 		this->m_Data[2] += scalar;
 		this->m_Data[3] += scalar;
 	}
-
 
 	void Mat4x4::operator-=(const Mat4x4& matrix)
 	{
@@ -134,7 +124,6 @@ namespace Volund
 		this->m_Data[3] -= matrix[3];
 	}
 
-
 	void Mat4x4::operator-=(const float& scalar)
 	{
 		this->m_Data[0] -= scalar;
@@ -142,7 +131,6 @@ namespace Volund
 		this->m_Data[2] -= scalar;
 		this->m_Data[3] -= scalar;
 	}
-
 
 	void Mat4x4::operator*=(const Mat4x4& matrix)
 	{
@@ -158,7 +146,6 @@ namespace Volund
 		this->m_Data[3] *= scalar;
 	}
 
-
 	Mat4x4::Mat4x4(const Vec4& vector1, const Vec4& vector2, const Vec4& vector3, const Vec4& vector4)
 	{
 		this->m_Data[0] = vector1;
@@ -166,7 +153,6 @@ namespace Volund
 		this->m_Data[2] = vector3;
 		this->m_Data[3] = vector4;
 	}
-
 
 	Mat4x4::Mat4x4(const std::array<float, 16> initList)
 	{
@@ -176,21 +162,10 @@ namespace Volund
 		this->m_Data[3] = Vec4(initList[12], initList[13], initList[14], initList[15]);
 	}
 
-
 	Mat4x4::Mat4x4(const Mat4x4& matrix)
 	{
 		this->m_Data = matrix.m_Data;
 	}
-
-
-	Mat4x4::Mat4x4(const glm::mat4x4& matrix)
-	{
-		this->m_Data[0] = Vec4(matrix[0]);
-		this->m_Data[1] = Vec4(matrix[1]);
-		this->m_Data[2] = Vec4(matrix[2]);
-		this->m_Data[3] = Vec4(matrix[3]);
-	}
-
 
 	Mat4x4::Mat4x4(const float& scalar)
 	{
@@ -199,7 +174,6 @@ namespace Volund
 		this->m_Data[2] = Vec4(0, 0, scalar, 0);
 		this->m_Data[3] = Vec4(0, 0, 0, scalar);
 	}
-
 
 	Mat4x4::Mat4x4()
 	{

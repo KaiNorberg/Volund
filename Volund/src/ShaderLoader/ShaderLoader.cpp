@@ -138,10 +138,10 @@ namespace Volund
                     {
                         this->m_MaterialBlueprint->Insert<UniformTexture>(uniformName);
                     }
-                    else if (words[1].starts_with("mat3"))
+                    /*else if (words[1].starts_with("mat3"))
                     {
                         this->m_MaterialBlueprint->Insert<UniformMat3x3>(uniformName);
-                    }
+                    }*/
                     else if (words[1].starts_with("mat4"))
                     {
                         this->m_MaterialBlueprint->Insert<UniformMat4x4>(uniformName);

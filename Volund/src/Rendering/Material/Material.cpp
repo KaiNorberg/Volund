@@ -75,10 +75,10 @@ namespace Volund
 			{
 				this->m_Shader->SetVec4(name, uniform->As<UniformVec4>());
 			}
-			else if (uniform->Is<UniformMat3x3>())
+			/*else if (uniform->Is<UniformMat3x3>())
 			{
 				this->m_Shader->SetMat3x3(name, uniform->As<UniformMat3x3>());
-			}
+			}*/
 			else if (uniform->Is<UniformMat4x4>())
 			{
 				this->m_Shader->SetMat4x4(name, uniform->As<UniformMat4x4>());

@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "AABB.h"
 
-#include <glm/glm/gtx/matrix_decompose.hpp>
-
 namespace Volund
 {
 	AABB AABB::ToWorldSpace(const Mat4x4& modelMatrix)

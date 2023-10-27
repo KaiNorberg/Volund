@@ -13,14 +13,10 @@ namespace Volund
 		union { T y, g, t; };
 		union { T z, b, p; };
 
-		typedef glm::vec<3, T> GLMType;
-
 		static VectorSize GetSize();
 
 		T Length() const;
 		T Length2() const;
-
-		GLMType GLM() const;
 
 		T& operator[](uint8_t index);
 		const T& operator[](uint8_t index) const;
@@ -58,7 +54,6 @@ namespace Volund
 		Vector() = default;
 
 		Vector(const Vector<3, T>& vector);
-		Vector(const GLMType& vector);
 		Vector(T x, T y, T z);
 		Vector(T scalar);
 	};
@@ -79,12 +74,6 @@ namespace Volund
 	inline VectorSize Vector<3, T>::GetSize()
 	{
 		return 3;
-	}
-
-	template<typename T>
-	inline Vector<3, T>::GLMType Vector<3, T>::GLM() const
-	{
-		return glm::vec<3, T>(this->x, this->y, this->z);
 	}
 
 	template<typename T>
@@ -282,14 +271,6 @@ namespace Volund
 
 	template<typename T>
 	inline Vector<3, T>::Vector(const Vector<3, T>& vector)
-	{
-		this->x = vector.x;
-		this->y = vector.y;
-		this->z = vector.z;
-	}
-
-	template<typename T>
-	inline Vector<3, T>::Vector(const GLMType& vector)
 	{
 		this->x = vector.x;
 		this->y = vector.y;

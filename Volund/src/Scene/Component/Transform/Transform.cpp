@@ -53,7 +53,7 @@ namespace Volund
 		Mat4x4 modelMatrix = Mat4x4(1.0f);
 
 		modelMatrix = Math::Translate(modelMatrix, this->Position);
-		modelMatrix *= Mat4x4(glm::mat4x4(glm::quat(this->Quaternion.w, this->Quaternion.x, this->Quaternion.y, this->Quaternion.z)));
+		modelMatrix *= Mat4x4(this->Quaternion);
 		modelMatrix = Math::Scale(modelMatrix, this->Scale);
 
 		return modelMatrix;

@@ -40,7 +40,6 @@ namespace Volund
 		Mat4x4(const Vec4& vector1, const Vec4& vector2, const Vec4& vector3, const Vec4& vector4);
 		Mat4x4(const std::array<float, 16> initList);
 		Mat4x4(const Mat4x4& matrix);
-		Mat4x4(const glm::mat4x4& matrix);
 		Mat4x4(const float& scalar);
 
 		Mat4x4();

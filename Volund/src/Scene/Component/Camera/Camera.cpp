@@ -63,7 +63,7 @@ namespace Volund
 	{
 		if (abs(aspectRatio - std::numeric_limits<float>::epsilon()) > 0.0f)
 		{
-			return Math::ProjectionMatrix(glm::radians(this->FOV), aspectRatio, this->NearPlane, this->FarPlane);
+			return Math::ProjectionMatrix(Math::Radians(this->FOV), aspectRatio, this->NearPlane, this->FarPlane);
 		}
 		else
 		{
