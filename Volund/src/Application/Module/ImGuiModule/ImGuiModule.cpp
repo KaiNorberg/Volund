@@ -1,22 +1,18 @@
 #include "PCH/PCH.h"
 #include "ImGuiModule.h"
 
-#include <imgui.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_glfw.h>
+#include <imgui/imgui.h>
+#include <imgui/backends/imgui_impl_opengl3.h>
+#include <imgui/backends/imgui_impl_glfw.h>
+#include <imgui/imgui_internal.h>
+#include <imgui/misc/cpp/imgui_stdlib.h>
 
 #include "Application/Application.h"
-#include "Application/Module/WindowModule/WindowModule.h"
 
 namespace Volund
 {
 	void ImGuiModule::OnAttach(Application* app)
 	{
-		if (!app->HasModule<WindowModule>())
-		{
-			VOLUND_ERROR("Cant attach ImGuiModule to an app without a WindowModule!");
-		}
-
 		static std::string iniFilename = fs::current_path().string() + "/imgui.ini";
 
 		IMGUI_CHECKVERSION();
@@ -26,7 +22,7 @@ namespace Volund
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		io.IniFilename = iniFilename.c_str();
 
-		const auto appWindow = app->GetModule<WindowModule>()->GetWindow();
+		const auto appWindow = app->GetWindow();
 
 		ImGui_ImplGlfw_InitForOpenGL(appWindow->GetGlfwWindow(), false);
 		ImGui_ImplOpenGL3_Init();
@@ -113,7 +109,7 @@ namespace Volund
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, 0.0f);
 		ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0.0f, 0.0f));
 
-		if (ImGui::Begin("DockSpace Demo", &open, windowFlags))
+		if (ImGui::Begin("DockSpace", &open, windowFlags))
 		{
 			ImGui::PopStyleVar(3);
 

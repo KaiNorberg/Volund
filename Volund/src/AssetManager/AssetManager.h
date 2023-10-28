@@ -29,7 +29,7 @@ namespace Volund
 
     private:
 
-        AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
+        AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
 
         std::string GetRelativePath(const std::string& absolutePath);
 

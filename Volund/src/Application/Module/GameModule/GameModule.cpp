@@ -3,18 +3,12 @@
 
 #include "Application/Application.h"
 
-#include "Application/Module/WindowModule/WindowModule.h"
-
 namespace Volund
 {
 	void GameModule::OnAttach(Application* app)
 	{
-		if (!app->HasModule<WindowModule>())
-		{
-			VOLUND_ERROR("Cant attach a GameModule to an app without a WindowModule!");
-		}
-
-		this->m_GameWindow = app->GetModule<WindowModule>()->GetWindow();
+		this->m_GameWindow = app->GetWindow();
+		this->m_Dispatcher = app->GetDispatcher();
 
 		this->m_Renderer = std::make_shared<ForwardRenderer>();
 
@@ -101,6 +95,6 @@ namespace Volund
 
 		this->m_GameState.reset();
 
-		//this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, this->m_Filepath);
+		this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, this->m_Filepath);
 	}
 }

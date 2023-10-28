@@ -5,30 +5,23 @@ namespace Volund
 {
 	AABB AABB::ToWorldSpace(const Mat4x4& modelMatrix)
 	{
-		/*VOLUND_PROFILE_FUNCTION();
+		VOLUND_PROFILE_FUNCTION();
 
-		glm::vec3 scale;
-		glm::quat rotation;
-		glm::vec3 position;
-		glm::vec3 skew;
-		glm::vec4 perspective;
-		glm::decompose(modelMatrix, scale, rotation, position, skew, perspective);
+		Vec3 position = modelMatrix * Vec3(0.0f);
 
 		AABB newAABB = AABB(position, position);
-		glm::mat3x3 rotationMatrix = glm::toMat3(rotation);
-		for (int i = 0; i < rotationMatrix.length(); i++)
+		for (int i = 0; i < 3; i++)
 		{
-			for (int j = 0; j < rotationMatrix[i].length(); j++)
+			for (int j = 0; j < 3; j++)
 			{
-				float a = rotationMatrix[i][j] * this->Min[j] * scale[j];
-				float b = rotationMatrix[i][j] * this->Max[j] * scale[j];
+				float a = modelMatrix[i][j] * this->Min[j];
+				float b = modelMatrix[i][j] * this->Max[j];
 				newAABB.Min[i] += a < b ? a : b;
 				newAABB.Max[i] += a < b ? b : a;
 			}
 		}
 
-		return newAABB;*/
-		return AABB();
+		return newAABB;
 	}
 
 	AABB::AABB(const float points[], const uint32_t count)

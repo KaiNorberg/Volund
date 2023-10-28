@@ -2,12 +2,7 @@
 workspace "Volund"
 	architecture "x64"
 
-	configurations
-	{
-		"Debug",
-		"Release",
-		"Dist"
-	}
+	configurations { "Debug", "Release", "Dist" }
 
 TargetDir = "bin\\%{cfg.buildcfg}_x64"
 ObjDir = "bin\\Intermediate\\%{cfg.buildcfg}_x64\\%{prj.name}"
@@ -17,49 +12,42 @@ project "Volund"
 	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
+	staticruntime "On"
 	systemversion "latest"
-	staticruntime "on"
-
-	dependson 
-	{
-		"ImGui",
-		"Glad",
-		"GLFW"
-	}
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
 
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
+	dependson { "ImGui", "Glad", "GLFW" }
 
-	includedirs
-	{
-		"%{prj.name}/src",
-		"vendor",
-		"vendor/glfw/include",
-		"vendor/glad/include",
-		"vendor/imgui",
-		"vendor/lua"
-	}
+	files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-	libdirs
-	{
-		TargetDir,
-		"vendor/lua",
-		"vendor/OpenAL_Soft/lib"
-	}
+	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui" }
+	libdirs { TargetDir, "vendor", "vendor/OpenAL_Soft/lib", "vendor/lua/" }
 	
-	defines
-	{
-		"VOLUND_CORE"
-	}
+	defines { "VOLUND_CORE" }
 
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
+
+	filter "system:windows" 
+		links
+		{
+			TargetDir .. "/Glad",
+			TargetDir .. "/GLFW",
+			TargetDir .. "/ImGui",
+			"OpenGL32",
+			"winmm",
+			"vendor/OpenAL_Soft/lib/OpenAL32",
+			"vendor/OpenAL_Soft/lib/common",
+			"vendor/OpenAL_Soft/lib/ex-common",
+			"vendor/lua/lua54",
+		}
+	filter "system:linux" 
+		links 
+		{		
+
+		}
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
@@ -74,75 +62,47 @@ project "Volund"
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "Speed"
-		runtime "Release"	
+		runtime "Release"
 
-	filter "system:windows" 
-		links
-		{
-			"OpenGL32",
-			"Glad",
-			"GLFW",
-			"OpenAL32",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
-			"winmm"
-		}
-	filter "system:linux" 
-		links
-		{
-			"dl",
-			"Glad",
-			"GLFW",
-			"openal",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
-		}
-		
 project "Editor"
 	location "Editor"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
+	staticruntime "On"
 	systemversion "latest"
-	staticruntime "on"
-
-	dependson 
-	{
-		"Volund"
-	}
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
 
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
+	dependson { "Volund" }
 
-	includedirs
-	{
-		"%{prj.name}/src",
-		"vendor",
-		"vendor/imgui",
-		"Volund/src",
-		"vendor/glfw/include",
-		"vendor/glad/include",
-		"vendor/lua"
-	}
+	files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-	libdirs
-	{
-		TargetDir,
-		"vendor/lua",
-		"vendor/OpenAL_Soft/lib"
-	}
+	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui", "Volund/src" }
+	libdirs { TargetDir, "vendor", "vendor/OpenAL_Soft/lib", "vendor/lua/" }
 
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
+
+	filter "system:windows" 
+		links
+		{
+			"Volund"
+		}
+	filter "system:linux" 
+		links 
+		{ 
+			"Volund",	
+			"dl",
+			"Glad",
+			"GLFW",
+			"ImGui",
+			"openal",
+			"common",
+			"ex-common",
+			"lua54",
+		}
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
@@ -159,78 +119,48 @@ project "Editor"
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "Speed"
-		runtime "Release"	
-		kind "WindowedApp"		
-
-	filter "system:windows" 
-		postbuildcommands {
-			"xcopy data\\* ..\\" .. TargetDir .. "\\data /Q /E /Y /I /S"
-		}
-		links
-		{
-			"Volund",
-			"OpenGL32",
-			"Glad",
-			"GLFW"
-		}
-	filter "system:linux" 
-		postbuildcommands {
-			"cp -R data ../bin/%{cfg.buildcfg}_x64"
-		}
-		links
-		{
-			"Volund",
-			"dl",
-			"Glad",
-			"GLFW",
-			"openal",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
-		}
+		runtime "Release"
+		kind "WindowedApp"
 
 project "Launcher"
 	location "Launcher"
+	kind "StaticLib"
 	language "C++"
 	cppdialect "C++20"
+	staticruntime "On"
 	systemversion "latest"
-	staticruntime "on"
-
-	dependson 
-	{
-		"Volund"
-	}
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
 
-	files
-	{
-		"%{prj.name}/src/**.h",
-		"%{prj.name}/src/**.cpp"
-	}
+	dependson { "Volund" }
 
-	includedirs
-	{
-		"%{prj.name}/src",
-		"vendor",
-		"vendor/imgui",
-		"Volund/src",
-		"vendor/glfw/include",
-		"vendor/glad/include",
-		"vendor/lua"
-	}
+	files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-	libdirs
-	{
-		TargetDir,
-		"vendor/lua",
-		"vendor/OpenAL_Soft/lib"
-	}
+	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui", "Volund/src" }
+	libdirs { TargetDir, "vendor", "vendor/OpenAL_Soft/lib", "vendor/lua/" }
 
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
+
+	filter "system:windows" 
+		links
+		{
+			"Volund"
+		}
+	filter "system:linux" 
+		links 
+		{ 
+			"Volund",	
+			"dl",
+			"Glad",
+			"GLFW",
+			"ImGui",
+			"openal",
+			"common",
+			"ex-common",
+			"lua54",
+		}
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
@@ -247,50 +177,19 @@ project "Launcher"
 	filter "configurations:Dist"
 		defines "VOLUND_DIST"
 		optimize "Speed"
-		runtime "Release"	
+		runtime "Release"
 		kind "WindowedApp"
-
-	filter "system:windows"
-		links
-		{
-			"Volund",
-			"OpenGL32",
-			"Glad",
-			"GLFW",
-			"OpenAL32",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
-			"winmm"
-		}
-	filter "system:linux"
-		links
-		{
-			"Volund",
-			"dl",
-			"Glad",
-			"GLFW",
-			"openal",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
-		}
 		
 project "Glad"
-	kind "StaticLib"
-	language "C"
 	location "vendor/glad"
+	kind "StaticLib"
+	language "C++"
 	cppdialect "C++20"
+	staticruntime "On"
+	systemversion "latest"
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
-
-	includedirs
-	{
-		"vendor/glad/include"
-	}
 
 	files
 	{
@@ -298,34 +197,35 @@ project "Glad"
 		"vendor/glad/include/KHR/khrplatform.h",
 		"vendor/glad/src/glad.c"
 	}
-	
-	systemversion "latest"
-	staticruntime "on"
+
+	includedirs { "%{prj.name}/src", "vendor", "vendor/glad/include" }
+	libdirs { TargetDir, "vendor" }
 
 	filter "configurations:Debug"
+		defines "VOLUND_DEBUG"
+		symbols "On"
 		runtime "Debug"
-		symbols "on"
 
 	filter "configurations:Release"
-		runtime "Release"
+		defines "VOLUND_RELEASE"
 		optimize "Speed"
+		runtime "Release"
 
+	filter "configurations:Dist"
+		defines "VOLUND_DIST"
+		optimize "Speed"
+		runtime "Release"
+		
 project "ImGui"
+	location "vendor/imgui"
 	kind "StaticLib"
 	language "C++"
-	staticruntime "on"
 	cppdialect "C++20"
-
-	location "vendor/imgui"
+	staticruntime "On"
+	systemversion "latest"
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
-
-	includedirs
-	{
-		"vendor/imgui",
-		"vendor/glfw/include"
-	}
 
 	files
 	{
@@ -346,50 +246,38 @@ project "ImGui"
 		"vendor/imgui/misc/cpp/imgui_stdlib.h"
 	}
 
-	filter "system:windows"
-		systemversion "latest"
+	includedirs { "%{prj.name}/src", "vendor/imgui", "vendor/glfw/include" }
+	libdirs { TargetDir, "vendor" }
 
-	filter "system:linux"
-		pic "On"
-		systemversion "latest"
+	--filter "system:linux"
+		--pic "On"
 
 	filter "configurations:Debug"
+		defines "VOLUND_DEBUG"
+		symbols "On"
 		runtime "Debug"
-		symbols "on"
 
 	filter "configurations:Release"
-		runtime "Release"
+		defines "VOLUND_RELEASE"
 		optimize "Speed"
+		runtime "Release"
 
-    filter "configurations:Dist"
-		runtime "Release"
+	filter "configurations:Dist"
+		defines "VOLUND_DIST"
 		optimize "Speed"
-        symbols "off"
+		runtime "Release"
 
 project "GLFW"
-	kind "StaticLib"
-	language "C"
 	location "vendor/glfw"
+	kind "StaticLib"
+	language "C++"
+	cppdialect "C++20"
+	staticruntime "On"
+	systemversion "latest"
 
 	targetdir (TargetDir)
 	objdir (ObjDir)
 	
-	systemversion "latest"
-	staticruntime "on"
-
-	filter "configurations:Debug"
-		runtime "Debug"
-		symbols "on"
-
-	filter "configurations:Release"
-		runtime "Release"
-		optimize "on"
-
-	filter "configurations:Dist"
-		runtime "Release"
-		optimize "Speed"
-		symbols "off"
-
 	filter "system:windows" 
 		defines 
 		{ 
@@ -407,12 +295,12 @@ project "GLFW"
 			"vendor/glfw/src/init.c",
 			"vendor/glfw/src/input.c",
 			"vendor/glfw/src/monitor.c",
-	
+
 			"vendor/glfw/src/null_init.c",
 			"vendor/glfw/src/null_joystick.c",
 			"vendor/glfw/src/null_monitor.c",
 			"vendor/glfw/src/null_window.c",
-	
+
 			"vendor/glfw/src/platform.c",
 			"vendor/glfw/src/vulkan.c",
 			"vendor/glfw/src/window.c",
@@ -445,12 +333,12 @@ project "GLFW"
 			"vendor/glfw/src/init.c",
 			"vendor/glfw/src/input.c",
 			"vendor/glfw/src/monitor.c",
-	
+
 			"vendor/glfw/src/null_init.c",
 			"vendor/glfw/src/null_joystick.c",
 			"vendor/glfw/src/null_monitor.c",
 			"vendor/glfw/src/null_window.c",
-	
+
 			"vendor/glfw/src/platform.c",
 			"vendor/glfw/src/vulkan.c",
 			"vendor/glfw/src/window.c",
@@ -471,3 +359,15 @@ project "GLFW"
 			"vendor/glfw/src/xkb_unicode.c",
 			"vendor/glfw/src/osmesa_context.c"
 		}
+
+	filter "configurations:Debug"
+		runtime "Debug"
+		symbols "on"
+
+	filter "configurations:Release"
+		runtime "Release"
+		optimize "on"
+
+	filter "configurations:Dist"
+		runtime "Release"
+		optimize "Speed"

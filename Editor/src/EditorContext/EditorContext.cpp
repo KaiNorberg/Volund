@@ -5,12 +5,7 @@
 
 void EditorContext::OnAttach(VL::Application* app)
 {
-	if (!app->HasModule<VL::WindowModule>())
-	{
-		VOLUND_ERROR("Cant attach a GameModule to an app without a WindowModule!");
-	}
-
-	this->m_GameWindow = app->GetModule<VL::WindowModule>()->GetWindow();
+	this->m_GameWindow = app->GetWindow();
 	this->m_Dispatcher = app->GetDispatcher();
 
 	SetDefaultImGuiStyle();

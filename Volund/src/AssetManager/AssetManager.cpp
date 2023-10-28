@@ -681,7 +681,7 @@ namespace Volund
         return shortPath;
     }
 
-    AssetManager::AssetManager(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine)
+    AssetManager::AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine)
     {
         if (fs::is_directory(parentPath))
         {
@@ -692,7 +692,7 @@ namespace Volund
             this->m_ParentPath = fs::path(parentPath).parent_path().string();
         }
 
-        this->m_Dispatcher = Dispatcher;
+        this->m_Dispatcher = dispatcher;
         this->m_ScriptingEngine = scriptingEngine;
     }
 }

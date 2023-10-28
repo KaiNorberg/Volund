@@ -23,7 +23,7 @@ namespace Volund
 
 		void Procedure(const Event& e);
 
-		GameState(Ref<Dispatcher> Dispatcher, const std::string& filepath);
+		GameState(Ref<Dispatcher> dispatcher, const std::string& filepath);
 
 		~GameState();
 
@@ -33,7 +33,6 @@ namespace Volund
 
 		Ref<Input> m_Input;
 		Ref<Scene> m_Scene;
-		Ref<Dispatcher> m_Dispatcher;
 		Ref<AssetManager> m_AssetManager;	
 		Ref<ScriptingEngine> m_ScriptingEngine;
 	};

@@ -38,13 +38,13 @@ namespace Volund
 		this->m_Scene->Procedure(e);
 	}
 
-	GameState::GameState(Ref<Dispatcher> Dispatcher, const std::string& filepath)
+	GameState::GameState(Ref<Dispatcher> dispatcher, const std::string& filepath)
 	{	
         this->m_ScenePath = filepath;
 
 		this->m_Input = std::make_shared<Input>();
 		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
-		this->m_AssetManager = AssetManager::Create(Dispatcher, this->m_ScenePath, this->m_ScriptingEngine);
+		this->m_AssetManager = AssetManager::Create(dispatcher, this->m_ScenePath, this->m_ScriptingEngine);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(this->m_ScenePath);
 	}
 

@@ -3,6 +3,8 @@
 
 #include "ImageLoader/ImageLoader.h"
 
+#include <glfw/include/GLFW/glfw3.h>
+
 namespace Volund
 {
 	void DefaultWindowCloseCallback(GLFWwindow *window)
@@ -10,7 +12,7 @@ namespace Volund
 		WindowData *windowData = static_cast<WindowData *>(glfwGetWindowUserPointer(window));
 
 		Event e = Event(VOLUND_EVENT_TYPE_WINDOW_CLOSE);
-		windowData->Dispatcher->Enqueue(e);
+		windowData->EventDispatcher->Enqueue(e);
 	}
 
 	void DefaultWindowSizeCallback(GLFWwindow *window, int width, int height)
@@ -23,7 +25,7 @@ namespace Volund
 		Event e = Event(VOLUND_EVENT_TYPE_WINDOW_SIZE);
 		VOLUND_EVENT_WINDOW_SIZE_SET_WIDTH(e, windowData->Width);
 		VOLUND_EVENT_WINDOW_SIZE_SET_HEIGHT(e, windowData->Height);
-		windowData->Dispatcher->Enqueue(e);
+		windowData->EventDispatcher->Enqueue(e);
 	}
 
 	void DefaultKeyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
@@ -46,7 +48,7 @@ namespace Volund
 			return;
 		}
 
-		windowData->Dispatcher->Enqueue(e);
+		windowData->EventDispatcher->Enqueue(e);
 	}
 
 	void DefaultCursorPositionCallback(GLFWwindow *window, double xpos, double ypos)
@@ -57,7 +59,7 @@ namespace Volund
 		VOLUND_EVENT_MOUSE_MOVE_SET_XPOS(e, xpos);
 		VOLUND_EVENT_MOUSE_MOVE_SET_YPOS(e, ypos);
 
-		windowData->Dispatcher->Enqueue(e);
+		windowData->EventDispatcher->Enqueue(e);
 	}
 
 	void DefaultMouseButtonCallback(GLFWwindow *window, int button, int action, int mods)
@@ -68,7 +70,7 @@ namespace Volund
 		VOLUND_EVENT_MOUSE_BUTTON_SET_BUTTON(e, button);
 		VOLUND_EVENT_MOUSE_BUTTON_SET_ISDOWN(e, (action != GLFW_RELEASE));
 
-		windowData->Dispatcher->Enqueue(e);
+		windowData->EventDispatcher->Enqueue(e);
 	}
 
 	void DefaultScrollCallback(GLFWwindow *window, double xoffset, double yoffset)
@@ -78,7 +80,7 @@ namespace Volund
 		Event e = Event(VOLUND_EVENT_TYPE_MOUSE_WHEEL);
 		VOLUND_EVENT_MOUSE_WHEEL_SET_DELTA(e, (float)yoffset);
 
-		windowData->Dispatcher->Enqueue(e);
+		windowData->EventDispatcher->Enqueue(e);
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -327,10 +329,11 @@ namespace Volund
 		VOLUND_INFO("Creating window...");
 
 		this->m_WindowData = std::make_shared<WindowData>();
-		this->m_WindowData->Dispatcher = Dispatcher;
+		this->m_WindowData->EventDispatcher = Dispatcher;
 		
 		if (!glfwInit())
 		{
+			VOLUND_ERROR("Failed to init glfw!");
 		}
 
 		if (FullScreen)
@@ -345,15 +348,15 @@ namespace Volund
 			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
 			GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Volund", monitor, 0);
-			m_WindowData->Height = mode->height;
-			m_WindowData->Width = mode->width;
+			this->m_WindowData->Height = mode->height;
+			this->m_WindowData->Width = mode->width;
 		}
 		else
 		{
 			this->m_WindowData->GlfwWindow = glfwCreateWindow(Width, Height, "Volund", 0, 0);
 
-			m_WindowData->Height = Height;
-			m_WindowData->Width = Width;
+			this->m_WindowData->Height = Height;
+			this->m_WindowData->Width = Width;
 		}
 
 		if (!this->m_WindowData->GlfwWindow)

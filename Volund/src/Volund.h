@@ -27,6 +27,4 @@
 #include "Audio/AudioDevice/AudioDevice.h"
 #include "Audio/AudioSource/AudioSource.h"
 
-#include "ImGuiWindow/ImGuiWindow.h"
-
 #include "Lua/Serializer/Serializer.h"

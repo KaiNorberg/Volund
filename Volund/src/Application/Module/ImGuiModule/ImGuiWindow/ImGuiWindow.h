@@ -8,9 +8,13 @@
 
 #include "Math/Math.h"
 
+#include "ImGuiCommand/ImGuiCommand.h"
+
 namespace Volund
 {
-	class ImGuiWindow
+	class ImGuiModule;
+
+	class ImGuiWindow : public std::enable_shared_from_this<ImGuiWindow>
 	{
 	public:
 
@@ -36,11 +40,12 @@ namespace Volund
 
 		virtual void OnProcedure(const Event& e) {};
 
-		ImGuiWindow();
-
 		virtual ~ImGuiWindow() = default;
 
 	protected:
+		friend class ImGuiModule;
+
+		ImGuiWindow();
 
 		static void ImGuiStartCombo();
 
@@ -83,18 +88,14 @@ namespace Volund
 	private:
 
 		std::string m_Name;
-
-		std::string m_Id;
+		std::string m_UniqueName;
 
 		bool m_IsWindowHovered;
 
-		bool m_PositionChanged;
-
-		bool m_SizeChanged;
-
 		Vec2 m_Position;
-
 		Vec2 m_Size;
+
+		std::queue<Ref<ImGuiCommand>> m_CommandQueue;
 	};
 }
 
