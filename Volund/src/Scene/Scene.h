@@ -11,7 +11,16 @@
 namespace Volund
 {
 	using Entity = uint64_t;
-	using EntityRegistry = std::vector<std::pair<Entity, PolyContainer<Component>>>;
+
+	struct RegistryEntry
+	{
+		Entity entity;
+		PolyContainer<Component> componentContainer;
+
+		RegistryEntry(Entity entityId);
+	};
+
+	using EntityRegistry = std::vector<RegistryEntry>;
 
 	class Scene
 	{
@@ -20,19 +29,26 @@ namespace Volund
 		CHRONO_TIME_POINT GetStartTime();
 
 		Entity RegisterNewEntity();
+
 		void UnregisterEntity(Entity entity);
+
 		bool IsEntityRegistered(Entity entity);
+
 		std::vector<Entity> GetRegisteredEntities();
 
-		template <typename T>
+		template<typename T>
 		void DeleteComponent(Entity entity, uint64_t index = 0);
-		template <typename T, typename... Args>
+
+		template<typename T, typename... Args>
 		Ref<T> CreateComponent(Entity entity, Args&&... args);
-		template <typename T>
+
+		template<typename T>
 		bool HasComponent(Entity entity);	
-		template <typename T>
+
+		template<typename T>
 		uint64_t ComponentAmount(Entity entity);
-		template <typename T>
+
+		template<typename T>
 		Ref<T> GetComponent(Entity entity, uint64_t index = 0);
 		
 		void Procedure(const Event& e);
@@ -64,8 +80,8 @@ namespace Volund
 
 		if (entityIndex != -1)
 		{
-			this->m_Registry[entityIndex].second.Get<T>(index)->OnDestroy();
-			this->m_Registry[entityIndex].second.Erase<T>(index);
+			this->m_Registry[entityIndex].componentContainer.Get<T>(index)->OnDestroy();
+			this->m_Registry[entityIndex].componentContainer.Erase<T>(index);
 		}
 		else
 		{
@@ -85,7 +101,7 @@ namespace Volund
 			Ref<T> newComponent = std::make_shared<T>(args...);
 			newComponent->Init(entity, this);
 			newComponent->OnCreate();
-			this->m_Registry[index].second.PushBack(newComponent);
+			this->m_Registry[index].componentContainer.PushBack(newComponent);
 
 			return newComponent;
 		}
@@ -103,7 +119,7 @@ namespace Volund
 
 		const uint64_t entityIndex = FindEntity(entity);
 
-		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>();
+		return entityIndex != -1 && this->m_Registry[entityIndex].componentContainer.Contains<T>();
 	}
 
 	template<typename T>
@@ -113,7 +129,7 @@ namespace Volund
 
 		const uint64_t entityIndex = FindEntity(entity);
 
-		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>() ? this->m_Registry[entityIndex].second.Size<T>() : 0;
+		return entityIndex != -1 && this->m_Registry[entityIndex].componentContainer.Contains<T>() ? this->m_Registry[entityIndex].componentContainer.Size<T>() : 0;
 	}
 
 	template<typename T>
@@ -123,6 +139,6 @@ namespace Volund
 
 		const uint64_t entityIndex = FindEntity(entity);
 
-		return entityIndex != -1 && this->m_Registry[entityIndex].second.Contains<T>() ? this->m_Registry[entityIndex].second.Get<T>(index) : nullptr;
+		return entityIndex != -1 && this->m_Registry[entityIndex].componentContainer.Contains<T>() ? this->m_Registry[entityIndex].componentContainer.Get<T>(index) : nullptr;
 	}
 }

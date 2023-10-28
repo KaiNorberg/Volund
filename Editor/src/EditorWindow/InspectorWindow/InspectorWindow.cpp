@@ -93,7 +93,7 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 			auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
 
 			std::string label = "##Color" + std::to_string((uint64_t)pointLight.get());
-			ImGui::ColorPicker3(label.c_str(), glm::value_ptr(pointLight->Color), ImGuiColorEditFlags_Float);
+			ImGui::ColorPicker3(label.c_str(), &pointLight->Color.x, ImGuiColorEditFlags_Float);
 
 			ImGuiFloat("Brightness", pointLight->Brightness);
 		});
@@ -161,52 +161,52 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 			{
 				for (const std::string& identifier : script->GetPublicVariables())
 				{
-					if (script->IsVariable<int>(identifier))
+					if (script->Is<VL::LuaInt>(identifier))
 					{
-						auto rawValue = script->GetVariable<int>(identifier);
+						int rawValue = script->Get<VL::LuaInt>(identifier);
 						if (ImGuiInt(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->Set(identifier, (VL::LuaInt)rawValue);
 						}
 					}
-					else if (script->IsVariable<double>(identifier))
+					else if (script->Is<VL::LuaFloat>(identifier))
 					{
-						auto rawValue = script->GetVariable<double>(identifier);
+						auto rawValue = script->Get<VL::LuaFloat>(identifier);
 						if (ImGuiDouble(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->Set(identifier, (VL::LuaFloat)rawValue);
 						}
 					}
-					else if (script->IsVariable<std::string>(identifier))
+					else if (script->Is<VL::LuaString>(identifier))
 					{
-						auto rawValue = script->GetVariable<std::string>(identifier);
+						auto rawValue = script->Get<VL::LuaString>(identifier);
 						if (ImGuiString(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->Set(identifier, rawValue);
 						}
 					}
-					else if (script->IsVariable<VL::Vec2>(identifier))
+					else if (script->Is<VL::LuaVec2>(identifier))
 					{
-						auto rawValue = script->GetVariable<VL::Vec2>(identifier);
+						auto rawValue = (VL::Vec2)script->Get<VL::LuaVec2>(identifier);
 						if (ImGuiVec2(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->Set(identifier, (VL::LuaVec2)rawValue);
 						}
 					}
-					else if (script->IsVariable<VL::Vec3>(identifier))
+					else if (script->Is<VL::LuaVec3>(identifier))
 					{
-						auto rawValue = script->GetVariable<VL::Vec3>(identifier);
+						auto rawValue = (VL::Vec3)script->Get<VL::LuaVec3>(identifier);
 						if (ImGuiVec3(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->Set(identifier, (VL::LuaVec3)rawValue);
 						}
 					}
-					else if (script->IsVariable<VL::Vec4>(identifier))
+					else if (script->Is<VL::Vec4>(identifier))
 					{
-						auto rawValue = script->GetVariable<VL::Vec4>(identifier);
+						auto rawValue = script->Get<VL::Vec4>(identifier);
 						if (ImGuiVec4(identifier, rawValue))
 						{
-							script->SetVariable(identifier, rawValue);
+							script->Set(identifier, rawValue);
 						}
 					}
 				}

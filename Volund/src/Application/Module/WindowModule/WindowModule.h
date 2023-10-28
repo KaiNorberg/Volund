@@ -18,11 +18,6 @@ namespace Volund
 
 		void Procedure(const Event& e) override;
 
-		Ref<Window> operator->()
-		{
-			return this->GetWindow();
-		}
-
 		WindowModule();
 
 	private:	

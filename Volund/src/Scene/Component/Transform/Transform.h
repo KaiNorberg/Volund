@@ -22,7 +22,7 @@ namespace Volund
 
 		Vec3 Scale = Vec3(1.0f);
 
-		Quat Quaternion = Quat(Vec3(0.0f));
+		Quat Quaternion = Quat(1.0f);
 
 		Transform();
 

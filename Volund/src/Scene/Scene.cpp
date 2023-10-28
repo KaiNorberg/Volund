@@ -8,6 +8,11 @@
 
 namespace Volund
 {
+	RegistryEntry::RegistryEntry(Entity entityId)
+	{
+		this->entity = entityId;
+	}
+
 	CHRONO_TIME_POINT Scene::GetStartTime()
 	{
 		return this->m_StartTime;
@@ -16,8 +21,8 @@ namespace Volund
 	Entity Scene::RegisterNewEntity()
 	{
 		Entity newEntity = this->m_NewEntity;
-
-		this->m_Registry.push_back(std::pair<Entity, PolyContainer<Component>>(newEntity, PolyContainer<Component>()));
+		
+		this->m_Registry.push_back(RegistryEntry(newEntity));
 
 		this->m_NewEntity++;
 		return newEntity;
@@ -102,9 +107,9 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		auto it = std::lower_bound(this->m_Registry.begin(), this->m_Registry.end(), entity, [](const std::pair<Entity, PolyContainer<Component>>& a, Entity entity)
+		auto it = std::lower_bound(this->m_Registry.begin(), this->m_Registry.end(), entity, [](const RegistryEntry& a, Entity entity)
 		{
-			return a.first < entity;
+			return a.entity < entity;
 		});
 
 		if (it != this->m_Registry.end())

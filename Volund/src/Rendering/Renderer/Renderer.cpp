@@ -11,21 +11,21 @@ namespace Volund
 	{
 		for (auto& entity : *scene)
 		{
-			auto componentRegistry = entity.second;
+			auto componentContainer = entity.componentContainer;
 
 			Mat4x4 modelMatrix = Mat4x4();
 			Vec3 position = Vec3();
-			if (componentRegistry.Contains<Transform>())
+			if (componentContainer.Contains<Transform>())
 			{
-				auto transform = componentRegistry.Get<Transform>();
+				auto transform = componentContainer.Get<Transform>();
 
 				modelMatrix = transform->GetModelMatrix();
 				position = transform->Position;
 			}
 
-			for (int i = 0; i < componentRegistry.Size<MeshRenderer>(); i++)
+			for (int i = 0; i < componentContainer.Size<MeshRenderer>(); i++)
 			{
-				auto meshRenderer = componentRegistry.Get<MeshRenderer>(i);
+				auto meshRenderer = componentContainer.Get<MeshRenderer>(i);
 
 				RendererModel model;
 				model.LayerMask = meshRenderer->GetLayerMask();
@@ -36,9 +36,9 @@ namespace Volund
 				this->Submit(model);
 			}
 
-			for (int i = 0; i < componentRegistry.Size<Camera>(); i++)
+			for (int i = 0; i < componentContainer.Size<Camera>(); i++)
 			{
-				auto camera = componentRegistry.Get<Camera>(i);
+				auto camera = componentContainer.Get<Camera>(i);
 
 				const auto spec = this->m_Data.Target->GetSpec();
 
@@ -50,9 +50,9 @@ namespace Volund
 				this->Submit(eye);
 			}
 
-			for (int i = 0; i < componentRegistry.Size<PointLight>(); i++)
+			for (int i = 0; i < componentContainer.Size<PointLight>(); i++)
 			{
-				auto pointLight = componentRegistry.Get<PointLight>(i);
+				auto pointLight = componentContainer.Get<PointLight>(i);
 
 				RendererLight light;
 				light.Brightness = pointLight->Brightness;

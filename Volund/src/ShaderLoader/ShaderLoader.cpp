@@ -3,6 +3,10 @@
 
 #include "ResourceLibrary/ResourceLibrary.h"
 
+#include "Rendering/Texture/Texture.h"
+
+#include "Rendering/Shader/Shader.h"
+
 namespace Volund
 {
 	ShaderSource ShaderLoader::GetSource()
@@ -103,47 +107,49 @@ namespace Volund
             {
                 if (inMaterial && words.size() == 3 && words[0] == "uniform")
                 {
-                    MaterialUniformType uniformType;
-                    if (words[1] == "int" || words[1] == "uint" || words[1] == "bool")
+                    std::string uniformName = std::string(words[2].begin(), words[2].end() - 1);
+                    std::string uniformType = std::string(words[1]);
+
+                    if (words[1] == "int" || words[1] == "bool")
                     {
-                        uniformType = MaterialUniformType::Int;
+                        this->m_MaterialBlueprint->Insert<UniformInt>(uniformName);
                     }
                     else if (words[1] == "float")
                     {
-                        uniformType = MaterialUniformType::Float;
+                        this->m_MaterialBlueprint->Insert<UniformFloat>(uniformName);
                     }
                     else if (words[1] == "double")
                     {
-                        uniformType = MaterialUniformType::Double;
+                        this->m_MaterialBlueprint->Insert<UniformDouble>(uniformName);
                     }
                     else if (words[1].ends_with("vec2"))
                     {
-                        uniformType = MaterialUniformType::Vec2;
+                        this->m_MaterialBlueprint->Insert<UniformVec2>(uniformName);
                     }
                     else if (words[1].ends_with("vec3"))
                     {
-                        uniformType = MaterialUniformType::Vec3;
+                        this->m_MaterialBlueprint->Insert<UniformVec3>(uniformName);
                     }
                     else if (words[1].ends_with("vec4"))
                     {
-                        uniformType = MaterialUniformType::Vec4;
+                        this->m_MaterialBlueprint->Insert<UniformVec4>(uniformName);
                     }
                     else if (words[1].starts_with("sampler"))
                     {
-                        uniformType = MaterialUniformType::Sampler;
+                        this->m_MaterialBlueprint->Insert<UniformTexture>(uniformName);
                     }
+                    /*else if (words[1].starts_with("mat3"))
+                    {
+                        this->m_MaterialBlueprint->Insert<UniformMat3x3>(uniformName);
+                    }*/
                     else if (words[1].starts_with("mat4"))
                     {
-                        uniformType = MaterialUniformType::Matrix;
+                        this->m_MaterialBlueprint->Insert<UniformMat4x4>(uniformName);
                     }
                     else
                     {
                         VOLUND_WARNING("Corrupt uniform type detected in shader file (%s)!", filepath.c_str());
                     }
-
-                    std::string uniformName = std::string(words[2].begin(), words[2].end() - 1);
-
-                    this->m_MaterialBlueprint->AddUniform(uniformName, uniformType);
                 }
 
                 m_Source[(int32_t)type] += line + '\n';

@@ -57,58 +57,119 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			return;
 		}
 
-		if (ImGuiMaterialMap<int>(this->m_SelectedMaterial->IntMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Int), ImGuiInt))
+		for (auto& [key, uniform] : (*this->m_SelectedMaterial))
 		{
-			changed = true;
-		}
+			bool isInBlueprint = materialBlueprint->Exists(key);
 
-		if (ImGuiMaterialMap<float>(this->m_SelectedMaterial->FloatMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Float), ImGuiFloat))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<double>(this->m_SelectedMaterial->DoubleMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Double), ImGuiDouble))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Vec2>(this->m_SelectedMaterial->Vec2Map(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Vec2),
-			[](const std::string& key, VL::Vec2& value) { return ImGuiVec2(key, value); }))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Vec3>(this->m_SelectedMaterial->Vec3Map(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Vec3),
-			[](const std::string& key, VL::Vec3& value) { return ImGuiVec3(key, value); }))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Vec4>(this->m_SelectedMaterial->Vec4Map(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Vec4),
-			[](const std::string& key, VL::Vec4& value) { return ImGuiVec4(key, value); }))
-		{
-			changed = true;
-		}
-
-		if (ImGuiMaterialMap<VL::Ref<VL::Texture>>(this->m_SelectedMaterial->TextureMap(), materialBlueprint->GetUniforms(VL::MaterialUniformType::Sampler),
-			[assetManager](const std::string& key, VL::Ref<VL::Texture>& value)
+			ImVec2 itemRectMin;
+			ImVec2 itemRectMax;
+			ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
+			if (ImGui::BeginListBox((std::string("##ListBox") + key).c_str(), listBoxSize))
 			{
-				std::string texturePath = assetManager->FetchFilepath<VL::Texture>(value);
-				if (ImGuiFile(key, texturePath))
+				itemRectMin = ImVec2(this->GetPosition().x, ImGui::GetItemRectMin().y);
+				itemRectMax = ImVec2(this->GetPosition().x + this->GetSize().x, itemRectMin.y + listBoxSize.y);
+
+				std::string name;
+				if (!isInBlueprint)
 				{
-					value = assetManager->Fetch<VL::Texture>(texturePath);
-					return true;
+					name = key;
 				}
 				else
 				{
-					return false;
+					name = VOLUND_LOGGERCOLOR_BLUE + key;
 				}
-			}))
-		{
-			changed = true;
+
+				if (uniform->Is<VL::UniformInt>())
+				{
+					if (ImGuiInt(name, *uniform->Get<VL::UniformInt>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformFloat>())
+				{
+					if (ImGuiFloat(name, *uniform->Get<VL::UniformFloat>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformDouble>())
+				{
+					if (ImGuiDouble(name, *uniform->Get<VL::UniformDouble>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformVec2>())
+				{
+					if (ImGuiVec2(name, *uniform->Get<VL::UniformVec2>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformVec3>())
+				{
+					if (ImGuiVec3(name, *uniform->Get<VL::UniformVec3>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformVec4>())
+				{
+					if (ImGuiVec4(name, *uniform->Get<VL::UniformVec4>()))
+					{
+						changed = true;
+					}
+				}
+				else if (uniform->Is<VL::UniformTexture>())
+				{
+					std::string texturePath = assetManager->FetchFilepath<VL::Texture>(uniform->As<VL::UniformTexture>());
+					if (ImGuiFile(name, texturePath))
+					{
+						this->m_SelectedMaterial->Set(key, assetManager->Fetch<VL::Texture>(texturePath));
+						changed = true;
+					}
+				}
+
+				ImGui::EndListBox();
+			}
+
+			if (!isInBlueprint)
+			{
+				std::string popupName = (std::string("Material entry") + key);
+
+				if (ImGui::IsMouseHoveringRect(itemRectMin, itemRectMax) && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
+				{
+					ImGui::OpenPopup(popupName.c_str());
+				}
+
+				if (ImGui::BeginPopup(popupName.c_str()))
+				{
+					if (ImGui::MenuItem("Delete"))
+					{
+						changed = true;
+						this->m_SelectedMaterial->Erase(key);
+						ImGui::CloseCurrentPopup();
+					}
+					if (ImGui::MenuItem("Rename"))
+					{
+						changed = true;
+						std::string newKey = VL::Dialog::InputBox("Rename Material Entry", "Please specify a new name");
+						if (!newKey.empty())
+						{
+							this->m_SelectedMaterial->Rename(key, newKey);
+						}
+					}
+
+					ImGui::EndPopup();
+				}
+			}
+
+			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
 
-		ImGuiAlign("Add Entry", 0.5f);
+		//Temporarily disabled
+		/*ImGuiAlign("Add Entry", 0.5f);
 		if (ImGui::Button("Add Entry"))
 		{
 			ImGui::OpenPopup("Add Entry");
@@ -125,19 +186,13 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			if (ImGui::MenuItem("Float"))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetFloat("NewFloat", 0.0f);
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Double"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetDouble("NewDouble", 0.0);
+				this->m_SelectedMaterial->SetFloat("NewDouble", 0.0);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Vec2"))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetVec2("NewVec2", VL::Vec2(0.0f, 0.0f));
+				this->m_SelectedMaterial->SetVec2("NewVec2", VL::UniformVec2(0.0f, 0.0f));
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Vec3"))
@@ -155,11 +210,11 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			if (ImGui::MenuItem("Texture"))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetTexture("NewTexture", nullptr);
+				this->m_SelectedMaterial->SetTexture("NewTexture", VL::Ref<VL::Texture>(nullptr));
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
-		}
+		}*/
 
 		if (changed && this->m_Context->IsPaused())
 		{
@@ -167,7 +222,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		}
 	}
 	break;
-	case EDITOR_EVENT_TYPE_LOAD_SCENE:
+	case EDITOR_EVENT_TYPE_RESET:
 	{
 		this->m_SelectedMaterial = nullptr;
 	}

@@ -62,8 +62,6 @@ namespace Volund
 
         PolyContainer<PrimitiveAsset> m_Data;
 
-        std::mutex m_Mutex;
-
         std::string m_ParentPath;
 
         Ref<Dispatcher> m_Dispatcher;
@@ -74,7 +72,8 @@ namespace Volund
     template<typename T>
     inline Ref<T> AssetManager::Fetch(const std::string& filepath)
     {
-        //std::unique_lock lock(this->m_Mutex);
+        static std::mutex mutex;
+        std::unique_lock lock(mutex);
 
         std::string absolutePath = this->GetAbsolutePath(filepath);
         std::string relativePath = this->GetRelativePath(filepath);
@@ -116,8 +115,6 @@ namespace Volund
     template<typename T>
     inline std::string AssetManager::FetchFilepath(Ref<T> asset)
     {
-        //std::unique_lock lock(this->m_Mutex);
-
         if (m_Data.Contains<Asset<T>>())
         {
             auto& view = m_Data.View<Asset<T>>();

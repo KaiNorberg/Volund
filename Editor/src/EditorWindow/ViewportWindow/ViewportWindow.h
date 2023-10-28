@@ -36,9 +36,8 @@ private:
 	private:
 
 		VL::Vec3 m_Position;
-		VL::Vec3 m_Rotation;
 		VL::Vec3 m_BallCenter;
-		VL::Vec3 m_BallRotation;
+		VL::Vec3 m_Rotation;
 		float m_Distance;
 
 		VL::IVec2 m_OldMousePosition;

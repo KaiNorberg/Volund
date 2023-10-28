@@ -27,35 +27,21 @@ namespace Volund
 		return this->m_PublicVariables;
 	}
 
-	Script::Script(const std::string& filepath, Ref<ScriptingEngine> scriptingEngine)
+	void Script::Procedure(const Event& e)
 	{
-		this->m_Filepath = filepath;
+		this->m_ScriptingEngine->ScriptProcedure(this->m_ScriptId, e);
+	}
+
+	Script::~Script()
+	{
+		this->m_ScriptingEngine->DestroyScript(this->m_ScriptId);
+	}
+
+	Script::Script(Ref<ScriptingEngine> scriptingEngine, uint64_t scriptId, const std::string& filepath, const std::vector<std::string>& publicVars)
+	{
 		this->m_ScriptingEngine = scriptingEngine;
-
-		auto luaState = scriptingEngine->GetLuaState();
-		
-		sol::protected_function_result result;
-		try
-		{
-			this->m_Table = luaState->script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
-			{
-				sol::error err = pfr;
-				VOLUND_ERROR(err.what());
-
-				return pfr;
-			});
-		}
-		catch (const sol::error& e)
-		{
-			VOLUND_ERROR(e.what());
-		}
-
-		for (auto& publicVar : this->m_Table)
-		{
-			if (!publicVar.second.is<sol::function>())
-			{
-				this->m_PublicVariables.push_back(publicVar.first.as<std::string>());
-			}
-		}
+		this->m_ScriptId = scriptId;
+		this->m_Filepath = filepath;
+		this->m_PublicVariables = publicVars;
 	}
 }

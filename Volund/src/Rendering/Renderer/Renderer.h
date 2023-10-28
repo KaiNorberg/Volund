@@ -19,7 +19,7 @@ namespace Volund
 		Ref<Mesh> mesh;
 		Ref<Material> material;
 
-		uint32_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
+		uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 	};
 
 	struct RendererLight
@@ -36,7 +36,7 @@ namespace Volund
 
 		Ref<Framebuffer> Target;
 
-		uint32_t LayerMask; //Render if: ((model.LayerMask & eye.LayerMask) != 0
+		uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 
 		std::vector<Ref<Effect>> Effects;
 	};

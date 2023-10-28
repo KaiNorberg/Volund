@@ -3,92 +3,34 @@
 
 namespace Volund
 {
-	void Material::SetInt(const std::string& name, int value)
+	void Material::Erase(const std::string& key)
 	{
-		this->m_IntUniforms[name] = value;
-		this->m_MaterialChanged = true;
+		this->m_Table.Erase(key);
 	}
 
-	void Material::SetFloat(const std::string& name, float value)
+	void Material::Rename(const std::string& key, const std::string& newKey)
 	{
-		this->m_FloatUniforms[name] = value;
-		this->m_MaterialChanged = true;
+		this->m_Table.Rename(key, newKey);
 	}
 
-	void Material::SetDouble(const std::string& name, double value)
+	const SerialTable::const_iterator Material::begin() const
 	{
-		this->m_DoubleUniforms[name] = value;
-		this->m_MaterialChanged = true;
+		return this->m_Table.begin();
 	}
 
-	void Material::SetVec2(const std::string& name, const Vec2& value)
+	const SerialTable::const_iterator Material::end() const
 	{
-		this->m_Vec2Uniforms[name] = value;
-		this->m_MaterialChanged = true;
+		return this->m_Table.end();
 	}
 
-	void Material::SetVec3(const std::string& name, const Vec3& value)
+	SerialTable::iterator Material::begin()
 	{
-		this->m_Vec3Uniforms[name] = value;
-		this->m_MaterialChanged = true;
+		return this->m_Table.begin();
 	}
 
-	void Material::SetVec4(const std::string& name, const Vec4& value)
+	SerialTable::iterator Material::end()
 	{
-		this->m_Vec4Uniforms[name] = value;
-		this->m_MaterialChanged = true;
-	}
-
-	void Material::SetTexture(const std::string& name, Ref<Texture> value)
-	{
-		this->m_TextureUniforms[name] = value;
-		this->m_MaterialChanged = true;
-	}
-
-	void Material::SetFramebuffer(const std::string& name, Ref<Framebuffer> value)
-	{
-		this->m_FramebufferUniforms[name] = value;
-		this->m_MaterialChanged = true;
-	}
-
-	void Material::SetMatrix(const std::string& name, const Mat4x4& value)
-	{
-		this->m_MatrixUniforms[name] = value;
-	}
-
-	std::map<std::string, int>& Material::IntMap()
-	{
-		return this->m_IntUniforms;
-	}
-
-	std::map<std::string, float>& Material::FloatMap()
-	{
-		return this->m_FloatUniforms;
-	}
-
-	std::map<std::string, double>& Material::DoubleMap()
-	{
-		return this->m_DoubleUniforms;
-	}
-
-	std::map<std::string, Vec2>& Material::Vec2Map()
-	{
-		return this->m_Vec2Uniforms;
-	}
-
-	std::map<std::string, Vec3>& Material::Vec3Map()
-	{
-		return this->m_Vec3Uniforms;
-	}
-
-	std::map<std::string, Vec4>& Material::Vec4Map()
-	{
-		return this->m_Vec4Uniforms;
-	}
-
-	std::map<std::string, Ref<Texture>>& Material::TextureMap()
-	{
-		return this->m_TextureUniforms;
+		return this->m_Table.end();
 	}
 
 	void Material::UpdateShader()
@@ -106,57 +48,51 @@ namespace Volund
 			this->m_MaterialChanged = false;
 		}
 
-		for (auto& [name, value] : this->m_IntUniforms)
-		{
-			this->m_Shader->SetInt(name, value);
-		}
-
-		for (auto& [name, value] : this->m_FloatUniforms)
-		{
-			this->m_Shader->SetFloat(name, value);
-		}
-
-		for (auto& [name, value] : this->m_DoubleUniforms)
-		{
-			this->m_Shader->SetDouble(name, value);
-		}
-
-		for (auto& [name, value] : this->m_Vec2Uniforms)
-		{
-			this->m_Shader->SetVec2(name, value);
-		}
-
-		for (auto& [name, value] : this->m_Vec3Uniforms)
-		{
-			this->m_Shader->SetVec3(name, value);
-		}
-
-		for (auto& [name, value] : this->m_Vec4Uniforms)
-		{
-			this->m_Shader->SetVec4(name, value);
-		}
-
 		int textureUnit = 0;
-		for (auto& [name, value] : this->m_TextureUniforms)
+		for (auto& [name, uniform] : this->m_Table)
 		{
-			if (value != nullptr)
+			if (uniform->Is<UniformInt>())
 			{
-				this->m_Shader->SetTexture(name, value, textureUnit);
+				this->m_Shader->SetInt(name, uniform->As<UniformInt>());
+			}
+			else if (uniform->Is<UniformFloat>())
+			{
+				this->m_Shader->SetFloat(name, uniform->As<UniformFloat>());
+			}
+			else if (uniform->Is<UniformDouble>())
+			{
+				this->m_Shader->SetDouble(name, uniform->As<UniformDouble>());
+			}
+			else if (uniform->Is<UniformVec2>())
+			{
+				this->m_Shader->SetVec2(name, uniform->As<UniformVec2>());
+			}
+			else if (uniform->Is<UniformVec3>())
+			{
+				this->m_Shader->SetVec3(name, uniform->As<UniformVec3>());
+			}
+			else if (uniform->Is<UniformVec4>())
+			{
+				this->m_Shader->SetVec4(name, uniform->As<UniformVec4>());
+			}
+			/*else if (uniform->Is<UniformMat3x3>())
+			{
+				this->m_Shader->SetMat3x3(name, uniform->As<UniformMat3x3>());
+			}*/
+			else if (uniform->Is<UniformMat4x4>())
+			{
+				this->m_Shader->SetMat4x4(name, uniform->As<UniformMat4x4>());
+			}
+			else if (uniform->Is<UniformTexture>())
+			{
+				this->m_Shader->SetTexture(name, uniform->As<UniformTexture>(), textureUnit);
 				textureUnit++;
 			}
-		}
-		for (auto& [name, value] : this->m_FramebufferUniforms)
-		{
-			if (value != nullptr)
+			else if (uniform->Is<UniformFramebuffer>())
 			{
-				this->m_Shader->SetFramebuffer(name, value, textureUnit);
+				this->m_Shader->SetFramebuffer(name, uniform->As<UniformFramebuffer>(), textureUnit);
 				textureUnit++;
 			}
-		}
-
-		for (auto& [name, value] : this->m_MatrixUniforms)
-		{
-			this->m_Shader->SetMat4x4(name, value);
 		}
 	}
 
@@ -193,19 +129,11 @@ namespace Volund
 
 		auto& blueprint = this->m_Shader->GetMaterialBlueprint();
 
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
+		/*for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
 		{
 			if (!this->m_IntUniforms.contains(blueprintUniform))
 			{
 				VOLUND_WARNING("Material does not contain blueprint uniform (int, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Float))
-		{
-			if (!this->m_FloatUniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (float, %s)", blueprintUniform.c_str());
 			}
 		}
 
@@ -255,7 +183,7 @@ namespace Volund
 			{
 				VOLUND_WARNING("Material does not contain blueprint uniform (sampler, %s)", blueprintUniform.c_str());
 			}
-		}
+		}*/
 	}
 
 	void Material::ConformToBlueprint()
@@ -267,19 +195,11 @@ namespace Volund
 			return;
 		}
 
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
+		/*for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
 		{
 			if (!this->m_IntUniforms.contains(blueprintUniform))
 			{
 				this->SetInt(blueprintUniform, 0);
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Float))
-		{
-			if (!this->m_FloatUniforms.contains(blueprintUniform))
-			{
-				this->SetFloat(blueprintUniform, 0.0f);
 			}
 		}
 
@@ -321,7 +241,7 @@ namespace Volund
 			{
 				this->SetTexture(blueprintUniform, nullptr);
 			}
-		}
+		}*/
 	}
 
 	Ref<Material> Material::Create()

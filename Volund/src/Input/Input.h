@@ -2,6 +2,8 @@
 
 #include "Dispatcher/Event/Event.h"
 
+#include "Math/Math.h"
+
 namespace Volund
 {
 	class Input

@@ -21,7 +21,7 @@ void OutputWindow::OnProcedure(const VL::Event& e)
 		}
 	}
 	break;
-	case EDITOR_EVENT_TYPE_LOAD_SCENE:
+	case EDITOR_EVENT_TYPE_RESET:
 	{
 
 	}

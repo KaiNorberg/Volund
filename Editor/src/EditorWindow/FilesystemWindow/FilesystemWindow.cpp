@@ -54,7 +54,7 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 				{
 					fs::path filepath = VL::Utils::GenerateUniquePath(this->m_CurrentDirectory / "New.material.lua");
 
-					VL::LuaSerializer serializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
+					VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 					serializer.StartTable();
 					serializer.Insert("", "://Simple.shader");
 					serializer.EndTable();
@@ -66,7 +66,7 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 				{
 					fs::path filepath = VL::Utils::GenerateUniquePath(this->m_CurrentDirectory / "New.scene.lua");
 
-					VL::LuaSerializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
+					VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 					serializer.StartTable();
 					serializer.EndTable();
 					serializer.WriteToFile(filepath.string());

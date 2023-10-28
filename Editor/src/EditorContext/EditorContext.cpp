@@ -36,6 +36,7 @@ void EditorContext::Procedure(const VL::Event& e)
 				this->LoadScene(this->m_GameState->GetScenePath());
 			}
 		}
+		this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_RESET);
 	}
 	break;
 	case EDITOR_EVENT_TYPE_LOAD_SCENE:
@@ -45,6 +46,7 @@ void EditorContext::Procedure(const VL::Event& e)
 		{
 			this->LoadScene(filepath);
 		}
+		this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_RESET);
 	}
 	break;
 	case EDITOR_EVENT_TYPE_SAVE_SCENE:
@@ -65,11 +67,12 @@ void EditorContext::Procedure(const VL::Event& e)
 
 		if (!filepath.empty())
 		{
-			VL::LuaSerializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
+			VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 			serializer.WriteToFile(filepath + "/scene.lua");
 
 			this->LoadScene(filepath + "/scene.lua");
 		}
+		this->m_Dispatcher->Enqueue(EDITOR_EVENT_TYPE_RESET);
 	}
 	break;
 	default:

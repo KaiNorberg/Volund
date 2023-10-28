@@ -1,6 +1,8 @@
 #include "PCH/PCH.h"
 #include "ModelLoader.h"
 
+#include "Math/Math.h"
+
 namespace Volund
 {
 	void ModelLoader::LoadFile(const std::string& filepath)

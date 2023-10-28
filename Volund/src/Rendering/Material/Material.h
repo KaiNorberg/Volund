@@ -3,40 +3,38 @@
 #include "Rendering/Shader/Shader.h"
 #include "Rendering/Texture/Texture.h"
 
+#include "SerialTable/SerialTable.h"
+
 namespace Volund
 {
 	class Material
 	{
 	public:
 
-		void SetInt(const std::string& name, int value);
-		void SetFloat(const std::string& name, float value);
-		void SetDouble(const std::string& name, double value);
-		void SetVec2(const std::string& name, const Vec2& value);
-		void SetVec3(const std::string& name, const Vec3& value);
-		void SetVec4(const std::string& name, const Vec4& value);
-		void SetTexture(const std::string& name, Ref<Texture> value);
-		void SetFramebuffer(const std::string& name, Ref<Framebuffer> value);
+		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
+		void Set(const std::string& name, const T& value);
+		
+		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
+		bool Is(const std::string& key) const;
 
-		void SetMatrix(const std::string& name, const Mat4x4& value);
+		void Erase(const std::string& key);
 
-		std::map<std::string, int>& IntMap();
-		std::map<std::string, float>& FloatMap();
-		std::map<std::string, double>& DoubleMap();
-		std::map<std::string, Vec2>& Vec2Map();
-		std::map<std::string, Vec3>& Vec3Map();
-		std::map<std::string, Vec4>& Vec4Map();
-		std::map<std::string, Ref<Texture>>& TextureMap();
+		void Rename(const std::string& key, const std::string& newKey);
 
-		void UpdateShader();
+		const SerialTable::const_iterator begin() const;
+		const SerialTable::const_iterator end() const;
+
+		SerialTable::iterator begin();
+		SerialTable::iterator end();
 
 		void SetShader(Ref<Shader> shader);
 		Ref<Shader> GetShader();
 
 		Ref<MaterialBlueprint> GetBlueprint();
 
-		static Ref<Material> Create();
+		void UpdateShader();
 
+		static Ref<Material> Create();
 		static Ref<Material> Create(Ref<Shader> shader);
 
 		Material();
@@ -45,18 +43,11 @@ namespace Volund
 
 	private:
 
-		std::map<std::string, int> m_IntUniforms;
-		std::map<std::string, float> m_FloatUniforms;
-		std::map<std::string, double> m_DoubleUniforms;
-		std::map<std::string, Vec2> m_Vec2Uniforms;
-		std::map<std::string, Vec3> m_Vec3Uniforms;
-		std::map<std::string, Vec4> m_Vec4Uniforms;
-		std::map<std::string, Ref<Texture>> m_TextureUniforms;
-		std::map<std::string, Ref<Framebuffer>> m_FramebufferUniforms;
-
-		std::map<std::string, Mat4x4> m_MatrixUniforms;
+		SerialTable m_Table;
 
 		Ref<Shader> m_Shader;
+
+		Ref<MaterialBlueprint> m_Blueprint;
 
 		bool m_MaterialChanged = true;
 
@@ -64,4 +55,23 @@ namespace Volund
 
 		void ConformToBlueprint();
 	};
+
+	template<typename T, typename>
+	inline void Material::Set(const std::string& name, const T& value)
+	{
+		if (this->m_Table.Contains<T>(name))
+		{
+			this->m_Table[name] = value;
+		}
+		else
+		{
+			this->m_Table.Insert(name, value);
+		}
+	}
+
+	template<typename T, typename>
+	inline bool Material::Is(const std::string& key) const
+	{
+		return this->m_Table.Is<T>(key);
+	}
 }
