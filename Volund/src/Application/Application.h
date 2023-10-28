@@ -91,6 +91,4 @@ namespace Volund
 	{
 		return this->m_Modules.Contains<T>();
 	}
-
-	Ref<Application> Entry();
 }
