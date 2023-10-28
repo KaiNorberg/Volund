@@ -3,7 +3,7 @@
 #include "OpenGLRenderingAPI.h"
 
 #include <glad/include/glad/glad.h>
-#include <GLFW/glfw3.h>
+#include <glfw/include/GLFW/glfw3.h>
 
 namespace Volund
 {

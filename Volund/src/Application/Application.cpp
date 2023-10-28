@@ -4,8 +4,6 @@
 
 #include "Time/Time.h"
 
-#include <glad/glad.h>
-
 namespace Volund
 {
 	void Application::Run()

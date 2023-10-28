@@ -3,6 +3,8 @@
 
 #include "ImageLoader/ImageLoader.h"
 
+#include <glfw/include/GLFW/glfw3.h>
+
 namespace Volund
 {
 	void DefaultWindowCloseCallback(GLFWwindow *window)
@@ -331,6 +333,7 @@ namespace Volund
 		
 		if (!glfwInit())
 		{
+			VOLUND_ERROR("Failed to init glfw!");
 		}
 
 		if (FullScreen)

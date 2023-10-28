@@ -40,8 +40,11 @@ def RecursiveCopy(src, dest, extension):
         if not (os.path.exists(relativeDestDir)):
             os.makedirs(relativeDestDir)
         shutil.copy(path, relativeDest)
+        
+def DeployLibLinux():
+    print("Not Implemented!")
 
-def DeployWin():
+def DeployLibWin():
     if (os.path.exists(DEPLOY_FOLDER)):
         shutil.rmtree(DEPLOY_FOLDER)
     os.mkdir(DEPLOY_FOLDER)
@@ -60,9 +63,9 @@ def main():
     if (args.deploy == True):
         print("Please wait...")
         if IsLinux():
-            print("Not Implemented!")
+            DeployLibLinux()
         elif IsWindows():
-            DeployWin()
+            DeployLibWin()
         print("Done!")
             
 if __name__ == "__main__":

@@ -4,7 +4,16 @@
 
 #include "Rendering/Framebuffer/Framebuffer.h"
 
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
+typedef void (*GLFWwindowfocusfun)(GLFWwindow* window, int focused);
+typedef void (*GLFWcursorenterfun)(GLFWwindow* window, int entered);
+typedef void (*GLFWwindowclosefun)(GLFWwindow* window);
+typedef void (*GLFWwindowsizefun)(GLFWwindow* window, int width, int height);
+typedef void (*GLFWkeyfun)(GLFWwindow* window, int key, int scancode, int action, int mods);
+typedef void (*GLFWcursorposfun)(GLFWwindow* window, double xpos, double ypos);
+typedef void (*GLFWmousebuttonfun)(GLFWwindow* window, int button, int action, int mods);
+typedef void (*GLFWscrollfun)(GLFWwindow* window, double xoffset, double yoffset);
+typedef void (*GLFWcharfun)(GLFWwindow* window, unsigned int codepoint);
 
 namespace Volund
 {
@@ -13,7 +22,7 @@ namespace Volund
 		uint64_t Width = 0;
 		uint64_t Height = 0;
 
-		GLFWwindow* GlfwWindow;
+		GLFWwindow* GlfwWindow = nullptr;
 
 		bool IsCursorEnabled = true;
 
