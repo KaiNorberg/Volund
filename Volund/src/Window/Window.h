@@ -26,7 +26,7 @@ namespace Volund
 
 		bool IsCursorEnabled = true;
 
-		Ref<Dispatcher> Dispatcher;
+		Ref<Dispatcher> EventDispatcher;
 
 		std::vector<GLFWwindowfocusfun> WindowFocusCallbacks;
 		std::vector<GLFWcursorenterfun> CursorEnterCallbacks;

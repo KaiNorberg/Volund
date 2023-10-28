@@ -24,6 +24,8 @@
 #include <tuple>
 #include <ranges>
 #include <charconv>
+#include <cstring>
+#include <cmath>
 
 #include "Core/Core.h"
 #include "Logger/Logger.h"

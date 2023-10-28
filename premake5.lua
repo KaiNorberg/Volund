@@ -33,9 +33,9 @@ project "Volund"
 	filter "system:windows" 
 		links
 		{
-			TargetDir .. "/Glad.lib",
-			TargetDir .. "/GLFW.lib",
-			TargetDir .. "/ImGui.lib",
+			TargetDir .. "/Glad",
+			TargetDir .. "/GLFW",
+			TargetDir .. "/ImGui",
 			"OpenGL32",
 			"winmm",
 			"vendor/OpenAL_Soft/lib/OpenAL32",
@@ -44,16 +44,9 @@ project "Volund"
 			"vendor/lua/lua54",
 		}
 	filter "system:linux" 
-		links
-		{
-			"dl",
-			"Glad",
-			"GLFW",
-			"openal",
-			"common",
-			"ex-common",
-			"ImGui",
-			"lua54",
+		links 
+		{		
+
 		}
 
 	filter "configurations:Debug"
@@ -86,13 +79,30 @@ project "Editor"
 
 	files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui" }
-	libdirs { TargetDir, "vendor" }
+	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui", "Volund/src" }
+	libdirs { TargetDir, "vendor", "vendor/OpenAL_Soft/lib", "vendor/lua/" }
 
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
 
-	links { "Volund" }
+	filter "system:windows" 
+		links
+		{
+			"Volund"
+		}
+	filter "system:linux" 
+		links 
+		{ 
+			"Volund",	
+			"dl",
+			"Glad",
+			"GLFW",
+			"ImGui",
+			"openal",
+			"common",
+			"ex-common",
+			"lua54",
+		}
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"
@@ -127,13 +137,30 @@ project "Launcher"
 
 	files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
-	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui" }
-	libdirs { TargetDir, "vendor" }
+	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui", "Volund/src" }
+	libdirs { TargetDir, "vendor", "vendor/OpenAL_Soft/lib", "vendor/lua/" }
 
 	pchheader "PCH/PCH.h"
 	pchsource "%{prj.name}/src/PCH/PCH.cpp"
 
-	links { "Volund" }
+	filter "system:windows" 
+		links
+		{
+			"Volund"
+		}
+	filter "system:linux" 
+		links 
+		{ 
+			"Volund",	
+			"dl",
+			"Glad",
+			"GLFW",
+			"ImGui",
+			"openal",
+			"common",
+			"ex-common",
+			"lua54",
+		}
 
 	filter "configurations:Debug"
 		defines "VOLUND_DEBUG"

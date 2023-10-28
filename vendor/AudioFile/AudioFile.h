@@ -31,6 +31,8 @@
 #include <unordered_map>
 #include <iterator>
 #include <algorithm>
+#include <stdio.h>
+#include <string.h>
 
 // disable some warnings on Windows
 #if defined (_MSC_VER)
