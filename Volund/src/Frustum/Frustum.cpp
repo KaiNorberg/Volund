@@ -41,7 +41,7 @@ namespace Volund
 				axisVert.z = aabb.Max.z;
 			}
 
-			if (glm::dot(m_FrustumPlanes[y], axisVert) < 0.0f)
+			if (Math::Dot(m_FrustumPlanes[y], axisVert) < 0.0f)
 			{
 				return false;
 			}
@@ -50,9 +50,11 @@ namespace Volund
 		return true;
 	}
 
-	Frustum::Frustum(Mat4x4 viewProjMatrix)
+	Frustum::Frustum(Mat4x4 viewProjMatrix)	
 	{
 		VOLUND_PROFILE_FUNCTION();
+
+		auto test = (viewProjMatrix[0]);
 
 		// Left clipping plane
 		m_FrustumPlanes[0].x = viewProjMatrix[0][3] + viewProjMatrix[0][0];
@@ -87,7 +89,7 @@ namespace Volund
 
 		for (int i = 0; i < 6; i++)
 		{
-			m_FrustumPlanes[i] = glm::normalize(m_FrustumPlanes[i]);
+			m_FrustumPlanes[i] = Math::Normalize(m_FrustumPlanes[i]);
 		}
 	}
 }

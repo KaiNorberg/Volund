@@ -1,8 +1,6 @@
 #include "PCH/PCH.h"
 #include "ScriptingEngine.h"
 
-#include "LuaVec/LuaVec.h"
-
 #include "Script/Script.h"
 
 #include <sol/sol.hpp>
@@ -20,20 +18,20 @@ namespace Volund
 		VOLUND_WARNING("Require not implemented!");
 	}
 
-	template<typename T>
-	T ScriptingEngine::GetVariable(uint64_t scriptId, const std::string& key)
+	template<typename T, typename>
+	T ScriptingEngine::Get(uint64_t scriptId, const std::string& key)
 	{
 		return (*this->m_LuaState)[scriptId][key];
 	}
 
-	template<typename T>
-	void ScriptingEngine::SetVariable(uint64_t scriptId, const std::string& key, const T& value)
+	template<typename T, typename>
+	void ScriptingEngine::Set(uint64_t scriptId, const std::string& key, const T& value)
 	{
 		(*this->m_LuaState)[scriptId][key] = value;
 	}
 
-	template<typename T>
-	bool ScriptingEngine::IsVariable(uint64_t scriptId, const std::string& key)
+	template<typename T, typename>
+	bool ScriptingEngine::Is(uint64_t scriptId, const std::string& key)
 	{
 		return (*this->m_LuaState)[scriptId].is<T>();
 	}
@@ -138,7 +136,7 @@ namespace Volund
 
 		//Global UserTypes
 
-		this->m_LuaState->new_usertype<LuaVec4>("Vec4", sol::constructors<void(LuaVec4), void(), void(float), void(float, float, float, float)>(),
+		/*this->m_LuaState->new_usertype<LuaVec4>("Vec4", sol::constructors<void(LuaVec4), void(), void(float), void(float, float, float, float)>(),
 			"x", &LuaVec4::x,
 			"y", &LuaVec4::y,
 			"z", &LuaVec4::z,
@@ -179,30 +177,30 @@ namespace Volund
 			sol::meta_function::subtraction, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator-), sol::resolve<LuaVec2(float)>(&LuaVec2::operator-)),
 			sol::meta_function::multiplication, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator*), sol::resolve<LuaVec2(float)>(&LuaVec2::operator*)),
 			sol::meta_function::division, sol::overload(sol::resolve<LuaVec2(const LuaVec2&)>(&LuaVec2::operator/), sol::resolve<LuaVec2(float)>(&LuaVec2::operator/))
-		);
+		);*/
 	}
 
-	template LuaInt ScriptingEngine::GetVariable<LuaInt>(uint64_t, const std::string&);
-	template LuaFloat ScriptingEngine::GetVariable<LuaFloat>(uint64_t, const std::string&);
-	template LuaBool ScriptingEngine::GetVariable<LuaBool>(uint64_t, const std::string&);
-	template LuaString ScriptingEngine::GetVariable<LuaString>(uint64_t, const std::string&);
-	template Vec2 ScriptingEngine::GetVariable<Vec2>(uint64_t, const std::string&);
-	template Vec3 ScriptingEngine::GetVariable<Vec3>(uint64_t, const std::string&);
-	template Vec4 ScriptingEngine::GetVariable<Vec4>(uint64_t, const std::string&);
+	template LuaInt ScriptingEngine::Get<LuaInt>(uint64_t, const std::string&);
+	template LuaFloat ScriptingEngine::Get<LuaFloat>(uint64_t, const std::string&);
+	template LuaBool ScriptingEngine::Get<LuaBool>(uint64_t, const std::string&);
+	template LuaString ScriptingEngine::Get<LuaString>(uint64_t, const std::string&);
+	template LuaVec2 ScriptingEngine::Get<LuaVec2>(uint64_t, const std::string&);
+	template LuaVec3 ScriptingEngine::Get<LuaVec3>(uint64_t, const std::string&);
+	template Vec4 ScriptingEngine::Get<Vec4>(uint64_t, const std::string&);
 
-	template void ScriptingEngine::SetVariable<LuaInt>(uint64_t, const std::string&, const LuaInt&);
-	template void ScriptingEngine::SetVariable<LuaFloat>(uint64_t, const std::string&, const LuaFloat&);
-	template void ScriptingEngine::SetVariable<LuaBool>(uint64_t, const std::string&, const LuaBool&);
-	template void ScriptingEngine::SetVariable<LuaString>(uint64_t, const std::string&, const LuaString&);
-	template void ScriptingEngine::SetVariable<Vec2>(uint64_t, const std::string&, const Vec2&);
-	template void ScriptingEngine::SetVariable<Vec3>(uint64_t, const std::string&, const Vec3&);
-	template void ScriptingEngine::SetVariable<Vec4>(uint64_t, const std::string&, const Vec4&);
+	template void ScriptingEngine::Set<LuaInt>(uint64_t, const std::string&, const LuaInt&);
+	template void ScriptingEngine::Set<LuaFloat>(uint64_t, const std::string&, const LuaFloat&);
+	template void ScriptingEngine::Set<LuaBool>(uint64_t, const std::string&, const LuaBool&);
+	template void ScriptingEngine::Set<LuaString>(uint64_t, const std::string&, const LuaString&);
+	template void ScriptingEngine::Set<LuaVec2>(uint64_t, const std::string&, const LuaVec2&);
+	template void ScriptingEngine::Set<LuaVec3>(uint64_t, const std::string&, const LuaVec3&);
+	template void ScriptingEngine::Set<Vec4>(uint64_t, const std::string&, const Vec4&);
 
-	template bool ScriptingEngine::IsVariable<LuaInt>(uint64_t, const std::string&);
-	template bool ScriptingEngine::IsVariable<LuaFloat>(uint64_t, const std::string&);
-	template bool ScriptingEngine::IsVariable<LuaBool>(uint64_t, const std::string&);
-	template bool ScriptingEngine::IsVariable<LuaString>(uint64_t, const std::string&);
-	template bool ScriptingEngine::IsVariable<Vec2>(uint64_t, const std::string&);
-	template bool ScriptingEngine::IsVariable<Vec3>(uint64_t, const std::string&);
-	template bool ScriptingEngine::IsVariable<Vec4>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaInt>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaFloat>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaBool>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaString>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaVec2>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<LuaVec3>(uint64_t, const std::string&);
+	template bool ScriptingEngine::Is<Vec4>(uint64_t, const std::string&);
 }

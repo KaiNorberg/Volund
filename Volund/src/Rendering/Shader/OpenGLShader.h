@@ -26,7 +26,7 @@ namespace Volund
 
 		void SetVec4(const std::string& name, const Vec4& value) override;
 
-		void SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose = false) override;
+		//void SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose = false) override;
 
 		void SetMat4x4(const std::string& name, const Mat4x4& value, bool transpose = false) override;
 

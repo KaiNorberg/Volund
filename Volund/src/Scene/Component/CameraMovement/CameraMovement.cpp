@@ -41,10 +41,10 @@ namespace Volund
 				entityTransform->Position += entityTransform->GetRight() * float(ts) * this->Speed;
 			}
 
-			Vec2 delta = m_Input.GetMousePosition() - this->m_OldMousePosition;
+			IVec2 delta = m_Input.GetMousePosition() - this->m_OldMousePosition;
 
-			delta.x = ((float)std::clamp(delta.x, -10.0f, 10.0f) * this->Sensitivity);
-			delta.y = ((float)std::clamp(delta.y, -10.0f, 10.0f) * this->Sensitivity);
+			delta.x = ((float)std::clamp(delta.x, -10, 10) * this->Sensitivity);
+			delta.y = ((float)std::clamp(delta.y, -10, 10) * this->Sensitivity);
 
 			m_Rotation -= Vec3(delta.y, delta.x, 0.0f) * this->Sensitivity;
 			m_Rotation.x = std::clamp(m_Rotation.x, -89.0f, 89.0f);

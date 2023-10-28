@@ -3,6 +3,8 @@
 #include "Rendering/Mesh/Mesh.h"
 #include "Rendering/Framebuffer/Framebuffer.h"
 
+#include "Math/Math.h"
+
 namespace Volund
 {
 	enum class GraphicsAPI

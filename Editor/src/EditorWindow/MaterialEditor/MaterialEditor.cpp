@@ -126,7 +126,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 					std::string texturePath = assetManager->FetchFilepath<VL::Texture>(uniform->As<VL::UniformTexture>());
 					if (ImGuiFile(name, texturePath))
 					{
-						this->m_SelectedMaterial->SetTexture(key, assetManager->Fetch<VL::Texture>(texturePath));
+						this->m_SelectedMaterial->Set(key, assetManager->Fetch<VL::Texture>(texturePath));
 						changed = true;
 					}
 				}
@@ -168,7 +168,8 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
 
-		ImGuiAlign("Add Entry", 0.5f);
+		//Temporarily disabled
+		/*ImGuiAlign("Add Entry", 0.5f);
 		if (ImGui::Button("Add Entry"))
 		{
 			ImGui::OpenPopup("Add Entry");
@@ -191,7 +192,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			if (ImGui::MenuItem("Vec2"))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetVec2("NewVec2", VL::Vec2(0.0f, 0.0f));
+				this->m_SelectedMaterial->SetVec2("NewVec2", VL::UniformVec2(0.0f, 0.0f));
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Vec3"))
@@ -213,7 +214,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 				ImGui::CloseCurrentPopup();
 			}
 			ImGui::EndPopup();
-		}
+		}*/
 
 		if (changed && this->m_Context->IsPaused())
 		{

@@ -80,14 +80,14 @@ namespace Volund
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void Serializer::Insert(const std::string& name, const Vec2& value)
+	void Serializer::Insert(const std::string& name, const LuaVec2& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec2:new(" + std::to_string(value.x) +
 			", " + std::to_string(value.y) + ")";
 	}
 
-	void Serializer::Insert(const std::string& name, const Vec3& value)
+	void Serializer::Insert(const std::string& name, const LuaVec3& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec3:new(" + std::to_string(value.x) +

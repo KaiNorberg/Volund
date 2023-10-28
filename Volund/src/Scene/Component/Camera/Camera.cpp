@@ -36,13 +36,12 @@ namespace Volund
 
 		if (entityTransform != nullptr)
 		{
-			return lookAt(entityTransform->Position, entityTransform->Position + entityTransform->GetFront(),
+			return Math::ViewMatrix(entityTransform->Position, entityTransform->Position + entityTransform->GetFront(),
 				entityTransform->GetUp());
 		}
 		else
 		{
-			return lookAt(Vec3(0.0f), Vec3(0.0f, 1.0, 0.0),
-				Vec3(0.0f));
+			return Mat4x4(1.0f);
 		}
 	}
 
@@ -52,12 +51,11 @@ namespace Volund
 
 		if (entityTransform != nullptr)
 		{
-			return lookAt(Vec3(0.0f), entityTransform->GetFront(), entityTransform->GetUp());
+			return Math::ViewMatrix(Vec3(0.0f), entityTransform->GetFront(), entityTransform->GetUp());
 		}
 		else
 		{
-			return lookAt(Vec3(0.0f), Vec3(0.0f),
-				Vec3(0.0f));
+			return Mat4x4(1.0f);
 		}
 	}
 
@@ -65,7 +63,7 @@ namespace Volund
 	{
 		if (abs(aspectRatio - std::numeric_limits<float>::epsilon()) > 0.0f)
 		{
-			return glm::perspective(glm::radians(this->FOV), aspectRatio, this->NearPlane, this->FarPlane);
+			return Math::ProjectionMatrix(Math::Radians(this->FOV), aspectRatio, this->NearPlane, this->FarPlane);
 		}
 		else
 		{
