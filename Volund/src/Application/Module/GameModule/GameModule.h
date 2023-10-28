@@ -31,12 +31,11 @@ namespace Volund
 		std::mutex m_Mutex;
 
 		Ref<GameState> m_GameState;
+		Ref<Renderer> m_Renderer;
+		Ref<Framebuffer> m_Framebuffer;
 
 		Ref<Window> m_GameWindow;
-
-		Ref<Renderer> m_Renderer;
-
-		Ref<Framebuffer> m_Framebuffer;
+		Ref<Dispatcher> m_Dispatcher;
 
 		std::string m_Filepath;
 	};

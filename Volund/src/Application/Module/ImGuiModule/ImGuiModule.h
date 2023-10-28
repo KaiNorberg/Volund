@@ -20,8 +20,8 @@ namespace Volund
 
         void SetBackgroundCallback(std::function<void()> callback);
           
-        template<typename T>
-        void AddWindow(Ref<T> imGuiWindow);
+        template<typename T, typename... Args>
+        Ref<T> CreateWindow(Args&&... args);
 
     private:
 
@@ -36,9 +36,12 @@ namespace Volund
         PolyContainer<ImGuiWindow> m_ImGuiWindows;
     };
 
-    template<typename T>
-    inline void ImGuiModule::AddWindow(Ref<T> imGuiWindow)
+    template<typename T, typename ...Args>
+    inline Ref<T> ImGuiModule::CreateWindow(Args&&... args)
     {
-        this->m_ImGuiWindows.PushBack(imGuiWindow);
+        Ref<T> newWindow = std::make_shared<T>(args...);
+        this->m_ImGuiWindows.PushBack(newWindow);
+
+        return newWindow;
     }
 }

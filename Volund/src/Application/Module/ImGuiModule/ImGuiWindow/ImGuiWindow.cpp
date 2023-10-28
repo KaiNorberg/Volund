@@ -14,14 +14,12 @@ namespace Volund
 
 	void ImGuiWindow::SetSize(const Vec2& size)
 	{
-		this->m_Size = size;
-		this->m_SizeChanged = true;
+		this->m_CommandQueue.push(Ref<ImGuiResizeCommand>(new ImGuiResizeCommand(size)));
 	}
 
 	void ImGuiWindow::SetPosition(const Vec2& position)
 	{
-		this->m_Position = position;
-		this->m_PositionChanged = true;
+		this->m_CommandQueue.push(Ref<ImGuiMoveCommand>(new ImGuiMoveCommand(position)));
 	}
 
 	void ImGuiWindow::SetName(const std::string& name)
@@ -49,7 +47,7 @@ namespace Volund
 
 	std::string ImGuiWindow::GetId()
 	{
-		return this->m_Name + "##" + this->m_Id;
+		return this->m_Name + "##" + this->m_UniqueName;
 	}
 
 	void ImGuiWindow::Procedure(const Event& e)
@@ -57,19 +55,15 @@ namespace Volund
 		switch (e.Type)
 		{
 		case VOLUND_EVENT_TYPE_RENDER:
-		{    
+		{   				
+			while (!this->m_CommandQueue.empty())
+			{
+				this->m_CommandQueue.front()->Execute(this->GetId());
+				this->m_CommandQueue.pop();
+			}
+
 			if (ImGui::Begin(this->GetId().c_str(), &this->IsActive))
 			{
-				if (this->m_PositionChanged)
-				{
-					ImGui::SetWindowPos(ImVec2(this->m_Position.x, this->m_Position.y));
-					this->m_PositionChanged = false;
-				}
-				if (this->m_SizeChanged)
-				{
-					ImGui::SetWindowSize(ImVec2(this->m_Size.x, this->m_Size.y));
-					this->m_SizeChanged = false;
-				}
 
 				ImVec2 windowSize = ImGui::GetWindowSize();
 				ImVec2 windowPos = ImGui::GetWindowPos();
@@ -637,6 +631,6 @@ namespace Volund
 
 	ImGuiWindow::ImGuiWindow()
 	{
-		this->m_Id = std::to_string(rand());
+		this->m_UniqueName = std::to_string(rand());
 	}
 }

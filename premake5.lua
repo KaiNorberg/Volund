@@ -23,7 +23,7 @@ project "Volund"
 	files { "%{prj.name}/src/**.h", "%{prj.name}/src/**.cpp" }
 
 	includedirs { "%{prj.name}/src", "vendor", "vendor/imgui" }
-	libdirs { TargetDir, "vendor" }
+	libdirs { TargetDir, "vendor", "vendor/OpenAL_Soft/lib", "vendor/lua/" }
 	
 	defines { "VOLUND_CORE" }
 

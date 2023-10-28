@@ -13,43 +13,30 @@
 
 void Editor::OnRun()
 {
-	auto windowModule = this->AttachModule<VL::WindowModule>();
-	auto window = windowModule->GetWindow();
+	this->m_Window->SetIcon("data/icons/logo.png");
+	this->m_Window->SetTitle("Volund Editor");
 
-	window->SetIcon("data/icons/logo.png");
-	window->SetTitle("Volund Editor");
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
 	auto audioModule = this->AttachModule<VL::AudioModule>();
 	auto imGuiModule = this->AttachModule<VL::ImGuiModule>();
 	auto context = this->AttachModule<EditorContext>();
-
+	
 	imGuiModule->SetBackgroundCallback([this]() 
 	{
 		this->BackgroundCallback(); 
 	});
 
-	auto outputWindow = VL::Ref<OutputWindow>(new OutputWindow(context));
-	imGuiModule->AddWindow(outputWindow);
-
-	auto viewportWindow = VL::Ref<ViewportWindow>(new ViewportWindow(context));
-	imGuiModule->AddWindow(viewportWindow);
-
-	auto inspectorWindow = VL::Ref<InspectorWindow>(new InspectorWindow(context));
-	imGuiModule->AddWindow(inspectorWindow);
-
-	auto filesystemWindow = VL::Ref<FilesystemWindow>(new FilesystemWindow(context));
-	imGuiModule->AddWindow(filesystemWindow);
-
-	auto hierarchyWindow = VL::Ref<HierarchyWindow>(new HierarchyWindow(context));
-	imGuiModule->AddWindow(hierarchyWindow);
-
-	auto materialWindow = VL::Ref<MaterialEditor>(new MaterialEditor(context));
-	imGuiModule->AddWindow(materialWindow);	
-
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = "data/imgui.ini";
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
+
+	auto viewportWindow = imGuiModule->CreateWindow<ViewportWindow>(context);
+	auto outputWindow = imGuiModule->CreateWindow<OutputWindow>(context);
+	auto inspectorWindow = imGuiModule->CreateWindow<InspectorWindow>(context);
+	auto filesystemWindow = imGuiModule->CreateWindow<FilesystemWindow>(context);
+	auto hierarchyWindow = imGuiModule->CreateWindow<HierarchyWindow>(context);
+	auto materialWindow = imGuiModule->CreateWindow<MaterialEditor>(context);
 }
 
 void Editor::OnTerminate()
@@ -70,12 +57,6 @@ void Editor::Procedure(const VL::Event& e)
 	case VOLUND_EVENT_TYPE_RENDER:
 	{ 	
 		auto window = context->GetWindow();
-
-		if (!this->m_iniLoaded)
-		{
-			ImGui::LoadIniSettingsFromDisk("imgui.ini");
-			this->m_iniLoaded = true;
-		}
 	}
 	break;	
 	case VOLUND_EVENT_TYPE_KEY:

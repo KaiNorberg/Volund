@@ -6,6 +6,9 @@
 #include "PolyContainer/PolyContainer.h"
 #include "Dispatcher/Dispatcher.h"
 
+#include "Window/Window.h"
+#include "GameState/GameState.h"
+
 namespace Volund
 {
 	class Application
@@ -15,6 +18,8 @@ namespace Volund
 		void Run();
 
 		bool ShouldRun() const;
+
+		Ref<Window> GetWindow();
 
 		Ref<Dispatcher> GetDispatcher();
 
@@ -49,6 +54,8 @@ namespace Volund
 	protected:
 
 		void Terminate();
+
+		Ref<Window> m_Window;
 
 		PolyContainer<Module> m_Modules;
 	};

@@ -15,8 +15,6 @@ void Launcher::Procedure(const VL::Event& e)
 
 Launcher::Launcher()
 {
-	this->AttachModule<VL::WindowModule>();
-
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
 	this->AttachModule<VL::GameModule>();

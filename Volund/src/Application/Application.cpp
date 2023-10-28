@@ -23,6 +23,11 @@ namespace Volund
 		return this->m_ShouldRun;
 	}
 
+	Ref<Window> Application::GetWindow()
+	{
+		return this->m_Window;
+	}
+
 	Ref<Dispatcher> Application::GetDispatcher()
 	{
 		return this->m_Dispatcher;
@@ -60,6 +65,9 @@ namespace Volund
 			TimeStep ts = TimeStep(std::chrono::duration<double>(std::chrono::high_resolution_clock::now() - startTime).count());
 			startTime = std::chrono::high_resolution_clock::now();
 
+			this->m_Window->Flush();
+			this->m_Window->Update();
+
 			Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
 			VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 
@@ -86,6 +94,9 @@ namespace Volund
 		{
 			this->EventCallback(e);
 		});
+
+		this->m_Window = std::make_shared<Window>(this->m_Dispatcher, 1980, 1080, false);
+		this->m_Window->SetTitle("Volund");
 	}
 
 	Application::~Application()
