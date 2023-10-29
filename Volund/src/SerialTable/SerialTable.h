@@ -54,6 +54,6 @@ namespace Volund
 	template<typename T>
 	inline bool SerialTable::Is(const std::string& key) const
 	{
-		return this->m_Table.at(key)->GetTypeHash() == typeid(T).hash_code();
+		return this->m_Table.at(key)->GetTypeHash() == Utils::GetTypeId<T>();
 	}
 }

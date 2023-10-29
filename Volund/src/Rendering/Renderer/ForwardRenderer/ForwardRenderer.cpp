@@ -55,6 +55,11 @@ namespace Volund
 			Ref<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)
 			{
+				if (model.material == nullptr)
+				{
+					continue;
+				}
+
 				auto shader = model.material->GetShader();
 
 				if (shader == nullptr || shader->GetId() == 0)

@@ -54,7 +54,7 @@ namespace Volund
 	{
 		//VOLUND_SERIAL_TYPE_ASSERT(T);
 
-		return this->GetTypeHash() == typeid(T).hash_code();
+		return this->GetTypeHash() == Utils::GetTypeId<T>();
 	}	
 
 	template<typename T>
@@ -124,7 +124,7 @@ namespace Volund
 	{
 		//VOLUND_SERIAL_TYPE_ASSERT(T);
 
-		return typeid(T).hash_code();
+		return Utils::GetTypeId<T>();
 	}
 
 	template<typename T>

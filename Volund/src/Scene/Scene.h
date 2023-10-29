@@ -10,40 +10,59 @@
 
 namespace Volund
 {
-	using Entity = uint64_t;
+	typedef uint64_t Entity;
+}
 
-	struct RegistryEntry
-	{
-		Entity entity;
-		PolyContainer<Component> componentContainer;
+#define VOLUND_ENTITY_CREATE(id, index) ((uint64_t)id << 32) | ((uint64_t)index)
 
-		RegistryEntry(Entity entityId);
-	};
+#define VOLUND_ENTITY_GET_ID(entity) (entity >> 32)
+#define VOLUND_ENTITY_GET_INDEX(entity) entity & 0x00000000FFFFFFFF
 
-	using EntityRegistry = std::vector<RegistryEntry>;
+#define NULL_ENTITY (Entity)-1
 
+namespace Volund
+{
 	class Scene
 	{
 	public:
 
+		struct ComponentEntry
+		{
+			size_t TypeId = 0;
+			Ref<Component> component;
+
+			template<typename T>
+			bool Is();
+
+			template<typename T>
+			Ref<T> As();
+		};
+
+		struct EntityEntry
+		{
+			Entity entity;
+			std::vector<ComponentEntry> Components;
+
+			std::vector<ComponentEntry>::iterator begin();
+			std::vector<ComponentEntry>::iterator end();
+		};
+
 		CHRONO_TIME_POINT GetStartTime();
 
-		Entity RegisterNewEntity();
+		Entity AllocateEntity();
 
-		void UnregisterEntity(Entity entity);
+		void DeallocateEntity(Entity entity);
 
-		bool IsEntityRegistered(Entity entity);
-
-		std::vector<Entity> GetRegisteredEntities();
-
-		template<typename T>
-		void DeleteComponent(Entity entity, uint64_t index = 0);
+		bool IsAllocated(Entity entity);
 
 		template<typename T, typename... Args>
 		Ref<T> CreateComponent(Entity entity, Args&&... args);
 
 		template<typename T>
-		bool HasComponent(Entity entity);	
+		void DeleteComponent(Entity entity, uint64_t index = 0);
+
+		template<typename T>
+		bool HasComponent(Entity entity, uint64_t index = 0);	
 
 		template<typename T>
 		uint64_t ComponentAmount(Entity entity);
@@ -53,8 +72,8 @@ namespace Volund
 		
 		void Procedure(const Event& e);
 
-		EntityRegistry::iterator begin();
-		EntityRegistry::iterator end();
+		std::vector<EntityEntry>::iterator begin();
+		std::vector<EntityEntry>::iterator end();
 
 		Scene();
 
@@ -62,31 +81,29 @@ namespace Volund
 
 	private:
 
-		uint64_t FindEntity(Entity entity);
-
-		uint64_t m_NewEntity = 1;
-
-		EntityRegistry m_Registry;
+		static std::vector<ComponentEntry>::iterator LowerBound(std::vector<ComponentEntry>& components, const size_t& typeId);
 		
+		static std::vector<ComponentEntry>::iterator UpperBound(std::vector<ComponentEntry>& components, const size_t& typeId);
+
+		std::vector<EntityEntry> m_EntityHeap;
+		std::vector<uint32_t> m_FreeEntries;
+
 		CHRONO_TIME_POINT m_StartTime;
 	};
 
-    template <typename T>
-    inline void Scene::DeleteComponent(Entity entity, uint64_t index)
-    {
-		VOLUND_PROFILE_FUNCTION();
+	bool operator<(const size_t& a, const Scene::ComponentEntry& b);
+	bool operator<(const Scene::ComponentEntry& a, const size_t& b);
 
-		const uint64_t entityIndex = FindEntity(entity);
+	template<typename T>
+	inline bool Scene::ComponentEntry::Is()
+	{
+		return this->TypeId == Utils::GetTypeId<T>();
+	}
 
-		if (entityIndex != -1)
-		{
-			this->m_Registry[entityIndex].componentContainer.Get<T>(index)->OnDestroy();
-			this->m_Registry[entityIndex].componentContainer.Erase<T>(index);
-		}
-		else
-		{
-			VOLUND_ERROR("Unable to find entity (%d)", entity);
-		}
+	template<typename T>
+	inline Ref<T> Scene::ComponentEntry::As()
+	{
+		return std::dynamic_pointer_cast<T>(this->component);
 	}
 
 	template<typename T, typename ...Args>
@@ -94,32 +111,72 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		const uint64_t index = FindEntity(entity);
-
-		if (index != -1)
+		if (!IsAllocated(entity))
 		{
-			Ref<T> newComponent = std::make_shared<T>(args...);
-			newComponent->Init(entity, this);
-			newComponent->OnCreate();
-			this->m_Registry[index].componentContainer.PushBack(newComponent);
+			VOLUND_ERROR("Unallocated entity detected!");
+		}
+		
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+		auto& entry = this->m_EntityHeap[entityIndex];
 
-			return newComponent;
+		Ref<T> newComponent = std::make_shared<T>(args...);
+		newComponent->Init(entity, this);
+		newComponent->OnCreate();
+
+		size_t componentTypeId = Utils::GetTypeId<T>();
+
+		auto insertPos = UpperBound(entry.Components, componentTypeId);
+		ComponentEntry newEntry = ComponentEntry(Utils::GetTypeId<T>(), newComponent);
+		entry.Components.insert(insertPos, newEntry);
+
+		return newComponent;
+	}		
+
+    template <typename T>
+    inline void Scene::DeleteComponent(Entity entity, uint64_t index)
+    {
+		VOLUND_PROFILE_FUNCTION();
+
+		if (!IsAllocated(entity))
+		{
+			VOLUND_ERROR("Unallocated entity detected!");
+		}
+
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+		auto& entry = this->m_EntityHeap[entityIndex];
+
+		size_t componentTypeId = Utils::GetTypeId<T>();
+
+		auto componentEntry = LowerBound(entry.Components, componentTypeId) + index;
+
+		if (componentEntry < entry.Components.end() && (*componentEntry).TypeId == componentTypeId)
+		{
+			entry.Components.erase(componentEntry);
 		}
 		else
 		{
-			VOLUND_ERROR("Unable to find entity (%d)", entity);
-			return nullptr;
+			VOLUND_ERROR("Component out of bounds!");
 		}
 	}
 
 	template<typename T>
-	inline bool Scene::HasComponent(Entity entity)
+	inline bool Scene::HasComponent(Entity entity, uint64_t index)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		const uint64_t entityIndex = FindEntity(entity);
+		if (!IsAllocated(entity))
+		{
+			return false;
+		}
 
-		return entityIndex != -1 && this->m_Registry[entityIndex].componentContainer.Contains<T>();
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+		auto& entry = this->m_EntityHeap[entityIndex];
+
+		size_t componentTypeId = Utils::GetTypeId<T>();
+
+		auto componentEntry = LowerBound(entry.Components, componentTypeId) + index;
+
+		return componentEntry < entry.Components.end() && (*componentEntry).TypeId == componentTypeId;
 	}
 
 	template<typename T>
@@ -127,9 +184,20 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		const uint64_t entityIndex = FindEntity(entity);
+		if (!IsAllocated(entity))
+		{
+			return false;
+		}
 
-		return entityIndex != -1 && this->m_Registry[entityIndex].componentContainer.Contains<T>() ? this->m_Registry[entityIndex].componentContainer.Size<T>() : 0;
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+		auto& entry = this->m_EntityHeap[entityIndex];
+
+		size_t componentTypeId = Utils::GetTypeId<T>();
+
+		auto lower = LowerBound(entry.Components, componentTypeId);
+		auto upper = UpperBound(entry.Components, componentTypeId);
+
+		return upper - lower;
 	}
 
 	template<typename T>
@@ -137,8 +205,26 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		const uint64_t entityIndex = FindEntity(entity);
+		if (!IsAllocated(entity))
+		{
+			VOLUND_ERROR("Unallocated entity detected!");
+		}
 
-		return entityIndex != -1 && this->m_Registry[entityIndex].componentContainer.Contains<T>() ? this->m_Registry[entityIndex].componentContainer.Get<T>(index) : nullptr;
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+		auto& entry = this->m_EntityHeap[entityIndex];
+
+		size_t componentTypeId = Utils::GetTypeId<T>();
+
+		auto componentEntry = LowerBound(entry.Components, componentTypeId) + index;
+
+		if (componentEntry < entry.Components.end() && (*componentEntry).TypeId == componentTypeId)
+		{
+			return (*componentEntry).As<T>();
+		}
+		else
+		{
+			VOLUND_ERROR("Component out of bounds!");
+			return nullptr;
+		}
 	}
 }

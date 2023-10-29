@@ -16,7 +16,7 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 
 			if (ImGui::Button("+"))
 			{
-				scene->RegisterNewEntity();
+				scene->AllocateEntity();
 			}
 
 			ImGui::SameLine();
@@ -27,10 +27,14 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 
 			for (auto& [entity, container] : *scene)
 			{
-				std::string entityName = "#" + std::to_string(entity);
+				std::string entityName;
 				if (scene->HasComponent<VL::Tag>(entity))
 				{
-					entityName += " | " + scene->GetComponent<VL::Tag>(entity)->String;
+					entityName = scene->GetComponent<VL::Tag>(entity)->String;
+				}
+				else
+				{
+					entityName = "Unnamed entity";
 				}
 
 				if (entityName.find(searchTerm) != std::string::npos)
@@ -84,7 +88,7 @@ bool HierarchyWindow::ImGuiEntity(VL::Entity entity, const std::string& entityNa
 	{
 		if (ImGui::MenuItem("Delete"))
 		{
-			scene->UnregisterEntity(entity);
+			scene->DeallocateEntity(entity);
 			EntityAlive = false;
 		}
 

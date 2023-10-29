@@ -11,55 +11,58 @@ namespace Volund
 	{
 		for (auto& entity : *scene)
 		{
-			auto componentContainer = entity.componentContainer;
-
 			Mat4x4 modelMatrix = Mat4x4();
 			Vec3 position = Vec3();
-			if (componentContainer.Contains<Transform>())
+			for (auto& component : entity)
 			{
-				auto transform = componentContainer.Get<Transform>();
+				if (component.Is<Transform>())
+				{
+					auto transform = component.As<Transform>();
 
-				modelMatrix = transform->GetModelMatrix();
-				position = transform->Position;
+					modelMatrix = transform->GetModelMatrix();
+					position = transform->Position;
+
+					break;
+				}
 			}
 
-			for (int i = 0; i < componentContainer.Size<MeshRenderer>(); i++)
+			for (auto& component : entity)
 			{
-				auto meshRenderer = componentContainer.Get<MeshRenderer>(i);
+				if (component.Is<MeshRenderer>())
+				{
+					auto meshRenderer = component.As<MeshRenderer>();
 
-				RendererModel model;
-				model.LayerMask = meshRenderer->GetLayerMask();
-				model.material = meshRenderer->GetMaterial();
-				model.mesh = meshRenderer->GetMesh();
-				model.ModelMatrix = modelMatrix;
+					RendererModel model;
+					model.LayerMask = meshRenderer->GetLayerMask();
+					model.material = meshRenderer->GetMaterial();
+					model.mesh = meshRenderer->GetMesh();
+					model.ModelMatrix = modelMatrix;
 
-				this->Submit(model);
-			}
+					this->Submit(model);
+				}
+				else if (component.Is<PointLight>())
+				{
+					auto pointLight = component.As<PointLight>();
 
-			for (int i = 0; i < componentContainer.Size<Camera>(); i++)
-			{
-				auto camera = componentContainer.Get<Camera>(i);
+					RendererLight light;
+					light.Brightness = pointLight->Brightness;
+					light.Color = pointLight->Color;
+					light.Position = position;
 
-				const auto spec = this->m_Data.Target->GetSpec();
+					this->Submit(light);
+				}
+				else if (component.Is<Camera>())
+				{
+					auto camera = component.As<Camera>();
 
-				RendererEye eye;
-				eye.LayerMask = camera->GetLayerMask();
-				eye.ViewMatrix = camera->GetViewMatrix();
-				eye.ProjectionMatrix = camera->GetProjectionMatrix((float)spec.Width / (float)spec.Height);
-				eye.Target = nullptr; //TODO: Implement render cameras
-				this->Submit(eye);
-			}
-
-			for (int i = 0; i < componentContainer.Size<PointLight>(); i++)
-			{
-				auto pointLight = componentContainer.Get<PointLight>(i);
-
-				RendererLight light;
-				light.Brightness = pointLight->Brightness;
-				light.Color = pointLight->Color;
-				light.Position = position;
-
-				this->Submit(light);
+					const auto spec = this->m_Data.Target->GetSpec();
+					RendererEye eye;
+					eye.LayerMask = camera->GetLayerMask();
+					eye.ViewMatrix = camera->GetViewMatrix();
+					eye.ProjectionMatrix = camera->GetProjectionMatrix((float)spec.Width / (float)spec.Height);
+					eye.Target = nullptr; //TODO: Implement render cameras
+					this->Submit(eye);
+				}
 			}
 		}
 	}

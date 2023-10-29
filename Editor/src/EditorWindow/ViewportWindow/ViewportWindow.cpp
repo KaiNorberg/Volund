@@ -159,11 +159,6 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep, bo
 
 		this->m_Position = this->m_BallCenter - front * this->m_Distance;
 	}
-	/*else if (input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
-	{
-		this->m_BallRotation -= VL::Vec3(cursorDelta.y, cursorDelta.x, 0.0f) * this->MoveSpeed;
-		this->m_BallRotation.x = VL::Utils::Clamp(this->m_BallRotation.x, -89.0f, 89.0f);
-	}*/
 
 	this->m_OldScrollPosition = input.GetScrollPosition();
 	this->m_OldMousePosition = input.GetMousePosition();

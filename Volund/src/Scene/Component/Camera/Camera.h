@@ -5,8 +5,6 @@
 
 namespace Volund
 {
-	class Scene;
-
 	class Camera : public Component
 	{
 	public:

@@ -17,7 +17,7 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 		auto scene = this->m_Context->GetScene();
 		auto selectedEntity = this->m_Context->SelectedEntity;
 
-		if (scene == nullptr || !scene->IsEntityRegistered(selectedEntity))
+		if (scene == nullptr || !scene->IsAllocated(selectedEntity))
 		{
 			ImGui::Text("No valid entity selected!");
 			return;

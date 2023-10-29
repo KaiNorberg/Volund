@@ -49,7 +49,7 @@ namespace Volund
 	template<typename D>
 	inline void PolyContainer<T>::PushBack(const D& entry)
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		this->m_Data[typeId].push_back(std::make_shared<D>(entry));
 	}
@@ -58,7 +58,7 @@ namespace Volund
 	template<typename D>
 	inline void PolyContainer<T>::PushBack(Ref<D> entry)
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		this->m_Data[typeId].push_back(entry);
 	}
@@ -67,7 +67,7 @@ namespace Volund
 	template<typename D>
 	inline void PolyContainer<T>::PushBack(D* entry)
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		this->m_Data[typeId].push_back(Ref<D>(entry));
 	}
@@ -76,7 +76,7 @@ namespace Volund
 	template<typename D>
 	inline void PolyContainer<T>::Erase(uint64_t index)
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		if (this->m_Data.contains(typeId) && this->m_Data[typeId].size() > index)
 		{
@@ -88,7 +88,7 @@ namespace Volund
 	template<typename D>
 	inline Ref<D> PolyContainer<T>::Get(uint64_t index)
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		return std::dynamic_pointer_cast<D>(this->m_Data[typeId][index]);
 	}
@@ -97,7 +97,7 @@ namespace Volund
 	template<typename D>
 	inline bool PolyContainer<T>::Contains()
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		return this->m_Data.contains(typeId);
 	}
@@ -106,7 +106,7 @@ namespace Volund
 	template<typename D>
 	inline uint64_t PolyContainer<T>::Size()
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		return this->m_Data[typeId].size();
 	}
@@ -115,7 +115,7 @@ namespace Volund
 	template<typename D>
 	inline std::vector<Ref<T>>& PolyContainer<T>::View()
 	{
-		static uint64_t typeId = typeid(D).hash_code();
+		static uint64_t typeId = Utils::GetTypeId<D>();
 
 		return this->m_Data[typeId];
 	}

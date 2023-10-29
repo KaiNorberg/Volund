@@ -26,6 +26,7 @@
 #include <charconv>
 #include <cstring>
 #include <cmath>
+#include <typeindex>
 
 #include "Core/Core.h"
 #include "Logger/Logger.h"

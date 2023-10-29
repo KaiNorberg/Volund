@@ -8,9 +8,14 @@
 
 namespace Volund
 {
-	RegistryEntry::RegistryEntry(Entity entityId)
+	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::begin()
 	{
-		this->entity = entityId;
+		return this->Components.begin();
+	}
+
+	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::end()
+	{
+		return this->Components.end();
 	}
 
 	CHRONO_TIME_POINT Scene::GetStartTime()
@@ -18,70 +23,87 @@ namespace Volund
 		return this->m_StartTime;
 	}
 
-	Entity Scene::RegisterNewEntity()
-	{
-		Entity newEntity = this->m_NewEntity;
-		
-		this->m_Registry.push_back(RegistryEntry(newEntity));
+	Entity Scene::AllocateEntity()
+	{	
+		uint32_t newEntityId = rand();
 
-		this->m_NewEntity++;
-		return newEntity;
-	}
-
-	void Scene::UnregisterEntity(Entity entity)
-	{
-		const uint64_t index = FindEntity(entity);
-
-		if (index != -1)
+		if (!this->m_FreeEntries.empty())
 		{
-			this->m_Registry.erase(this->m_Registry.begin() + index);
-		}
-		else
-		{
-			VOLUND_ERROR("Unable to find entity (%d)", entity);
-		}
-	}
+			uint32_t freeIndex = this->m_FreeEntries.back();
+			EntityEntry& bucket = this->m_EntityHeap[freeIndex];
+			this->m_FreeEntries.pop_back();
 
-	bool Scene::IsEntityRegistered(Entity entity)
-	{
-		return FindEntity(entity) != -1;
-	}
-
-	std::vector<Entity> Scene::GetRegisteredEntities()
-	{
-		std::vector<Entity> output;
-		output.reserve(this->m_Registry.size());
-		
-		for (auto& [entity, polyContainer] : this->m_Registry)
-		{
-			output.push_back(entity);
+			bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, freeIndex);
+			return bucket.entity;
 		}
 
-		return output;
+		EntityEntry bucket;
+		bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, this->m_EntityHeap.size());
+
+		this->m_EntityHeap.push_back(bucket);
+
+		return bucket.entity;
 	}
 
-	void Scene::Procedure(const Event& e)
+	void Scene::DeallocateEntity(Entity entity)
 	{
-		for (const auto& [entity, polystorage] : this->m_Registry)
+		if (!IsAllocated(entity))
 		{
-			for (auto& [typeID, components] : polystorage)
+			VOLUND_ERROR("Attempted to deallocate unallocated entity!");
+		}
+
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+
+		this->m_EntityHeap[entityIndex].entity = NULL_ENTITY;
+		m_FreeEntries.push_back(entityIndex);
+
+		while (!this->m_EntityHeap.empty() && this->m_EntityHeap.back().entity == NULL_ENTITY)
+		{
+			this->m_EntityHeap.pop_back();
+			auto it = std::find(this->m_FreeEntries.begin(), this->m_FreeEntries.end(), this->m_EntityHeap.size() - 1);
+			if (it != this->m_FreeEntries.end())
 			{
-				for (const auto& component : components)
-				{
-					component->Procedure(e);
-				}
+				this->m_FreeEntries.erase(it);
 			}
 		}
 	}
 
-	EntityRegistry::iterator Scene::begin()
+	bool Scene::IsAllocated(Entity entity)
 	{
-		return this->m_Registry.begin();
+		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+
+		return this->m_EntityHeap.size() > entityIndex && this->m_EntityHeap[entityIndex].entity != NULL_ENTITY;
 	}
 
-	EntityRegistry::iterator Scene::end()
+	void Scene::Procedure(const Event& e)
 	{
-		return this->m_Registry.end();
+		for (auto& entry : this->m_EntityHeap)
+		{
+			for (auto& [typeId, component] : entry)
+			{
+				component->Procedure(e);
+			}
+		}
+	}
+
+	std::vector<Scene::EntityEntry>::iterator Scene::begin()
+	{
+		return this->m_EntityHeap.begin();
+	}
+
+	std::vector<Scene::EntityEntry>::iterator Scene::end()
+	{
+		return this->m_EntityHeap.end();
+	}
+
+	std::vector<Scene::ComponentEntry>::iterator Scene::LowerBound(std::vector<ComponentEntry>& components, const size_t& typeId)
+	{
+		return std::lower_bound(components.begin(), components.end(), typeId);
+	}
+
+	std::vector<Scene::ComponentEntry>::iterator Scene::UpperBound(std::vector<ComponentEntry>& components, const size_t& typeId)
+	{
+		return std::upper_bound(components.begin(), components.end(), typeId);
 	}
 
 	Scene::Scene()
@@ -91,34 +113,22 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (const auto& [entity, PolyContainer] : this->m_Registry)
+		for (auto& entry : this->m_EntityHeap)
 		{
-			for (auto& [TypeID, Components] : PolyContainer)
+			for (auto& [typeId, component] : entry)
 			{
-				for (const auto& component : Components)
-				{
-					component->OnDestroy();
-				}
+				component->OnDestroy();
 			}
 		}
 	}
 
-	uint64_t Scene::FindEntity(Entity entity)
+	bool operator<(const size_t& a, const Scene::ComponentEntry& b)
 	{
-		VOLUND_PROFILE_FUNCTION();
+		return a < b.TypeId;
+	}
 
-		auto it = std::lower_bound(this->m_Registry.begin(), this->m_Registry.end(), entity, [](const RegistryEntry& a, Entity entity)
-		{
-			return a.entity < entity;
-		});
-
-		if (it != this->m_Registry.end())
-		{
-			return it - this->m_Registry.begin();
-		}
-		else
-		{
-			return -1;
-		}
+	bool operator<(const Scene::ComponentEntry& a, const size_t& b)
+	{
+		return a.TypeId < b;
 	}
 }

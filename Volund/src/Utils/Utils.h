@@ -4,6 +4,12 @@
 
 namespace Volund::Utils
 {
+	template<typename T>
+	inline size_t GetTypeId()
+	{
+		return typeid(T).hash_code();
+	}
+
 	bool CheckBit(uint32_t var, uint8_t pos);
 
 	fs::path GenerateUniquePath(const fs::path& basePath);
