@@ -55,6 +55,7 @@ namespace Volund
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
 		this->m_EntityHeap[entityIndex].entity = NULL_ENTITY;
+		this->m_EntityHeap[entityIndex].Components.clear();
 		m_FreeEntries.push_back(entityIndex);
 
 		while (!this->m_EntityHeap.empty() && this->m_EntityHeap.back().entity == NULL_ENTITY)
