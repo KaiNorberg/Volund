@@ -42,7 +42,7 @@ namespace Volund
     std::string Dialog::OpenFile(Ref<Window> window)
     {
         bool cursorEnabled = window->IsCursorEnabled();
-
+        
         window->SetCursorEnabled(true);
         const char* ret = tinyfd_openFileDialog("", fs::current_path().string().c_str(), 0, 0, "", 0);
         window->SetCursorEnabled(cursorEnabled);

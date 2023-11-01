@@ -7,48 +7,41 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_TYPE_RENDER:
 	{
-		auto scene = this->m_Context->GetScene();
+		auto gameState = this->m_Context->GameState;
 
-		if (scene != nullptr)
+		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
+		ImGui::Separator();
+
+		if (ImGui::Button("+"))
 		{
-			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
-			ImGui::Separator();
-
-			if (ImGui::Button("+"))
-			{
-				scene->AllocateEntity();
-			}
-
-			ImGui::SameLine();
-			static char searchTerm[64];
-			ImGui::Text("Search: ");
-			ImGui::SameLine();
-			ImGui::InputText(" ", searchTerm, 64);
-
-			for (auto& [entity, container] : *scene)
-			{
-				std::string entityName;
-				if (scene->HasComponent<VL::Tag>(entity))
-				{
-					entityName = scene->GetComponent<VL::Tag>(entity)->String;
-				}
-				else
-				{
-					entityName = "Unnamed entity";
-				}
-
-				if (entityName.find(searchTerm) != std::string::npos)
-				{
-					if (!this->ImGuiEntity(entity, entityName))
-					{
-						break;
-					}
-				}
-			}
+			gameState->AllocateEntity();
 		}
-		else
+
+		ImGui::SameLine();
+		static char searchTerm[64];
+		ImGui::Text("Search: ");
+		ImGui::SameLine();
+		ImGui::InputText(" ", searchTerm, 64);
+
+		for (auto& [entity, container] : *gameState)
 		{
-			ImGui::Text("No Scene Loaded!");
+			std::string entityName;
+			if (gameState->HasComponent<VL::Tag>(entity))
+			{
+				entityName = gameState->GetComponent<VL::Tag>(entity)->String;
+			}
+			else
+			{
+				entityName = "Unnamed entity";
+			}
+
+			if (entityName.find(searchTerm) != std::string::npos)
+			{
+				if (!this->ImGuiEntity(entity, entityName))
+				{
+					break;
+				}
+			}
 		}
 	}
 	break;
@@ -57,7 +50,7 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 
 bool HierarchyWindow::ImGuiEntity(VL::Entity entity, const std::string& entityName)
 {
-	auto scene = this->m_Context->GetScene();
+	auto gameState = this->m_Context->GameState;
 	auto& selectedEntity = this->m_Context->SelectedEntity;
 
 	ImGui::PushID((void*)entity);
@@ -88,7 +81,7 @@ bool HierarchyWindow::ImGuiEntity(VL::Entity entity, const std::string& entityNa
 	{
 		if (ImGui::MenuItem("Delete"))
 		{
-			scene->DeallocateEntity(entity);
+			gameState->DeallocateEntity(entity);
 			EntityAlive = false;
 		}
 

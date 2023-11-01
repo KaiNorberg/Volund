@@ -23,13 +23,13 @@ namespace Volund
         template<typename T>
         void Serialize(Ref<T> asset, const std::string& destinationPath);
 
-        std::string GetParentPath();
+        std::string GetRootDirectory();
 
-        static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
+        static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& rootPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
 
     private:
 
-        AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
+        AssetManager(Ref<Dispatcher> dispatcher, const std::string& rootPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
 
         std::string GetRelativePath(const std::string& absolutePath);
 
@@ -62,7 +62,7 @@ namespace Volund
 
         PolyContainer<PrimitiveAsset> m_Data;
 
-        std::string m_ParentPath;
+        std::string m_RootDir;
 
         Ref<Dispatcher> m_Dispatcher;
 
@@ -123,7 +123,7 @@ namespace Volund
             {
                 if (view[i]->Identifier == asset.get())
                 {
-                    return view[i]->Filepath;
+                    return this->GetAbsolutePath(view[i]->Filepath);
                 }
             }
         }

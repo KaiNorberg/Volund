@@ -18,7 +18,7 @@ namespace Volund
 #define VOLUND_ENTITY_GET_ID(entity) (entity >> 32)
 #define VOLUND_ENTITY_GET_INDEX(entity) entity & 0x00000000FFFFFFFF
 
-#define NULL_ENTITY (Entity)-1
+#define VOLUND_NULL_ENTITY (::VL::Entity)-1
 
 namespace Volund
 {

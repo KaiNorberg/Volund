@@ -67,6 +67,11 @@ namespace Volund
 		}
 	}
 
+	void Renderer::Submit(Ref<GameState> gameState)
+	{
+		this->Submit(gameState->GetScene());
+	}
+
 	void Renderer::Submit(const RendererModel& model)
 	{
 		this->m_Data.Models.push_back(model);

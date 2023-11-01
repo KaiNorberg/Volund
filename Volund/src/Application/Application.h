@@ -49,15 +49,14 @@ namespace Volund
 
 		bool m_ShouldRun = true;
 
+		Ref<Window> m_Window;
 		Ref<Dispatcher> m_Dispatcher;
+
+		PolyContainer<Module> m_Modules;
 
 	protected:
 
 		void Terminate();
-
-		Ref<Window> m_Window;
-
-		PolyContainer<Module> m_Modules;
 	};
 
 

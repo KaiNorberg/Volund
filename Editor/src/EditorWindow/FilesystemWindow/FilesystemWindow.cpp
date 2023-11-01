@@ -8,21 +8,15 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_TYPE_RENDER:
 	{		
-		auto assetManager = this->m_Context->GetAssetmanager();
+		fs::path rootDir = this->m_Context->GameState->GetRootDirectory();
 
-		fs::path parentDir;
-		if (assetManager != nullptr)
+		if (rootDir != this->m_OldParentDir)
 		{
-			parentDir = assetManager->GetParentPath();
+			this->m_CurrentDirectory = rootDir;
 		}
+		this->m_OldParentDir = rootDir;
 
-		if (parentDir != this->m_OldParentDir)
-		{
-			this->m_CurrentDirectory = parentDir;
-		}
-		this->m_OldParentDir = parentDir;
-
-		if (!fs::is_directory(parentDir))
+		if (!fs::is_directory(rootDir))
 		{
 			break;
 		}
@@ -83,7 +77,7 @@ void FilesystemWindow::OnProcedure(const VL::Event& e)
 
 		ImGui::Columns(columnCount, 0, false);
 
-		if (parentDir != this->m_CurrentDirectory && !this->m_ResourcesOpen)
+		if (rootDir != this->m_CurrentDirectory && !this->m_ResourcesOpen)
 		{
 			this->ImGuiFilesystemEntry(this->m_CurrentDirectory.parent_path().string(), "../", true);
 		}

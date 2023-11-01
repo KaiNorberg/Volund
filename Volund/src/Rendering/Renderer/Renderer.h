@@ -8,6 +8,7 @@
 #include "Rendering/Framebuffer/Framebuffer.h"
 
 #include "Scene/Scene.h"
+#include "GameState/GameState.h"
 
 #define VOLUND_UNIFORM_NAME_MODELMATRIX "_ModelMatrix"
 
@@ -48,6 +49,8 @@ namespace Volund
 		virtual void Begin(Ref<Framebuffer> targetBuffer) = 0;
 
 		void Submit(Ref<Scene> scene);
+
+		void Submit(Ref<GameState> gameState);
 
 		void Submit(const RendererModel& model);
 

@@ -10,42 +10,99 @@ namespace Volund
 		return this->m_Scene;
 	}
 
-	Ref<AssetManager> GameState::GetAssetManager()
+	void GameState::SaveScene(const std::string& filepath)
 	{
-		return this->m_AssetManager;
+		if (filepath.empty())
+		{
+			this->m_AssetManager->Serialize<Scene>(this->m_Scene, this->FetchFilepath<Scene>(this->m_Scene));
+		}
+		else
+		{
+			this->m_AssetManager->Serialize<Scene>(this->m_Scene, filepath);
+		}
 	}
 
-    std::string GameState::GetScenePath()
-    {
-        return this->m_ScenePath;
-    }
+	void GameState::LoadScene(const std::string& filepath)
+	{
+		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, filepath, this->m_ScriptingEngine);
+		this->m_Scene = this->m_AssetManager->Fetch<Scene>(filepath);
+	}
 
-    std::string GameState::GetParentPath()
-    {
-        if (this->m_AssetManager != nullptr)
-        {
-            return this->m_AssetManager->GetParentPath();
-        }
-        else
-        {
-            return "";
-        }
-    }
+	void GameState::ReloadScene()
+	{
+		std::string scenePath = this->m_AssetManager->FetchFilepath<Scene>(this->m_Scene);
 
-    void GameState::Procedure(const Event& e)
+		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, scenePath, this->m_ScriptingEngine);
+		this->m_Scene = this->m_AssetManager->Fetch<Scene>(scenePath);
+	}
+
+	void GameState::Procedure(const Event& e)
 	{
 		this->m_Input->Procedure(e);
+
 		this->m_Scene->Procedure(e);
 	}
 
-	GameState::GameState(Ref<Dispatcher> dispatcher, const std::string& filepath)
-	{	
-        this->m_ScenePath = filepath;
+	CHRONO_TIME_POINT GameState::GetStartTime()
+	{
+		return CHRONO_TIME_POINT();
+	}
+
+	Entity GameState::AllocateEntity()
+	{
+		return this->m_Scene->AllocateEntity();
+	}
+
+	void GameState::DeallocateEntity(Entity entity)
+	{
+		this->m_Scene->DeallocateEntity(entity);
+	}
+
+	bool GameState::IsAllocated(Entity entity)
+	{
+		return this->m_Scene->IsAllocated(entity);
+	}
+
+	std::vector<Scene::EntityEntry>::iterator GameState::begin()
+	{
+		return this->m_Scene->begin();
+	}
+
+	std::vector<Scene::EntityEntry>::iterator GameState::end()
+	{
+		return this->m_Scene->end();
+	}
+
+	Ref<Script> GameState::LoadScript(const std::string& filepath)
+	{
+		return this->m_AssetManager->LoadScript(filepath);
+	}
+
+	std::string GameState::GetRootDirectory()
+	{
+		return this->m_AssetManager->GetRootDirectory();
+	}
+
+	GameState::GameState(Ref<Dispatcher> dispatcher)
+	{
+		this->m_Dispatcher = dispatcher;
 
 		this->m_Input = std::make_shared<Input>();
+
 		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
-		this->m_AssetManager = AssetManager::Create(dispatcher, this->m_ScenePath, this->m_ScriptingEngine);
-		this->m_Scene = this->m_AssetManager->Fetch<Scene>(this->m_ScenePath);
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, ".", this->m_ScriptingEngine);
+		this->m_Scene = std::make_shared<Scene>();
+	}
+
+	GameState::GameState(Ref<Dispatcher> dispatcher, const std::string& filepath)
+	{
+		this->m_Dispatcher = dispatcher;
+
+		this->m_Input = std::make_shared<Input>();
+
+		this->LoadScene(filepath);
 	}
 
 	GameState::~GameState()

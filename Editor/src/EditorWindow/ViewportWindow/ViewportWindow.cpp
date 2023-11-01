@@ -10,9 +10,9 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_TYPE_RENDER:
 	{
-		auto scene = this->m_Context->GetScene();
+		auto gameState = this->m_Context->GameState;
 
-		this->m_Camera.Render(scene, ImVec2(this->m_Size.x, this->m_Size.y));
+		this->m_Camera.Render(gameState, ImVec2(this->m_Size.x, this->m_Size.y));
 
 		ImVec2 buttonSize = ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight());
 		bool isPaused = this->m_Context->IsPaused();
@@ -23,12 +23,9 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		if (ImGui::ImageButton("PlayButton", (ImTextureID)this->m_PlayIcon->GetID(),
 			buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
 		{
-			if (this->m_Context->GetScene() != nullptr)
+			if (this->m_Context->IsPaused())
 			{
-				if (this->m_Context->IsPaused())
-				{
-					this->m_Context->Play();
-				}
+				this->m_Context->Enqueue(EDITOR_EVENT_TYPE_PLAY);
 			}
 		}
 		ImGui::EndDisabled();
@@ -39,12 +36,9 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		if (ImGui::ImageButton("PauseButton", (ImTextureID)this->m_PauseIcon->GetID(),
 			buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
 		{
-			if (this->m_Context->GetScene() != nullptr)
+			if (!this->m_Context->IsPaused())
 			{
-				if (!this->m_Context->IsPaused())
-				{
-					this->m_Context->Pause();
-				}
+				this->m_Context->Enqueue(EDITOR_EVENT_TYPE_PAUSE);
 			}
 		}
 		ImGui::EndDisabled();
@@ -164,7 +158,7 @@ void ViewportWindow::ViewportCamera::Update(VL::Input& input, float timeStep, bo
 	this->m_OldMousePosition = input.GetMousePosition();
 }
 
-void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 viewportSize)
+void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::GameState> gameState, ImVec2 viewportSize)
 {
 	auto spec = this->m_SceneFramebuffer->GetSpec();
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
@@ -182,10 +176,7 @@ void ViewportWindow::ViewportCamera::Render(VL::Ref<VL::Scene> scene, ImVec2 vie
 
 	this->m_Renderer->Begin(this->m_SceneFramebuffer);
 
-	if (scene != nullptr)
-	{
-		this->m_Renderer->Submit(scene);
-	}
+	this->m_Renderer->Submit(gameState);
 
 	VL::RendererEye editorEye;
 	editorEye.ProjectionMatrix = projectionMatrix;

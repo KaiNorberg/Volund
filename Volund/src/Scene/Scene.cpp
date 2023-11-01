@@ -54,11 +54,11 @@ namespace Volund
 
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		this->m_EntityHeap[entityIndex].entity = NULL_ENTITY;
+		this->m_EntityHeap[entityIndex].entity = VOLUND_NULL_ENTITY;
 		this->m_EntityHeap[entityIndex].Components.clear();
 		m_FreeEntries.push_back(entityIndex);
 
-		while (!this->m_EntityHeap.empty() && this->m_EntityHeap.back().entity == NULL_ENTITY)
+		while (!this->m_EntityHeap.empty() && this->m_EntityHeap.back().entity == VOLUND_NULL_ENTITY)
 		{
 			this->m_EntityHeap.pop_back();
 			auto it = std::find(this->m_FreeEntries.begin(), this->m_FreeEntries.end(), this->m_EntityHeap.size() - 1);
@@ -73,7 +73,7 @@ namespace Volund
 	{
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		return this->m_EntityHeap.size() > entityIndex && this->m_EntityHeap[entityIndex].entity != NULL_ENTITY;
+		return this->m_EntityHeap.size() > entityIndex && this->m_EntityHeap[entityIndex].entity != VOLUND_NULL_ENTITY;
 	}
 
 	void Scene::Procedure(const Event& e)

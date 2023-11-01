@@ -14,17 +14,12 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_TYPE_RENDER:
 	{
-		auto assetManager = this->m_Context->GetAssetmanager();
-		if (assetManager == nullptr)
-		{
-			ImGui::Text("No Scene Loaded!");
-			return;
-		}
+		auto gameState = this->m_Context->GameState;
 
-		std::string materialPath = assetManager->FetchFilepath<VL::Material>(this->m_SelectedMaterial);
+		std::string materialPath = gameState->FetchFilepath<VL::Material>(this->m_SelectedMaterial);
 		if (ImGuiFile("Material/Effect", materialPath))
 		{
-			this->m_SelectedMaterial = assetManager->Fetch<VL::Material>(materialPath);
+			this->m_SelectedMaterial = gameState->FetchAsset<VL::Material>(materialPath);
 		}
 		ImGui::Separator();
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
@@ -40,11 +35,11 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
 		if (ImGui::BeginListBox("##MaterialEditorShader", listBoxSize))
 		{
-			std::string shaderPath = assetManager->FetchFilepath<VL::Shader>(this->m_SelectedMaterial->GetShader());
+			std::string shaderPath = gameState->FetchFilepath<VL::Shader>(this->m_SelectedMaterial->GetShader());
 			if (ImGuiFile("Shader", shaderPath))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetShader(assetManager->Fetch<VL::Shader>(shaderPath));
+				this->m_SelectedMaterial->SetShader(gameState->FetchAsset<VL::Shader>(shaderPath));
 			}
 
 			ImGui::EndListBox();
@@ -123,10 +118,10 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 				}
 				else if (uniform->Is<VL::UniformTexture>())
 				{
-					std::string texturePath = assetManager->FetchFilepath<VL::Texture>(uniform->As<VL::UniformTexture>());
+					std::string texturePath = gameState->FetchFilepath<VL::Texture>(uniform->As<VL::UniformTexture>());
 					if (ImGuiFile(name, texturePath))
 					{
-						this->m_SelectedMaterial->Set(key, assetManager->Fetch<VL::Texture>(texturePath));
+						this->m_SelectedMaterial->Set(key, gameState->FetchAsset<VL::Texture>(texturePath));
 						changed = true;
 					}
 				}
@@ -218,7 +213,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 
 		if (changed && this->m_Context->IsPaused())
 		{
-			assetManager->Serialize(this->m_SelectedMaterial, materialPath);
+			gameState->Serialize(this->m_SelectedMaterial, materialPath);
 		}
 	}
 	break;

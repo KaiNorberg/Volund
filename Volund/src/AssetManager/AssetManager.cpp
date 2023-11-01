@@ -626,14 +626,14 @@ namespace Volund
         }
     }
 
-    std::string AssetManager::GetParentPath()
+    std::string AssetManager::GetRootDirectory()
     {
-        return this->m_ParentPath;
+        return this->m_RootDir;
     }
 
-    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> Dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine)
+    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> Dispatcher, const std::string& rootDir, Ref<ScriptingEngine> scriptingEngine)
     {
-        return Ref<AssetManager>(new AssetManager(Dispatcher, parentPath, scriptingEngine));
+        return Ref<AssetManager>(new AssetManager(Dispatcher, rootDir, scriptingEngine));
     }
 
     std::string AssetManager::GetRelativePath(const std::string& absolutePath)
@@ -645,7 +645,7 @@ namespace Volund
         else if (fs::exists(absolutePath))
         {
             std::string cleanPath = this->ShortPath(absolutePath);
-            return fs::relative(cleanPath, this->m_ParentPath).string();
+            return fs::relative(cleanPath, this->m_RootDir).string();
         }
         else
         {
@@ -668,7 +668,7 @@ namespace Volund
         else
         {
             std::string cleanPath = this->ShortPath(relativePath);
-            return this->m_ParentPath + VOLUND_PATH_SEPERATOR + cleanPath;
+            return this->m_RootDir + VOLUND_PATH_SEPERATOR + cleanPath;
         }
     }
 
@@ -681,15 +681,15 @@ namespace Volund
         return shortPath;
     }
 
-    AssetManager::AssetManager(Ref<Dispatcher> dispatcher, const std::string& parentPath, Ref<ScriptingEngine> scriptingEngine)
+    AssetManager::AssetManager(Ref<Dispatcher> dispatcher, const std::string& rootDir, Ref<ScriptingEngine> scriptingEngine)
     {
-        if (fs::is_directory(parentPath))
+        if (fs::is_directory(rootDir))
         {
-            this->m_ParentPath = parentPath;
+            this->m_RootDir = rootDir;
         }
         else
         {
-            this->m_ParentPath = fs::path(parentPath).parent_path().string();
+            this->m_RootDir = fs::path(rootDir).parent_path().string();
         }
 
         this->m_Dispatcher = dispatcher;

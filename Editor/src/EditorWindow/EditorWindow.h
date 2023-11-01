@@ -1,6 +1,6 @@
 #pragma once
 
-#include "EditorContext/EditorContext.h"
+#include "Editor/EditorContext/EditorContext.h"
 
 class EditorWindow : public VL::ImGuiWindow
 {

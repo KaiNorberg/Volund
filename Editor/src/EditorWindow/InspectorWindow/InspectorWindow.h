@@ -2,8 +2,6 @@
 
 #include "../EditorWindow.h"
 
-#include "EditorContext/EditorContext.h"
-
 class InspectorWindow : public EditorWindow
 {
 public:
@@ -21,11 +19,11 @@ private:
 template<typename T>
 inline void InspectorWindow::ImGuiComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
-	auto scene = this->m_Context->GetScene();
+	auto gameState = this->m_Context->GameState;
 
-	for (int i = 0; i < scene->ComponentAmount<T>(entity); i++)
+	for (int i = 0; i < gameState->ComponentAmount<T>(entity); i++)
 	{
-		void* ptrID = scene->GetComponent<T>(entity, i).get();
+		void* ptrID = gameState->GetComponent<T>(entity, i).get();
 
 		bool open = ImGui::TreeNodeEx(ptrID, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, name.c_str());
 
@@ -33,7 +31,7 @@ inline void InspectorWindow::ImGuiComponent(const std::string& name, VL::Entity 
 		{
 			if (ImGui::MenuItem("Delete"))
 			{
-				scene->DeleteComponent<T>(entity, i);
+				gameState->DeleteComponent<T>(entity, i);
 			}
 
 			ImGui::EndPopup();

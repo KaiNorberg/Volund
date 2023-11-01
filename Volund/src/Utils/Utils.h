@@ -4,6 +4,7 @@
 
 namespace Volund::Utils
 {
+	//TODO: this sucks, make it better
 	template<typename T>
 	inline size_t GetTypeId()
 	{

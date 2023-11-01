@@ -2,13 +2,15 @@
 #include "GameModule.h"
 
 #include "Application/Application.h"
-
+/*
 namespace Volund
 {
 	void GameModule::OnAttach(Application* app)
 	{
 		this->m_GameWindow = app->GetWindow();
 		this->m_Dispatcher = app->GetDispatcher();
+
+		this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher);
 
 		this->m_Renderer = std::make_shared<ForwardRenderer>();
 
@@ -40,15 +42,10 @@ namespace Volund
 		{
 		case VOLUND_EVENT_TYPE_RENDER:
 		{
-			auto scene = this->m_GameState->GetScene();
-
-			if (this->m_GameState->GetScene() != nullptr)
-			{
-				this->m_Renderer->Begin(this->m_Framebuffer);
-				this->m_Renderer->Submit(scene);
-				this->m_Renderer->End();
-				RenderingAPI::BlitFramebuffer(this->m_Framebuffer, nullptr);
-			}
+			this->m_Renderer->Begin(this->m_Framebuffer);
+			this->m_Renderer->Submit(this->m_GameState);
+			this->m_Renderer->End();
+			RenderingAPI::BlitFramebuffer(this->m_Framebuffer, nullptr);
 		}
 		break;
 		case VOLUND_EVENT_TYPE_WINDOW_SIZE:
@@ -93,8 +90,6 @@ namespace Volund
 
 		this->m_Filepath = filepath;
 
-		this->m_GameState.reset();
-
 		this->m_GameState = std::make_shared<VL::GameState>(this->m_Dispatcher, this->m_Filepath);
 	}
-}
+}*/

@@ -5,7 +5,7 @@
 #include "GameState/GameState.h"
 
 #include "Rendering/Renderer/ForwardRenderer/ForwardRenderer.h"
-
+/*
 namespace Volund
 {
 	class GameModule : public Module
@@ -19,8 +19,6 @@ namespace Volund
 		void Procedure(const Event& e) override;
 
 		std::string GetFilepath();
-
-		Ref<Scene> GetScene(); 
 
 		Ref<Window> GetWindow();
 
@@ -39,4 +37,4 @@ namespace Volund
 
 		std::string m_Filepath;
 	};
-}
+}*/

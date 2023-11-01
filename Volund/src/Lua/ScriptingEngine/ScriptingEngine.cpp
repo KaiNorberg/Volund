@@ -33,7 +33,7 @@ namespace Volund
 	template<typename T, typename>
 	bool ScriptingEngine::Is(uint64_t scriptId, const std::string& key)
 	{
-		return (*this->m_LuaState)[scriptId].is<T>();
+		return (*this->m_LuaState)[scriptId][key].is<T>();
 	}
 
 	Ref<Script> ScriptingEngine::LoadScript(const std::string& filepath)

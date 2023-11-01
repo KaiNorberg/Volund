@@ -2,8 +2,6 @@
 
 #include "../EditorWindow.h"
 
-#include "EditorContext/EditorContext.h"
-
 class MaterialEditor : public EditorWindow
 {
 public:

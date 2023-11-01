@@ -2,8 +2,6 @@
 
 #include "../EditorWindow.h"
 
-#include "EditorContext/EditorContext.h"
-
 class ViewportWindow : public EditorWindow
 {
 public:
@@ -29,7 +27,7 @@ private:
 
 		void Update(VL::Input& input, float timeStep, bool isInWindow);
 
-		void Render(VL::Ref<VL::Scene> scene, ImVec2 viewportSize);
+		void Render(VL::Ref<VL::GameState> gameState, ImVec2 viewportSize);
 
 		ViewportCamera();
 

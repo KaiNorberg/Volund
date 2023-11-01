@@ -11,17 +11,22 @@
 
 #include "EditorContext/EditorContext.h"
 
+#include "ImGuiStyles.h"
+
 void Editor::OnRun()
 {
-	this->m_Window->SetIcon("data/icons/logo.png");
-	this->m_Window->SetTitle("Volund Editor");
+	VL::Ref<VL::Window> window = this->GetWindow();
+
+	window->SetIcon("data/icons/logo.png");
+	window->SetTitle("Volund Editor");
 
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
 	auto audioModule = this->AttachModule<VL::AudioModule>();
 	auto imGuiModule = this->AttachModule<VL::ImGuiModule>();
-	auto context = this->AttachModule<EditorContext>();
 	
+	this->m_Context = std::make_shared<EditorContext>(this->GetDispatcher());
+
 	imGuiModule->SetBackgroundCallback([this]() 
 	{
 		this->BackgroundCallback(); 
@@ -31,12 +36,14 @@ void Editor::OnRun()
 	io.IniFilename = "data/imgui.ini";
 	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
 
-	auto viewportWindow = imGuiModule->CreateWindow<ViewportWindow>(context);
-	auto outputWindow = imGuiModule->CreateWindow<OutputWindow>(context);
-	auto inspectorWindow = imGuiModule->CreateWindow<InspectorWindow>(context);
-	auto filesystemWindow = imGuiModule->CreateWindow<FilesystemWindow>(context);
-	auto hierarchyWindow = imGuiModule->CreateWindow<HierarchyWindow>(context);
-	auto materialWindow = imGuiModule->CreateWindow<MaterialEditor>(context);
+	auto viewportWindow = imGuiModule->CreateWindow<ViewportWindow>(this->m_Context);
+	auto outputWindow = imGuiModule->CreateWindow<OutputWindow>(this->m_Context);
+	auto inspectorWindow = imGuiModule->CreateWindow<InspectorWindow>(this->m_Context);
+	auto filesystemWindow = imGuiModule->CreateWindow<FilesystemWindow>(this->m_Context);
+	auto hierarchyWindow = imGuiModule->CreateWindow<HierarchyWindow>(this->m_Context);
+	auto materialWindow = imGuiModule->CreateWindow<MaterialEditor>(this->m_Context);
+
+	SetDefaultImGuiStyle();
 }
 
 void Editor::OnTerminate()
@@ -46,23 +53,29 @@ void Editor::OnTerminate()
 
 void Editor::Procedure(const VL::Event& e)
 {
-	VOLUND_PROFILE_FUNCTION();
-
-	auto context = this->GetModule<EditorContext>();
-
 	this->m_Input.Procedure(e);
+
+	if (this->m_Context->IsPaused())
+	{
+		if (e.Type == VOLUND_EVENT_TYPE_RENDER)
+		{
+			this->m_Context->GameState->Procedure(e);
+		}
+	}
+	else
+	{
+		this->m_Context->GameState->Procedure(e);
+	}
 
 	switch (e.Type)
 	{
 	case VOLUND_EVENT_TYPE_RENDER:
 	{ 	
-		auto window = context->GetWindow();
+		//auto window = context->GetWindow();
 	}
 	break;	
 	case VOLUND_EVENT_TYPE_KEY:
 	{	
-		auto window = context->GetWindow();
-
 		if (this->m_Input.IsHeld(VOLUND_KEY_CONTROL))
 		{
 			if (this->m_Input.IsPressed('R'))
@@ -87,6 +100,69 @@ void Editor::Procedure(const VL::Event& e)
 	case VOLUND_EVENT_TYPE_WINDOW_CLOSE:
 	{
 		this->Terminate();
+	}
+	break;
+	case EDITOR_EVENT_TYPE_RELOAD_SCENE:
+	{
+		this->m_Context->GameState->ReloadScene();
+		this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_RESET);
+	}
+	break;
+	case EDITOR_EVENT_TYPE_LOAD_SCENE:
+	{
+		const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
+		if (!filepath.empty())
+		{
+			this->m_Context->GameState->LoadScene(filepath);
+		}
+		this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_RESET);
+	}
+	break;
+	case EDITOR_EVENT_TYPE_SAVE_SCENE:
+	{
+		this->m_Context->GameState->SaveScene();
+	}
+	break;
+	case EDITOR_EVENT_TYPE_NEW_SCENE:
+	{
+		const std::string filepath = VL::Dialog::OpenFolder(this->GetWindow());
+
+		if (!filepath.empty())
+		{
+			VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
+			serializer.WriteToFile(filepath + "/scene.lua");
+
+			this->m_Context->GameState->LoadScene(filepath + "/scene.lua");
+		}
+		this->GetDispatcher()->Enqueue(EDITOR_EVENT_TYPE_RESET);
+	}
+	break;
+	case EDITOR_EVENT_TYPE_PLAY:
+	{
+		if (this->m_Context->GameState == nullptr || !this->m_Context->m_Paused)
+		{
+			return;
+		}
+
+		this->m_Context->GameState->SaveScene();
+
+		SetDarkImGuiStyle();
+
+		this->m_Context->m_Paused = false;
+	}
+	break;
+	case EDITOR_EVENT_TYPE_PAUSE:
+	{
+		if (this->m_Context->GameState == nullptr || this->m_Context->m_Paused)
+		{
+			return;
+		}
+
+		this->m_Context->m_Paused = true;
+
+		this->m_Context->GameState->ReloadScene();
+
+		SetDefaultImGuiStyle();
 	}
 	break;
 	default:
