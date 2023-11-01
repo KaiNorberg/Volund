@@ -201,7 +201,7 @@ ViewportWindow::ViewportCamera::ViewportCamera()
 	this->m_SceneFramebuffer = VL::Framebuffer::Create(spec);
 	this->m_EditorFramebuffer = VL::Framebuffer::Create(spec);
 
-	this->m_Renderer = std::make_shared<VL::ForwardRenderer>();
+	this->m_Renderer = VL::ForwardRenderer::Create();
 
 	this->m_BallCenter = VL::Vec3(0, 1, 0);
 	this->m_Distance = 10.0f;

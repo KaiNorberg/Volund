@@ -21,7 +21,7 @@ namespace Volund
 		return this->m_Count;
 	}
 
-	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t indices[], uint32_t count)
+	OpenGLIndexBuffer::OpenGLIndexBuffer(const uint32_t indices[], uint64_t count)
 	{
 		this->m_Count = count;
 		glCreateBuffers(1, &this->m_Id);

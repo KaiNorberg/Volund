@@ -20,7 +20,7 @@ namespace Volund
 
 		VertexLayout GetLayout() override;
 
-		OpenGLVertexBuffer(const float vertices[], uint32_t count);
+		OpenGLVertexBuffer(const float vertices[], uint64_t count);
 
 		~OpenGLVertexBuffer() override;
 

@@ -13,7 +13,7 @@ namespace Volund
 
 		uint32_t GetCount() const override;
 
-		OpenGLIndexBuffer(const uint32_t indices[], uint32_t count);
+		OpenGLIndexBuffer(const uint32_t indices[], uint64_t count);
 
 		~OpenGLIndexBuffer() override;
 

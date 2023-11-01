@@ -1,15 +1,19 @@
 local Rotate = 
 {
-    Number = 5,
-    Text = "Hello, World!"
+    Integer = 5,
+    Float = 3.14
 }
 
 function Rotate:OnStart()
+    self.First = false
     print("Rotate OnStart")
 end
 
 function Rotate:OnUpdate(TS)
-    print("Rotate OnUpdate")
+    if self.First then
+        print("Rotate OnUpdate")
+        self.First = false
+    end
 end
 
 function Rotate:OnDestroy()

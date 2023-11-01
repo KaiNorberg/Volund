@@ -19,7 +19,7 @@ namespace Volund
 		});
 
 		LightsBuffer lightsBuffer;
-		lightsBuffer.LightAmount = std::min(this->m_Data.Lights.size(), (size_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
+		lightsBuffer.LightAmount = std::min((uint32_t)this->m_Data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
 		for (int i = 0; i < lightsBuffer.LightAmount; i++)
 		{
 			Vec3 lightColor = this->m_Data.Lights[i].Color * this->m_Data.Lights[i].Brightness;
@@ -121,6 +121,11 @@ namespace Volund
 
 			targetBuffer->Unbind();
 		}
+	}
+
+	Ref<ForwardRenderer> ForwardRenderer::Create()
+	{
+		return Ref<ForwardRenderer>(new ForwardRenderer());
 	}
 
 	ForwardRenderer::ForwardRenderer()

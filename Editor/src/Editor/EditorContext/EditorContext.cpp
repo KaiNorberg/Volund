@@ -15,7 +15,7 @@ EditorContext::EditorContext(VL::Ref<VL::Dispatcher> dispatcher)
 {
 	this->m_Dispatcher = dispatcher;
 
-	this->GameState = std::make_shared<VL::GameState>(dispatcher);
+	this->GameState = VL::GameState::Create(dispatcher);
 
 	this->m_Paused = true;
 }

@@ -107,6 +107,11 @@ namespace Volund
 		return std::upper_bound(components.begin(), components.end(), typeId);
 	}
 
+	Ref<Scene> Scene::Create()
+	{
+		return Ref<Scene>(new Scene());
+	}
+
 	Scene::Scene()
 	{
 		this->m_StartTime = std::chrono::high_resolution_clock::now();

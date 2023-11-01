@@ -62,17 +62,21 @@ namespace Volund
 		std::vector<Scene::EntityEntry>::iterator begin();
 		std::vector<Scene::EntityEntry>::iterator end();
 
-		GameState(Ref<Dispatcher> dispatcher);
-		GameState(Ref<Dispatcher> dispatcher, const std::string& filepath);
+		static Ref<GameState> Create(Ref<Dispatcher> dispatcher);
+		static Ref<GameState> Create(Ref<Dispatcher> dispatcher, const std::string& filepath);
 
 		~GameState();
 
 	private:
 
+		GameState(Ref<Dispatcher> dispatcher);
+		GameState(Ref<Dispatcher> dispatcher, const std::string& filepath);
+
 		std::mutex m_Mutex;
 
+		Input m_Input;
+
 		Ref<Dispatcher> m_Dispatcher;
-		Ref<Input> m_Input;
 
 		Ref<Scene> m_Scene;
 		Ref<AssetManager> m_AssetManager;	

@@ -75,11 +75,13 @@ namespace Volund
 		std::vector<EntityEntry>::iterator begin();
 		std::vector<EntityEntry>::iterator end();
 
-		Scene();
+		static Ref<Scene> Create();
 
 		~Scene();
 
 	private:
+
+		Scene();
 
 		static std::vector<ComponentEntry>::iterator LowerBound(std::vector<ComponentEntry>& components, const size_t& typeId);
 		

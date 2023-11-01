@@ -17,8 +17,17 @@ Launcher::Launcher()
 {
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
-	this->AttachModule<VL::GameModule>();
 	this->AttachModule<VL::AudioModule>();
 	
-	this->GetModule<VL::GameModule>()->LoadScene(MAIN_SCENE);
+	VL::FramebufferSpec spec;
+	spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
+	spec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
+	spec.Height = 1080;
+	spec.Width = 1920;
+
+	this->m_Framebuffer = VL::Framebuffer::Create(spec);
+
+	this->m_Renderer = VL::ForwardRenderer::Create();
+
+	this->m_GameState = VL::GameState::Create(this->GetDispatcher());
 }

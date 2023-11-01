@@ -9,9 +9,6 @@ void HierarchyWindow::OnProcedure(const VL::Event& e)
 	{
 		auto gameState = this->m_Context->GameState;
 
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
-		ImGui::Separator();
-
 		if (ImGui::Button("+"))
 		{
 			gameState->AllocateEntity();

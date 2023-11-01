@@ -268,7 +268,7 @@ namespace Volund
     template<>
     Ref<Scene> AssetManager::Load<Scene>(const std::string& filepath, uint64_t lineId)
     {
-        auto scene = std::make_shared<Scene>();
+        auto scene = Scene::Create();
 
         Deserializer sceneData = Deserializer(filepath, VOLUND_SERIAL_FILE_TYPE_SCENE);
 

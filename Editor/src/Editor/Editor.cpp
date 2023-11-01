@@ -145,6 +145,7 @@ void Editor::Procedure(const VL::Event& e)
 		}
 
 		this->m_Context->GameState->SaveScene();
+		this->m_Context->GameState->ReloadScene();
 
 		SetDarkImGuiStyle();
 

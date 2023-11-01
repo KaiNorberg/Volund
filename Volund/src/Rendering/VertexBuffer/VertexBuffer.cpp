@@ -10,7 +10,7 @@
 
 namespace Volund
 {
-	Ref<VertexBuffer> VertexBuffer::Create(const float vertices[], uint32_t count)
+	Ref<VertexBuffer> VertexBuffer::Create(const float vertices[], uint64_t count)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

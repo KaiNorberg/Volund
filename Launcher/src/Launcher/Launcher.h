@@ -15,5 +15,9 @@ public:
 	Launcher();
 
 private:
+
+	VL::Ref<VL::Framebuffer> m_Framebuffer;
+	VL::Ref<VL::Renderer> m_Renderer;
+	VL::Ref<VL::GameState> m_GameState;
 };
 

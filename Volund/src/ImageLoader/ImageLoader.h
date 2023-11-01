@@ -24,11 +24,11 @@ namespace Volund
 
 	private:
 
-		int32_t m_Width;
+		int32_t m_Width = 0;
 
-		int32_t m_Height;
+		int32_t m_Height = 0;
 
-		int32_t m_Channels;
+		int32_t m_Channels = 0;
 
 		unsigned char* m_Data = nullptr;
 	};

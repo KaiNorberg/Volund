@@ -16,13 +16,15 @@ namespace Volund
 
 		void End() override;
 
-		ForwardRenderer();
-
+		static Ref<ForwardRenderer> Create();
+			
 	private:	
+
+		ForwardRenderer();
 
 		struct alignas(16) LightsBuffer
 		{
-			int LightAmount;
+			uint32_t LightAmount;
 
 			char Padding1[sizeof(Vec4) - sizeof(int)];
 

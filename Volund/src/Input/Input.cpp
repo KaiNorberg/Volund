@@ -24,7 +24,7 @@ namespace Volund
 	bool Input::IsMouseButtonPressed(uint16_t button)
 	{
 		const bool isDown = this->m_MouseButtons[button] == 1;
-		this->m_MouseButtons[button] += (int)isDown;
+		this->m_MouseButtons[button] == isDown;
 
 		return isDown;
 	}
@@ -73,7 +73,7 @@ namespace Volund
 			const uint64_t xPos = VOLUND_EVENT_MOUSE_MOVE_GET_XPOS(e);
 			const uint64_t yPos = VOLUND_EVENT_MOUSE_MOVE_GET_YPOS(e);
 
-			this->m_MousePosition = IVec2(xPos, yPos);
+			this->m_MousePosition = IVec2((int32_t)xPos, (int32_t)yPos);
 		}
 		break;
 		}

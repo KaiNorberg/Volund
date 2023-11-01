@@ -36,9 +36,9 @@ namespace Volund
 
 		static Ref<ScriptingEngine> Create();
 
-		ScriptingEngine();
-
 	private:
+
+		ScriptingEngine();
 
 		std::vector<uint64_t> m_UnstartedScripts;
 

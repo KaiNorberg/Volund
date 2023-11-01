@@ -24,7 +24,7 @@ namespace Volund
 
 	void GameState::LoadScene(const std::string& filepath)
 	{
-		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
+		this->m_ScriptingEngine = ScriptingEngine::Create();
 		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, filepath, this->m_ScriptingEngine);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(filepath);
 	}
@@ -33,14 +33,14 @@ namespace Volund
 	{
 		std::string scenePath = this->m_AssetManager->FetchFilepath<Scene>(this->m_Scene);
 
-		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
+		this->m_ScriptingEngine = ScriptingEngine::Create();
 		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, scenePath, this->m_ScriptingEngine);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(scenePath);
 	}
 
 	void GameState::Procedure(const Event& e)
 	{
-		this->m_Input->Procedure(e);
+		this->m_Input.Procedure(e);
 
 		this->m_Scene->Procedure(e);
 	}
@@ -85,22 +85,28 @@ namespace Volund
 		return this->m_AssetManager->GetRootDirectory();
 	}
 
+	Ref<GameState> GameState::Create(Ref<Dispatcher> dispatcher)
+	{
+		return Ref<GameState>(new GameState(dispatcher));
+	}
+
+	Ref<GameState> GameState::Create(Ref<Dispatcher> dispatcher, const std::string& filepath)
+	{
+		return Ref<GameState>(new GameState(dispatcher, filepath));
+	}
+
 	GameState::GameState(Ref<Dispatcher> dispatcher)
 	{
 		this->m_Dispatcher = dispatcher;
 
-		this->m_Input = std::make_shared<Input>();
-
-		this->m_ScriptingEngine = std::make_shared<ScriptingEngine>();
+		this->m_ScriptingEngine = ScriptingEngine::Create();
 		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, ".", this->m_ScriptingEngine);
-		this->m_Scene = std::make_shared<Scene>();
+		this->m_Scene = Scene::Create();
 	}
 
 	GameState::GameState(Ref<Dispatcher> dispatcher, const std::string& filepath)
 	{
 		this->m_Dispatcher = dispatcher;
-
-		this->m_Input = std::make_shared<Input>();
 
 		this->LoadScene(filepath);
 	}

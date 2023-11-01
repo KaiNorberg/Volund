@@ -36,7 +36,7 @@ namespace Volund
 		return this->m_Layout;
 	}
 
-	OpenGLVertexBuffer::OpenGLVertexBuffer(const float vertices[], const uint32_t count)
+	OpenGLVertexBuffer::OpenGLVertexBuffer(const float vertices[], const uint64_t count)
 	{
 		glCreateBuffers(1, &this->m_Id);
 		glBindBuffer(GL_ARRAY_BUFFER, this->m_Id);

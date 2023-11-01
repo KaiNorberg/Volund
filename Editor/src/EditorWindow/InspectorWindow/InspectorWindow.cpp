@@ -159,7 +159,7 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 				{
 					if (script->Is<VL::LuaInt>(identifier))
 					{
-						int rawValue = script->Get<VL::LuaInt>(identifier);
+						int rawValue = (int)script->Get<VL::LuaInt>(identifier);
 						if (ImGuiInt(identifier, rawValue))
 						{
 							script->Set(identifier, (VL::LuaInt)rawValue);
@@ -168,7 +168,7 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 					else if (script->Is<VL::LuaFloat>(identifier))
 					{
 						auto rawValue = script->Get<VL::LuaFloat>(identifier);
-						if (ImGuiDouble(identifier, rawValue))
+						if (ImGuiFloat(identifier, rawValue))
 						{
 							script->Set(identifier, (VL::LuaFloat)rawValue);
 						}
@@ -197,17 +197,13 @@ void InspectorWindow::OnProcedure(const VL::Event& e)
 							script->Set(identifier, (VL::LuaVec3)rawValue);
 						}
 					}
-					else if (script->Is<VL::Vec4>(identifier))
+					else if (script->Is<VL::LuaVec4>(identifier))
 					{
-						auto rawValue = script->Get<VL::Vec4>(identifier);
+						auto rawValue = script->Get<VL::LuaVec4>(identifier);
 						if (ImGuiVec4(identifier, rawValue))
 						{
 							script->Set(identifier, rawValue);
 						}
-					}
-					else
-					{
-						VOLUND_INFO("Test3");
 					}
 				}
 			}

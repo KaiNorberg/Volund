@@ -78,7 +78,7 @@ namespace Volund
 
 	Ref<ScriptingEngine> ScriptingEngine::Create()
 	{
-		return std::make_shared<ScriptingEngine>();
+		return Ref<ScriptingEngine>(new ScriptingEngine());
 	}
 
 	void ScriptingEngine::ScriptProcedure(uint64_t scriptId, const Event& e)
