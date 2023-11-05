@@ -15,24 +15,15 @@ namespace Volund
 		bool HasUniform(const std::string& name) override;
 
 		void SetInt(const std::string& name, int value) override;
-
 		void SetFloat(const std::string& name, float value) override;
-
 		void SetDouble(const std::string& name, double value) override;
-
 		void SetVec2(const std::string& name, const Vec2& value) override;
-
 		void SetVec3(const std::string& name, const Vec3& value) override;
-
 		void SetVec4(const std::string& name, const Vec4& value) override;
-
 		//void SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose = false) override;
-
 		void SetMat4x4(const std::string& name, const Mat4x4& value, bool transpose = false) override;
-
-		void SetTexture(const std::string& name, const Ref<Texture>& value, uint32_t textureUnit) override;
-
-		void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value, uint32_t textureUnit) override;
+		void SetTexture(const std::string& name, const Ref<Texture>& value) override;
+		void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value) override;
 
 		void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) override;
 
@@ -50,5 +41,8 @@ namespace Volund
 		std::unordered_map<std::string, uint32_t> m_UniformLocations;
 
 		uint32_t m_Id = 0;
+
+		int32_t m_NextTextureUnit = 0;
+		int32_t m_MaxTextureUnit = 0;
 	};
 } //namespace Volund

@@ -3,34 +3,16 @@
 
 namespace Volund
 {
-	void Material::Erase(const std::string& key)
+	void Material::Erase(const std::string& name)
 	{
-		this->m_Table.Erase(key);
-	}
-
-	void Material::Rename(const std::string& key, const std::string& newKey)
-	{
-		this->m_Table.Rename(key, newKey);
-	}
-
-	const SerialTable::const_iterator Material::begin() const
-	{
-		return this->m_Table.begin();
-	}
-
-	const SerialTable::const_iterator Material::end() const
-	{
-		return this->m_Table.end();
-	}
-
-	SerialTable::iterator Material::begin()
-	{
-		return this->m_Table.begin();
-	}
-
-	SerialTable::iterator Material::end()
-	{
-		return this->m_Table.end();
+		for (int i = 0; i < this->m_Uniforms.size(); i++)
+		{
+			if (this->m_Uniforms[i]->GetName() == name)
+			{
+				this->m_Uniforms.erase(this->m_Uniforms.begin() + i);
+				return;
+			}
+		}
 	}
 
 	void Material::UpdateShader()
@@ -42,65 +24,73 @@ namespace Volund
 			return;
 		}
 
-		if (this->m_MaterialChanged)
+		for (int i = 0; i < this->m_Uniforms.size(); i++)
 		{
-			this->CompareBlueprint();
-			this->m_MaterialChanged = false;
+			this->m_Uniforms[i]->UpdateShader(this->m_Shader);
 		}
+	}
 
-		int textureUnit = 0;
-		for (auto& [name, uniform] : this->m_Table)
-		{
-			if (uniform->Is<UniformInt>())
-			{
-				this->m_Shader->SetInt(name, uniform->As<UniformInt>());
-			}
-			else if (uniform->Is<UniformFloat>())
-			{
-				this->m_Shader->SetFloat(name, uniform->As<UniformFloat>());
-			}
-			else if (uniform->Is<UniformDouble>())
-			{
-				this->m_Shader->SetDouble(name, uniform->As<UniformDouble>());
-			}
-			else if (uniform->Is<UniformVec2>())
-			{
-				this->m_Shader->SetVec2(name, uniform->As<UniformVec2>());
-			}
-			else if (uniform->Is<UniformVec3>())
-			{
-				this->m_Shader->SetVec3(name, uniform->As<UniformVec3>());
-			}
-			else if (uniform->Is<UniformVec4>())
-			{
-				this->m_Shader->SetVec4(name, uniform->As<UniformVec4>());
-			}
-			/*else if (uniform->Is<UniformMat3x3>())
-			{
-				this->m_Shader->SetMat3x3(name, uniform->As<UniformMat3x3>());
-			}*/
-			else if (uniform->Is<UniformMat4x4>())
-			{
-				this->m_Shader->SetMat4x4(name, uniform->As<UniformMat4x4>());
-			}
-			else if (uniform->Is<UniformTexture>())
-			{
-				this->m_Shader->SetTexture(name, uniform->As<UniformTexture>(), textureUnit);
-				textureUnit++;
-			}
-			else if (uniform->Is<UniformFramebuffer>())
-			{
-				this->m_Shader->SetFramebuffer(name, uniform->As<UniformFramebuffer>(), textureUnit);
-				textureUnit++;
-			}
-		}
+	std::vector<Ref<PrimitiveUniform>>::iterator Material::begin()
+	{
+		return this->m_Uniforms.begin();
+	}
+
+	std::vector<Ref<PrimitiveUniform>>::iterator Material::end()
+	{
+		return this->m_Uniforms.end();
+	}
+
+	std::vector<Ref<PrimitiveUniform>>::const_iterator Material::begin() const
+	{
+		return this->m_Uniforms.begin();
+	}
+
+	std::vector<Ref<PrimitiveUniform>>::const_iterator Material::end() const
+	{
+		return this->m_Uniforms.end();
 	}
 
 	void Material::SetShader(Ref<Shader> shader)
 	{
 		this->m_Shader = shader;
+		this->m_Blueprint = shader->GetMaterialBlueprint();
 
-		this->ConformToBlueprint();
+		if (this->m_Blueprint == nullptr)
+		{
+			return;
+		}
+
+		for (auto& uniform : (*this->m_Blueprint))
+		{
+			if (uniform.Is<IntUniformType>() && !this->Contains<IntUniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (IntUniformType)NULL);
+			}
+			else if (uniform.Is<FloatUniformType>() && !this->Contains<FloatUniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (FloatUniformType)NULL);
+			}
+			else if (uniform.Is<DoubleUniformType>() && !this->Contains<DoubleUniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (DoubleUniformType)NULL);
+			}
+			else if (uniform.Is<Vec2UniformType>() && !this->Contains<Vec2UniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (Vec2UniformType)NULL);
+			}
+			else if (uniform.Is<Vec3UniformType>() && !this->Contains<Vec3UniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (Vec3UniformType)NULL);
+			}
+			else if (uniform.Is<Vec4UniformType>() && !this->Contains<Vec4UniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (Vec4UniformType)NULL);
+			}
+			else if (uniform.Is<TextureUniformType>() && !this->Contains<TextureUniformType>(uniform.GetName()))
+			{
+				this->Set(uniform.GetName(), (TextureUniformType)NULL);
+			}
+		}
 	}
 
 	Ref<Shader> Material::GetShader()
@@ -120,130 +110,6 @@ namespace Volund
 		}
 	}
 
-	void Material::CompareBlueprint()
-	{
-		if (this->m_Shader == nullptr)
-		{
-			return;
-		}
-
-		auto& blueprint = this->m_Shader->GetMaterialBlueprint();
-
-		/*for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
-		{
-			if (!this->m_IntUniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (int, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Double))
-		{
-			if (!this->m_DoubleUniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (double, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec2))
-		{
-			if (!this->m_Vec2Uniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (vec2, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec3))
-		{
-			if (!this->m_Vec3Uniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (vec3, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec4))
-		{
-			if (!this->m_Vec4Uniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (vec4, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Sampler))
-		{
-			if (!this->m_TextureUniforms.contains(blueprintUniform) && !this->m_FramebufferUniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (sampler, %s)", blueprintUniform.c_str());
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Matrix))
-		{
-			if (!this->m_MatrixUniforms.contains(blueprintUniform) && !this->m_FramebufferUniforms.contains(blueprintUniform))
-			{
-				VOLUND_WARNING("Material does not contain blueprint uniform (sampler, %s)", blueprintUniform.c_str());
-			}
-		}*/
-	}
-
-	void Material::ConformToBlueprint()
-	{
-		auto blueprint = this->GetBlueprint();
-
-		if (blueprint == nullptr)
-		{
-			return;
-		}
-
-		/*for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Int))
-		{
-			if (!this->m_IntUniforms.contains(blueprintUniform))
-			{
-				this->SetInt(blueprintUniform, 0);
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Double))
-		{
-			if (!this->m_DoubleUniforms.contains(blueprintUniform))
-			{
-				this->SetDouble(blueprintUniform, 0.0);
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec2))
-		{
-			if (!this->m_Vec2Uniforms.contains(blueprintUniform))
-			{
-				this->SetVec2(blueprintUniform, Vec2(0.0f));
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec3))
-		{
-			if (!this->m_Vec3Uniforms.contains(blueprintUniform))
-			{
-				this->SetVec3(blueprintUniform, Vec3(0.0f));
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Vec4))
-		{
-			if (!this->m_Vec4Uniforms.contains(blueprintUniform))
-			{
-				this->SetVec4(blueprintUniform, Vec4(0.0f));
-			}
-		}
-
-		for (auto& blueprintUniform : blueprint->GetUniforms(MaterialUniformType::Sampler))
-		{
-			if (!this->m_TextureUniforms.contains(blueprintUniform))
-			{
-				this->SetTexture(blueprintUniform, nullptr);
-			}
-		}*/
-	}
-
 	Ref<Material> Material::Create()
 	{
 		return std::make_shared<Material>();
@@ -254,14 +120,8 @@ namespace Volund
 		return std::make_shared<Material>(shader);
 	}
 
-	Material::Material()
-	{
-	}
-
 	Material::Material(Ref<Shader> shader)
 	{
-		this->m_Shader = shader;
-
-		this->ConformToBlueprint();
+		this->SetShader(shader);
 	}
 }

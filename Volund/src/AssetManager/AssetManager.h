@@ -123,7 +123,7 @@ namespace Volund
             {
                 if (view[i]->Identifier == asset.get())
                 {
-                    return this->GetAbsolutePath(view[i]->Filepath);
+                    return view[i]->Filepath;
                 }
             }
         }

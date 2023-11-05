@@ -11,67 +11,68 @@ namespace Volund
 	{
 	public:
 
-		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
-		void Set(const std::string& name, const T& value);
-		
-		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
-		bool Is(const std::string& key) const;
-
-		void Erase(const std::string& key);
-
-		void Rename(const std::string& key, const std::string& newKey);
-
-		const SerialTable::const_iterator begin() const;
-		const SerialTable::const_iterator end() const;
-
-		SerialTable::iterator begin();
-		SerialTable::iterator end();
-
 		void SetShader(Ref<Shader> shader);
 		Ref<Shader> GetShader();
 
 		Ref<MaterialBlueprint> GetBlueprint();
 
+		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
+		void Set(const std::string& name, const T& value);
+		
+		template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
+		bool Contains(const std::string& name) const;
+
+		void Erase(const std::string& name);
+
 		void UpdateShader();
+
+		std::vector<Ref<PrimitiveUniform>>::iterator begin();
+		std::vector<Ref<PrimitiveUniform>>::iterator end();
+
+		std::vector<Ref<PrimitiveUniform>>::const_iterator begin() const;
+		std::vector<Ref<PrimitiveUniform>>::const_iterator end() const;
 
 		static Ref<Material> Create();
 		static Ref<Material> Create(Ref<Shader> shader);
 
-		Material();
-
+		Material() = default;
 		Material(Ref<Shader> shader);
 
 	private:
-
-		SerialTable m_Table;
 
 		Ref<Shader> m_Shader;
 
 		Ref<MaterialBlueprint> m_Blueprint;
 
-		bool m_MaterialChanged = true;
-
-		void CompareBlueprint();
-
-		void ConformToBlueprint();
+		std::vector<Ref<PrimitiveUniform>> m_Uniforms;
 	};
 
 	template<typename T, typename>
 	inline void Material::Set(const std::string& name, const T& value)
 	{
-		if (this->m_Table.Contains<T>(name))
+		for (int i = 0; i < this->m_Uniforms.size(); i++)
 		{
-			this->m_Table[name] = value;
+			if (this->m_Uniforms[i]->Is<T>() && this->m_Uniforms[i]->GetName() == name)
+			{
+				this->m_Uniforms[i]->Set<T>(value);
+				return;
+			}
 		}
-		else
-		{
-			this->m_Table.Insert(name, value);
-		}
+
+		this->m_Uniforms.push_back(Uniform<T>::Create(name, value));
 	}
 
 	template<typename T, typename>
-	inline bool Material::Is(const std::string& key) const
+	inline bool Material::Contains(const std::string& name) const
 	{
-		return this->m_Table.Is<T>(key);
+		for (int i = 0; i < this->m_Uniforms.size(); i++)
+		{
+			if (this->m_Uniforms[i]->Is<T>() && this->m_Uniforms[i]->GetName() == name)
+			{
+				return true;
+			}
+		}
+
+		return false;
 	}
 }

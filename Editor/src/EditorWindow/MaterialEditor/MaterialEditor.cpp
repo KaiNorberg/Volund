@@ -52,14 +52,16 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			return;
 		}
 
-		for (auto& [key, uniform] : (*this->m_SelectedMaterial))
+		for (auto& uniform : (*this->m_SelectedMaterial))
 		{
-			bool isInBlueprint = materialBlueprint->Exists(key);
+			std::string uniformName = uniform->GetName();
+
+			bool isInBlueprint = materialBlueprint->Exists(uniformName);
 
 			ImVec2 itemRectMin;
 			ImVec2 itemRectMax;
 			ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
-			if (ImGui::BeginListBox((std::string("##ListBox") + key).c_str(), listBoxSize))
+			if (ImGui::BeginListBox((std::string("##ListBox") + uniformName).c_str(), listBoxSize))
 			{
 				itemRectMin = ImVec2(this->GetPosition().x, ImGui::GetItemRectMin().y);
 				itemRectMax = ImVec2(this->GetPosition().x + this->GetSize().x, itemRectMin.y + listBoxSize.y);
@@ -67,63 +69,67 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 				std::string name;
 				if (!isInBlueprint)
 				{
-					name = key;
+					name = uniformName;
 				}
 				else
 				{
-					name = VOLUND_LOGGERCOLOR_BLUE + key;
+					name = VOLUND_LOGGERCOLOR_BLUE + uniformName;
 				}
 
-				if (uniform->Is<VL::UniformInt>())
+				if (uniform->Is<VL::IntUniformType>())
 				{
-					if (ImGuiInt(name, *uniform->Get<VL::UniformInt>()))
+					if (ImGuiInt(name, uniform->As<VL::IntUniformType>()))
 					{
 						changed = true;
 					}
 				}
-				else if (uniform->Is<VL::UniformFloat>())
+				else if (uniform->Is<VL::FloatUniformType>())
 				{
-					if (ImGuiFloat(name, *uniform->Get<VL::UniformFloat>()))
+					if (ImGuiFloat(name, uniform->As<VL::FloatUniformType>()))
 					{
 						changed = true;
 					}
 				}
-				else if (uniform->Is<VL::UniformDouble>())
+				else if (uniform->Is<VL::DoubleUniformType>())
 				{
-					if (ImGuiDouble(name, *uniform->Get<VL::UniformDouble>()))
+					if (ImGuiDouble(name, uniform->As<VL::DoubleUniformType>()))
 					{
 						changed = true;
 					}
 				}
-				else if (uniform->Is<VL::UniformVec2>())
+				else if (uniform->Is<VL::Vec2UniformType>())
 				{
-					if (ImGuiVec2(name, *uniform->Get<VL::UniformVec2>()))
+					if (ImGuiVec2(name, uniform->As<VL::Vec2UniformType>()))
 					{
 						changed = true;
 					}
 				}
-				else if (uniform->Is<VL::UniformVec3>())
+				else if (uniform->Is<VL::Vec3UniformType>())
 				{
-					if (ImGuiVec3(name, *uniform->Get<VL::UniformVec3>()))
+					if (ImGuiVec3(name, uniform->As<VL::Vec3UniformType>()))
 					{
 						changed = true;
 					}
 				}
-				else if (uniform->Is<VL::UniformVec4>())
+				else if (uniform->Is<VL::Vec4UniformType>())
 				{
-					if (ImGuiVec4(name, *uniform->Get<VL::UniformVec4>()))
+					if (ImGuiVec4(name, uniform->As<VL::Vec4UniformType>()))
 					{
 						changed = true;
 					}
 				}
-				else if (uniform->Is<VL::UniformTexture>())
+				else if (uniform->Is<VL::TextureUniformType>())
 				{
-					std::string texturePath = gameState->FetchFilepath<VL::Texture>(uniform->As<VL::UniformTexture>());
+					std::string texturePath = gameState->FetchFilepath<VL::Texture>(uniform->As<VL::TextureUniformType>());
 					if (ImGuiFile(name, texturePath))
 					{
-						this->m_SelectedMaterial->Set(key, gameState->FetchAsset<VL::Texture>(texturePath));
+						this->m_SelectedMaterial->Set(uniformName, gameState->FetchAsset<VL::Texture>(texturePath));
 						changed = true;
 					}
+				}
+				else
+				{
+					VOLUND_INFO("Invalid Uniform Type!");
 				}
 
 				ImGui::EndListBox();
@@ -131,7 +137,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 
 			if (!isInBlueprint)
 			{
-				std::string popupName = (std::string("Material entry") + key);
+				std::string popupName = (std::string("Material entry") + uniformName);
 
 				if (ImGui::IsMouseHoveringRect(itemRectMin, itemRectMax) && ImGui::IsMouseClicked(ImGuiMouseButton_Right))
 				{
@@ -143,73 +149,15 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 					if (ImGui::MenuItem("Delete"))
 					{
 						changed = true;
-						this->m_SelectedMaterial->Erase(key);
+						this->m_SelectedMaterial->Erase(uniformName);
 						ImGui::CloseCurrentPopup();
 					}
-					if (ImGui::MenuItem("Rename"))
-					{
-						changed = true;
-						std::string newKey = VL::Dialog::InputBox("Rename Material Entry", "Please specify a new name");
-						if (!newKey.empty())
-						{
-							this->m_SelectedMaterial->Rename(key, newKey);
-						}
-					}
-
 					ImGui::EndPopup();
 				}
 			}
 
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
-
-		//Temporarily disabled
-		/*ImGuiAlign("Add Entry", 0.5f);
-		if (ImGui::Button("Add Entry"))
-		{
-			ImGui::OpenPopup("Add Entry");
-		}
-
-		if (ImGui::BeginPopup("Add Entry"))
-		{
-			if (ImGui::MenuItem("Int"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetInt("NewInt", 0);
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Float"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetFloat("NewDouble", 0.0);
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Vec2"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetVec2("NewVec2", VL::UniformVec2(0.0f, 0.0f));
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Vec3"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetVec3("NewVec3", VL::Vec3(0.0f, 0.0f, 0.0f));
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Vec4"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetVec4("NewVec4", VL::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Texture"))
-			{
-				changed = true;
-				this->m_SelectedMaterial->SetTexture("NewTexture", VL::Ref<VL::Texture>(nullptr));
-				ImGui::CloseCurrentPopup();
-			}
-			ImGui::EndPopup();
-		}*/
 
 		if (changed && this->m_Context->IsPaused())
 		{

@@ -49,7 +49,7 @@ namespace Volund
 	template<typename T>
 	inline bool MaterialBlueprint::BlueprintUniform::Is() const
 	{
-		constexpr uint64_t typeHash = Utils::GetTypeId<T>();
+		const static uint64_t typeHash = Utils::GetTypeId<T>();
 
 		return this->m_TypeHash == typeHash;
 	}
@@ -63,7 +63,7 @@ namespace Volund
 	template<typename T>
 	inline bool MaterialBlueprint::Contains(const std::string& name)
 	{
-		constexpr uint64_t typeHash = Utils::GetTypeId<T>();
+		const static uint64_t typeHash = Utils::GetTypeId<T>();
 
 		for (auto& uniform : this->m_Uniforms)
 		{

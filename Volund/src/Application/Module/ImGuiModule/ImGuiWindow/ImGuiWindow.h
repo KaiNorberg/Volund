@@ -73,7 +73,7 @@ namespace Volund
 
 		static bool ImGuiVec4(const std::string& name, VL::Vec4& value, float speed = 0.1f, float defaultValue = 0.0f);
 
-		static void ImGuiColoredText(const std::string& text);
+		static void ImGuiColoredText(const std::string text);
 
 		static bool ImGuiListBegin(const std::string& name);
 

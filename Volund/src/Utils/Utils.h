@@ -6,9 +6,10 @@ namespace Volund::Utils
 {
 	//TODO: this sucks, make it better
 	template<typename T>
-	inline size_t GetTypeId()
+	inline uint64_t GetTypeId()
 	{
-		return typeid(T).hash_code();
+		static const uint64_t typeId = typeid(T).hash_code();
+		return typeId;
 	}
 
 	bool CheckBit(uint32_t var, uint8_t pos);
