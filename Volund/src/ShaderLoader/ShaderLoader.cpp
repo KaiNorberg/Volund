@@ -112,31 +112,31 @@ namespace Volund
 
                     if (words[1] == "int" || words[1] == "bool")
                     {
-                        this->m_MaterialBlueprint->Insert<UniformInt>(uniformName);
+                        this->m_MaterialBlueprint->Insert<IntUniformType>(uniformName);
                     }
                     else if (words[1] == "float")
                     {
-                        this->m_MaterialBlueprint->Insert<UniformFloat>(uniformName);
+                        this->m_MaterialBlueprint->Insert<FloatUniformType>(uniformName);
                     }
                     else if (words[1] == "double")
                     {
-                        this->m_MaterialBlueprint->Insert<UniformDouble>(uniformName);
+                        this->m_MaterialBlueprint->Insert<DoubleUniformType>(uniformName);
                     }
                     else if (words[1].ends_with("vec2"))
                     {
-                        this->m_MaterialBlueprint->Insert<UniformVec2>(uniformName);
+                        this->m_MaterialBlueprint->Insert<Vec2UniformType>(uniformName);
                     }
                     else if (words[1].ends_with("vec3"))
                     {
-                        this->m_MaterialBlueprint->Insert<UniformVec3>(uniformName);
+                        this->m_MaterialBlueprint->Insert<Vec3UniformType>(uniformName);
                     }
                     else if (words[1].ends_with("vec4"))
                     {
-                        this->m_MaterialBlueprint->Insert<UniformVec4>(uniformName);
+                        this->m_MaterialBlueprint->Insert<Vec4UniformType>(uniformName);
                     }
                     else if (words[1].starts_with("sampler"))
                     {
-                        this->m_MaterialBlueprint->Insert<UniformTexture>(uniformName);
+                        this->m_MaterialBlueprint->Insert<TextureUniformType>(uniformName);
                     }
                     /*else if (words[1].starts_with("mat3"))
                     {
@@ -144,7 +144,7 @@ namespace Volund
                     }*/
                     else if (words[1].starts_with("mat4"))
                     {
-                        this->m_MaterialBlueprint->Insert<UniformMat4x4>(uniformName);
+                        this->m_MaterialBlueprint->Insert<Mat4x4UniformType>(uniformName);
                     }
                     else
                     {

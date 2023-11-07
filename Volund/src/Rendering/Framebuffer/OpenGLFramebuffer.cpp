@@ -6,6 +6,8 @@
 
 #include <glad/include/glad/glad.h>
 
+#include "Rendering/Uniform/Uniform.h"
+
 namespace Volund
 {
 	void OpenGLFramebuffer::Bind()

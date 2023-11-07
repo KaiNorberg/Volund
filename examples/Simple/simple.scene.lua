@@ -17,7 +17,7 @@ local table =
 			{
 				ComponentType = 3,
 				Mesh = "://Cube.obj",
-				Material = "C:/Users/KNKai/Documents/Github/Volund/examples/Simple/Materials/Blue.mat.lua"
+				Material = "Materials/Blue.mat.lua"
 			}
 		},
 		{
@@ -34,15 +34,15 @@ local table =
 			{
 				ComponentType = 3,
 				Mesh = "://Cube.obj",
-				Material = "C:/Users/KNKai/Documents/Github/Volund/examples/Simple/Materials/Green.mat.lua"
+				Material = "Materials/Green.mat.lua"
 			},
 			{
 				ComponentType = 10,
 				Filepath = "Scripts/Rotate.lua",
 				PublicVars =
 				{
-					Text = "Hello, World!",
-					Number = 5
+					Integer = 5,
+					Float = 3.140000
 				}
 			}
 		},
@@ -76,8 +76,8 @@ local table =
 			},
 			{
 				ComponentType = 3,
-				Mesh = "C:/Users/KNKai/Documents/Github/Volund/examples/Simple/Models/Teapot.obj",
-				Material = "C:/Users/KNKai/Documents/Github/Volund/examples/Simple/Materials/White.mat.lua"
+				Mesh = "Models/Teapot.obj",
+				Material = "Materials/White.mat.lua"
 			}
 		},
 		{
@@ -94,7 +94,7 @@ local table =
 			{
 				ComponentType = 3,
 				Mesh = "://Cube.obj",
-				Material = "C:/Users/KNKai/Documents/Github/Volund/examples/Simple/Materials/Texture.material.lua"
+				Material = "Materials/Texture.material.lua"
 			}
 		},
 		{

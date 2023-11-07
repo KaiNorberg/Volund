@@ -58,36 +58,36 @@ namespace Volund
 
         serializer.StartTable(VOLUND_SERIAL_MATERIAL_UNIFORMS);
 
-        for (auto& [key, uniform] : (*material))
+        for (auto& uniform : (*material))
         {
-            if (uniform->Is<UniformInt>())
+            if (uniform->Is<IntUniformType>())
             {
-                serializer.Insert(key, (LuaInt)uniform->As<UniformInt>());
+                serializer.Insert(uniform->GetName(), (LuaInt)uniform->As<IntUniformType>());
             }
-            else if (uniform->Is<UniformFloat>())
+            else if (uniform->Is<FloatUniformType>())
             {
-                serializer.Insert(key, (LuaFloat)uniform->As<UniformFloat>());
+                serializer.Insert(uniform->GetName(), (LuaFloat)uniform->As<FloatUniformType>());
             }
-            else if (uniform->Is<UniformDouble>())
+            else if (uniform->Is<DoubleUniformType>())
             {
-                serializer.Insert(key, (LuaFloat)uniform->As<UniformDouble>());
+                serializer.Insert(uniform->GetName(), (LuaFloat)uniform->As<DoubleUniformType>());
             }
-            else if (uniform->Is<UniformVec2>())
+            else if (uniform->Is<Vec2UniformType>())
             {
-                serializer.Insert(key, (LuaVec2)uniform->As<UniformVec2>());
+                serializer.Insert(uniform->GetName(), (LuaVec2)uniform->As<Vec2UniformType>());
             }
-            else if (uniform->Is<UniformVec3>())
+            else if (uniform->Is<Vec3UniformType>())
             {
-                serializer.Insert(key, (LuaVec3)uniform->As<UniformVec3>());
+                serializer.Insert(uniform->GetName(), (LuaVec3)uniform->As<Vec3UniformType>());
             }
-            else if (uniform->Is<UniformVec4>())
+            else if (uniform->Is<Vec4UniformType>())
             {
-                serializer.Insert(key, uniform->As<UniformVec4>());
+                serializer.Insert(uniform->GetName(), (LuaVec4)uniform->As<Vec4UniformType>());
             }
-            else if (uniform->Is<UniformTexture>())
+            else if (uniform->Is<TextureUniformType>())
             {
-                std::string texturePath = this->FetchFilepath(uniform->As<UniformTexture>());
-                serializer.Insert(key, texturePath);
+                std::string texturePath = this->FetchFilepath(uniform->As<TextureUniformType>());
+                serializer.Insert(uniform->GetName(), texturePath);
             }
         }
         serializer.EndTable();
@@ -468,15 +468,15 @@ namespace Volund
             {
                 if (luaUniform->Is<LuaInt>())
                 {
-                    material->Set(key, (UniformInt)luaUniform->As<LuaInt>());
+                    material->Set(key, (IntUniformType)luaUniform->As<LuaInt>());
                 }
                 else if (luaUniform->Is<LuaFloat>())
                 {
-                    material->Set(key, (UniformFloat)luaUniform->As<LuaFloat>());
+                    material->Set(key, (FloatUniformType)luaUniform->As<LuaFloat>());
                 }
                 else if (luaUniform->Is<LuaVec2>())
                 {
-                    material->Set(key, (UniformVec2)luaUniform->As<LuaVec2>());
+                    material->Set(key, (Vec2UniformType)luaUniform->As<LuaVec2>());
                 }
                 else if (luaUniform->Is<Vec3>())
                 {

@@ -507,7 +507,7 @@ namespace Volund
 		return changed;
 	}
 
-	void ImGuiWindow::ImGuiColoredText(const std::string& text)
+	void ImGuiWindow::ImGuiColoredText(const std::string text)
 	{
 		ImGuiStyle* style = &ImGui::GetStyle();
 

@@ -6,6 +6,7 @@
 #include "Rendering/RenderingAPI/RenderingAPI.h"
 #include "Rendering/UniformBuffer/UniformBuffer.h"
 #include "Rendering/Framebuffer/Framebuffer.h"
+#include "Rendering/Uniform/Uniform.h"
 
 #include "Scene/Scene.h"
 #include "GameState/GameState.h"
@@ -17,8 +18,8 @@ namespace Volund
 	struct RendererModel
 	{
 		Mat4x4 ModelMatrix;
-		Ref<Mesh> mesh;
-		Ref<Material> material;
+		Ref<Mesh> ModelMesh;
+		Ref<Material> Material;
 
 		uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 	};

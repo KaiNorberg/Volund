@@ -15,12 +15,12 @@ namespace Volund
 	{
 		std::sort(this->m_Data.Models.begin(), this->m_Data.Models.end(), [](const RendererModel& a, const RendererModel& b)
 		{
-			return a.material < b.material;
+			return a.Material < b.Material;
 		});
 
 		LightsBuffer lightsBuffer;
 		lightsBuffer.LightAmount = std::min((uint32_t)this->m_Data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
-		for (int i = 0; i < lightsBuffer.LightAmount; i++)
+		for (uint64_t i = 0; i < lightsBuffer.LightAmount; i++)
 		{
 			Vec3 lightColor = this->m_Data.Lights[i].Color * this->m_Data.Lights[i].Brightness;
 			Vec3 lightPosition = this->m_Data.Lights[i].Position;
@@ -55,12 +55,12 @@ namespace Volund
 			Ref<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)
 			{
-				if (model.material == nullptr)
+				if (model.Material == nullptr)
 				{
 					continue;
 				}
 
-				auto shader = model.material->GetShader();
+				auto shader = model.Material->GetShader();
 
 				if (shader == nullptr || shader->GetId() == 0)
 				{
@@ -69,17 +69,17 @@ namespace Volund
 
 				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
 
-				bool isInFrustum = model.mesh != nullptr && cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix));
+				bool isInFrustum = model.ModelMesh != nullptr && cameraFrustum.ContainsAABB(model.ModelMesh->GetAABB(model.ModelMatrix));
 				bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
 
 				if (isInFrustum && isInMask)
 				{
-					if (model.material != prevMaterial)
+					if (model.Material != prevMaterial)
 					{
 						shader->Bind();
-						model.material->UpdateShader();
+						model.Material->UpdateShader();
 
-						prevMaterial = model.material;
+						prevMaterial = model.Material;
 					}
 
 					if (shader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
@@ -87,9 +87,9 @@ namespace Volund
 						shader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}
 
-					model.mesh->Bind();		
-					auto indexBuffer = model.mesh->GetIndexBuffer();
-					auto vertexBuffer = model.mesh->GetVertexBuffer();
+					model.ModelMesh->Bind();		
+					auto indexBuffer = model.ModelMesh->GetIndexBuffer();
+					auto vertexBuffer = model.ModelMesh->GetVertexBuffer();
 					
 					if (indexBuffer != nullptr)
 					{
@@ -152,7 +152,7 @@ namespace Volund
 
 		for (auto& model : this->Models)
 		{
-			bool isInFrustum = model.mesh != nullptr && cameraFrustum.ContainsAABB(model.mesh->GetAABB(model.ModelMatrix));
+			bool isInFrustum = model.ModelMesh != nullptr && cameraFrustum.ContainsAABB(model.ModelMesh->GetAABB(model.ModelMatrix));
 			bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
 
 			model.Discriminated = !isInFrustum || !isInMask;
