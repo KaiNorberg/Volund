@@ -19,10 +19,6 @@ namespace Volund
 	{
 		Mat4x4 ModelMatrix;
 		Ref<Mesh> ModelMesh;
-
-		//Ref<Shader> ModelShader;
-		//std::vector<Ref<PrimitiveUniform>> ShaderUniforms;
-
 		Ref<Material> Material;
 
 		uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0

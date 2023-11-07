@@ -62,33 +62,33 @@ namespace Volund
 
 		for (auto& uniform : (*this->m_Blueprint))
 		{
-			if (uniform.Is<IntUniformType>() && !this->Contains<IntUniformType>(uniform.GetName()))
+			if (uniform->Is<IntUniformType>() && !this->Contains<IntUniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (IntUniformType)NULL);
+				this->Set(uniform->GetName(), (IntUniformType)NULL);
 			}
-			else if (uniform.Is<FloatUniformType>() && !this->Contains<FloatUniformType>(uniform.GetName()))
+			else if (uniform->Is<FloatUniformType>() && !this->Contains<FloatUniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (FloatUniformType)NULL);
+				this->Set(uniform->GetName(), (FloatUniformType)NULL);
 			}
-			else if (uniform.Is<DoubleUniformType>() && !this->Contains<DoubleUniformType>(uniform.GetName()))
+			else if (uniform->Is<DoubleUniformType>() && !this->Contains<DoubleUniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (DoubleUniformType)NULL);
+				this->Set(uniform->GetName(), (DoubleUniformType)NULL);
 			}
-			else if (uniform.Is<Vec2UniformType>() && !this->Contains<Vec2UniformType>(uniform.GetName()))
+			else if (uniform->Is<Vec2UniformType>() && !this->Contains<Vec2UniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (Vec2UniformType)NULL);
+				this->Set(uniform->GetName(), (Vec2UniformType)NULL);
 			}
-			else if (uniform.Is<Vec3UniformType>() && !this->Contains<Vec3UniformType>(uniform.GetName()))
+			else if (uniform->Is<Vec3UniformType>() && !this->Contains<Vec3UniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (Vec3UniformType)NULL);
+				this->Set(uniform->GetName(), (Vec3UniformType)NULL);
 			}
-			else if (uniform.Is<Vec4UniformType>() && !this->Contains<Vec4UniformType>(uniform.GetName()))
+			else if (uniform->Is<Vec4UniformType>() && !this->Contains<Vec4UniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (Vec4UniformType)NULL);
+				this->Set(uniform->GetName(), (Vec4UniformType)NULL);
 			}
-			else if (uniform.Is<TextureUniformType>() && !this->Contains<TextureUniformType>(uniform.GetName()))
+			else if (uniform->Is<TextureUniformType>() && !this->Contains<TextureUniformType>(uniform->GetName()))
 			{
-				this->Set(uniform.GetName(), (TextureUniformType)NULL);
+				this->Set(uniform->GetName(), (TextureUniformType)NULL);
 			}
 		}
 	}

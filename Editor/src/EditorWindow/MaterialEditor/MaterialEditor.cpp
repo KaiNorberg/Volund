@@ -56,7 +56,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		{
 			std::string uniformName = uniform->GetName();
 
-			bool isInBlueprint = materialBlueprint->Exists(uniformName);
+			bool isInBlueprint = materialBlueprint->Contains(uniformName);
 
 			ImVec2 itemRectMin;
 			ImVec2 itemRectMax;
