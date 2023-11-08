@@ -47,11 +47,11 @@ namespace Volund
 	{
 	public:
 
-		virtual void Begin(Ref<Framebuffer> targetBuffer) = 0;
+		virtual void Begin() = 0;
 
-		void Submit(Ref<Scene> scene);
+		void Submit(Ref<Scene> scene, Ref<Framebuffer> target);
 
-		void Submit(Ref<GameState> gameState);
+		void Submit(Ref<GameState> gameState, Ref<Framebuffer> target);
 
 		void Submit(const RendererModel& model);
 
@@ -67,8 +67,6 @@ namespace Volund
 
 		struct Data
 		{
-			Ref<Framebuffer> Target;
-
 			std::vector<RendererModel> Models;
 			std::vector<RendererEye> Eyes;
 			std::vector<RendererLight> Lights;

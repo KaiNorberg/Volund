@@ -23,6 +23,8 @@ namespace Volund
         template<typename T>
         void Serialize(Ref<T> asset, const std::string& destinationPath);
 
+        std::string GetAbsolutePath(const std::string& relativePath);
+
         std::string GetRootDirectory();
 
         static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& rootPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
@@ -32,8 +34,6 @@ namespace Volund
         AssetManager(Ref<Dispatcher> dispatcher, const std::string& rootPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
 
         std::string GetRelativePath(const std::string& absolutePath);
-
-        std::string GetAbsolutePath(const std::string& relativePath);
 
         std::string ShortPath(const std::string& path);
 

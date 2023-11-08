@@ -2,11 +2,15 @@
 
 #include "../EditorWindow.h"
 
-#include "ViewportCamera/ViewportCamera.h"
-
 class ViewportWindow : public EditorWindow
 {
 public:
+
+	float LookSpeed = 1.0f;
+	float MoveSpeed = 2.5f;
+	float ZoomSpeed = 0.2f;
+
+	float FOV = 80.0f;
 
 	void OnProcedure(const VL::Event& e) override;
 
@@ -14,6 +18,10 @@ public:
 
 private:
 	
+	void UpdateCameraMovement(VL::Input& input, float timeStep, bool isInWindow);
+
+	void Render(VL::Ref<VL::GameState> gameState, ImVec2 viewportSize);
+
 	VL::Vec2 m_Size = VL::Vec2(100, 100);
 	std::string m_Text;
 
@@ -24,6 +32,23 @@ private:
 
 	VL::Ref<VL::Framebuffer> m_Viewportbuffer;
 
-	VL::Ref<ViewportCamera> m_Camera;
+	VL::Vec3 m_Position;
+	VL::Vec3 m_BallCenter;
+	VL::Vec3 m_Rotation;
+	float m_Distance;
+
+	VL::IVec2 m_OldMousePosition;
+	float m_OldScrollPosition;
+
+	VL::Ref<VL::Renderer> m_Renderer;
+
+	VL::Ref<VL::Effect> m_GridEffect;
+
+	VL::IVec2 m_ImagePosition;
+	//VL::Ref<VL::Shader> m_EntityPickShader;
+	//VL::Ref<VL::Framebuffer> m_EntityPickFramebuffer;
+
+	VL::Ref<VL::Framebuffer> m_SceneFramebuffer;
+	VL::Ref<VL::Framebuffer> m_EditorFramebuffer;
 };
 

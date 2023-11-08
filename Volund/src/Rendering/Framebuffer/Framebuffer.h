@@ -26,7 +26,11 @@ namespace Volund
 
 		virtual void Invalidate() = 0;
 
+		virtual int32_t ReadPixel(uint32_t attachment, uint32_t x, uint32_t y) = 0;
+
 		virtual void BlitTo(const Ref<Framebuffer>& drawFramebuffer) = 0;
+
+		virtual void BlitToScreen() = 0;
 
 		uint32_t GetID() const;
 

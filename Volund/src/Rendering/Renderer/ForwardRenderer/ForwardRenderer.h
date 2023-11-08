@@ -12,7 +12,7 @@ namespace Volund
 	{
 	public:
 
-		void Begin(Ref<Framebuffer> targetBuffer) override;
+		void Begin() override;
 
 		void End() override;
 

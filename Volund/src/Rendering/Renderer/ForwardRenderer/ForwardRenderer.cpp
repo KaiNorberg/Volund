@@ -5,10 +5,9 @@
 
 namespace Volund
 {
-	void ForwardRenderer::Begin(Ref<Framebuffer> targetBuffer)
+	void ForwardRenderer::Begin()
 	{
 		this->m_Data = Renderer::Data();
-		this->m_Data.Target = targetBuffer;
 	}
 
 	void ForwardRenderer::End()
@@ -37,17 +36,8 @@ namespace Volund
 			cameraBuffer.ViewMatrix = eye.ViewMatrix;
 			this->m_CameraUniformBuffer->SetData(&cameraBuffer, sizeof(CameraBuffer), 0);
 
-			Ref<Framebuffer> targetBuffer;
-			if (eye.Target != nullptr)
-			{
-				targetBuffer = eye.Target;
-			}
-			else
-			{
-				targetBuffer = this->m_Data.Target;
-			}
-			targetBuffer->Bind();
-			auto& targetSpec = targetBuffer->GetSpec();
+			eye.Target->Bind();
+			auto& targetSpec = eye.Target->GetSpec();
 
 			VL::RenderingAPI::Clear();						
 			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
@@ -119,7 +109,7 @@ namespace Volund
 				}
 			}
 
-			targetBuffer->Unbind();
+			eye.Target->Unbind();
 		}
 	}
 

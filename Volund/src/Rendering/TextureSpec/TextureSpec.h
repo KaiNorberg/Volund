@@ -8,7 +8,7 @@ namespace Volund
 
 		RGBA8,
 		RGBA16F,
-		RedInteger,
+		RGBA32UI,
 
 		Depth24Stencil8,
 
