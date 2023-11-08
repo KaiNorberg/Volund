@@ -8,6 +8,8 @@
 
 #include "Rendering/Uniform/Uniform.h"
 
+#include <glfw/include/GLFW/glfw3.h>
+
 namespace Volund
 {
 	void OpenGLFramebuffer::Bind()
@@ -43,7 +45,6 @@ namespace Volund
 		glGenFramebuffers(1, &this->m_Id);
 		glBindFramebuffer(GL_FRAMEBUFFER, this->m_Id);
 
-		std::vector<GLenum> buffers;
 		for (int i = 0; i < this->m_Spec.ColorAttachments.size(); i++)
 		{
 			uint32_t newAttachment;
@@ -60,12 +61,12 @@ namespace Volund
 			break;
 			case TextureFormat::RGBA16F:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RGBA, GL_FLOAT, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 			}
 			break;
-			case TextureFormat::RedInteger:
+			case TextureFormat::RGBA32UI:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_R32I, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RED_INTEGER, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, nullptr);
 			}
 			break;
 			default:
@@ -80,12 +81,8 @@ namespace Volund
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, newAttachment, 0);
 
-			buffers.push_back(GL_COLOR_ATTACHMENT0 + i);
-
 			this->m_ColorAttachments.push_back(newAttachment);
 		}
-
-		glDrawBuffers(this->m_Spec.ColorAttachments.size(), buffers.data());
 
 		if (this->m_Spec.DepthAttachment.Format != TextureFormat::None)
 		{
@@ -111,9 +108,27 @@ namespace Volund
 			}
 		}
 
-		//VOLUND_ASSERT(glCheckFramebufferStatus(this->_ID) == GL_FRAMEBUFFER_COMPLETE, "Error occurred while creating Framebuffer!"); False positive?
+		VOLUND_ASSERT(glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE, "Error occurred while creating Framebuffer!");
 		glBindTexture(GL_TEXTURE_2D, 0);
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	}
+
+	int32_t OpenGLFramebuffer::ReadPixel(uint32_t attachment, uint32_t x, uint32_t y)
+	{
+		if (attachment < this->m_ColorAttachments.size())
+		{
+			this->Bind();
+			glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
+			uint32_t pixel[4] = { 0, 0, 0, 0 };
+			glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_INT, &pixel);
+
+			VOLUND_INFO("%u, %u, %u, %u", pixel[0], pixel[1], pixel[2], pixel[3]);
+			return 0;
+		}
+		else
+		{
+			return 0;
+		}
 	}
 
 	void OpenGLFramebuffer::BlitTo(const Ref<Framebuffer>& drawFramebuffer)
@@ -121,6 +136,19 @@ namespace Volund
 		glBlitNamedFramebuffer(this->m_Id, drawFramebuffer->GetID(),
 			0, 0, this->m_Spec.Width, this->m_Spec.Height,
 			0, 0, drawFramebuffer->GetSpec().Width, drawFramebuffer->GetSpec().Height,
+			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	}
+
+	void OpenGLFramebuffer::BlitToScreen()
+	{
+		auto context = glfwGetCurrentContext();
+
+		int width, height;
+		glfwGetWindowSize(context, &width, &height);
+
+		glBlitNamedFramebuffer(this->m_Id, 0,
+			0, 0, this->m_Spec.Width, this->m_Spec.Height,
+			0, 0, width, height,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	}
 

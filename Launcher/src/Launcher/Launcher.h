@@ -3,7 +3,7 @@
 #ifdef VOLUND_DIST
 	#define MAIN_SCENE "scene.lua"
 #else
-	#define MAIN_SCENE "../examples/Mandelbrot/scene.lua"
+	#define MAIN_SCENE "../examples/Mandelbrot/mandelbrot.scene.lua"
 #endif
 
 class Launcher : public VL::Application

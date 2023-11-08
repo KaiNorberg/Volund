@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-	void Renderer::Submit(Ref<Scene> scene)
+	void Renderer::Submit(Ref<Scene> scene, Ref<Framebuffer> target)
 	{
 		for (auto& entity : *scene)
 		{
@@ -55,21 +55,21 @@ namespace Volund
 				{
 					auto camera = component.As<Camera>();
 
-					const auto spec = this->m_Data.Target->GetSpec();
+					const auto spec = target->GetSpec();
 					RendererEye eye;
 					eye.LayerMask = camera->GetLayerMask();
 					eye.ViewMatrix = camera->GetViewMatrix();
 					eye.ProjectionMatrix = camera->GetProjectionMatrix((float)spec.Width / (float)spec.Height);
-					eye.Target = nullptr; //TODO: Implement render cameras
+					eye.Target = target;
 					this->Submit(eye);
 				}
 			}
 		}
 	}
 
-	void Renderer::Submit(Ref<GameState> gameState)
+	void Renderer::Submit(Ref<GameState> gameState, Ref<Framebuffer> target)
 	{
-		this->Submit(gameState->GetScene());
+		this->Submit(gameState->GetScene(), target);
 	}
 
 	void Renderer::Submit(const RendererModel& model)

@@ -11,6 +11,8 @@ namespace Volund
 	{
 	public:
 
+		bool IsValid();
+
 		void SetLayer(uint8_t layer);
 
 		uint32_t GetLayerMask();

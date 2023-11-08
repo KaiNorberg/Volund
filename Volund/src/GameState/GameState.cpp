@@ -33,8 +33,10 @@ namespace Volund
 	{
 		std::string scenePath = this->m_AssetManager->FetchFilepath<Scene>(this->m_Scene);
 
+		std::string absoluteScenePath = this->m_AssetManager->GetAbsolutePath(scenePath);
+
 		this->m_ScriptingEngine = ScriptingEngine::Create();
-		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, scenePath, this->m_ScriptingEngine);
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, absoluteScenePath, this->m_ScriptingEngine);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(scenePath);
 	}
 

@@ -8,6 +8,11 @@
 
 namespace Volund
 {
+	bool MeshRenderer::IsValid()
+	{
+		return this->m_Mesh != nullptr && this->m_Material != nullptr;
+	}
+
 	void MeshRenderer::SetLayer(const uint8_t layer)
 	{
 		this->m_LayerMask = 0;
