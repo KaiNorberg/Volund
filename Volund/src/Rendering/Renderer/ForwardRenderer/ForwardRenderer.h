@@ -20,7 +20,12 @@ namespace Volund
 			
 	private:	
 
-		ForwardRenderer();
+		struct alignas(16) CameraBuffer
+		{
+			Mat4x4 ViewMatrix = Mat4x4(1.0f);
+			Mat4x4 ProjectionMatrix = Mat4x4(1.0f);
+		};
+
 
 		struct alignas(16) LightsBuffer
 		{
@@ -32,14 +37,8 @@ namespace Volund
 			Vec4 LightPositions[VOLUND_FORWARD_RENDERER_MAX_LIGHTS];
 		};
 
-		struct alignas(16) CameraBuffer
-		{
-			Mat4x4 ViewMatrix = Mat4x4(1.0f);
-			Mat4x4 ProjectionMatrix = Mat4x4(1.0f);
-		};
-
-		Ref<UniformBuffer> m_CameraUniformBuffer;
-		Ref<UniformBuffer> m_LightsUniformBuffer;
+		UniformBuffer<CameraBuffer> m_CameraBuffer = UniformBuffer<CameraBuffer>(VOLUND_FORWARD_RENDERER_BINDING_CAMERA);
+		UniformBuffer<LightsBuffer> m_LightsBuffer = UniformBuffer<LightsBuffer>(VOLUND_FORWARD_RENDERER_BINDING_LIGHTS);
 	};
 }
 

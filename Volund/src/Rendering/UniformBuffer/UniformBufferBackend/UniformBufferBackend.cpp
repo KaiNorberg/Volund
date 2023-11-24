@@ -1,19 +1,19 @@
 #include "PCH/PCH.h"
-#include "UniformBuffer.h"
+#include "UniformBufferBackend.h"
 
 #include "Rendering/RenderingAPI/RenderingAPI.h"
 
-#include "OpenGLUniformBuffer.h"
+#include "OpenGLUniformBufferBackend.h"
 
 namespace Volund
 {
-	Ref<UniformBuffer> UniformBuffer::Create(uint32_t size, uint32_t binding)
+	Ref<UniformBufferBackend> UniformBufferBackend::Create(uint32_t size, uint32_t binding)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLUniformBuffer>(size, binding);
+			return std::make_shared<OpenGLUniformBufferBackend>(size, binding);
 		}
 		break;
 		default:
@@ -25,7 +25,7 @@ namespace Volund
 		}
 	}
 
-	UniformBuffer::~UniformBuffer()
+	UniformBufferBackend::~UniformBufferBackend()
 	{
 	}
 }
