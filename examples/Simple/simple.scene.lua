@@ -41,8 +41,8 @@ local table =
 				Filepath = "Scripts/Rotate.lua",
 				PublicVars =
 				{
-					Integer = 5,
-					Float = 3.140000
+					Float = 3.140000,
+					Integer = 5
 				}
 			}
 		},

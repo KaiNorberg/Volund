@@ -17,7 +17,7 @@ local table =
 			{
 				ComponentType = 3,
 				Mesh = "://Quad.obj",
-				Material = "C:/Users/KNKai/Documents/Github/Volund/examples/Mandelbrot/Materials/Mandelbrot.mat.lua"
+				Material = "Materials/Mandelbrot.mat.lua"
 			}
 		},
 		{
