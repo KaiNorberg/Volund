@@ -4,9 +4,6 @@
 #include "Lua/ScriptingEngine/Script/Script.h"
 #include "Lua/ScriptingEngine/ScriptingAPI/ScriptingAPI.h"
 
-#include "Lua/ScriptingEngine/ScriptingAPI/LuaEntity/LuaEntity.h"
-#include "Lua/ScriptingEngine/ScriptingAPI/LuaScene/LuaScene.h"
-
 #include <sol/sol.hpp>
 
 namespace Volund
