@@ -9,12 +9,12 @@ namespace Volund
 		return this->m_Entity;
 	}
 
-	Scene* Component::GetScene() const
+	Ref<Scene> Component::GetScene() const
 	{
-		return this->m_Scene;
+		return this->m_Scene.lock();
 	}
 
-	void Component::Init(Entity entity, Scene* scene)
+	void Component::Init(Entity entity, WeakRef<Scene> scene)
 	{
 		this->m_Entity = entity;
 		this->m_Scene = scene;

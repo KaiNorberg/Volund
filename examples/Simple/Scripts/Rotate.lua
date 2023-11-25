@@ -5,19 +5,15 @@ local Rotate =
 }
 
 function Rotate:OnStart()
-    self.First = false
-    print("Rotate OnStart")
+
 end
 
 function Rotate:OnUpdate(TS)
-    if self.First then
-        print("Rotate OnUpdate")
-        self.First = false
-    end
+    print(self.Entity)
 end
 
 function Rotate:OnDestroy()
-    print("Rotate OnDestroy")
+    
 end
 
 return Rotate

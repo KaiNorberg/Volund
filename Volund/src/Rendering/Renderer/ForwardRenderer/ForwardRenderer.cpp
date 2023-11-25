@@ -55,12 +55,17 @@ namespace Volund
 					continue;
 				}
 
-				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
+				if (model.ModelMesh == nullptr)
+				{
+					continue;
+				}
 
-				bool isInFrustum = model.ModelMesh != nullptr && cameraFrustum.ContainsAABB(model.ModelMesh->GetAABB(model.ModelMatrix));
+				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
+				const AABB modelAABB = model.ModelMesh->GetAABB(model.ModelMatrix);
+
 				bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
 
-				if (isInFrustum && isInMask)
+				if (cameraFrustum.ContainsAABB(modelAABB) && isInMask)
 				{
 					if (model.Material != prevMaterial)
 					{

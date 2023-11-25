@@ -126,6 +126,7 @@ namespace Volund
 				component->OnDestroy();
 			}
 		}
+		this->m_EntityHeap.clear();
 	}
 
 	bool operator<(const size_t& a, const Scene::ComponentEntry& b)
