@@ -6,11 +6,11 @@
 
 namespace Volund
 {
-	class ScriptComponent : public Component
+	class ScriptComponent : public Component,  public std::enable_shared_from_this<ScriptComponent> 
 	{
 	public:
 
-		bool ContainsScript();
+		bool Valid();
 
 		void SetScript(Ref<Script> script);
 

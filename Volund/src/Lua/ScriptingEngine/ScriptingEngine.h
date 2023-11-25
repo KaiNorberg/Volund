@@ -17,8 +17,6 @@ namespace Volund
 	{
 	public:
 
-		static inline Logger m_LuaLogger = Logger("LUA");
-
 		template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
 		T Get(uint64_t scriptId, const std::string& key);
 

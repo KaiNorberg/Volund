@@ -17,24 +17,22 @@ namespace Volund
 			return a.Material < b.Material;
 		});
 
-		LightsBuffer lightsBuffer;
-		lightsBuffer.LightAmount = std::min((uint32_t)this->m_Data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
-		for (uint64_t i = 0; i < lightsBuffer.LightAmount; i++)
+		this->m_LightsBuffer->LightAmount = std::min((uint32_t)this->m_Data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
+		for (uint64_t i = 0; i < this->m_LightsBuffer->LightAmount; i++)
 		{
 			Vec3 lightColor = this->m_Data.Lights[i].Color * this->m_Data.Lights[i].Brightness;
 			Vec3 lightPosition = this->m_Data.Lights[i].Position;
 
-			lightsBuffer.LightColors[i] = Vec4(lightColor.x, lightColor.y, lightColor.z, 0.0f);
-			lightsBuffer.LightPositions[i] = Vec4(lightPosition.x, lightPosition.y, lightPosition.z, 0.0f);
+			this->m_LightsBuffer->LightColors[i] = Vec4(lightColor.x, lightColor.y, lightColor.z, 0.0f);
+			this->m_LightsBuffer->LightPositions[i] = Vec4(lightPosition.x, lightPosition.y, lightPosition.z, 0.0f);
 		}
-		this->m_LightsUniformBuffer->SetData(&lightsBuffer, sizeof(LightsBuffer), 0);
+		this->m_LightsBuffer.Update();
 
 		for (const auto& eye : this->m_Data.Eyes)
 		{
-			CameraBuffer cameraBuffer;
-			cameraBuffer.ProjectionMatrix = eye.ProjectionMatrix;
-			cameraBuffer.ViewMatrix = eye.ViewMatrix;
-			this->m_CameraUniformBuffer->SetData(&cameraBuffer, sizeof(CameraBuffer), 0);
+			this->m_CameraBuffer->ProjectionMatrix = eye.ProjectionMatrix;
+			this->m_CameraBuffer->ViewMatrix = eye.ViewMatrix;
+			this->m_CameraBuffer.Update();
 
 			eye.Target->Bind();
 			auto& targetSpec = eye.Target->GetSpec();
@@ -57,12 +55,17 @@ namespace Volund
 					continue;
 				}
 
-				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
+				if (model.ModelMesh == nullptr)
+				{
+					continue;
+				}
 
-				bool isInFrustum = model.ModelMesh != nullptr && cameraFrustum.ContainsAABB(model.ModelMesh->GetAABB(model.ModelMatrix));
+				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
+				const AABB modelAABB = model.ModelMesh->GetAABB(model.ModelMatrix);
+
 				bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
 
-				if (isInFrustum && isInMask)
+				if (cameraFrustum.ContainsAABB(modelAABB) && isInMask)
 				{
 					if (model.Material != prevMaterial)
 					{
@@ -116,12 +119,6 @@ namespace Volund
 	Ref<ForwardRenderer> ForwardRenderer::Create()
 	{
 		return Ref<ForwardRenderer>(new ForwardRenderer());
-	}
-
-	ForwardRenderer::ForwardRenderer()
-	{
-		this->m_CameraUniformBuffer = UniformBuffer::Create(sizeof(CameraBuffer), VOLUND_FORWARD_RENDERER_BINDING_CAMERA);
-		this->m_LightsUniformBuffer = UniformBuffer::Create(sizeof(LightsBuffer), VOLUND_FORWARD_RENDERER_BINDING_LIGHTS);
 	}
 
 	/*void Renderer::Data::Sort()

@@ -8,31 +8,11 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 
 	switch (e.Type)
 	{
-	/*case VOLUND_EVENT_TYPE_MOUSE_BUTTON:
-	{	
-		if (this->m_Context->IsPaused())
-		{
-			if (this->m_Input.IsMouseButtonPressed(VOLUND_MOUSE_BUTTON_LEFT))
-			{
-				VL::IVec2 mousePos = this->m_Input.GetMousePosition() - this->m_ImagePosition;
-
-				VL::FramebufferSpec spec = this->m_EntityPickFramebuffer->GetSpec();
-
-				if (mousePos.x < spec.Width && mousePos.y < spec.Height)
-				{
-					int32_t entity = this->m_EntityPickFramebuffer->ReadPixel(0, mousePos.x, spec.Height - mousePos.y);
-
-					VOLUND_INFO("%d, %d: %d", mousePos.x, mousePos.y, entity);
-				}
-			}
-		}
-	}
-	break;*/
 	case VOLUND_EVENT_TYPE_RENDER:
 	{
 		auto gameState = this->m_Context->GameState;
 
-		this->Render(gameState, ImVec2(this->m_Size.x, this->m_Size.y));
+		this->Render(gameState, ImVec2(this->m_FramebufferSize.x, this->m_FramebufferSize.y));
 
 		ImVec2 buttonSize = ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight());
 		bool isPaused = this->m_Context->IsPaused();
@@ -66,18 +46,16 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 		if (ImGui::BeginChild(this->GetId().c_str()))
 		{
 			ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-			this->m_Size = VL::Vec2(viewportSize.x, viewportSize.y);
+			this->m_FramebufferSize = VL::Vec2(viewportSize.x, viewportSize.y);
 			ImVec2 cursorPosition = ImGui::GetCursorScreenPos();
-
-			this->m_ImagePosition = VL::IVec2(cursorPosition.x, cursorPosition.y);
 
 			if (!this->m_Context->IsPaused())
 			{
-				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_SceneFramebuffer->GetAttachment(0)), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_SceneFramebuffer->GetAttachment(0)), ImVec2(this->m_FramebufferSize.x, this->m_FramebufferSize.y), ImVec2(0, 1), ImVec2(1, 0));
 			}
 			else
 			{
-				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_EditorFramebuffer->GetAttachment(0)), ImVec2(this->m_Size.x, this->m_Size.y), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_EditorFramebuffer->GetAttachment(0)), ImVec2(this->m_FramebufferSize.x, this->m_FramebufferSize.y), ImVec2(0, 1), ImVec2(1, 0));
 			}
 		}
 		ImGui::EndChild();
@@ -94,7 +72,6 @@ void ViewportWindow::OnProcedure(const VL::Event& e)
 	{	
 		this->m_EditorFramebuffer->Invalidate();
 		this->m_SceneFramebuffer->Invalidate();
-		//this->m_EntityPickFramebuffer->Invalidate();
 	}
 	break;
 	}
@@ -165,7 +142,6 @@ void ViewportWindow::Render(VL::Ref<VL::GameState> gameState, ImVec2 viewportSiz
 
 		this->m_SceneFramebuffer->SetSpec(spec);
 		this->m_EditorFramebuffer->SetSpec(spec);
-		//this->m_EntityPickFramebuffer->SetSpec(spec);
 	}
 
 	VL::Vec3 front = VL::Math::Normalize(this->m_BallCenter - this->m_Position);
@@ -183,45 +159,6 @@ void ViewportWindow::Render(VL::Ref<VL::GameState> gameState, ImVec2 viewportSiz
 	this->m_Renderer->Submit(gameState, this->m_SceneFramebuffer);
 	this->m_Renderer->Submit(editorEye);
 	this->m_Renderer->End();
-
-	/*if (this->m_Context->IsPaused())
-	{
-		this->m_Renderer->Begin();
-		for (auto& entity : *gameState)
-		{
-			auto transform = gameState->GetComponent<VL::Transform>(entity.entity);
-			VL::Mat4x4 modelMatrix = transform->GetModelMatrix();
-
-			if (gameState->HasComponent<VL::MeshRenderer>(entity.entity))
-			{
-				auto meshRenderer = gameState->GetComponent<VL::MeshRenderer>(entity.entity);
-
-				if (meshRenderer->IsValid())
-				{
-					VL::Ref<VL::Material> material = VL::Material::Create(this->m_EntityPickShader);
-
-					material->Set("entityId", (VL::IntUniformType)entity.entity);
-
-					VL::RendererModel model;
-					model.LayerMask = -1;
-					model.Material = material;
-					model.ModelMesh = meshRenderer->GetMesh();
-					model.ModelMatrix = modelMatrix;
-
-					this->m_Renderer->Submit(model);
-				}
-			}
-		}
-
-		editorEye.ProjectionMatrix = projectionMatrix;
-		editorEye.ViewMatrix = viewMatrix;
-		editorEye.Target = this->m_EntityPickFramebuffer;
-		editorEye.LayerMask = -1;
-		editorEye.Effects.clear();
-		this->m_Renderer->Submit(editorEye);
-
-		this->m_Renderer->End();
-	}*/
 }
 
 ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
@@ -241,15 +178,6 @@ ViewportWindow::ViewportWindow(VL::Ref<EditorContext> context)
 
 	this->m_SceneFramebuffer = VL::Framebuffer::Create(spec);
 	this->m_EditorFramebuffer = VL::Framebuffer::Create(spec);
-
-	/*VL::FramebufferSpec entityPickSpec;
-	entityPickSpec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA32UI) };
-	entityPickSpec.DepthAttachment = VL::TextureSpec(VL::TextureFormat::Depth24Stencil8);
-	entityPickSpec.Height = 1080;
-	entityPickSpec.Width = 1920;
-
-	this->m_EntityPickFramebuffer = VL::Framebuffer::Create(entityPickSpec);
-	this->m_EntityPickShader = VL::Shader::Create("data/shaders/entityPick.shader");*/
 
 	this->m_Renderer = VL::ForwardRenderer::Create();
 

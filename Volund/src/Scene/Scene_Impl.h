@@ -28,7 +28,7 @@ namespace Volund
 		auto& entry = this->m_EntityHeap[entityIndex];
 
 		Ref<T> newComponent = std::make_shared<T>(args...);
-		newComponent->Init(entity, this);
+		newComponent->Init(entity, this->weak_from_this());
 		newComponent->OnCreate();
 
 		size_t componentTypeId = Utils::GetTypeId<T>();

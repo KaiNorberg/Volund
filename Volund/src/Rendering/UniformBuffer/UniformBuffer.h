@@ -1,22 +1,26 @@
 #pragma once
 
+#include "UniformBufferBackend/UniformBufferBackend.h"
+
 namespace Volund
 {
+	template<typename T>
 	class UniformBuffer
 	{
 	public:
 
-		virtual void SetData(const void* data, uint32_t size, uint32_t offset) = 0;
+		T* operator ->();
 
-		static Ref<UniformBuffer> Create(uint32_t size, uint32_t binding);
+		void Update();
 
-		virtual ~UniformBuffer();
-	
-	protected:
-
-		uint32_t m_Id = 0;
+		UniformBuffer(uint32_t binding);
 
 	private:
+
+		Ref<UniformBufferBackend> m_Backend;
+
+		T m_Data;
 	};
 }
 
+#include "UniformBuffer_Impl.h"

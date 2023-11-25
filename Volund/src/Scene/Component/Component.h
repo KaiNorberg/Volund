@@ -22,7 +22,7 @@ namespace Volund
 
 		Entity GetEntity() const;
 
-		Scene* GetScene() const;
+		Ref<Scene> GetScene() const;
 
 		Component() = default;
 
@@ -31,10 +31,10 @@ namespace Volund
 	private:
 		friend class Scene;
 
-		void Init(Entity entity, Scene* scene);
+		void Init(Entity entity, WeakRef<Scene> scene);
 
 		Entity m_Entity = 0;
 
-		Scene* m_Scene = nullptr;
+		WeakRef<Scene> m_Scene;
 	};
 }
