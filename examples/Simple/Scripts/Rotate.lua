@@ -9,7 +9,7 @@ function Rotate:OnStart()
 end
 
 function Rotate:OnUpdate(TS)
-    print(self.Entity)
+    print()
 end
 
 function Rotate:OnDestroy()
