@@ -8,21 +8,6 @@
 
 namespace Volund
 {
-	uint32_t Texture::GetID() const
-	{
-		return this->m_Id;
-	}
-
-	uint32_t Texture::GetWidth() const
-	{
-		return this->m_Width;
-	}
-
-	uint32_t Texture::GetHeight() const
-	{
-		return this->m_Height;
-	}
-
 	Ref<Texture> Texture::Create()
 	{
 		switch (RenderingAPI::GetSelectedAPI())

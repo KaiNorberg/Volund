@@ -27,6 +27,8 @@ namespace Volund
 
 		void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) override;
 
+		const Ref<MaterialBlueprint> GetMaterialBlueprint() override;
+
 		OpenGLShader() = default;
 
 		OpenGLShader(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint);
@@ -34,6 +36,7 @@ namespace Volund
 		~OpenGLShader() override;
 
 	private:
+
 		uint32_t CompileShader(uint32_t type, const std::string& source);
 
 		uint32_t GetUniformLocation(const std::string& name);
@@ -44,5 +47,7 @@ namespace Volund
 
 		int32_t m_NextTextureUnit = 0;
 		int32_t m_MaxTextureUnit = 0;
+
+		Ref<MaterialBlueprint> m_MaterialBlueprint;
 	};
 } //namespace Volund

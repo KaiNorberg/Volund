@@ -20,40 +20,28 @@ namespace Volund
 	{
 	public:
 
+		virtual uint32_t GetID() const = 0;
+
 		virtual void Bind() = 0;
 		
 		virtual void Unbind() = 0;
 
 		virtual void Invalidate() = 0;
 
-		virtual int32_t ReadPixel(uint32_t attachment, uint32_t x, uint32_t y) = 0;
-
 		virtual void BlitTo(const Ref<Framebuffer>& drawFramebuffer) = 0;
 
 		virtual void BlitToScreen() = 0;
 
-		uint32_t GetID() const;
+		virtual uint32_t GetAttachment(uint32_t index) = 0;
 
-		uint32_t GetAttachment(uint32_t index);
+		virtual uint32_t GetDepthAttachment() = 0;
 
-		uint32_t GetDepthAttachment();
+		virtual void SetSpec(const FramebufferSpec& spec) = 0;
 
-		void SetSpec(const FramebufferSpec& spec);
-
-		const FramebufferSpec GetSpec() const;
+		virtual const FramebufferSpec GetSpec() const = 0;
 
 		static Ref<Framebuffer> Create(const FramebufferSpec& spec);
 
 		virtual ~Framebuffer() = default;
-
-	protected:
-
-		uint32_t m_Id;
-
-		FramebufferSpec m_Spec;		
-		
-		std::vector<uint32_t> m_ColorAttachments;
-
-		uint32_t m_DepthAttachment = 0;
 	};
 }

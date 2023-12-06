@@ -35,7 +35,7 @@ namespace Volund
 
 		virtual void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) = 0;
 
-		const Ref<MaterialBlueprint> GetMaterialBlueprint();
+		virtual const Ref<MaterialBlueprint> GetMaterialBlueprint() = 0;
 
 		static Ref<Shader> Create();
 
@@ -45,10 +45,5 @@ namespace Volund
 
 		virtual ~Shader() = default;
 
-	protected:
-
-		Shader();
-
-		Ref<MaterialBlueprint> m_MaterialBlueprint;
 	};
 }

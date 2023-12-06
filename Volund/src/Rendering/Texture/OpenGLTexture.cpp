@@ -9,6 +9,21 @@
 
 namespace Volund
 {
+	uint32_t OpenGLTexture::GetID() const
+	{
+		return this->m_Id;
+	}
+
+	uint32_t OpenGLTexture::GetWidth() const
+	{
+		return this->m_Width;
+	}
+
+	uint32_t OpenGLTexture::GetHeight() const
+	{
+		return this->m_Height;
+	}
+
 	void OpenGLTexture::Bind(uint32_t unit)
 	{
 		glActiveTexture(GL_TEXTURE0 + unit);

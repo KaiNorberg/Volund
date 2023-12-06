@@ -210,6 +210,11 @@ namespace Volund
 		return uniformLocation;
 	}
 
+	const Ref<MaterialBlueprint> OpenGLShader::GetMaterialBlueprint()
+	{
+		return this->m_MaterialBlueprint;
+	}
+
 	OpenGLShader::OpenGLShader(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint)
 	{
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->m_MaxTextureUnit);

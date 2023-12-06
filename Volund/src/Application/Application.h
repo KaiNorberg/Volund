@@ -31,6 +31,7 @@ namespace Volund
 
 		template<typename T>
 		bool HasModule();
+
 		virtual void OnRun() {}
 		virtual void OnTerminate() {}
 		virtual void Procedure(const Event& e) {}
