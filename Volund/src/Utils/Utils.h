@@ -29,34 +29,4 @@ namespace Volund::Utils
 	float CastIntToFloat(int value);
 
 	int RoundUp(int n, int m);
-
-	/*template <class T>
-	T ToRadians(const T& v)
-	{
-		return (PI / 180.0f) * v;
-	}
-
-	template <class T>
-	T ToDegrees(const T& v)
-	{
-		return (180.0f / PI) * v;
-	}
-
-	template <class T>
-	T Min(T n1, T n2)
-	{
-		return (n1 < n2) ? n1 : n2;
-	}
-
-	template <class T>
-	T Max(T n1, T n2)
-	{
-		return (n1 > n2) ? n1 : n2;
-	}
-
-	template <class T>
-	T Clamp(T n, T lower, T upper)
-	{
-		return Max(lower, Min(n, upper));
-	}*/
 }

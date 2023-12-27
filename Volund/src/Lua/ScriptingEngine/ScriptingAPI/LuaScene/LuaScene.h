@@ -8,8 +8,6 @@ namespace Volund
 	{
 	public:
 
-		int Test = 5;
-
 		LuaScene(Ref<Scene> scene);
 
 	private:

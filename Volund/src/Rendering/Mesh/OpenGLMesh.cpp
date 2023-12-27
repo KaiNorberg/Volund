@@ -9,6 +9,16 @@
 
 namespace Volund
 {
+	AABB OpenGLMesh::GetAABB(const Mat4x4& modelMatrix)
+	{
+		if (this->m_VertexBuffer == nullptr)
+		{
+			return AABB();
+		}
+
+		return this->m_VertexBuffer->GetAABB().ToWorldSpace(modelMatrix);
+	}
+
 	void OpenGLMesh::Bind() const
 	{
 		glBindVertexArray(this->m_Id);
@@ -48,6 +58,26 @@ namespace Volund
 
 		glBindVertexArray(this->m_Id);
 		buffer->Bind();
+	}
+
+	Ref<VertexBuffer> OpenGLMesh::GetVertexBuffer()
+	{
+		return this->m_VertexBuffer;
+	}
+
+	Ref<IndexBuffer> OpenGLMesh::GetIndexBuffer()
+	{
+		return this->m_IndexBuffer;
+	}
+
+	const Ref<VertexBuffer> OpenGLMesh::GetVertexBuffer() const
+	{
+		return this->m_VertexBuffer;
+	}
+
+	const Ref<IndexBuffer> OpenGLMesh::GetIndexBuffer() const
+	{
+		return this->m_IndexBuffer;
 	}
 
 	OpenGLMesh::OpenGLMesh()

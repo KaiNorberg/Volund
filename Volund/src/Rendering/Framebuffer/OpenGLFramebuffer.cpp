@@ -12,6 +12,11 @@
 
 namespace Volund
 {
+	uint32_t OpenGLFramebuffer::GetID() const
+	{
+		return this->m_Id;
+	}
+
 	void OpenGLFramebuffer::Bind()
 	{
 		glBindFramebuffer(GL_FRAMEBUFFER, this->m_Id);
@@ -113,7 +118,7 @@ namespace Volund
 		glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	}
 
-	int32_t OpenGLFramebuffer::ReadPixel(uint32_t attachment, uint32_t x, uint32_t y)
+	/*int32_t OpenGLFramebuffer::ReadPixel(uint32_t attachment, uint32_t x, uint32_t y)
 	{
 		if (attachment < this->m_ColorAttachments.size())
 		{
@@ -129,7 +134,7 @@ namespace Volund
 		{
 			return 0;
 		}
-	}
+	}*/
 
 	void OpenGLFramebuffer::BlitTo(const Ref<Framebuffer>& drawFramebuffer)
 	{
@@ -150,6 +155,35 @@ namespace Volund
 			0, 0, this->m_Spec.Width, this->m_Spec.Height,
 			0, 0, width, height,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
+	}
+
+	uint32_t OpenGLFramebuffer::GetAttachment(const uint32_t index)
+	{
+		if (index >= this->m_ColorAttachments.size())
+		{
+			VOLUND_ERROR("Index out of range!");
+			return 0;
+		}
+		else
+		{
+			return this->m_ColorAttachments[index];
+		}
+	}
+
+	uint32_t OpenGLFramebuffer::GetDepthAttachment()
+	{
+		return this->m_DepthAttachment;
+	}
+
+	void OpenGLFramebuffer::SetSpec(const FramebufferSpec& spec)
+	{
+		this->m_Spec = spec;
+		this->Invalidate();
+	}
+
+	const FramebufferSpec OpenGLFramebuffer::GetSpec() const
+	{
+		return this->m_Spec;
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpec& spec)

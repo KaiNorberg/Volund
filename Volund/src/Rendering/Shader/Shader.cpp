@@ -8,11 +8,6 @@
 
 namespace Volund
 {
-    const Ref<MaterialBlueprint> Shader::GetMaterialBlueprint()
-    {
-        return this->m_MaterialBlueprint;
-    }
-
     Ref<Shader> Shader::Create()
 	{
 		switch (RenderingAPI::GetSelectedAPI())
@@ -55,10 +50,4 @@ namespace Volund
 		break;
 		}
 	}
-
-    Shader::Shader()
-    {
-        this->m_MaterialBlueprint = std::make_shared<MaterialBlueprint>();
-    }
-
 } //namespace Volund
