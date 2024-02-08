@@ -1,8 +1,8 @@
 # Volund [![License](https://img.shields.io/badge/licence-MIT-green)](https://github.com/Kaj9296/Volund/blob/main/LICENSE)
 
-Volund is a game engine written in C++ with Lua scripting for Windows and Linux. The game engine supports Lua scripting via an editor, or you can use the engine via a library that allows for native C++ scripting.
+### OBS! This project should not be used due to its rather low quality. However, it serves as a reminder of my earlier days as a programmer.
 
-# OBS! This project is should not be used due to its rather low quality. However, it serves as a reminder of my earlier days as a programmer.
+Volund is a game engine written in C++ with Lua scripting for Windows and Linux. The game engine supports Lua scripting via an editor, or you can use the engine via a library that allows for native C++ scripting.
 
 ***
 
