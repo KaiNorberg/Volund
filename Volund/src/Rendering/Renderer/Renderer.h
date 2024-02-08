@@ -18,8 +18,8 @@ namespace Volund
 	struct RendererModel
 	{
 		Mat4x4 ModelMatrix;
-		Ref<Mesh> ModelMesh;
-		Ref<Material> Material;
+		Ref<Mesh> mesh;
+		Ref<Material> material;
 
 		uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 	};

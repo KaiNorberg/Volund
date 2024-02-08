@@ -34,8 +34,8 @@ namespace Volund
 
 					RendererModel model;
 					model.LayerMask = meshRenderer->GetLayerMask();
-					model.Material = meshRenderer->GetMaterial();
-					model.ModelMesh = meshRenderer->GetMesh();
+					model.material = meshRenderer->GetMaterial();
+					model.mesh = meshRenderer->GetMesh();
 					model.ModelMatrix = modelMatrix;
 
 					this->Submit(model);

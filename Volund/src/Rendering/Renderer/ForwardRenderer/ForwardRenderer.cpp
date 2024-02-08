@@ -14,7 +14,7 @@ namespace Volund
 	{
 		std::sort(this->m_Data.Models.begin(), this->m_Data.Models.end(), [](const RendererModel& a, const RendererModel& b)
 		{
-			return a.Material < b.Material;
+			return a.material < b.material;
 		});
 
 		this->m_LightsBuffer->LightAmount = std::min((uint32_t)this->m_Data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
@@ -43,36 +43,36 @@ namespace Volund
 			Ref<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)
 			{
-				if (model.Material == nullptr)
+				if (model.material == nullptr)
 				{
 					continue;
 				}
 
-				auto shader = model.Material->GetShader();
+				auto shader = model.material->GetShader();
 
 				if (shader == nullptr || shader->GetId() == 0)
 				{
 					continue;
 				}
 
-				if (model.ModelMesh == nullptr)
+				if (model.mesh == nullptr)
 				{
 					continue;
 				}
 
 				const Frustum cameraFrustum(eye.ProjectionMatrix * eye.ViewMatrix);
-				const AABB modelAABB = model.ModelMesh->GetAABB(model.ModelMatrix);
+				const AABB modelAABB = model.mesh->GetAABB(model.ModelMatrix);
 
 				bool isInMask = (model.LayerMask & eye.LayerMask) != 0;
 
 				if (cameraFrustum.ContainsAABB(modelAABB) && isInMask)
 				{
-					if (model.Material != prevMaterial)
+					if (model.material != prevMaterial)
 					{
 						shader->Bind();
-						model.Material->UpdateShader();
+						model.material->UpdateShader();
 
-						prevMaterial = model.Material;
+						prevMaterial = model.material;
 					}
 
 					if (shader->HasUniform(VOLUND_UNIFORM_NAME_MODELMATRIX))
@@ -80,9 +80,9 @@ namespace Volund
 						shader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}
 
-					model.ModelMesh->Bind();		
-					auto indexBuffer = model.ModelMesh->GetIndexBuffer();
-					auto vertexBuffer = model.ModelMesh->GetVertexBuffer();
+					model.mesh->Bind();		
+					auto indexBuffer = model.mesh->GetIndexBuffer();
+					auto vertexBuffer = model.mesh->GetVertexBuffer();
 					
 					if (indexBuffer != nullptr)
 					{
