@@ -68,35 +68,35 @@ char * tinyfd_arrayDialog(
         FILE * lIn ;
         int i ;
 
-		if (tfd_quoteDetected(aTitle)) return tinyfd_arrayDialog("INVALID TITLE WITH QUOTES", aNumOfColumns, aColumns, aNumOfRows, aCells);
-		for (i = 0; i < aNumOfColumns; i++)
-		{
-			if (tfd_quoteDetected(aColumns[i])) return tinyfd_arrayDialog("INVALID COLUMNS WITH QUOTES", 0, NULL, 0, NULL);
-		}
-		for (i = 0; i < aNumOfRows; i++)
-		{
-			if (tfd_quoteDetected(aCells[i])) return tinyfd_arrayDialog("INVALID ROWS WITH QUOTES", 0, NULL, 0, NULL);
-		}
+        if (tfd_quoteDetected(aTitle)) return tinyfd_arrayDialog("INVALID TITLE WITH QUOTES", aNumOfColumns, aColumns, aNumOfRows, aCells);
+        for (i = 0; i < aNumOfColumns; i++)
+        {
+            if (tfd_quoteDetected(aColumns[i])) return tinyfd_arrayDialog("INVALID COLUMNS WITH QUOTES", 0, NULL, 0, NULL);
+        }
+        for (i = 0; i < aNumOfRows; i++)
+        {
+            if (tfd_quoteDetected(aCells[i])) return tinyfd_arrayDialog("INVALID ROWS WITH QUOTES", 0, NULL, 0, NULL);
+        }
 
         lBuff[0]='\0';
 
-		if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
+        if ( tfd_zenityPresent() || tfd_matedialogPresent() || tfd_shellementaryPresent() || tfd_qarmaPresent() )
         {
-			if ( tfd_zenityPresent() )
+            if ( tfd_zenityPresent() )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"zenity");return (char *)1;}
                         strcpy( lDialogString , "zenity" ) ;
-						if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
+                        if ( (tfd_zenity3Present() >= 4) && !getenv("SSH_TTY") && tfd_xpropPresent() )
                         {
                                 strcat( lDialogString, " --attach=$(sleep .01;xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
                         }
                 }
-			else if ( tfd_matedialogPresent() )
+            else if ( tfd_matedialogPresent() )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"matedialog");return (char *)1;}
                         strcpy( lDialogString , "matedialog" ) ;
                 }
-			else if ( tfd_shellementaryPresent() )
+            else if ( tfd_shellementaryPresent() )
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"shellementary");return (char *)1;}
                         strcpy( lDialogString , "shellementary" ) ;
@@ -105,7 +105,7 @@ char * tinyfd_arrayDialog(
                 {
                         if (aTitle&&!strcmp(aTitle,"tinyfd_query")){strcpy(tinyfd_response,"qarma");return (char *)1;}
                         strcpy( lDialogString , "qarma" ) ;
-						if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
+                        if ( !getenv("SSH_TTY") && tfd_xpropPresent() )
                         {
                                 strcat(lDialogString, " --attach=$(xprop -root 32x '\t$0' _NET_ACTIVE_WINDOW | cut -f 2)"); /* contribution: Paul Rouget */
                         }
@@ -181,14 +181,14 @@ char *tinyfd_checklistDialog(
 
         char lDialogString[MAX_PATH_OR_CMD];
         FILE *lIn;
-		int i ;
-		char *target = lDialogString;
+        int i ;
+        char *target = lDialogString;
 
-		if (tfd_quoteDetected(aTitle)) return tinyfd_checklistDialog("INVALID TITLE WITH QUOTES", aNumOfOptions, aOptions);
-		for (i = 0; i < aNumOfOptions; i++)
-		{
-			if (tfd_quoteDetected(aOptions[i])) return tinyfd_checklistDialog("INVALID COLUMNS WITH QUOTES", 0, NULL);
-		}
+        if (tfd_quoteDetected(aTitle)) return tinyfd_checklistDialog("INVALID TITLE WITH QUOTES", aNumOfOptions, aOptions);
+        for (i = 0; i < aNumOfOptions; i++)
+        {
+            if (tfd_quoteDetected(aOptions[i])) return tinyfd_checklistDialog("INVALID COLUMNS WITH QUOTES", 0, NULL);
+        }
 
         lBuff[0] = '\0';
         if (tfd_isDarwin())
@@ -204,7 +204,7 @@ char *tinyfd_checklistDialog(
                 target += sprintf(target, "}\' -e \'set Choice to choose from list Choices with prompt \"%s\" with multiple selections allowed\' -e \'Choice\'", aTitle);
         }
 
-		else if (tfd_kdialogPresent())
+        else if (tfd_kdialogPresent())
         {
                 target += sprintf(target, "kdialog --checklist \'%s\' ", aTitle);
                 for (i = 0; i < aNumOfOptions; i++)
@@ -212,7 +212,7 @@ char *tinyfd_checklistDialog(
                         target += sprintf(target, "\'%s\' \'%s\' OFF ", aOptions[i], aOptions[i]);
                 }
         }
-		else if (tfd_zenityPresent())
+        else if (tfd_zenityPresent())
         {
                 target += sprintf(target, "zenity --list --column= --column= --checklist --title=\'%s\' ", aTitle);
                 for (i = 0; i < aNumOfOptions; i++)
@@ -239,13 +239,13 @@ char *tinyfd_checklistDialog(
         {
                 return NULL;
         }
-		if (tfd_kdialogPresent())
+        if (tfd_kdialogPresent())
         {
                 tfd_replaceSubStr(lBuff, "\" \"", "|", dest);
                 dest[strlen(dest) - 2] = '\0';
                 return dest + 1;
         }
-		if (tfd_isDarwin())
+        if (tfd_isDarwin())
         {
                 tfd_replaceSubStr(lBuff, "\", \"", "|", dest);
                 dest[strlen(dest) - 2] = '\0';

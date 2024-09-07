@@ -135,13 +135,13 @@ int main(int argc, char **argv)
 #endif
 
    (void)stbtt_GetCodepointBitmapSubpixel(&font,
-					 0.4972374737262726f,
-					 0.4986416995525360f,
-					 0.2391788959503174f,
-					 0.1752119064331055f,
-					 'd',
-					 &w, &h,
-					 0,0);
+                     0.4972374737262726f,
+                     0.4986416995525360f,
+                     0.2391788959503174f,
+                     0.1752119064331055f,
+                     'd',
+                     &w, &h,
+                     0,0);
 
    bitmap = stbtt_GetCodepointBitmap(&font, 0,stbtt_ScaleForPixelHeight(&font, (float)s), c, &w, &h, 0,0);
    for (j=0; j < h; ++j) {

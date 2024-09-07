@@ -1,9 +1,8 @@
-*/.vs
-.vs*
-*.sln
-*.vcxproj
-*.vcxproj.user
-*.vcxproj.filters
-bin/
-Makefile
-deploy/
+# Xmake cache
+.xmake/
+.cache
+build/
+compile_commands.json
+
+# MacOS Cache
+.DS_Store

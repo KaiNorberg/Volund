@@ -141,8 +141,8 @@ int main(int argc, char **argv)
 == VERSION HISTORY ===================
 
    0.7   2019-03-04   - fix warnings
-	0.6   2014-08-17   - fix broken map-maker
-	0.5   2014-07-07   - initial release
+    0.6   2014-08-17   - fix broken map-maker
+    0.5   2014-07-07   - initial release
 
 */
 

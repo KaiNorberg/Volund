@@ -28,12 +28,12 @@ https://stackoverflow.com/a/47651444
 /* contributed by Attila Dusnoki */
 #ifndef _WIN32
 char * tinyfd_arrayDialog(
-	char const * aTitle , /* NULL or "" */
-	int aNumOfColumns , /* 2 */
-	char const * const * aColumns, /* {"Column 1","Column 2"} */
-	int aNumOfRows, /* 2 */
-	char const * const * aCells);
-		/* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
+    char const * aTitle , /* NULL or "" */
+    int aNumOfColumns , /* 2 */
+    char const * const * aColumns, /* {"Column 1","Column 2"} */
+    int aNumOfRows, /* 2 */
+    char const * const * aCells);
+        /* {"Row1 Col1","Row1 Col2","Row2 Col1","Row2 Col2"} */
 #endif /*_WIN32 */
 
 /* not cross platform - UNIX and OSX only */

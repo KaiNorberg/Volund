@@ -154,7 +154,7 @@ public:
      */
     std::string iXMLChunk;
     
-	bool writePCMToBuffer(std::vector<uint8_t>& out);
+    bool writePCMToBuffer(std::vector<uint8_t>& out);
 private:
     
     //=============================================================
@@ -226,60 +226,60 @@ bool AudioFile<T>::writePCMToBuffer(std::vector<uint8_t>& fileData)
         Extensible = 0xFFFE
     };
 
-	fileData.clear();
+    fileData.clear();
 
     #pragma warning( push )
-    #pragma warning( disable : 26812 )	
-	int16_t audioFormat = bitDepth == 32 ? WavAudioFormat::IEEEFloat : WavAudioFormat::PCM;
+    #pragma warning( disable : 26812 )  
+    int16_t audioFormat = bitDepth == 32 ? WavAudioFormat::IEEEFloat : WavAudioFormat::PCM;
     #pragma warning( pop )
 
-	for (int i = 0; i < getNumSamplesPerChannel(); i++)
-	{
-		for (int channel = 0; channel < getNumChannels(); channel++)
-		{
-			if (bitDepth == 8)
-			{
-				uint8_t byte = sampleToSingleByte(samples[channel][i]);
-				fileData.push_back(byte);
-			}
-			else if (bitDepth == 16)
-			{
-				int16_t sampleAsInt = sampleToSixteenBitInt(samples[channel][i]);
-				addInt16ToFileData(fileData, sampleAsInt);
-			}
-			else if (bitDepth == 24)
-			{
-				int32_t sampleAsIntAgain = (int32_t)(samples[channel][i] * (T)8388608.);
+    for (int i = 0; i < getNumSamplesPerChannel(); i++)
+    {
+        for (int channel = 0; channel < getNumChannels(); channel++)
+        {
+            if (bitDepth == 8)
+            {
+                uint8_t byte = sampleToSingleByte(samples[channel][i]);
+                fileData.push_back(byte);
+            }
+            else if (bitDepth == 16)
+            {
+                int16_t sampleAsInt = sampleToSixteenBitInt(samples[channel][i]);
+                addInt16ToFileData(fileData, sampleAsInt);
+            }
+            else if (bitDepth == 24)
+            {
+                int32_t sampleAsIntAgain = (int32_t)(samples[channel][i] * (T)8388608.);
 
-				uint8_t bytes[3];
-				bytes[2] = (uint8_t)(sampleAsIntAgain >> 16) & 0xFF;
-				bytes[1] = (uint8_t)(sampleAsIntAgain >> 8) & 0xFF;
-				bytes[0] = (uint8_t)sampleAsIntAgain & 0xFF;
+                uint8_t bytes[3];
+                bytes[2] = (uint8_t)(sampleAsIntAgain >> 16) & 0xFF;
+                bytes[1] = (uint8_t)(sampleAsIntAgain >> 8) & 0xFF;
+                bytes[0] = (uint8_t)sampleAsIntAgain & 0xFF;
 
-				fileData.push_back(bytes[0]);
-				fileData.push_back(bytes[1]);
-				fileData.push_back(bytes[2]);
-			}
-			else if (bitDepth == 32)
-			{
-				int32_t sampleAsInt;
+                fileData.push_back(bytes[0]);
+                fileData.push_back(bytes[1]);
+                fileData.push_back(bytes[2]);
+            }
+            else if (bitDepth == 32)
+            {
+                int32_t sampleAsInt;
 
-				if (audioFormat == WavAudioFormat::IEEEFloat)
-					sampleAsInt = (int32_t) reinterpret_cast<int32_t&> (samples[channel][i]);
-				else // assume PCM
-					sampleAsInt = (int32_t)(samples[channel][i] * std::numeric_limits<int32_t>::max());
+                if (audioFormat == WavAudioFormat::IEEEFloat)
+                    sampleAsInt = (int32_t) reinterpret_cast<int32_t&> (samples[channel][i]);
+                else // assume PCM
+                    sampleAsInt = (int32_t)(samples[channel][i] * std::numeric_limits<int32_t>::max());
 
-				addInt32ToFileData(fileData, sampleAsInt, Endianness::LittleEndian);
-			}
-			else
-			{
-				assert(false && "Trying to write a file with unsupported bit depth");
-				return false;
-			}
-		}
-	}
+                addInt32ToFileData(fileData, sampleAsInt, Endianness::LittleEndian);
+            }
+            else
+            {
+                assert(false && "Trying to write a file with unsupported bit depth");
+                return false;
+            }
+        }
+    }
 
-	return true;
+    return true;
 }
 
 //=============================================================
@@ -1273,27 +1273,27 @@ int AudioFile<T>::getIndexOfString (std::vector<uint8_t>& source, std::string st
 template <class T>
 int AudioFile<T>::getIndexOfChunk(std::vector<uint8_t>& source, const std::string& chunkHeaderID, int startIndex, Endianness endianness)
 {
-	constexpr size_t dataLen = 4;
-	if (chunkHeaderID.size() != dataLen || startIndex < 0)
-	{
-		assert(false && "Invalid chunk header ID string");
-		return -1;
-	}
+    constexpr size_t dataLen = 4;
+    if (chunkHeaderID.size() != dataLen || startIndex < 0)
+    {
+        assert(false && "Invalid chunk header ID string");
+        return -1;
+    }
 
-	size_t i = size_t(startIndex);
-	while (i < source.size() - dataLen)
-	{
-		if (memcmp(&source[i], chunkHeaderID.data(), dataLen) == 0)
-		{
-			return (int)i;
-		}
+    size_t i = size_t(startIndex);
+    while (i < source.size() - dataLen)
+    {
+        if (memcmp(&source[i], chunkHeaderID.data(), dataLen) == 0)
+        {
+            return (int)i;
+        }
 
-		i += dataLen;
-		auto chunkSize = fourBytesToInt(source, i, endianness);
-		i += (dataLen + chunkSize);
-	}
+        i += dataLen;
+        auto chunkSize = fourBytesToInt(source, i, endianness);
+        i += (dataLen + chunkSize);
+    }
 
-	return -1;
+    return -1;
 }
 
 
