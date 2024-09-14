@@ -29,7 +29,7 @@ namespace Volund
 		glBindVertexArray(0);
 	}
 
-	void OpenGLMesh::SetVertexBuffer(Ref<VertexBuffer> buffer)
+	void OpenGLMesh::SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer)
 	{
 		this->m_VertexBuffer = buffer;
 
@@ -52,7 +52,7 @@ namespace Volund
 		}
 	}
 
-	void OpenGLMesh::SetIndexBuffer(Ref<IndexBuffer> buffer)
+	void OpenGLMesh::SetIndexBuffer(std::shared_ptr<IndexBuffer> buffer)
 	{
 		this->m_IndexBuffer = buffer;
 
@@ -60,22 +60,22 @@ namespace Volund
 		buffer->Bind();
 	}
 
-	Ref<VertexBuffer> OpenGLMesh::GetVertexBuffer()
+	std::shared_ptr<VertexBuffer> OpenGLMesh::GetVertexBuffer()
 	{
 		return this->m_VertexBuffer;
 	}
 
-	Ref<IndexBuffer> OpenGLMesh::GetIndexBuffer()
+	std::shared_ptr<IndexBuffer> OpenGLMesh::GetIndexBuffer()
 	{
 		return this->m_IndexBuffer;
 	}
 
-	const Ref<VertexBuffer> OpenGLMesh::GetVertexBuffer() const
+	const std::shared_ptr<VertexBuffer> OpenGLMesh::GetVertexBuffer() const
 	{
 		return this->m_VertexBuffer;
 	}
 
-	const Ref<IndexBuffer> OpenGLMesh::GetIndexBuffer() const
+	const std::shared_ptr<IndexBuffer> OpenGLMesh::GetIndexBuffer() const
 	{
 		return this->m_IndexBuffer;
 	}
@@ -85,7 +85,7 @@ namespace Volund
 		glGenVertexArrays(1, &this->m_Id);
 	}
 
-	OpenGLMesh::OpenGLMesh(Ref<VertexBuffer> VertexBuffer, Ref<IndexBuffer> IndexBuffer)
+	OpenGLMesh::OpenGLMesh(std::shared_ptr<VertexBuffer> VertexBuffer, std::shared_ptr<IndexBuffer> IndexBuffer)
 	{
 		glGenVertexArrays(1, &this->m_Id);
 		this->SetVertexBuffer(VertexBuffer);

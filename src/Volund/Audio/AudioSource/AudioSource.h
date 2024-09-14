@@ -10,8 +10,8 @@ namespace Volund
 
         void Play();
 
-        void SetBuffer(Ref<AudioBuffer> buffer);
-        Ref<AudioBuffer> GetBuffer();
+        void SetBuffer(std::shared_ptr<AudioBuffer> buffer);
+        std::shared_ptr<AudioBuffer> GetBuffer();
 
         void SetPosition(const Vec3& position);
 
@@ -34,7 +34,7 @@ namespace Volund
 
     private:
 
-        Ref<AudioBuffer> m_Buffer;
+        std::shared_ptr<AudioBuffer> m_Buffer;
 
         uint32_t m_Source;
     };

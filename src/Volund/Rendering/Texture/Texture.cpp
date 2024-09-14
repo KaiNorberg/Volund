@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-	Ref<Texture> Texture::Create()
+	std::shared_ptr<Texture> Texture::Create()
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
@@ -26,13 +26,13 @@ namespace Volund
 		}
 	}
 
-	Ref<Texture> Texture::Create(const std::string& filepath)
+	std::shared_ptr<Texture> Texture::Create(const std::string& filepath)
 	{
 		ImageLoader loader = ImageLoader(filepath);
 		return Texture::Create(loader.GetData(), loader.GetWidth(), loader.GetHeight());
 	}
 
-	Ref<Texture> Texture::Create(unsigned char* data, uint32_t width, uint32_t height)
+	std::shared_ptr<Texture> Texture::Create(unsigned char* data, uint32_t width, uint32_t height)
 	{
 		auto texture = Texture::Create();
 		texture->SetData(data, width, height);

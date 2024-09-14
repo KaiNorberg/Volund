@@ -11,14 +11,14 @@ namespace Volund
     {
     public:
 
-        void SetShader(Ref<Shader> shader);
-        Ref<Shader> GetShader();
+        void SetShader(std::shared_ptr<Shader> shader);
+        std::shared_ptr<Shader> GetShader();
 
-        Ref<MaterialBlueprint> GetBlueprint();
+        std::shared_ptr<MaterialBlueprint> GetBlueprint();
 
         template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
         void Set(const std::string& name, const T& value);
-        
+
         template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
         bool Contains(const std::string& name) const;
 
@@ -26,25 +26,25 @@ namespace Volund
 
         void UpdateShader();
 
-        std::vector<Ref<PrimitiveUniform>>::iterator begin();
-        std::vector<Ref<PrimitiveUniform>>::iterator end();
+        std::vector<std::shared_ptr<PrimitiveUniform>>::iterator begin();
+        std::vector<std::shared_ptr<PrimitiveUniform>>::iterator end();
 
-        std::vector<Ref<PrimitiveUniform>>::const_iterator begin() const;
-        std::vector<Ref<PrimitiveUniform>>::const_iterator end() const;
+        std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator begin() const;
+        std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator end() const;
 
-        static Ref<Material> Create();
-        static Ref<Material> Create(Ref<Shader> shader);
+        static std::shared_ptr<Material> Create();
+        static std::shared_ptr<Material> Create(std::shared_ptr<Shader> shader);
 
         Material() = default;
-        Material(Ref<Shader> shader);
+        Material(std::shared_ptr<Shader> shader);
 
     private:
 
-        Ref<Shader> m_Shader;
+        std::shared_ptr<Shader> m_Shader;
 
-        Ref<MaterialBlueprint> m_Blueprint;
+        std::shared_ptr<MaterialBlueprint> m_Blueprint;
 
-        std::vector<Ref<PrimitiveUniform>> m_Uniforms;
+        std::vector<std::shared_ptr<PrimitiveUniform>> m_Uniforms;
     };
 
     template<typename T, typename>

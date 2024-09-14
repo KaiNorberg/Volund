@@ -13,12 +13,12 @@ namespace Volund
 		this->m_Source.Play();
 	}
 
-	void SoundSource::SetBuffer(Ref<AudioBuffer> buffer)
+	void SoundSource::SetBuffer(std::shared_ptr<AudioBuffer> buffer)
 	{
 		this->m_Source.SetBuffer(buffer);
 	}
 
-	Ref<AudioBuffer> SoundSource::GetBuffer()
+	std::shared_ptr<AudioBuffer> SoundSource::GetBuffer()
 	{
 		return this->m_Source.GetBuffer();
 	}
@@ -57,10 +57,10 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (e.Type)
+		switch (e.type)
 		{
-		case VOLUND_EVENT_TYPE_UPDATE:
-		{				
+		case VOLUND_EVENT_UPDATE:
+		{
 			if (this->AutoPlay && !this->m_HasAutoPlayed)
 			{
 				this->m_HasAutoPlayed = true;
@@ -71,7 +71,7 @@ namespace Volund
 
 			const float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			this->m_Source.SetPosition(entityTransform->Position);
 			this->m_Source.SetVelocity((entityTransform->Position - oldPosition) * timeStep);

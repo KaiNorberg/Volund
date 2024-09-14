@@ -2,6 +2,10 @@
 
 #include "Math/Math.h"
 
+#include <vector>
+#include <string_view>
+#include <filesystem>
+
 namespace Volund::Utils
 {
     //TODO: this sucks, make it better
@@ -14,9 +18,9 @@ namespace Volund::Utils
 
     bool CheckBit(uint32_t var, uint8_t pos);
 
-    fs::path GenerateUniquePath(const fs::path& basePath);
+    std::filesystem::path GenerateUniquePath(const std::filesystem::path& basePath);
 
-    fs::path RelativePath(const fs::path& path, const fs::path& parentPath);
+    std::filesystem::path RelativePath(const std::filesystem::path& path, const std::filesystem::path& parentPath);
 
     std::vector<std::string_view> SplitString(std::string_view string, const char delimiter);
 

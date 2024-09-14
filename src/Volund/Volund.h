@@ -18,7 +18,7 @@
 #include "Scene/Component/Components.h"
 #include "Window/Window.h"
 
-#include "Input/Input.h"
+#include "Input.h"
 
 #include "Dialog/Dialog.h"
 
@@ -28,3 +28,5 @@
 #include "Audio/AudioSource/AudioSource.h"
 
 #include "Lua/Serializer/Serializer.h"
+
+namespace VL = Volund;

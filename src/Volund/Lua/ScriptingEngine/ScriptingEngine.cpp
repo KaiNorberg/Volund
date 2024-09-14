@@ -26,8 +26,8 @@ namespace Volund
 		return (*this->m_LuaState)[scriptId][key].is<T>();
 	}
 
-	Ref<Script> ScriptingEngine::LoadScript(const std::string& filepath)
-	{		
+	std::shared_ptr<Script> ScriptingEngine::LoadScript(const std::string& filepath)
+	{
 		sol::table scriptTable;
 		sol::protected_function_result result;
 		try
@@ -61,16 +61,16 @@ namespace Volund
 
 		m_UnstartedScripts.push_back(scriptId);
 
-		Ref<Script> script = Ref<Script>(new Script(this->shared_from_this(), scriptId, filepath, publicVars));
+		std::shared_ptr<Script> script = std::shared_ptr<Script>(new Script(this->shared_from_this(), scriptId, filepath, publicVars));
 
 		return script;
 	}
 
 	void ScriptingEngine::ScriptProcedure(uint64_t scriptId, const Event& e)
 	{
-		switch (e.Type)
+		switch (e.type)
 		{
-		case VOLUND_EVENT_TYPE_UPDATE:
+		case VOLUND_EVENT_UPDATE:
 		{
 			float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
@@ -110,9 +110,9 @@ namespace Volund
 		(*this->m_LuaState)[scriptId] = sol::nil;
 	}
 
-	Ref<ScriptingEngine> ScriptingEngine::Create()
+	std::shared_ptr<ScriptingEngine> ScriptingEngine::Create()
 	{
-		return Ref<ScriptingEngine>(new ScriptingEngine());
+		return std::shared_ptr<ScriptingEngine>(new ScriptingEngine());
 	}
 
 	ScriptingEngine::ScriptingEngine()

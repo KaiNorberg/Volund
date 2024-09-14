@@ -16,8 +16,8 @@ namespace Volund
     using LuaVec4 = Vector<4, LuaFloat>;
 }
 
-#define VOLUND_TEMPLATE_LUA_TYPES_ONLY typename = std::enable_if_t<std::is_same<T, ::VL::LuaInt>::value || std::is_same<T, ::VL::LuaFloat>::value || \
-std::is_same<T, ::VL::LuaBool>::value || std::is_same<T, ::VL::LuaString>::value || \
-std::is_same<T, ::VL::LuaVec2>::value || std::is_same<T, ::VL::LuaVec3>::value || \
-std::is_same<T, ::VL::LuaVec4>::value || std::is_same<T, ::VL::LuaEntity>::value || \
-std::is_same<T, ::VL::LuaScene>::value>
+#define VOLUND_TEMPLATE_LUA_TYPES_ONLY typename = std::enable_if_t<std::is_same<T, ::Volund::LuaInt>::value || std::is_same<T, ::Volund::LuaFloat>::value || \
+std::is_same<T, ::Volund::LuaBool>::value || std::is_same<T, ::Volund::LuaString>::value || \
+std::is_same<T, ::Volund::LuaVec2>::value || std::is_same<T, ::Volund::LuaVec3>::value || \
+std::is_same<T, ::Volund::LuaVec4>::value || std::is_same<T, ::Volund::LuaEntity>::value || \
+std::is_same<T, ::Volund::LuaScene>::value>

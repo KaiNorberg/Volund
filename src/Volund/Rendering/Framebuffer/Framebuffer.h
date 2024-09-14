@@ -23,12 +23,12 @@ namespace Volund
         virtual uint32_t GetID() const = 0;
 
         virtual void Bind() = 0;
-        
+
         virtual void Unbind() = 0;
 
         virtual void Invalidate() = 0;
 
-        virtual void BlitTo(const Ref<Framebuffer>& drawFramebuffer) = 0;
+        virtual void BlitTo(const std::shared_ptr<Framebuffer>& drawFramebuffer) = 0;
 
         virtual void BlitToScreen() = 0;
 
@@ -40,7 +40,7 @@ namespace Volund
 
         virtual const FramebufferSpec GetSpec() const = 0;
 
-        static Ref<Framebuffer> Create(const FramebufferSpec& spec);
+        static std::shared_ptr<Framebuffer> Create(const FramebufferSpec& spec);
 
         virtual ~Framebuffer() = default;
     };

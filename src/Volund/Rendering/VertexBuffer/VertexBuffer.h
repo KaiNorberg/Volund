@@ -22,7 +22,7 @@ namespace Volund
 
         virtual VertexLayout GetLayout() = 0;
 
-        static Ref<VertexBuffer> Create(const float vertices[], uint64_t count);
+        static std::shared_ptr<VertexBuffer> Create(const float vertices[], uint64_t count);
 
         virtual ~VertexBuffer() = default;
     };

@@ -32,7 +32,7 @@ namespace Volund
 		}
 	}
 
-	AudioContext::AudioContext(Ref<AudioDevice> device)
+	AudioContext::AudioContext(std::shared_ptr<AudioDevice> device)
 	{
 		this->m_Device = device->GetDevice();
 

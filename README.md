@@ -4,7 +4,7 @@ Volund is a game engine written in C++ with Lua scripting for Windows and Linux.
 
 ***
 
-**Volund is no longer under development and these instructions may be incomplete.**
+**Volund is currently undergoing a big overhaul, this means some stuff might not make sense.**
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ To clone (download) this repository, you can use the ```Code``` button at the to
 
 In order to build Volund you will need to have xmake installed on your machine, if you do not have xmake installed you can install it from [here](https://xmake.io/#/).
 
-With xmake installed you can generate the project files using the ```xmake``` command, use ```xmake run``` to launch the editor. 
+With xmake installed you can generate the project files using the ```xmake``` command, use ```xmake run``` to launch the editor.
 
 <!---
 ## Creating a Scene

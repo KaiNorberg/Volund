@@ -66,13 +66,13 @@ namespace Volund::LuaUtils
         return out;
     }
 
-    sol::protected_function_result ScriptFile(Ref<sol::state> state, const std::string &filepath)
+    sol::protected_function_result ScriptFile(std::shared_ptr<sol::state> state, const std::string &filepath)
     {
         sol::protected_function_result result;
         try
 		{
             result = state->script_file(filepath, [](lua_State*, sol::protected_function_result pfr)
-			{		
+			{
 				sol::error err = pfr;
 				VOLUND_WARNING(err.what());
 

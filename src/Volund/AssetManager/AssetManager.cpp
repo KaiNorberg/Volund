@@ -42,7 +42,7 @@ namespace Volund
     };
 
     template<>
-    void AssetManager::Serialize<Material>(Ref<Material> material, const std::string& destinationPath)
+    void AssetManager::Serialize<Material>(std::shared_ptr<Material> material, const std::string& destinationPath)
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
@@ -98,7 +98,7 @@ namespace Volund
     }
 
     template<>
-    void AssetManager::Serialize<Scene>(Ref<Scene> scene, const std::string& destinationPath)
+    void AssetManager::Serialize<Scene>(std::shared_ptr<Scene> scene, const std::string& destinationPath)
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
@@ -209,7 +209,7 @@ namespace Volund
             for (int i = 0; i < scene->ComponentAmount<ScriptComponent>(entity); i++)
             {
                 auto component = scene->GetComponent<ScriptComponent>(entity, i);
-                Ref<Script> script = component->GetScript();
+                std::shared_ptr<Script> script = component->GetScript();
 
                 serializer.StartTable();
                 serializer.Insert("ComponentType", (LuaInt)LuaComponentID::ScriptComponent);
@@ -266,7 +266,7 @@ namespace Volund
     }
 
     template<>
-    Ref<Scene> AssetManager::Load<Scene>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Scene> AssetManager::Load<Scene>(const std::string& filepath, uint64_t lineId)
     {
         auto scene = Scene::Create();
 
@@ -344,8 +344,8 @@ namespace Volund
                         std::string meshFilepath = componentTable["Mesh"];
                         std::string materialFilepath = componentTable["Material"];
 
-                        Ref<Mesh> mesh = this->Fetch<Mesh>(meshFilepath);
-                        Ref<Material> material = this->Fetch<Material>(materialFilepath);
+                        std::shared_ptr<Mesh> mesh = this->Fetch<Mesh>(meshFilepath);
+                        std::shared_ptr<Material> material = this->Fetch<Material>(materialFilepath);
 
                         auto newComponent = scene->CreateComponent<MeshRenderer>(entity, mesh, material);
                     }
@@ -380,7 +380,7 @@ namespace Volund
 
                     if (componentTable.Contains<std::string>("Sound"))
                     {
-                        Ref<AudioBuffer> sound = this->Fetch<AudioBuffer>(componentTable["Sound"]);
+                        std::shared_ptr<AudioBuffer> sound = this->Fetch<AudioBuffer>(componentTable["Sound"]);
                         newComponent->SetBuffer(sound);
                     }
                 }
@@ -445,7 +445,7 @@ namespace Volund
     }
 
     template<>
-    Ref<Material> AssetManager::Load<Material>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Material> AssetManager::Load<Material>(const std::string& filepath, uint64_t lineId)
     {
         auto material = Material::Create();
 
@@ -505,10 +505,10 @@ namespace Volund
     }
 
     template<>
-    Ref<Mesh> AssetManager::Load<Mesh>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Mesh> AssetManager::Load<Mesh>(const std::string& filepath, uint64_t lineId)
     {
-        Ref<Mesh> newMesh = Mesh::Create();
-        Ref<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
+        std::shared_ptr<Mesh> newMesh = Mesh::Create();
+        std::shared_ptr<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
 
         Task task = [newMesh, modelLoader, filepath]()
         {
@@ -528,11 +528,11 @@ namespace Volund
         };
 
         Task cleanupTask = [newMesh, modelLoader, lineId]()
-        {            
-            Ref<VertexBuffer> vertexBuffer = VertexBuffer::Create(modelLoader->Vertices.data(), modelLoader->Vertices.size());
+        {
+            std::shared_ptr<VertexBuffer> vertexBuffer = VertexBuffer::Create(modelLoader->Vertices.data(), modelLoader->Vertices.size());
             vertexBuffer->SetLayout({ VertexAttributeType::Float3, VertexAttributeType::Float2, VertexAttributeType::Float3 });
 
-            Ref<IndexBuffer> indexBuffer = IndexBuffer::Create(modelLoader->Indices.data(), modelLoader->Indices.size());
+            std::shared_ptr<IndexBuffer> indexBuffer = IndexBuffer::Create(modelLoader->Indices.data(), modelLoader->Indices.size());
 
             newMesh->SetVertexBuffer(vertexBuffer);
             newMesh->SetIndexBuffer(indexBuffer);
@@ -547,11 +547,11 @@ namespace Volund
     }
 
     template<>
-    Ref<Texture> AssetManager::Load<Texture>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Texture> AssetManager::Load<Texture>(const std::string& filepath, uint64_t lineId)
     {
-        Ref<Texture> newTexture = Texture::Create();
+        std::shared_ptr<Texture> newTexture = Texture::Create();
 
-        Ref<ImageLoader> loader = std::make_shared<ImageLoader>();
+        std::shared_ptr<ImageLoader> loader = std::make_shared<ImageLoader>();
 
         Task task = [newTexture, loader, filepath]()
         {
@@ -572,11 +572,11 @@ namespace Volund
     }
 
     template<>
-    Ref<Shader> AssetManager::Load<Shader>(const std::string& filepath, uint64_t lineId)
-    {           
-        Ref<Shader> newShader = Shader::Create();
+    std::shared_ptr<Shader> AssetManager::Load<Shader>(const std::string& filepath, uint64_t lineId)
+    {
+        std::shared_ptr<Shader> newShader = Shader::Create();
 
-        Ref<ShaderLoader> loader = std::make_shared<ShaderLoader>();
+        std::shared_ptr<ShaderLoader> loader = std::make_shared<ShaderLoader>();
 
         Task task = [newShader, loader, filepath]()
         {
@@ -597,14 +597,14 @@ namespace Volund
     }
 
     template<>
-    Ref<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath, uint64_t lineId)
     {
         auto newAudioBuffer = std::make_shared<AudioBuffer>(filepath);
 
         return newAudioBuffer;
     }
 
-    Ref<Script> AssetManager::LoadScript(const std::string& filepath)
+    std::shared_ptr<Script> AssetManager::LoadScript(const std::string& filepath)
     {
         uint64_t lineId = VOLUND_INFO("Loading Script (%s)... ", filepath.c_str());
 
@@ -631,9 +631,9 @@ namespace Volund
         return this->m_RootDir;
     }
 
-    Ref<AssetManager> AssetManager::Create(Ref<Dispatcher> Dispatcher, const std::string& rootDir, Ref<ScriptingEngine> scriptingEngine)
+    std::shared_ptr<AssetManager> AssetManager::Create(std::shared_ptr<Dispatcher> Dispatcher, const std::string& rootDir, std::shared_ptr<ScriptingEngine> scriptingEngine)
     {
-        return Ref<AssetManager>(new AssetManager(Dispatcher, rootDir, scriptingEngine));
+        return std::shared_ptr<AssetManager>(new AssetManager(Dispatcher, rootDir, scriptingEngine));
     }
 
     std::string AssetManager::GetRelativePath(const std::string& absolutePath)
@@ -642,10 +642,10 @@ namespace Volund
         {
             return absolutePath;
         }
-        else if (fs::exists(absolutePath))
+        else if (std::filesystem::exists(absolutePath))
         {
             std::string cleanPath = this->ShortPath(absolutePath);
-            return fs::relative(cleanPath, this->m_RootDir).string();
+            return std::filesystem::relative(cleanPath, this->m_RootDir).string();
         }
         else
         {
@@ -659,8 +659,8 @@ namespace Volund
         if (!relativePath.empty() && relativePath[0] == ':')
         {
             return relativePath;
-        }        
-        else if (fs::exists(relativePath))
+        }
+        else if (std::filesystem::exists(relativePath))
         {
             std::string cleanPath = this->ShortPath(relativePath);
             return cleanPath;
@@ -681,15 +681,15 @@ namespace Volund
         return shortPath;
     }
 
-    AssetManager::AssetManager(Ref<Dispatcher> dispatcher, const std::string& rootDir, Ref<ScriptingEngine> scriptingEngine)
+    AssetManager::AssetManager(std::shared_ptr<Dispatcher> dispatcher, const std::string& rootDir, std::shared_ptr<ScriptingEngine> scriptingEngine)
     {
-        if (fs::is_directory(rootDir))
+        if (std::filesystem::is_directory(rootDir))
         {
             this->m_RootDir = rootDir;
         }
         else
         {
-            this->m_RootDir = fs::path(rootDir).parent_path().string();
+            this->m_RootDir = std::filesystem::path(rootDir).parent_path().string();
         }
 
         this->m_Dispatcher = dispatcher;

@@ -16,12 +16,12 @@ namespace Volund
 		return false;
 	}
 
-	const std::vector<Ref<PrimitiveUniform>>::const_iterator MaterialBlueprint::begin() const
+	const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator MaterialBlueprint::begin() const
 	{
 		return this->m_Uniforms.begin();
 	}
 
-	const std::vector<Ref<PrimitiveUniform>>::const_iterator MaterialBlueprint::end() const
+	const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator MaterialBlueprint::end() const
 	{
 		return this->m_Uniforms.end();
 	}

@@ -128,7 +128,7 @@ namespace Volund
 		glDrawArrays(GL_TRIANGLES, first, count);
 	}
 
-	void OpenGLRenderingAPI::BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer)
+	void OpenGLRenderingAPI::BlitFramebuffer(std::shared_ptr<Framebuffer> readBuffer, std::shared_ptr<Framebuffer> drawBuffer)
 	{
 		uint32_t readId = readBuffer->GetID();
 		auto readSpec = readBuffer->GetSpec();

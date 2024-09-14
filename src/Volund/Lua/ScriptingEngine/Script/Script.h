@@ -2,7 +2,7 @@
 
 #include "../ScriptingEngine.h"
 
-#include "Dispatcher/Event/Event.h"
+#include "Dispatcher/Event.h"
 
 namespace Volund
 {
@@ -32,13 +32,13 @@ namespace Volund
     private:
         friend class ScriptingEngine;
 
-        Script(Ref<ScriptingEngine> scriptingEngine, uint64_t scriptId, const std::string& filepath, const std::vector<std::string>& publicVars);
-        
+        Script(std::shared_ptr<ScriptingEngine> scriptingEngine, uint64_t scriptId, const std::string& filepath, const std::vector<std::string>& publicVars);
+
         std::vector<std::string> m_PublicVariables;
 
         std::string m_Filepath;
         uint64_t m_ScriptId;
-        Ref<ScriptingEngine> m_ScriptingEngine;
+        std::shared_ptr<ScriptingEngine> m_ScriptingEngine;
     };
 }
 

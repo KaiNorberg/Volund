@@ -30,27 +30,27 @@ namespace Volund
 		}
 	}
 
-	std::vector<Ref<PrimitiveUniform>>::iterator Material::begin()
+	std::vector<std::shared_ptr<PrimitiveUniform>>::iterator Material::begin()
 	{
 		return this->m_Uniforms.begin();
 	}
 
-	std::vector<Ref<PrimitiveUniform>>::iterator Material::end()
+	std::vector<std::shared_ptr<PrimitiveUniform>>::iterator Material::end()
 	{
 		return this->m_Uniforms.end();
 	}
 
-	std::vector<Ref<PrimitiveUniform>>::const_iterator Material::begin() const
+	std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator Material::begin() const
 	{
 		return this->m_Uniforms.begin();
 	}
 
-	std::vector<Ref<PrimitiveUniform>>::const_iterator Material::end() const
+	std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator Material::end() const
 	{
 		return this->m_Uniforms.end();
 	}
 
-	void Material::SetShader(Ref<Shader> shader)
+	void Material::SetShader(std::shared_ptr<Shader> shader)
 	{
 		this->m_Shader = shader;
 		this->m_Blueprint = shader->GetMaterialBlueprint();
@@ -93,12 +93,12 @@ namespace Volund
 		}
 	}
 
-	Ref<Shader> Material::GetShader()
+	std::shared_ptr<Shader> Material::GetShader()
 	{
 		return this->m_Shader;
 	}
 
-	Ref<MaterialBlueprint> Material::GetBlueprint()
+	std::shared_ptr<MaterialBlueprint> Material::GetBlueprint()
 	{
 		if (this->m_Shader == nullptr)
 		{
@@ -110,17 +110,17 @@ namespace Volund
 		}
 	}
 
-	Ref<Material> Material::Create()
+	std::shared_ptr<Material> Material::Create()
 	{
 		return std::make_shared<Material>();
 	}
 
-	Ref<Material> Material::Create(Ref<Shader> shader)
+	std::shared_ptr<Material> Material::Create(std::shared_ptr<Shader> shader)
 	{
 		return std::make_shared<Material>(shader);
 	}
 
-	Material::Material(Ref<Shader> shader)
+	Material::Material(std::shared_ptr<Shader> shader)
 	{
 		this->SetShader(shader);
 	}

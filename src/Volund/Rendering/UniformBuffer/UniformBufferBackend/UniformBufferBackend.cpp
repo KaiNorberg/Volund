@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-	Ref<UniformBufferBackend> UniformBufferBackend::Create(uint32_t size, uint32_t binding)
+	std::shared_ptr<UniformBufferBackend> UniformBufferBackend::Create(uint32_t size, uint32_t binding)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

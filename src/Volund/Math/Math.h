@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Vector/Vector2/Vector2.h"
-#include "Vector/Vector3/Vector3.h"
-#include "Vector/Vector4/Vector4.h"
-#include "Matrix/Matrix4x4/Matrix4x4.h"
+#include "Vector/Vector2.h"
+#include "Vector/Vector3.h"
+#include "Vector/Vector4.h"
+#include "Matrix/Matrix4x4.h"
 #include "Quaternion/Quaternion.h"
 
 #define PI 3.14159265359f
@@ -54,7 +54,7 @@ namespace Volund::Math
 
     Mat4x4 ProjectionMatrix(float fovRadians, float aspectRatio, float near, float far);
 
-    template<typename T>        
+    template<typename T>
     T Radians(const T& degress)
     {
         return degress * (PI / 180.0f);

@@ -9,10 +9,10 @@ namespace Volund::Utils
 		return ((var) & (1 << (pos)));
 	}
 
-	fs::path GenerateUniquePath(const fs::path& basePath)
+	std::filesystem::path GenerateUniquePath(const std::filesystem::path& basePath)
 	{
-		fs::path filepath = basePath;
-		if (fs::exists(filepath))
+		std::filesystem::path filepath = basePath;
+		if (std::filesystem::exists(filepath))
 		{
 			int i = 2;
 			while (true)
@@ -23,8 +23,8 @@ namespace Volund::Utils
 				std::string pathNoExtension = basePathString.substr(0, splitPoint);
 				std::string pathExtension = basePathString.substr(splitPoint);
 
-				filepath = fs::path(pathNoExtension + " (" + std::to_string(i) + ")" + pathExtension);
-				if (!fs::exists(filepath))
+				filepath = std::filesystem::path(pathNoExtension + " (" + std::to_string(i) + ")" + pathExtension);
+				if (!std::filesystem::exists(filepath))
 				{
 					return filepath;
 				}
@@ -37,9 +37,9 @@ namespace Volund::Utils
 		}
 	}
 
-	fs::path RelativePath(const fs::path& path, const fs::path& parentPath)
+	std::filesystem::path RelativePath(const std::filesystem::path& path, const std::filesystem::path& parentPath)
 	{
-		fs::path relativePath = fs::relative(path.parent_path(), parentPath);
+		std::filesystem::path relativePath = std::filesystem::relative(path.parent_path(), parentPath);
 		relativePath /= path.filename();
 		return relativePath.string();
 	}
@@ -83,7 +83,7 @@ namespace Volund::Utils
 		return output;
 	}
 
-	uint32_t CastFloatToInt(const float value) 
+	uint32_t CastFloatToInt(const float value)
 	{
 		union { float f; int i; } u;
 		u.f = value;

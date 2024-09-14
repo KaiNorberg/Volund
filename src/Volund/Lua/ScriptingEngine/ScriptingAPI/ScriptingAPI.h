@@ -9,5 +9,5 @@ namespace sol
 
 namespace Volund::ScriptingAPI
 {
-    void Integrate(Ref<sol::state> state);
+    void Integrate(std::shared_ptr<sol::state> state);
 }

@@ -14,9 +14,9 @@ namespace Volund
 
         void Play();
 
-        void SetBuffer(Ref<AudioBuffer> buffer);
-        
-        Ref<AudioBuffer> GetBuffer();
+        void SetBuffer(std::shared_ptr<AudioBuffer> buffer);
+
+        std::shared_ptr<AudioBuffer> GetBuffer();
 
         void SetPitch(float pitch);
         float GetPitch();

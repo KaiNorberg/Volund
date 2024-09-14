@@ -37,7 +37,7 @@ namespace Volund
 		this->m_ScriptingEngine->DestroyScript(this->m_ScriptId);
 	}
 
-	Script::Script(Ref<ScriptingEngine> scriptingEngine, uint64_t scriptId, const std::string& filepath, const std::vector<std::string>& publicVars)
+	Script::Script(std::shared_ptr<ScriptingEngine> scriptingEngine, uint64_t scriptId, const std::string& filepath, const std::vector<std::string>& publicVars)
 	{
 		this->m_ScriptingEngine = scriptingEngine;
 		this->m_ScriptId = scriptId;

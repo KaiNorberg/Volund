@@ -16,9 +16,9 @@ namespace Volund
 
         void End() override;
 
-        static Ref<ForwardRenderer> Create();
-            
-    private:    
+        static std::shared_ptr<ForwardRenderer> Create();
+
+    private:
 
         struct alignas(16) CameraBuffer
         {
@@ -41,4 +41,3 @@ namespace Volund
         UniformBuffer<LightsBuffer> m_LightsBuffer = UniformBuffer<LightsBuffer>(VOLUND_FORWARD_RENDERER_BINDING_LIGHTS);
     };
 }
-

@@ -1,5 +1,3 @@
-#pragma once
-
 #include "PCH/PCH.h"
 #include "OpenGLShader.h"
 
@@ -120,7 +118,7 @@ namespace Volund
 		this->m_NextTextureUnit++;
 	}
 
-	void OpenGLShader::Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint)
+	void OpenGLShader::Init(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
 	{
 		this->m_MaterialBlueprint = materialBlueprint;
 
@@ -210,12 +208,12 @@ namespace Volund
 		return uniformLocation;
 	}
 
-	const Ref<MaterialBlueprint> OpenGLShader::GetMaterialBlueprint()
+	const std::shared_ptr<MaterialBlueprint> OpenGLShader::GetMaterialBlueprint()
 	{
 		return this->m_MaterialBlueprint;
 	}
 
-	OpenGLShader::OpenGLShader(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint)
+	OpenGLShader::OpenGLShader(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
 	{
 		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->m_MaxTextureUnit);
 

@@ -50,9 +50,9 @@ namespace Volund
     }
 
     template<typename T, typename U>
-    Ref<Uniform<T>> Uniform<T, U>::Create(const std::string& name, const T& value)
+    std::shared_ptr<Uniform<T>> Uniform<T, U>::Create(const std::string& name, const T& value)
     {
-        return Ref<Uniform<T>>(new Uniform<T>(name, value));
+        return std::shared_ptr<Uniform<T>>(new Uniform<T>(name, value));
     }
 
     template<typename T, typename U>

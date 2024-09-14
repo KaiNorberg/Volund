@@ -14,18 +14,18 @@ namespace Volund
 
         void Unbind() const override;
 
-        void SetVertexBuffer(Ref<VertexBuffer> buffer) override;
-        void SetIndexBuffer(Ref<IndexBuffer> buffer) override;
+        void SetVertexBuffer(std::shared_ptr<VertexBuffer> buffer) override;
+        void SetIndexBuffer(std::shared_ptr<IndexBuffer> buffer) override;
 
-        Ref<VertexBuffer> GetVertexBuffer() override;
-        Ref<IndexBuffer> GetIndexBuffer() override;
+        std::shared_ptr<VertexBuffer> GetVertexBuffer() override;
+        std::shared_ptr<IndexBuffer> GetIndexBuffer() override;
 
-        const Ref<VertexBuffer> GetVertexBuffer() const override;
-        const Ref<IndexBuffer> GetIndexBuffer() const override;
+        const std::shared_ptr<VertexBuffer> GetVertexBuffer() const override;
+        const std::shared_ptr<IndexBuffer> GetIndexBuffer() const override;
 
         OpenGLMesh();
 
-        OpenGLMesh(Ref<VertexBuffer> VertexBuffer, Ref<IndexBuffer> IndexBuffer);
+        OpenGLMesh(std::shared_ptr<VertexBuffer> VertexBuffer, std::shared_ptr<IndexBuffer> IndexBuffer);
 
         ~OpenGLMesh() override;
 
@@ -33,7 +33,7 @@ namespace Volund
 
         uint32_t m_Id;
 
-        Ref<VertexBuffer> m_VertexBuffer;
-        Ref<IndexBuffer> m_IndexBuffer;
+        std::shared_ptr<VertexBuffer> m_VertexBuffer;
+        std::shared_ptr<IndexBuffer> m_IndexBuffer;
     };
 }

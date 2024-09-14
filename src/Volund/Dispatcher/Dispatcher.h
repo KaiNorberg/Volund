@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Event/Event.h"
-#include "Job/Job.h"
+#include "Event.h"
+#include "Job.h"
 
 #include "Scene/Scene.h"
 
@@ -29,7 +29,7 @@ namespace Volund
 
         std::function<void(const Event&)> m_EventCallback;
 
-        Ref<ThreadPool> m_ThreadPool;
+        std::shared_ptr<ThreadPool> m_ThreadPool;
 
         std::queue<Job> m_JobQueue;
         std::queue<Task> m_CleanupQueue;

@@ -18,12 +18,12 @@ namespace Volund
 
         bool Contains(const std::string& name);
 
-        const std::vector<Ref<PrimitiveUniform>>::const_iterator begin() const;
-        const std::vector<Ref<PrimitiveUniform>>::const_iterator end() const;
+        const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator begin() const;
+        const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator end() const;
 
     private:
 
-        std::vector<Ref<PrimitiveUniform>> m_Uniforms;
+        std::vector<std::shared_ptr<PrimitiveUniform>> m_Uniforms;
     };
 
     template<typename T>

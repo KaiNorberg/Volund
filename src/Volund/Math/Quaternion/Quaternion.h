@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Vector/Vector3/Vector3.h"
-#include "../Matrix/Matrix4x4/Matrix4x4.h"
+#include "Math/Vector/Vector3.h"
+#include "Math/Matrix/Matrix4x4.h"
 
 namespace Volund
 {

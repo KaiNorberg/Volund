@@ -19,15 +19,15 @@ namespace Volund
 
         bool ShouldRun() const;
 
-        Ref<Window> GetWindow();
+        std::shared_ptr<Window> GetWindow();
 
-        Ref<Dispatcher> GetDispatcher();
+        std::shared_ptr<Dispatcher> GetDispatcher();
 
         template <typename T, typename... Args>
-        Ref<T> AttachModule(Args&&... args);
+        std::shared_ptr<T> AttachModule(Args&&... args);
 
         template<typename T>
-        Ref<T> GetModule();
+        std::shared_ptr<T> GetModule();
 
         template<typename T>
         bool HasModule();
@@ -50,8 +50,8 @@ namespace Volund
 
         bool m_ShouldRun = true;
 
-        Ref<Window> m_Window;
-        Ref<Dispatcher> m_Dispatcher;
+        std::shared_ptr<Window> m_Window;
+        std::shared_ptr<Dispatcher> m_Dispatcher;
 
         PolyContainer<Module> m_Modules;
 
@@ -62,21 +62,21 @@ namespace Volund
 
 
     template<typename T, typename ...Args>
-    inline Ref<T> Application::AttachModule(Args && ...args)
+    inline std::shared_ptr<T> Application::AttachModule(Args && ...args)
     {
         if (this->HasModule<T>())
         {
             VOLUND_ERROR("Module of specifed type already attached!");
         }
 
-        Ref<T> newModule = std::make_shared<T>(args...);
+        std::shared_ptr<T> newModule = std::make_shared<T>(args...);
         this->m_Modules.PushBack(newModule);
         newModule->OnAttach(this);
         return newModule;
     }
 
     template<typename T>
-    inline Ref<T> Application::GetModule()
+    inline std::shared_ptr<T> Application::GetModule()
     {
         if (!this->HasModule<T>())
         {

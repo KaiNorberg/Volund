@@ -8,8 +8,8 @@ namespace Volund
     {
     public:
 
-        using iterator = std::unordered_map<std::string, Ref<PrimitiveSerialObject>>::iterator;
-        using const_iterator = std::unordered_map<std::string, Ref<PrimitiveSerialObject>>::const_iterator;
+        using iterator = std::unordered_map<std::string, std::shared_ptr<PrimitiveSerialObject>>::iterator;
+        using const_iterator = std::unordered_map<std::string, std::shared_ptr<PrimitiveSerialObject>>::const_iterator;
 
         void Erase(const std::string& key);
 
@@ -36,7 +36,7 @@ namespace Volund
 
     private:
 
-        std::unordered_map<std::string, Ref<PrimitiveSerialObject>> m_Table;
+        std::unordered_map<std::string, std::shared_ptr<PrimitiveSerialObject>> m_Table;
     };
 
     template<typename T>

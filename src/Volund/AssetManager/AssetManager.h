@@ -12,42 +12,42 @@ namespace Volund
     {
     public:
 
-        Ref<Script> LoadScript(const std::string& filepath);
+        std::shared_ptr<Script> LoadScript(const std::string& filepath);
 
         template<typename T>
-        Ref<T> Fetch(const std::string& filepath);
+        std::shared_ptr<T> Fetch(const std::string& filepath);
 
         template<typename T>
-        std::string FetchFilepath(Ref<T> asset);
-        
+        std::string FetchFilepath(std::shared_ptr<T> asset);
+
         template<typename T>
-        void Serialize(Ref<T> asset, const std::string& destinationPath);
+        void Serialize(std::shared_ptr<T> asset, const std::string& destinationPath);
 
         std::string GetAbsolutePath(const std::string& relativePath);
 
         std::string GetRootDirectory();
 
-        static Ref<AssetManager> Create(Ref<Dispatcher> Dispatcher, const std::string& rootPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
+        static std::shared_ptr<AssetManager> Create(std::shared_ptr<Dispatcher> Dispatcher, const std::string& rootPath, std::shared_ptr<ScriptingEngine> scriptingEngine = nullptr);
 
     private:
 
-        AssetManager(Ref<Dispatcher> dispatcher, const std::string& rootPath, Ref<ScriptingEngine> scriptingEngine = nullptr);
+        AssetManager(std::shared_ptr<Dispatcher> dispatcher, const std::string& rootPath, std::shared_ptr<ScriptingEngine> scriptingEngine = nullptr);
 
         std::string GetRelativePath(const std::string& absolutePath);
 
         std::string ShortPath(const std::string& path);
 
         template<typename T>
-        Ref<T> Load(const std::string& filepath, uint64_t lineId);
+        std::shared_ptr<T> Load(const std::string& filepath, uint64_t lineId);
 
         template<typename T>
-        void Push(const std::string& filepath, Ref<T> assetData);
+        void Push(const std::string& filepath, std::shared_ptr<T> assetData);
 
         class PrimitiveAsset
         {
         public:
             std::string Filepath;
-            
+
             void* Identifier = nullptr;
 
             virtual ~PrimitiveAsset() = default;
@@ -57,20 +57,20 @@ namespace Volund
         class Asset : public PrimitiveAsset
         {
         public:
-            WeakRef<T> Data;
+            std::weak_ptr<T> Data;
         };
 
         PolyContainer<PrimitiveAsset> m_Data;
 
         std::string m_RootDir;
 
-        Ref<Dispatcher> m_Dispatcher;
+        std::shared_ptr<Dispatcher> m_Dispatcher;
 
-        WeakRef<ScriptingEngine> m_ScriptingEngine;
+        std::weak_ptr<ScriptingEngine> m_ScriptingEngine;
     };
-    
+
     template<typename T>
-    inline Ref<T> AssetManager::Fetch(const std::string& filepath)
+    inline std::shared_ptr<T> AssetManager::Fetch(const std::string& filepath)
     {
         static std::mutex mutex;
         std::unique_lock lock(mutex);
@@ -88,7 +88,7 @@ namespace Volund
                 {
                     auto fetchedData = std::dynamic_pointer_cast<Asset<T>>(view[i])->Data;
                     if (fetchedData.expired())
-                    {        
+                    {
                         uint64_t lineId = VOLUND_INFO("Asset expired, retrieving new asset (%s)... ", relativePath.c_str());
 
                         this->m_Data.Erase<Asset<T>>(i);
@@ -106,14 +106,14 @@ namespace Volund
 
         uint64_t lineId = VOLUND_INFO("Loading Asset (%s)... ", relativePath.c_str());
 
-        Ref<T> newAssetData = this->Load<T>(absolutePath, lineId);
+        std::shared_ptr<T> newAssetData = this->Load<T>(absolutePath, lineId);
         this->Push(relativePath, newAssetData);
 
         return newAssetData;
     }
 
     template<typename T>
-    inline std::string AssetManager::FetchFilepath(Ref<T> asset)
+    inline std::string AssetManager::FetchFilepath(std::shared_ptr<T> asset)
     {
         if (m_Data.Contains<Asset<T>>())
         {
@@ -132,7 +132,7 @@ namespace Volund
     }
 
     template<typename T>
-    inline void AssetManager::Push(const std::string& filepath, Ref<T> assetData)
+    inline void AssetManager::Push(const std::string& filepath, std::shared_ptr<T> assetData)
     {
         auto newAsset = std::make_shared<Asset<T>>();
         newAsset->Filepath = filepath;

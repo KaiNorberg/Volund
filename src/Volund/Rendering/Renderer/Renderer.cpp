@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-	void Renderer::Submit(Ref<Scene> scene, Ref<Framebuffer> target)
+	void Renderer::Submit(std::shared_ptr<Scene> scene, std::shared_ptr<Framebuffer> target)
 	{
 		for (auto& entity : *scene)
 		{
@@ -67,7 +67,7 @@ namespace Volund
 		}
 	}
 
-	void Renderer::Submit(Ref<GameState> gameState, Ref<Framebuffer> target)
+	void Renderer::Submit(std::shared_ptr<GameState> gameState, std::shared_ptr<Framebuffer> target)
 	{
 		this->Submit(gameState->GetScene(), target);
 	}

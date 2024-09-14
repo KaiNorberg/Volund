@@ -24,7 +24,7 @@ namespace Volund
 	}
 
 	Entity Scene::AllocateEntity()
-	{	
+	{
 		uint32_t newEntityId = rand();
 
 		if (!this->m_FreeEntries.empty())
@@ -107,9 +107,9 @@ namespace Volund
 		return std::upper_bound(components.begin(), components.end(), typeId);
 	}
 
-	Ref<Scene> Scene::Create()
+	std::shared_ptr<Scene> Scene::Create()
 	{
-		return Ref<Scene>(new Scene());
+		return std::shared_ptr<Scene>(new Scene());
 	}
 
 	Scene::Scene()

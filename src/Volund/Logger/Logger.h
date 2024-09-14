@@ -1,5 +1,11 @@
 #pragma once
 
+#include <string>
+#include <cstdint>
+#include <vector>
+#include <stdexcept>
+#include <memory>
+
 #define VOLUND_LOGGERCOLOR_BLACK   "\033[30m"
 #define VOLUND_LOGGERCOLOR_RED     "\033[31m"
 #define VOLUND_LOGGERCOLOR_GREEN   "\033[32m"
@@ -24,7 +30,7 @@ namespace Volund
         Cyan,
         White
     };
-    
+
     enum class LogSeverity
     {
         Info,
@@ -72,7 +78,7 @@ namespace Volund
         static Logger m_CoreLogger;
         static Logger m_ClientLogger;
 
-        static inline std::vector<LogLine> m_Lines; 
+        static inline std::vector<LogLine> m_Lines;
         static inline uint64_t m_NewLineId;
 
         std::string m_Name;

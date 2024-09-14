@@ -12,15 +12,15 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (e.Type)
+		switch (e.type)
 		{
-		case VOLUND_EVENT_TYPE_UPDATE:
-		{		
+		case VOLUND_EVENT_UPDATE:
+		{
 			static Vec3 oldPosition = Vec3(0.0f);
 
 			const float timeStep = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			this->m_Listener.SetPosition(entityTransform->Position);
 			this->m_Listener.SetVelocity((entityTransform->Position - oldPosition) * timeStep);

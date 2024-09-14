@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-	Ref<Framebuffer> Framebuffer::Create(const FramebufferSpec& spec)
+	std::shared_ptr<Framebuffer> Framebuffer::Create(const FramebufferSpec& spec)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

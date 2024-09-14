@@ -26,7 +26,7 @@ namespace Volund
 
         bool IsCursorEnabled = true;
 
-        Ref<Dispatcher> EventDispatcher;
+        std::shared_ptr<Dispatcher> EventDispatcher;
 
         std::vector<GLFWwindowfocusfun> WindowFocusCallbacks;
         std::vector<GLFWcursorenterfun> CursorEnterCallbacks;
@@ -63,7 +63,7 @@ namespace Volund
 
         void SetIcon(const std::string& filepath);
 
-        void ConnectWindowFocusCallback(GLFWwindowfocusfun callback);       
+        void ConnectWindowFocusCallback(GLFWwindowfocusfun callback);
         void ConnectCursorEnterCallback(GLFWcursorenterfun callback);
         void ConnectWindowCloseCallback(GLFWwindowclosefun callback);
         void ConnectWindowSizeCallback(GLFWwindowsizefun callback);
@@ -73,12 +73,12 @@ namespace Volund
         void ConnectScrollCallback(GLFWscrollfun callback);
         void ConnectCharCallback(GLFWcharfun callback);
 
-        Window(Ref<Dispatcher> Dispatcher, uint64_t width, uint64_t height, bool fullScreen);
+        Window(std::shared_ptr<Dispatcher> Dispatcher, uint64_t width, uint64_t height, bool fullScreen);
 
         ~Window();
 
     private:
 
-        Ref<WindowData> m_WindowData;
+        std::shared_ptr<WindowData> m_WindowData;
     };
 }

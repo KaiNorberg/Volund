@@ -9,13 +9,13 @@ namespace Volund
     }
 
     template<typename T>
-    inline Ref<T> Scene::ComponentEntry::As()
+    inline std::shared_ptr<T> Scene::ComponentEntry::As()
     {
         return std::dynamic_pointer_cast<T>(this->component);
     }
 
     template<typename T, typename ...Args>
-    inline Ref<T> Scene::CreateComponent(Entity entity, Args && ...args)
+    inline std::shared_ptr<T> Scene::CreateComponent(Entity entity, Args && ...args)
     {
         VOLUND_PROFILE_FUNCTION();
 
@@ -27,7 +27,7 @@ namespace Volund
         uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
         auto& entry = this->m_EntityHeap[entityIndex];
 
-        Ref<T> newComponent = std::make_shared<T>(args...);
+        std::shared_ptr<T> newComponent = std::make_shared<T>(args...);
         newComponent->Init(entity, this->weak_from_this());
         newComponent->OnCreate();
 
@@ -109,7 +109,7 @@ namespace Volund
     }
 
     template<typename T>
-    inline Ref<T> Scene::GetComponent(Entity entity, uint64_t index)
+    inline std::shared_ptr<T> Scene::GetComponent(Entity entity, uint64_t index)
     {
         VOLUND_PROFILE_FUNCTION();
 

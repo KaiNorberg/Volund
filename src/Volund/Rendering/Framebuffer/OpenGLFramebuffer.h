@@ -16,7 +16,7 @@ namespace Volund
 
         void Invalidate() override;
 
-        void BlitTo(const Ref<Framebuffer>& drawFramebuffer) override;
+        void BlitTo(const std::shared_ptr<Framebuffer>& drawFramebuffer) override;
 
         void BlitToScreen() override;
 
@@ -43,5 +43,3 @@ namespace Volund
         uint32_t m_DepthAttachment = 0;
     };
 }
-
-

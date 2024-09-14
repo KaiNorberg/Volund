@@ -37,10 +37,10 @@ namespace Volund
 			eye.Target->Bind();
 			auto& targetSpec = eye.Target->GetSpec();
 
-			VL::RenderingAPI::Clear();						
-			VL::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
+			Volund::RenderingAPI::Clear();
+			Volund::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
 
-			Ref<Material> prevMaterial = nullptr;
+			std::shared_ptr<Material> prevMaterial = nullptr;
 			for (const auto& model : this->m_Data.Models)
 			{
 				if (model.material == nullptr)
@@ -80,17 +80,17 @@ namespace Volund
 						shader->SetMat4x4(VOLUND_UNIFORM_NAME_MODELMATRIX, model.ModelMatrix);
 					}
 
-					model.mesh->Bind();		
+					model.mesh->Bind();
 					auto indexBuffer = model.mesh->GetIndexBuffer();
 					auto vertexBuffer = model.mesh->GetVertexBuffer();
-					
+
 					if (indexBuffer != nullptr)
 					{
-						VL::RenderingAPI::DrawIndexed(indexBuffer->GetCount());
+						Volund::RenderingAPI::DrawIndexed(indexBuffer->GetCount());
 					}
 					else if (vertexBuffer != nullptr)
 					{
-						VL::RenderingAPI::Draw(0, vertexBuffer->GetCount());
+						Volund::RenderingAPI::Draw(0, vertexBuffer->GetCount());
 					}
 					else
 					{
@@ -108,7 +108,7 @@ namespace Volund
 				{
 					shader->Bind();
 					effect->UpdateShader();
-					VL::RenderingAPI::Draw(0, 6);
+					Volund::RenderingAPI::Draw(0, 6);
 				}
 			}
 
@@ -116,9 +116,9 @@ namespace Volund
 		}
 	}
 
-	Ref<ForwardRenderer> ForwardRenderer::Create()
+	std::shared_ptr<ForwardRenderer> ForwardRenderer::Create()
 	{
-		return Ref<ForwardRenderer>(new ForwardRenderer());
+		return std::shared_ptr<ForwardRenderer>(new ForwardRenderer());
 	}
 
 	/*void Renderer::Data::Sort()

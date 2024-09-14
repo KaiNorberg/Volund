@@ -14,7 +14,7 @@ namespace Volund
 		return this->m_Source;
 	}
 
-	Ref<MaterialBlueprint> ShaderLoader::GetBlueprint()
+	std::shared_ptr<MaterialBlueprint> ShaderLoader::GetBlueprint()
 	{
 		return this->m_MaterialBlueprint;
 	}

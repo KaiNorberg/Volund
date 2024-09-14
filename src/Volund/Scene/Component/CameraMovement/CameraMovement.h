@@ -2,7 +2,7 @@
 
 #include "../Component.h"
 
-#include "Input/Input.h"
+#include "Input.h"
 
 namespace Volund
 {

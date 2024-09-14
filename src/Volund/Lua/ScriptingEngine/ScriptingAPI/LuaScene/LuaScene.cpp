@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-	LuaScene::LuaScene(Ref<Scene> scene)
+	LuaScene::LuaScene(std::shared_ptr<Scene> scene)
 	{
 		this->m_Scene = scene;
 	}

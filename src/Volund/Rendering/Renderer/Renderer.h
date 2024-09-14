@@ -18,8 +18,8 @@ namespace Volund
     struct RendererModel
     {
         Mat4x4 ModelMatrix;
-        Ref<Mesh> mesh;
-        Ref<Material> material;
+        std::shared_ptr<Mesh> mesh;
+        std::shared_ptr<Material> material;
 
         uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0
     };
@@ -36,11 +36,11 @@ namespace Volund
         Mat4x4 ViewMatrix = Mat4x4();
         Mat4x4 ProjectionMatrix = Mat4x4();
 
-        Ref<Framebuffer> Target;
+        std::shared_ptr<Framebuffer> Target;
 
         uint32_t LayerMask = 0xFFFFFFFF; //Render if: ((model.LayerMask & eye.LayerMask) != 0
 
-        std::vector<Ref<Effect>> Effects;
+        std::vector<std::shared_ptr<Effect>> Effects;
     };
 
     class Renderer
@@ -49,9 +49,9 @@ namespace Volund
 
         virtual void Begin() = 0;
 
-        void Submit(Ref<Scene> scene, Ref<Framebuffer> target);
+        void Submit(std::shared_ptr<Scene> scene, std::shared_ptr<Framebuffer> target);
 
-        void Submit(Ref<GameState> gameState, Ref<Framebuffer> target);
+        void Submit(std::shared_ptr<GameState> gameState, std::shared_ptr<Framebuffer> target);
 
         void Submit(const RendererModel& model);
 
@@ -73,4 +73,3 @@ namespace Volund
         } m_Data;
     };
 }
-

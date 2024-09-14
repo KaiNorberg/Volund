@@ -6,15 +6,15 @@
 
 namespace Volund
 {
-    class ScriptComponent : public Component,  public std::enable_shared_from_this<ScriptComponent> 
+    class ScriptComponent : public Component,  public std::enable_shared_from_this<ScriptComponent>
     {
     public:
 
         bool Valid();
 
-        void SetScript(Ref<Script> script);
+        void SetScript(std::shared_ptr<Script> script);
 
-        Ref<Script> GetScript();
+        std::shared_ptr<Script> GetScript();
 
         void Procedure(const Event& e) override;
 
@@ -22,6 +22,6 @@ namespace Volund
 
     private:
 
-        Ref<Script> m_Script;
+        std::shared_ptr<Script> m_Script;
     };
 }

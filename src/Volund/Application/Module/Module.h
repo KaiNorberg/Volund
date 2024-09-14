@@ -1,7 +1,7 @@
 #pragma once
 
 #include "Time/Time.h"
-#include "Dispatcher/Event/Event.h"
+#include "Dispatcher/Event.h"
 
 namespace Volund
 {

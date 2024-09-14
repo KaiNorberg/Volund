@@ -27,7 +27,7 @@ namespace Volund
 
         virtual void Draw(uint64_t first, uint64_t count) = 0;
 
-        virtual void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer) = 0;
+        virtual void BlitFramebuffer(std::shared_ptr<Framebuffer> readBuffer, std::shared_ptr<Framebuffer> drawBuffer) = 0;
 
         virtual ~RenderingAPIInstance() = default;
     };
@@ -46,7 +46,7 @@ namespace Volund
 
         static void Draw(uint64_t first, uint64_t count);
 
-        static void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer);
+        static void BlitFramebuffer(std::shared_ptr<Framebuffer> readBuffer, std::shared_ptr<Framebuffer> drawBuffer);
 
         static void Init(GraphicsAPI api);
 
@@ -56,7 +56,7 @@ namespace Volund
 
         RenderingAPI() = delete;
 
-        static inline Ref<RenderingAPIInstance> m_Instance;
+        static inline std::shared_ptr<RenderingAPIInstance> m_Instance;
 
         static inline GraphicsAPI m_SelectedAPI;
     };

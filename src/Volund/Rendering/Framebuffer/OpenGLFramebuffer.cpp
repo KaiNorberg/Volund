@@ -134,7 +134,7 @@ namespace Volund
 		}
 	}*/
 
-	void OpenGLFramebuffer::BlitTo(const Ref<Framebuffer>& drawFramebuffer)
+	void OpenGLFramebuffer::BlitTo(const std::shared_ptr<Framebuffer>& drawFramebuffer)
 	{
 		glBlitNamedFramebuffer(this->m_Id, drawFramebuffer->GetID(),
 			0, 0, this->m_Spec.Width, this->m_Spec.Height,

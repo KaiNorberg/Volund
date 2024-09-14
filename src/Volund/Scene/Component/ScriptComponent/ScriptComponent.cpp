@@ -8,14 +8,14 @@ namespace Volund
 		return this->m_Script != nullptr;
 	}
 
-	void ScriptComponent::SetScript(Ref<Script> script)
+	void ScriptComponent::SetScript(std::shared_ptr<Script> script)
 	{
 		this->m_Script = script;
 		this->m_Script->Set("Scene", LuaScene(this->GetScene()));
 		this->m_Script->Set("Entity", LuaEntity(this->GetEntity(), this->GetScene()));
 	}
 
-	Ref<Script> ScriptComponent::GetScript()
+	std::shared_ptr<Script> ScriptComponent::GetScript()
 	{
 		return this->m_Script;
 	}

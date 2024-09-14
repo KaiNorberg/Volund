@@ -8,11 +8,11 @@ namespace Volund
     {
     public:
 
-        LuaEntity(Entity entity, Ref<Scene> scene);
+        LuaEntity(Entity entity, std::shared_ptr<Scene> scene);
 
     private:
 
         Entity m_Entity;
-        Ref<Scene> m_Scene;
+        std::shared_ptr<Scene> m_Scene;
     };
 }

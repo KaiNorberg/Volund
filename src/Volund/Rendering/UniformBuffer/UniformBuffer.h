@@ -17,7 +17,7 @@ namespace Volund
 
     private:
 
-        Ref<UniformBufferBackend> m_Backend;
+        std::shared_ptr<UniformBufferBackend> m_Backend;
 
         T m_Data;
     };

@@ -22,16 +22,16 @@ namespace Volund
         void SetVec4(const std::string& name, const Vec4& value) override;
         //void SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose = false) override;
         void SetMat4x4(const std::string& name, const Mat4x4& value, bool transpose = false) override;
-        void SetTexture(const std::string& name, const Ref<Texture>& value) override;
-        void SetFramebuffer(const std::string& name, const Ref<Framebuffer>& value) override;
+        void SetTexture(const std::string& name, const std::shared_ptr<Texture>& value) override;
+        void SetFramebuffer(const std::string& name, const std::shared_ptr<Framebuffer>& value) override;
 
-        void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) override;
+        void Init(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint) override;
 
-        const Ref<MaterialBlueprint> GetMaterialBlueprint() override;
+        const std::shared_ptr<MaterialBlueprint> GetMaterialBlueprint() override;
 
         OpenGLShader() = default;
 
-        OpenGLShader(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint);
+        OpenGLShader(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint);
 
         ~OpenGLShader() override;
 
@@ -48,6 +48,6 @@ namespace Volund
         int32_t m_NextTextureUnit = 0;
         int32_t m_MaxTextureUnit = 0;
 
-        Ref<MaterialBlueprint> m_MaterialBlueprint;
+        std::shared_ptr<MaterialBlueprint> m_MaterialBlueprint;
     };
 } //namespace Volund

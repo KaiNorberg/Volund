@@ -20,7 +20,7 @@ namespace Volund
 
         ShaderSource GetSource();
 
-        Ref<MaterialBlueprint> GetBlueprint();
+        std::shared_ptr<MaterialBlueprint> GetBlueprint();
 
         void Load(const std::string& filepath);
 
@@ -32,7 +32,6 @@ namespace Volund
 
         ShaderSource m_Source;
 
-        Ref<MaterialBlueprint> m_MaterialBlueprint;
+        std::shared_ptr<MaterialBlueprint> m_MaterialBlueprint;
     };
 }
-

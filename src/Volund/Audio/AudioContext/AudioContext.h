@@ -2,6 +2,8 @@
 
 #include "Audio/AudioDevice/AudioDevice.h"
 
+#include <memory.h>
+
 struct ALCcontext;
 
 namespace Volund
@@ -16,7 +18,7 @@ namespace Volund
 
         AudioContext(const AudioDevice& device);
 
-        AudioContext(Ref<AudioDevice> device);
+        AudioContext(std::shared_ptr<AudioDevice> device);
 
         ~AudioContext();
 

@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-    Ref<Shader> Shader::Create()
+    std::shared_ptr<Shader> Shader::Create()
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
@@ -26,14 +26,14 @@ namespace Volund
 		}
 	}
 
-	Ref<Shader> Shader::Create(const std::string& filepath)
+	std::shared_ptr<Shader> Shader::Create(const std::string& filepath)
 	{
-		Ref<ShaderLoader> loader = std::make_shared<ShaderLoader>(filepath);
+		std::shared_ptr<ShaderLoader> loader = std::make_shared<ShaderLoader>(filepath);
 
 		return Shader::Create(loader->GetSource(), loader->GetBlueprint());
 	}
 
-	Ref<Shader> Shader::Create(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint)
+	std::shared_ptr<Shader> Shader::Create(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

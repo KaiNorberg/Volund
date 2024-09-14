@@ -9,7 +9,7 @@
 
 namespace Volund
 {
-	Ref<Mesh> Mesh::Create()
+	std::shared_ptr<Mesh> Mesh::Create()
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{
@@ -27,9 +27,9 @@ namespace Volund
 		}
 	}
 
-	Ref<Mesh> Mesh::Create(Ref<VertexBuffer> vertexBuffer, Ref<IndexBuffer> indexBuffer)
+	std::shared_ptr<Mesh> Mesh::Create(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer)
 	{
-		Ref<Mesh> newMesh = Mesh::Create();
+		std::shared_ptr<Mesh> newMesh = Mesh::Create();
 		newMesh->SetVertexBuffer(vertexBuffer);
 		newMesh->SetIndexBuffer(indexBuffer);
 

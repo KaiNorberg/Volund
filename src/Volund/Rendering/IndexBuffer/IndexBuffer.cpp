@@ -8,7 +8,7 @@
 
 namespace Volund
 {
-	Ref<IndexBuffer> IndexBuffer::Create(const uint32_t indices[], uint64_t count)
+	std::shared_ptr<IndexBuffer> IndexBuffer::Create(const uint32_t indices[], uint64_t count)
 	{
 		switch (RenderingAPI::GetSelectedAPI())
 		{

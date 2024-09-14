@@ -33,15 +33,15 @@ namespace Volund
         virtual void SetTexture(const std::string& name, const TextureUniformType& value) = 0;
         virtual void SetFramebuffer(const std::string& name, const FramebufferUniformType& value) = 0;
 
-        virtual void Init(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint) = 0;
+        virtual void Init(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint) = 0;
 
-        virtual const Ref<MaterialBlueprint> GetMaterialBlueprint() = 0;
+        virtual const std::shared_ptr<MaterialBlueprint> GetMaterialBlueprint() = 0;
 
-        static Ref<Shader> Create();
+        static std::shared_ptr<Shader> Create();
 
-        static Ref<Shader> Create(const std::string& filepath);
+        static std::shared_ptr<Shader> Create(const std::string& filepath);
 
-        static Ref<Shader> Create(const ShaderSource& source, Ref<MaterialBlueprint> materialBlueprint);
+        static std::shared_ptr<Shader> Create(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint);
 
         virtual ~Shader() = default;
 

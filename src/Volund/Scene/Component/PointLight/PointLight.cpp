@@ -13,11 +13,11 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (e.Type)
+		switch (e.type)
 		{
-		case VOLUND_EVENT_TYPE_RENDER:
+		case VOLUND_EVENT_RENDER:
 		{
-			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			/*RendererLight light;
 			light.Position = entityTransform->Position;

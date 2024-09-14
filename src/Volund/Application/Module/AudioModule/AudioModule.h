@@ -17,9 +17,9 @@ namespace Volund
 
         void Procedure(const Event& e) override;
 
-    private:    
+    private:
 
-        Ref<AudioDevice> m_Device;
-        Ref<AudioContext> m_Context;
+        std::shared_ptr<AudioDevice> m_Device;
+        std::shared_ptr<AudioContext> m_Context;
     };
 }

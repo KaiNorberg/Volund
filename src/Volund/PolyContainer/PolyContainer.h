@@ -14,7 +14,7 @@ namespace Volund
         void PushBack(const D& entry);
 
         template<typename D>
-        void PushBack(Ref<D> entry);
+        void PushBack(std::shared_ptr<D> entry);
 
         template<typename D>
         void PushBack(D* entry);
@@ -23,7 +23,7 @@ namespace Volund
         void Erase(uint64_t index = 0);
 
         template<typename D>
-        Ref<D> Get(uint64_t index = 0);
+        std::shared_ptr<D> Get(uint64_t index = 0);
 
         template<typename D>
         bool Contains();
@@ -32,17 +32,17 @@ namespace Volund
         uint64_t Size();
 
         template<typename D>
-        std::vector<Ref<T>>& View();
+        std::vector<std::shared_ptr<T>>& View();
 
-        std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator begin();
-        std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator end();
+        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::iterator begin();
+        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::iterator end();
 
-        std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator begin() const;
-        std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator end() const;
+        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::const_iterator begin() const;
+        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::const_iterator end() const;
 
     private:
 
-        std::unordered_map<uint64_t, std::vector<Ref<T>>> m_Data;
+        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>> m_Data;
     };
 
     template<typename T>
@@ -56,7 +56,7 @@ namespace Volund
 
     template<typename T>
     template<typename D>
-    inline void PolyContainer<T>::PushBack(Ref<D> entry)
+    inline void PolyContainer<T>::PushBack(std::shared_ptr<D> entry)
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
@@ -69,7 +69,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        this->m_Data[typeId].push_back(Ref<D>(entry));
+        this->m_Data[typeId].push_back(std::shared_ptr<D>(entry));
     }
 
     template<typename T>
@@ -86,7 +86,7 @@ namespace Volund
 
     template<typename T>
     template<typename D>
-    inline Ref<D> PolyContainer<T>::Get(uint64_t index)
+    inline std::shared_ptr<D> PolyContainer<T>::Get(uint64_t index)
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
@@ -113,7 +113,7 @@ namespace Volund
 
     template<typename T>
     template<typename D>
-    inline std::vector<Ref<T>>& PolyContainer<T>::View()
+    inline std::vector<std::shared_ptr<T>>& PolyContainer<T>::View()
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
@@ -121,25 +121,25 @@ namespace Volund
     }
 
     template<typename T>
-    inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator PolyContainer<T>::begin()
+    inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::iterator PolyContainer<T>::begin()
     {
         return this->m_Data.begin();
     }
 
     template<typename T>
-    inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::iterator PolyContainer<T>::end()
+    inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::iterator PolyContainer<T>::end()
     {
         return this->m_Data.end();
     }
 
     template<typename T>
-    inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator PolyContainer<T>::begin() const
+    inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::const_iterator PolyContainer<T>::begin() const
     {
         return this->m_Data.begin();
     }
 
     template<typename T>
-    inline std::unordered_map<uint64_t, std::vector<Ref<T>>>::const_iterator PolyContainer<T>::end() const
+    inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::const_iterator PolyContainer<T>::end() const
     {
         return this->m_Data.end();
     }

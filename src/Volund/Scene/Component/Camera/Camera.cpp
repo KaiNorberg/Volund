@@ -32,7 +32,7 @@ namespace Volund
 
 	Mat4x4 Camera::GetViewMatrix() const
 	{
-		const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 		if (entityTransform != nullptr)
 		{
@@ -47,7 +47,7 @@ namespace Volund
 
 	Mat4x4 Camera::GetOriginViewMatrix() const
 	{
-		const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 		if (entityTransform != nullptr)
 		{
@@ -75,13 +75,13 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		switch (e.Type)
+		switch (e.type)
 		{
-		case VOLUND_EVENT_TYPE_RENDER:
-		{				
-			/*const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+		case VOLUND_EVENT_RENDER:
+		{
+			/*const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			VOLUND_ASSERT(entityTransform != nullptr, "Camera component unable to retrive transform component!");		
+			VOLUND_ASSERT(entityTransform != nullptr, "Camera component unable to retrive transform component!");
 
 			RendererEye eye;
 			eye.Target = this->m_TargetBuffer;

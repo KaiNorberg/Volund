@@ -17,25 +17,25 @@ namespace Volund
 
         uint32_t GetLayerMask();
 
-        void SetMesh(Ref<Mesh> newMesh);
+        void SetMesh(std::shared_ptr<Mesh> newMesh);
 
-        void SetMaterial(Ref<Material> newMaterial);
+        void SetMaterial(std::shared_ptr<Material> newMaterial);
 
-        Ref<Mesh> GetMesh();
+        std::shared_ptr<Mesh> GetMesh();
 
-        Ref<Material> GetMaterial();
+        std::shared_ptr<Material> GetMaterial();
 
         void Procedure(const Event& e);
 
         MeshRenderer() = default;
 
-        MeshRenderer(Ref<Mesh> mesh, Ref<Material> material);
+        MeshRenderer(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
 
     private:
 
         uint32_t m_LayerMask = 1;
 
-        Ref<Mesh> m_Mesh;
-        Ref<Material> m_Material;
+        std::shared_ptr<Mesh> m_Mesh;
+        std::shared_ptr<Material> m_Material;
     };
 }

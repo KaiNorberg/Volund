@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Dispatcher/Event/Event.h"
+#include "Dispatcher/Event.h"
 
 #include "Lua/LuaTypes.h"
 
@@ -25,14 +25,14 @@ namespace Volund
 
         template<typename T, VOLUND_TEMPLATE_LUA_TYPES_ONLY>
         bool Is(uint64_t scriptId, const std::string& key);
-        
+
         void ScriptProcedure(uint64_t scriptId, const Event& e);
 
-        Ref<Script> LoadScript(const std::string& filepath);
+        std::shared_ptr<Script> LoadScript(const std::string& filepath);
 
         void DestroyScript(uint64_t scriptId);
 
-        static Ref<ScriptingEngine> Create();
+        static std::shared_ptr<ScriptingEngine> Create();
 
     private:
 
@@ -42,6 +42,6 @@ namespace Volund
 
         uint64_t m_UnusedScriptId = 0;
 
-        Ref<sol::state> m_LuaState;
+        std::shared_ptr<sol::state> m_LuaState;
     };
 }

@@ -9,7 +9,7 @@ namespace Volund
 
 		switch (E.Type)
 		{
-		case VOLUND_EVENT_TYPE_RENDER:
+		case VOLUND_EVENT_RENDER:
 		{
 			if (this->_Mesh != nullptr && this->_Material != nullptr)
 			{

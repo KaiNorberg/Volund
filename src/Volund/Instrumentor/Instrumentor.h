@@ -13,9 +13,9 @@ namespace Volund
         std::chrono::time_point<std::chrono::steady_clock> Start;
         std::chrono::time_point<std::chrono::steady_clock> End;
 
-        Ref<InstrumentorNode> Parent;
+        std::shared_ptr<InstrumentorNode> Parent;
 
-        std::vector<Ref<InstrumentorNode>> Children;
+        std::vector<std::shared_ptr<InstrumentorNode>> Children;
 
         std::string FormatTime();
 
@@ -36,7 +36,7 @@ namespace Volund
 
         friend class Instrumentor;
 
-        Ref<InstrumentorNode> _Node;
+        std::shared_ptr<InstrumentorNode> _Node;
     };
 
     class Instrumentor
@@ -50,9 +50,9 @@ namespace Volund
 
         ~Instrumentor();
 
-        static inline Ref<InstrumentorNode> FirstNode;
+        static inline std::shared_ptr<InstrumentorNode> FirstNode;
 
-        static inline Ref<InstrumentorNode> CurrentNode;
+        static inline std::shared_ptr<InstrumentorNode> CurrentNode;
     };
 }
 

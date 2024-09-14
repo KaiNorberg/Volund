@@ -22,8 +22,8 @@ namespace Volund
     using Vec4UniformType = Vec4;
     //using UniformMat3x3 = Mat3x3;
     using Mat4x4UniformType = Mat4x4;
-    using TextureUniformType = Ref<Texture>;
-    using FramebufferUniformType = Ref<Framebuffer>;
+    using TextureUniformType = std::shared_ptr<Texture>;
+    using FramebufferUniformType = std::shared_ptr<Framebuffer>;
 
     class PrimitiveUniform
     {
@@ -42,7 +42,7 @@ namespace Volund
 
         virtual uint64_t GetTypeId() const = 0;
 
-        virtual void UpdateShader(Ref<Shader> shader) = 0;
+        virtual void UpdateShader(std::shared_ptr<Shader> shader) = 0;
 
         PrimitiveUniform() = default;
 
@@ -66,9 +66,9 @@ namespace Volund
 
         uint64_t GetTypeId() const override;
 
-        void UpdateShader(Ref<Shader> shader) override;
+        void UpdateShader(std::shared_ptr<Shader> shader) override;
 
-        static Ref<Uniform<T>> Create(const std::string& name, const T& value);
+        static std::shared_ptr<Uniform<T>> Create(const std::string& name, const T& value);
 
     private:
 

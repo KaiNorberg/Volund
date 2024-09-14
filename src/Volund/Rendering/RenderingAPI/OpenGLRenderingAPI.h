@@ -21,7 +21,7 @@ namespace Volund
 
         void Draw(uint64_t first, uint64_t count) override;
 
-        void BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer) override;
+        void BlitFramebuffer(std::shared_ptr<Framebuffer> readBuffer, std::shared_ptr<Framebuffer> drawBuffer) override;
 
         OpenGLRenderingAPI();
 

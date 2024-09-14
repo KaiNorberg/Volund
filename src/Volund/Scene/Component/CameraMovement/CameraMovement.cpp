@@ -14,15 +14,15 @@ namespace Volund
 
 		this->m_Input.Procedure(e);
 
-		switch (e.Type)
+		switch (e.type)
 		{
-		case VOLUND_EVENT_TYPE_UPDATE:
+		case VOLUND_EVENT_UPDATE:
 		{
 			VOLUND_PROFILE_FUNCTION();
 
 			const float ts = VOLUND_EVENT_UPDATE_GET_TIMESTEP(e);
 
-			const Ref<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
+			const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			if (m_Input.IsHeld('W'))
 			{

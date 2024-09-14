@@ -1,12 +1,12 @@
  #pragma once
 
-#include "Dispatcher/Event/Event.h"
+#include "Dispatcher/Event.h"
 #include "Component/Component.h"
 #include "PolyContainer/PolyContainer.h"
 
 #include "Rendering/Framebuffer/Framebuffer.h"
 
-#include "Input/Input.h"
+#include "Input.h"
 
 namespace Volund
 {
@@ -18,7 +18,7 @@ namespace Volund
 #define VOLUND_ENTITY_GET_ID(entity) (entity >> 32)
 #define VOLUND_ENTITY_GET_INDEX(entity) (entity & 0x00000000FFFFFFFF)
 
-#define VOLUND_NULL_ENTITY (::VL::Entity)-1
+#define VOLUND_NULL_ENTITY (::Volund::Entity)-1
 
 namespace Volund
 {
@@ -29,13 +29,13 @@ namespace Volund
         struct ComponentEntry
         {
             size_t TypeId = 0;
-            Ref<Component> component;
+            std::shared_ptr<Component> component;
 
             template<typename T>
             bool Is();
 
             template<typename T>
-            Ref<T> As();
+            std::shared_ptr<T> As();
         };
 
         struct EntityEntry
@@ -56,7 +56,7 @@ namespace Volund
         bool IsAllocated(Entity entity);
 
         template<typename T, typename... Args>
-        Ref<T> CreateComponent(Entity entity, Args&&... args);
+        std::shared_ptr<T> CreateComponent(Entity entity, Args&&... args);
 
         template<typename T>
         void DeleteComponent(Entity entity, uint64_t index = 0);
@@ -68,14 +68,14 @@ namespace Volund
         uint64_t ComponentAmount(Entity entity);
 
         template<typename T>
-        Ref<T> GetComponent(Entity entity, uint64_t index = 0);
+        std::shared_ptr<T> GetComponent(Entity entity, uint64_t index = 0);
 
         void Procedure(const Event& e);
 
         std::vector<EntityEntry>::iterator begin();
         std::vector<EntityEntry>::iterator end();
 
-        static Ref<Scene> Create();
+        static std::shared_ptr<Scene> Create();
 
         ~Scene();
 

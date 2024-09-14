@@ -5,7 +5,7 @@
 
 namespace Volund
 {
-	Ref<Scene> GameState::GetScene()
+	std::shared_ptr<Scene> GameState::GetScene()
 	{
 		return this->m_Scene;
 	}
@@ -77,7 +77,7 @@ namespace Volund
 		return this->m_Scene->end();
 	}
 
-	Ref<Script> GameState::LoadScript(const std::string& filepath)
+	std::shared_ptr<Script> GameState::LoadScript(const std::string& filepath)
 	{
 		return this->m_AssetManager->LoadScript(filepath);
 	}
@@ -87,17 +87,17 @@ namespace Volund
 		return this->m_AssetManager->GetRootDirectory();
 	}
 
-	Ref<GameState> GameState::Create(Ref<Dispatcher> dispatcher)
+	std::shared_ptr<GameState> GameState::Create(std::shared_ptr<Dispatcher> dispatcher)
 	{
-		return Ref<GameState>(new GameState(dispatcher));
+		return std::shared_ptr<GameState>(new GameState(dispatcher));
 	}
 
-	Ref<GameState> GameState::Create(Ref<Dispatcher> dispatcher, const std::string& filepath)
+	std::shared_ptr<GameState> GameState::Create(std::shared_ptr<Dispatcher> dispatcher, const std::string& filepath)
 	{
-		return Ref<GameState>(new GameState(dispatcher, filepath));
+		return std::shared_ptr<GameState>(new GameState(dispatcher, filepath));
 	}
 
-	GameState::GameState(Ref<Dispatcher> dispatcher)
+	GameState::GameState(std::shared_ptr<Dispatcher> dispatcher)
 	{
 		this->m_Dispatcher = dispatcher;
 
@@ -106,7 +106,7 @@ namespace Volund
 		this->m_Scene = Scene::Create();
 	}
 
-	GameState::GameState(Ref<Dispatcher> dispatcher, const std::string& filepath)
+	GameState::GameState(std::shared_ptr<Dispatcher> dispatcher, const std::string& filepath)
 	{
 		this->m_Dispatcher = dispatcher;
 

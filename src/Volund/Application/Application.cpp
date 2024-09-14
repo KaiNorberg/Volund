@@ -1,3 +1,4 @@
+#include "Dispatcher/Event.h"
 #include "PCH/PCH.h"
 
 #include "Application.h"
@@ -23,12 +24,12 @@ namespace Volund
 		return this->m_ShouldRun;
 	}
 
-	Ref<Window> Application::GetWindow()
+	std::shared_ptr<Window> Application::GetWindow()
 	{
 		return this->m_Window;
 	}
 
-	Ref<Dispatcher> Application::GetDispatcher()
+	std::shared_ptr<Dispatcher> Application::GetDispatcher()
 	{
 		return this->m_Dispatcher;
 	}
@@ -68,11 +69,11 @@ namespace Volund
 			this->m_Window->Flush();
 			this->m_Window->Update();
 
-			Event updateEvent = Event(VOLUND_EVENT_TYPE_UPDATE);
+			Event updateEvent = Event(VOLUND_EVENT_UPDATE);
 			VOLUND_EVENT_UPDATE_SET_TIMESTEP(updateEvent, float(ts));
 
 			this->m_Dispatcher->Enqueue(updateEvent);
-			this->m_Dispatcher->Enqueue(Event(VOLUND_EVENT_TYPE_RENDER));
+			this->m_Dispatcher->Enqueue(Event(VOLUND_EVENT_RENDER));
 
 			this->m_Dispatcher->Dispatch();
 		}

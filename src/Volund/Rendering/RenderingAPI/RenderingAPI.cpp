@@ -16,7 +16,7 @@ namespace Volund
 
 		m_Instance->Clear(color);
 	}
-	
+
 	void RenderingAPI::SetViewPort(const int32_t x, const int32_t y, const int32_t width, const int32_t height)
 	{
 		VOLUND_PROFILE_FUNCTION();
@@ -36,10 +36,10 @@ namespace Volund
 		m_Instance->Draw(first, count);
 	}
 
-	void RenderingAPI::BlitFramebuffer(Ref<Framebuffer> readBuffer, Ref<Framebuffer> drawBuffer)
+	void RenderingAPI::BlitFramebuffer(std::shared_ptr<Framebuffer> readBuffer, std::shared_ptr<Framebuffer> drawBuffer)
 	{
 		VOLUND_PROFILE_FUNCTION();
-	
+
 		m_Instance->BlitFramebuffer(readBuffer, drawBuffer);
 	}
 

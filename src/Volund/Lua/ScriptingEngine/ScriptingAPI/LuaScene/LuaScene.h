@@ -8,10 +8,10 @@ namespace Volund
     {
     public:
 
-        LuaScene(Ref<Scene> scene);
+        LuaScene(std::shared_ptr<Scene> scene);
 
     private:
 
-        Ref<Scene> m_Scene;
+        std::shared_ptr<Scene> m_Scene;
     };
 }

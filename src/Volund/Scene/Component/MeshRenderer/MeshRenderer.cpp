@@ -27,22 +27,22 @@ namespace Volund
 		return this->m_LayerMask;
 	}
 
-	void MeshRenderer::SetMesh(const Ref<Mesh> newMesh)
+	void MeshRenderer::SetMesh(const std::shared_ptr<Mesh> newMesh)
 	{
 		this->m_Mesh = newMesh;
 	}
 
-	void MeshRenderer::SetMaterial(const Ref<Material> newMaterial)
+	void MeshRenderer::SetMaterial(const std::shared_ptr<Material> newMaterial)
 	{
 		this->m_Material = newMaterial;
 	}
 
-	Ref<Mesh> MeshRenderer::GetMesh()
+	std::shared_ptr<Mesh> MeshRenderer::GetMesh()
 	{
 		return this->m_Mesh;
 	}
 
-	Ref<Material> MeshRenderer::GetMaterial()
+	std::shared_ptr<Material> MeshRenderer::GetMaterial()
 	{
 		return this->m_Material;
 	}
@@ -52,7 +52,7 @@ namespace Volund
 		VOLUND_PROFILE_FUNCTION();
 	}
 
-	MeshRenderer::MeshRenderer(Ref<Mesh> mesh, Ref<Material> material)
+	MeshRenderer::MeshRenderer(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material)
 	{
 		this->m_Mesh = mesh;
 		this->m_Material = material;

@@ -1,7 +1,7 @@
 #include "PCH/PCH.h"
 
 #include "Dispatcher.h"
-#include "Input/Input.h"
+#include "Input.h"
 
 #include "Application/Application.h"
 
@@ -44,9 +44,9 @@ namespace Volund
 			Event e = this->m_EventQueue.front();
 			this->m_EventQueue.pop();
 
-			if ((e.Type & VOLUND_EVENT_TYPE_FLAG_ASYNC) != 0)
+			if ((e.type & VOLUND_EVENT_FLAG_ASYNC) != 0)
 			{
-				this->m_ThreadPool->Submit([this, e]() 
+				this->m_ThreadPool->Submit([this, e]()
 				{
 					this->m_EventCallback(e);
 				});
@@ -86,7 +86,7 @@ namespace Volund
 			this->m_CleanupQueue.pop();
 
 			cleanupTask();
-		}		
+		}
 	}
 
 	Dispatcher::Dispatcher(std::function<void(const Event&)> eventCallback)

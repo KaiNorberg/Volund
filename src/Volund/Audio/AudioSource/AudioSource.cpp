@@ -13,13 +13,13 @@ namespace Volund
         AL_CALL(alSourcePlay, this->m_Source);
     }
 
-    void AudioSource::SetBuffer(const Ref<AudioBuffer> buffer)
+    void AudioSource::SetBuffer(const std::shared_ptr<AudioBuffer> buffer)
     {
         this->m_Buffer = buffer;
         AL_CALL(alSourcei, this->m_Source, AL_BUFFER, buffer->GetBuffer());
     }
 
-    Ref<AudioBuffer> AudioSource::GetBuffer()
+    std::shared_ptr<AudioBuffer> AudioSource::GetBuffer()
     {
         return this->m_Buffer;
     }

@@ -40,8 +40,8 @@ namespace Volund::ScriptingAPI
 		return std::to_string(vec->x) + ", " + std::to_string(vec->y) + ", ";
 	}
 
-	void Integrate(Ref<sol::state> state)	
-	{		
+	void Integrate(std::shared_ptr<sol::state> state)
+	{
 		//IMPORTANT: Remember to implement new lua components whenever a new component is implemented.
 
 		state->open_libraries(sol::lib::base, sol::lib::table);
