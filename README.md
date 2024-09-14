@@ -17,3 +17,7 @@ To clone (download) this repository, you can use the ```Code``` button at the to
 In order to build Volund you will need to have xmake installed on your machine, if you do not have xmake installed you can install it from [here](https://xmake.io/#/).
 
 With xmake installed you can generate the project files using the ```xmake``` command, use ```xmake run``` to launch the editor.
+
+## Examples
+
+Several example scenes can be found in the [examples](https://github.com/KaiNorberg/Volund/tree/main/examples) folder, they can be loaded in the Editor by clicking the ```File > Load > Scene``` button in the top left corner.
