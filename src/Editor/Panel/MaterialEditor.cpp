@@ -8,7 +8,7 @@
 
 void MaterialEditor::OnProcedure(const VL::Event& e)
 {
-	/*switch (e.type)
+	switch (e.type)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
@@ -61,8 +61,8 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
 			if (ImGui::BeginListBox((std::string("##ListBox") + uniformName).c_str(), listBoxSize))
 			{
-				itemRectMin = ImVec2(this->GetPosition().x, ImGui::GetItemRectMin().y);
-				itemRectMax = ImVec2(this->GetPosition().x + this->GetSize().x, itemRectMin.y + listBoxSize.y);
+				itemRectMin = ImVec2(ImGui::GetWindowPos().x, ImGui::GetItemRectMin().y);
+				itemRectMax = ImVec2(ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, itemRectMin.y + listBoxSize.y);
 
 				std::string name;
 				if (!isInBlueprint)
@@ -168,7 +168,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		this->m_SelectedMaterial = nullptr;
 	}
 	break;
-	}*/
+	}
 }
 
 MaterialEditor::MaterialEditor(std::shared_ptr<EditorContext> context)
