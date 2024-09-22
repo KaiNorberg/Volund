@@ -9,11 +9,8 @@ namespace Volund
     class Job
     {
     public:
-
         Job(Task task, Task cleanupTask);
-
     private:
-
         friend class Dispatcher;
 
         Task m_Task;

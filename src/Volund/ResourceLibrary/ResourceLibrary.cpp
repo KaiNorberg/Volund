@@ -3,14 +3,14 @@
 
 namespace Volund
 {
-	bool ResourceLibrary::IsResource(const std::string& filepath)
+	bool ResourceLibrary::IsResource(std::string const& filepath)
 	{
 		ResourceLibrary singleton;
 
 		return m_Resources.contains(filepath);
 	}
 
-	const char* ResourceLibrary::Fetch(const std::string& filepath)
+	const char* ResourceLibrary::Fetch(std::string const& filepath)
     {
 		if (IsResource(filepath))
 		{
@@ -27,7 +27,7 @@ namespace Volund
 		return m_Resources;
 	}
 
-	void ResourceLibrary::CreateResource(const std::string& filepath, const char* content)
+	void ResourceLibrary::CreateResource(std::string const& filepath, const char* content)
 	{
 		m_Resources[filepath] = content;
 	}

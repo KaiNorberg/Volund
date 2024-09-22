@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "Instrumentor.h"
 
 #ifdef VOLUND_ENABLE_PROFILING
@@ -46,7 +45,7 @@ namespace Volund
 		return Output;
 	}
 
-	InstrumentorTimer::InstrumentorTimer(const std::string& Name)
+	InstrumentorTimer::InstrumentorTimer(std::string const& Name)
 	{
 		static Instrumentor Singleton;
 
@@ -54,7 +53,7 @@ namespace Volund
 		this->_Node->Name = Name;
 		this->_Node->Start = std::chrono::high_resolution_clock::now();
 
-		this->_Node->Parent = Instrumentor::CurrentNode; 
+		this->_Node->Parent = Instrumentor::CurrentNode;
 		Instrumentor::CurrentNode->Children.push_back(this->_Node);
 		Instrumentor::CurrentNode = this->_Node;
 	}

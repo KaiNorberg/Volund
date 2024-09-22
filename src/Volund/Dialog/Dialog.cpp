@@ -1,5 +1,3 @@
-#include "PCH/PCH.h"
-
 #include "Dialog.h"
 
 #include "tinyfiledialogs/tinyfiledialogs.c"
@@ -7,7 +5,7 @@
 
 namespace Volund
 {
-    std::string Dialog::InputBox(const std::string& title, const std::string& message, const std::string& defaultInput)
+    std::string Dialog::InputBox(std::string const& title, std::string const& message, std::string const& defaultInput)
     {
         const char* ret = tinyfd_inputBox(title.c_str(), message.c_str(), defaultInput.c_str());
 
@@ -57,7 +55,7 @@ namespace Volund
         }
     }
 
-    void Dialog::Message(const std::string& title, const std::string& message,  const std::string& dialogType, const std::string& iconType)
+    void Dialog::Message(std::string const& title, std::string const& message,  std::string const& dialogType, std::string const& iconType)
     {
         tinyfd_messageBox(title.c_str(), message.c_str(), dialogType.c_str(), iconType.c_str(), 1);
     }

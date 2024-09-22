@@ -2,9 +2,10 @@
 
 #include "Vector.h"
 #include "Vector3.h"
-#include "Logger/Logger.h"
+#include "Logger.h"
 
 #include <cstdint>
+#include <cmath>
 
 namespace Volund
 {

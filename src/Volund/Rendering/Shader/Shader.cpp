@@ -26,7 +26,7 @@ namespace Volund
 		}
 	}
 
-	std::shared_ptr<Shader> Shader::Create(const std::string& filepath)
+	std::shared_ptr<Shader> Shader::Create(std::string const& filepath)
 	{
 		std::shared_ptr<ShaderLoader> loader = std::make_shared<ShaderLoader>(filepath);
 

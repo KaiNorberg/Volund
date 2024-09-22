@@ -7,7 +7,7 @@ bool Panel::IsWindowHovered()
 	return this->m_IsWindowHovered;
 }
 
-void Panel::SetName(const std::string& name)
+void Panel::SetName(std::string const& name)
 {
 	this->m_Name = name;
 }

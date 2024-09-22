@@ -50,13 +50,13 @@ namespace Volund
     }
 
     template<typename T, typename U>
-    std::shared_ptr<Uniform<T>> Uniform<T, U>::Create(const std::string& name, const T& value)
+    std::shared_ptr<Uniform<T>> Uniform<T, U>::Create(std::string const& name, const T& value)
     {
         return std::shared_ptr<Uniform<T>>(new Uniform<T>(name, value));
     }
 
     template<typename T, typename U>
-    inline Volund::Uniform<T, U>::Uniform(const std::string& name, const T& value)
+    inline Volund::Uniform<T, U>::Uniform(std::string const& name, const T& value)
     {
         this->m_Name = name;
         this->m_Value = value;

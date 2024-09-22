@@ -46,7 +46,7 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 	}
 }
 
-bool Hierarchy::ImGuiEntity(VL::Entity entity, const std::string& entityName)
+bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 {
 	auto gameState = this->m_Context->GameState;
 	auto& selectedEntity = this->m_Context->SelectedEntity;

@@ -268,7 +268,7 @@ namespace Volund
 		glfwSwapBuffers(this->m_WindowData->GlfwWindow);
 	}
 
-	void Window::SetIcon(const std::string& filepath)
+	void Window::SetIcon(std::string const& filepath)
 	{
 		GLFWimage images[1];
 		ImageLoader imageLoader = ImageLoader(filepath, false);

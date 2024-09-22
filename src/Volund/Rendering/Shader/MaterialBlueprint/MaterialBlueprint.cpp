@@ -3,7 +3,7 @@
 
 namespace Volund
 {
-	bool MaterialBlueprint::Contains(const std::string& name)
+	bool MaterialBlueprint::Contains(std::string const& name)
 	{
 		for (auto& uniform : this->m_Uniforms)
 		{

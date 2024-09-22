@@ -2,7 +2,7 @@
 
 #include "SerialTable/SerialTable.h"
 
-namespace Volund 
+namespace Volund
 {
     class Deserializer
     {
@@ -11,9 +11,9 @@ namespace Volund
         bool Valid();
 
         template<typename T>
-        bool Is(const std::string& key) const;
+        bool Is(std::string const& key) const;
 
-        PrimitiveSerialObject& operator[](const std::string& key);
+        PrimitiveSerialObject& operator[](std::string const& key);
 
         const SerialTable::const_iterator begin() const;
         const SerialTable::const_iterator end() const;
@@ -21,7 +21,7 @@ namespace Volund
         SerialTable::iterator begin();
         SerialTable::iterator end();
 
-        Deserializer(const std::string& filepath, const std::string& fileType);
+        Deserializer(std::string const& filepath, std::string const& fileType);
 
         virtual ~Deserializer();
 
@@ -33,9 +33,8 @@ namespace Volund
     };
 
     template<typename T>
-    inline bool Deserializer::Is(const std::string& key) const
+    inline bool Deserializer::Is(std::string const& key) const
     {
         return this->m_Table.Is<T>(key);
     }
 }
-

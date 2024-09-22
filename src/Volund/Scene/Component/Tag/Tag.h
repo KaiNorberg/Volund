@@ -12,7 +12,7 @@ namespace Volund
 
         Tag() = default;
 
-        Tag(const std::string& string);
+        Tag(std::string const& string);
 
     private:
     };

@@ -19,7 +19,7 @@ namespace Volund
 		return this->m_MaterialBlueprint;
 	}
 
-	void ShaderLoader::Load(const std::string& filepath)
+	void ShaderLoader::Load(std::string const& filepath)
 	{
         std::stringstream stringStream;
         if (ResourceLibrary::IsResource(filepath))
@@ -162,7 +162,7 @@ namespace Volund
         this->m_MaterialBlueprint = std::make_shared<MaterialBlueprint>();
     }
 
-	ShaderLoader::ShaderLoader(const std::string& filepath)
+	ShaderLoader::ShaderLoader(std::string const& filepath)
 	{
         this->m_MaterialBlueprint = std::make_shared<MaterialBlueprint>();
 

@@ -12,14 +12,14 @@ public:
 
     bool IsWindowHovered();
 
-    void SetName(const std::string& name);
+    void SetName(std::string const& name);
     std::string GetName();
 	std::string GetId();
 
 	void Procedure(const VL::Event& e);
 	virtual void OnProcedure(const VL::Event& e) = 0;
 
-    virtual ~Panel() = default;
+    virtual ~Panel();
 
 protected:
 

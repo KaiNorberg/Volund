@@ -2,19 +2,22 @@
 
 #include "Window/Window.h"
 
+#include <string>
+#include <memory>
+
 namespace Volund
 {
     class Dialog
     {
     public:
 
-        static std::string InputBox(const std::string& title, const std::string& message, const std::string& defaultInput = "");
+        static std::string InputBox(std::string const& title, std::string const& message, std::string const& defaultInput = "");
 
         static std::string OpenFolder(std::shared_ptr<Window> window);
 
         static std::string OpenFile(std::shared_ptr<Window> window);
 
-        static void Message(const std::string& title, const std::string& message, const std::string& dialogType, const std::string& iconType);
+        static void Message(std::string const& title, std::string const& message, std::string const& dialogType, std::string const& iconType);
 
     private:
     };

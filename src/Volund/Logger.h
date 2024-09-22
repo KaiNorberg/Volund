@@ -17,7 +17,7 @@
 
 namespace Volund
 {
-    using LogCallback = void(*)(const std::string&);
+    using LogCallback = void(*)(std::string const&);
 
     enum class LogColor
     {
@@ -69,7 +69,7 @@ namespace Volund
         template<typename... Args>
         std::string FormatString(LogSeverity severity, const char* format, Args&&... args);
 
-        uint64_t Print(LogSeverity severity, const std::string& string);
+        uint64_t Print(LogSeverity severity, std::string const& string);
 
         static void UpdateConsole();
 

@@ -26,7 +26,7 @@ namespace Volund
 		}
 	}
 
-	std::shared_ptr<Texture> Texture::Create(const std::string& filepath)
+	std::shared_ptr<Texture> Texture::Create(std::string const& filepath)
 	{
 		ImageLoader loader = ImageLoader(filepath);
 		return Texture::Create(loader.GetData(), loader.GetWidth(), loader.GetHeight());

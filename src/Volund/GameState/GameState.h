@@ -5,8 +5,6 @@
 #include "Window/Window.h"
 #include "AssetManager/AssetManager.h"
 
-#include "Lua/ScriptingEngine/ScriptingEngine.h"
-
 namespace Volund
 {
     class GameState
@@ -15,9 +13,9 @@ namespace Volund
 
         std::shared_ptr<Scene> GetScene();
 
-        void SaveScene(const std::string& filepath = "");
+        void SaveScene(std::string const& filepath = "");
 
-        void LoadScene(const std::string& filepath);
+        void LoadScene(std::string const& filepath);
 
         void ReloadScene();
 
@@ -47,15 +45,15 @@ namespace Volund
         std::shared_ptr<T> GetComponent(Entity entity, uint64_t index = 0);
 
         template<typename T>
-        std::shared_ptr<T> FetchAsset(const std::string& filepath);
+        std::shared_ptr<T> FetchAsset(std::string const& filepath);
 
         template<typename T>
         std::string FetchFilepath(std::shared_ptr<T> asset);
 
         template<typename T>
-        void Serialize(std::shared_ptr<T> asset, const std::string& filepath);
+        void Serialize(std::shared_ptr<T> asset, std::string const& filepath);
 
-        std::shared_ptr<Script> LoadScript(const std::string& filepath);
+        std::shared_ptr<Script> LoadScript(std::string const& filepath);
 
         std::string GetRootDirectory();
 
@@ -63,14 +61,14 @@ namespace Volund
         std::vector<Scene::EntityEntry>::iterator end();
 
         static std::shared_ptr<GameState> Create(std::shared_ptr<Dispatcher> dispatcher);
-        static std::shared_ptr<GameState> Create(std::shared_ptr<Dispatcher> dispatcher, const std::string& filepath);
+        static std::shared_ptr<GameState> Create(std::shared_ptr<Dispatcher> dispatcher, std::string const& filepath);
 
         ~GameState();
 
     private:
 
         GameState(std::shared_ptr<Dispatcher> dispatcher);
-        GameState(std::shared_ptr<Dispatcher> dispatcher, const std::string& filepath);
+        GameState(std::shared_ptr<Dispatcher> dispatcher, std::string const& filepath);
 
         std::mutex m_Mutex;
 
@@ -80,7 +78,6 @@ namespace Volund
 
         std::shared_ptr<Scene> m_Scene;
         std::shared_ptr<AssetManager> m_AssetManager;
-        std::shared_ptr<ScriptingEngine> m_ScriptingEngine;
     };
 
     template<typename T, typename ...Args>
@@ -114,7 +111,7 @@ namespace Volund
     }
 
     template<typename T>
-    inline std::shared_ptr<T> GameState::FetchAsset(const std::string& filepath)
+    inline std::shared_ptr<T> GameState::FetchAsset(std::string const& filepath)
     {
         return this->m_AssetManager->Fetch<T>(filepath);
     }
@@ -126,7 +123,7 @@ namespace Volund
     }
 
     template<typename T>
-    inline void GameState::Serialize(std::shared_ptr<T> asset, const std::string& filepath)
+    inline void GameState::Serialize(std::shared_ptr<T> asset, std::string const& filepath)
     {
         this->m_AssetManager->Serialize<T>(asset, filepath);
     }

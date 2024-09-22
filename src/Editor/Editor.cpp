@@ -17,54 +17,6 @@
 #include <memory>
 #include <misc/cpp/imgui_stdlib.h>
 
-void Editor::OnRun()
-{
-	auto window = this->GetWindow();
-	window->SetIcon("data/icons/logo.png");
-	window->SetTitle("Volund Editor");
-
-	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
-
-	this->AttachModule<VL::AudioModule>();
-
-	IMGUI_CHECKVERSION();
-	ImGui::CreateContext();
-
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.IniFilename = "data/imgui.ini";
-	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
-
-	ImGui_ImplGlfw_InitForOpenGL(window->GetGlfwWindow(), false);
-	ImGui_ImplOpenGL3_Init();
-
-	window->ConnectWindowFocusCallback(ImGui_ImplGlfw_WindowFocusCallback);
-	window->ConnectCursorEnterCallback(ImGui_ImplGlfw_CursorEnterCallback);
-	window->ConnectCursorPositionCallback(ImGui_ImplGlfw_CursorPosCallback);
-	window->ConnectMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
-	window->ConnectScrollCallback(ImGui_ImplGlfw_ScrollCallback);
-	window->ConnectKeyCallback(ImGui_ImplGlfw_KeyCallback);
-	window->ConnectCharCallback(ImGui_ImplGlfw_CharCallback);
-
-	this->m_Context = std::make_shared<EditorContext>(this->GetDispatcher());
-
-	this->m_Panels.push_back(std::make_shared<Viewport>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Output>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Inspector>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Explorer>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Hierarchy>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<MaterialEditor>(this->m_Context));
-
-	SetDefaultImGuiStyle();
-
-	ImGui::LoadIniSettingsFromDisk("data/imgui.ini");
-}
-
-void Editor::OnTerminate()
-{
-
-}
-
 void Editor::Procedure(const VL::Event& e)
 {
 	this->m_Input.Procedure(e);
@@ -210,6 +162,49 @@ void Editor::Procedure(const VL::Event& e)
 	}
 	break;
 	}
+}
+
+Editor::Editor()
+{
+	auto window = this->GetWindow();
+	window->SetIcon("data/icons/logo.png");
+	window->SetTitle("Volund Editor");
+
+	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
+
+	this->AttachModule<VL::AudioModule>();
+
+	IMGUI_CHECKVERSION();
+	ImGui::CreateContext();
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.IniFilename = "data/imgui.ini";
+	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
+
+	ImGui_ImplGlfw_InitForOpenGL(window->GetGlfwWindow(), false);
+	ImGui_ImplOpenGL3_Init();
+
+	window->ConnectWindowFocusCallback(ImGui_ImplGlfw_WindowFocusCallback);
+	window->ConnectCursorEnterCallback(ImGui_ImplGlfw_CursorEnterCallback);
+	window->ConnectCursorPositionCallback(ImGui_ImplGlfw_CursorPosCallback);
+	window->ConnectMouseButtonCallback(ImGui_ImplGlfw_MouseButtonCallback);
+	window->ConnectScrollCallback(ImGui_ImplGlfw_ScrollCallback);
+	window->ConnectKeyCallback(ImGui_ImplGlfw_KeyCallback);
+	window->ConnectCharCallback(ImGui_ImplGlfw_CharCallback);
+
+	this->m_Context = std::make_shared<EditorContext>(this->GetDispatcher());
+
+	this->m_Panels.push_back(std::make_shared<Viewport>(this->m_Context));
+	this->m_Panels.push_back(std::make_shared<Output>(this->m_Context));
+	this->m_Panels.push_back(std::make_shared<Inspector>(this->m_Context));
+	this->m_Panels.push_back(std::make_shared<Explorer>(this->m_Context));
+	this->m_Panels.push_back(std::make_shared<Hierarchy>(this->m_Context));
+	this->m_Panels.push_back(std::make_shared<MaterialEditor>(this->m_Context));
+
+	SetDefaultImGuiStyle();
+
+	ImGui::LoadIniSettingsFromDisk("data/imgui.ini");
 }
 
 bool Editor::BeginDockSpace()

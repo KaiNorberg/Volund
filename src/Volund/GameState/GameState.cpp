@@ -1,7 +1,8 @@
-#include "PCH/PCH.h"
 #include "GameState.h"
 
 #include "Lua/Deserializer/Deserializer.h"
+
+#include <string>
 
 namespace Volund
 {
@@ -10,7 +11,7 @@ namespace Volund
 		return this->m_Scene;
 	}
 
-	void GameState::SaveScene(const std::string& filepath)
+	void GameState::SaveScene(std::string const& filepath)
 	{
 		if (filepath.empty())
 		{
@@ -22,7 +23,7 @@ namespace Volund
 		}
 	}
 
-	void GameState::LoadScene(const std::string& filepath)
+	void GameState::LoadScene(std::string const& filepath)
 	{
 		this->m_ScriptingEngine = ScriptingEngine::Create();
 		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, filepath, this->m_ScriptingEngine);
@@ -77,7 +78,7 @@ namespace Volund
 		return this->m_Scene->end();
 	}
 
-	std::shared_ptr<Script> GameState::LoadScript(const std::string& filepath)
+	std::shared_ptr<Script> GameState::LoadScript(std::string const& filepath)
 	{
 		return this->m_AssetManager->LoadScript(filepath);
 	}
@@ -92,7 +93,7 @@ namespace Volund
 		return std::shared_ptr<GameState>(new GameState(dispatcher));
 	}
 
-	std::shared_ptr<GameState> GameState::Create(std::shared_ptr<Dispatcher> dispatcher, const std::string& filepath)
+	std::shared_ptr<GameState> GameState::Create(std::shared_ptr<Dispatcher> dispatcher, std::string const& filepath)
 	{
 		return std::shared_ptr<GameState>(new GameState(dispatcher, filepath));
 	}
@@ -106,7 +107,7 @@ namespace Volund
 		this->m_Scene = Scene::Create();
 	}
 
-	GameState::GameState(std::shared_ptr<Dispatcher> dispatcher, const std::string& filepath)
+	GameState::GameState(std::shared_ptr<Dispatcher> dispatcher, std::string const& filepath)
 	{
 		this->m_Dispatcher = dispatcher;
 

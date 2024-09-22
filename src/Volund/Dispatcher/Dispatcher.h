@@ -5,6 +5,8 @@
 
 #include "Scene/Scene.h"
 
+#include <functional>
+
 namespace Volund
 {
     class Dispatcher

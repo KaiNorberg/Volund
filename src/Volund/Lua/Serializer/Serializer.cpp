@@ -1,10 +1,8 @@
-#include "PCH/PCH.h"
-
 #include "Serializer.h"
 
 namespace Volund
 {
-	void Serializer::WriteToFile(const std::string& filepath)
+	void Serializer::WriteToFile(std::string const& filepath)
 	{
 		VOLUND_INFO("Writing serialized table to (%s)...", filepath.c_str());
 
@@ -27,7 +25,7 @@ namespace Volund
 				"{\n" +
 				"	" + VOLUND_SERIAL_FILE_TYPE + " = \"" + this->m_FileType + "\",\n" +
 				"	" + VOLUND_SERIAL_DATA + " = \n" +
-					this->m_Output + 
+					this->m_Output +
 				"\n}" +
 				"\n\nreturn table";
 		}
@@ -62,32 +60,32 @@ namespace Volund
 		this->m_Output += "}";
 	}
 
-	void Serializer::Insert(const std::string& name, LuaInt value)
+	void Serializer::Insert(std::string const& name, LuaInt value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void Serializer::Insert(const std::string& name, LuaBool value)
+	void Serializer::Insert(std::string const& name, LuaBool value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void Serializer::Insert(const std::string& name, LuaFloat value)
+	void Serializer::Insert(std::string const& name, LuaFloat value)
 	{
 		this->InsertName(name);
 		this->m_Output += std::to_string(value) + "";
 	}
 
-	void Serializer::Insert(const std::string& name, const LuaVec2& value)
+	void Serializer::Insert(std::string const& name, const LuaVec2& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec2:new(" + std::to_string(value.x) +
 			", " + std::to_string(value.y) + ")";
 	}
 
-	void Serializer::Insert(const std::string& name, const LuaVec3& value)
+	void Serializer::Insert(std::string const& name, const LuaVec3& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec3:new(" + std::to_string(value.x) +
@@ -95,7 +93,7 @@ namespace Volund
 			", " + std::to_string(value.z) + ")";
 	}
 
-	void Serializer::Insert(const std::string& name, const Vec4& value)
+	void Serializer::Insert(std::string const& name, const Vec4& value)
 	{
 		this->InsertName(name);
 		this->m_Output += "Vec4:new(" + std::to_string(value.x) +
@@ -104,7 +102,7 @@ namespace Volund
 			", " + std::to_string(value.w) + ")";
 	}
 
-	void Serializer::Insert(const std::string& name, const LuaString& value, bool asString)
+	void Serializer::Insert(std::string const& name, const LuaString& value, bool asString)
 	{
 		this->InsertName(name);
 
@@ -121,12 +119,12 @@ namespace Volund
 		}
 	}
 
-	Serializer::Serializer(const std::string& fileType)
+	Serializer::Serializer(std::string const& fileType)
 	{
 		this->m_FileType = fileType;
 	}
 
-	void Serializer::InsertName(const std::string& name)
+	void Serializer::InsertName(std::string const& name)
 	{
 		if (!this->m_Output.empty() && this->m_Output.back() != '\n')
 		{

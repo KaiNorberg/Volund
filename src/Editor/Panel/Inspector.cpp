@@ -153,7 +153,7 @@ void Inspector::OnProcedure(const VL::Event& e)
 
 			if (script != nullptr)
 			{
-				for (const std::string& identifier : script->GetPublicVariables())
+				for (std::string const& identifier : script->GetPublicVariables())
 				{
 					if (script->Is<VL::LuaInt>(identifier))
 					{

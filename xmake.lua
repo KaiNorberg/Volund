@@ -5,7 +5,7 @@ add_requires("openal-soft", "glfw", "glad", "lua", "sol2")
 set_languages("cxx20");
 
 target("Volund")
-    set_kind("shared")
+    set_kind("static")
     add_packages("openal-soft", "glfw", "glad", "lua", "sol2")
     add_includedirs("vendor", "src/Volund")
     add_files("src/Volund/*.cpp", "src/Volund/**/*.cpp")
