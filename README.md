@@ -10,7 +10,7 @@ Volund is a game engine written in C++ with Lua scripting for Windows and Linux.
 
 <ins>**1. Cloning (downloading) this repository**</ins>
 
-To clone (download) this repository, you can use the ```Code``` button at the top left of the screen, or use the following command if you have git installed ```git clone --recursive https://github.com/Kaj9296/Volund```.
+To clone (download) this repository, you can use the ```Code``` button at the top left of the screen, or use the following command if you have git installed ```git clone --recursive https://github.com/KaiNorberg/Volund```.
 
 <ins>**2. Building Volund**</ins>
 
