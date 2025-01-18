@@ -66,11 +66,6 @@ namespace Volund
 		}
 	}
 
-	void Renderer::Submit(std::shared_ptr<GameState> gameState, std::shared_ptr<Framebuffer> target)
-	{
-		this->Submit(gameState->GetScene(), target);
-	}
-
 	void Renderer::Submit(const RendererModel& model)
 	{
 		this->m_Data.Models.push_back(model);

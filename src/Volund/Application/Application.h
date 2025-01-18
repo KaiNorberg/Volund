@@ -7,7 +7,6 @@
 #include "Dispatcher/Dispatcher.h"
 
 #include "Window/Window.h"
-#include "GameState/GameState.h"
 
 namespace Volund
 {

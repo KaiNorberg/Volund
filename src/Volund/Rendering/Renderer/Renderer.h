@@ -9,7 +9,6 @@
 #include "Rendering/Uniform/Uniform.h"
 
 #include "Scene/Scene.h"
-#include "GameState/GameState.h"
 
 #define VOLUND_UNIFORM_NAME_MODELMATRIX "_ModelMatrix"
 
@@ -50,8 +49,6 @@ namespace Volund
         virtual void Begin() = 0;
 
         void Submit(std::shared_ptr<Scene> scene, std::shared_ptr<Framebuffer> target);
-
-        void Submit(std::shared_ptr<GameState> gameState, std::shared_ptr<Framebuffer> target);
 
         void Submit(const RendererModel& model);
 

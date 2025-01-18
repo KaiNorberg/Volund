@@ -18,7 +18,7 @@ public:
 
     VL::Entity SelectedEntity = VOLUND_NULL_ENTITY;
 
-    std::shared_ptr<VL::GameState> GameState;
+    std::shared_ptr<VL::LuaState> State;
 
     bool IsPaused();
 

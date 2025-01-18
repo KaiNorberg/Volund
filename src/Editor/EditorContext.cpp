@@ -14,7 +14,7 @@ EditorContext::EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher)
 {
 	this->m_Dispatcher = dispatcher;
 
-	this->GameState = VL::GameState::Create(dispatcher);
+	this->State = NULL;
 
 	this->m_Paused = true;
 }
