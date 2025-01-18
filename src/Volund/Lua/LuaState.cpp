@@ -49,6 +49,16 @@ namespace Volund
         return this->m_scene.as<std::shared_ptr<Scene>>();
     }
 
+    std::string LuaState::ParseFilepath(std::string const& filepath)
+    {
+        if (ResourceLibrary::IsResource(filepath))
+        {
+            return filepath;
+        }
+
+        return std::filesystem::path(this->m_cwd) / std::filesystem::path(filepath);
+    }
+
     LuaState::LuaState(std::string const& cwd)
     {
         this->m_cwd = std::filesystem::absolute(cwd);
@@ -56,7 +66,7 @@ namespace Volund
         this->m_state.open_libraries(sol::lib::base);
 
         this->m_state.set_function("require", [this](std::string const& filepath) {
-            return this->m_state.script_file(std::filesystem::path(this->m_cwd) / std::filesystem::path(filepath));
+            return this->m_state.script_file(this->ParseFilepath(filepath));
         });
 
         this->m_state.set_function("print", [this](std::string const& string) {
@@ -167,7 +177,7 @@ namespace Volund
         );
 
         this->m_state.new_usertype<Shader>("Shader", sol::constructors<>(),
-            "new", [](std::string const& filepath) { return Shader::Create(filepath); },
+            "new", [this](std::string const& filepath) { return Shader::Create(this->ParseFilepath(filepath)); },
             "has_uniform", &Shader::HasUniform,
             "get_id", &Shader::GetId,
             "set_int", &Shader::SetInt,
@@ -181,8 +191,42 @@ namespace Volund
             "set_framebuffer", &Shader::SetFramebuffer
         );
 
+        this->m_state.new_usertype<Texture>("Texture", 
+            "new", sol::overload(
+                []() { return Texture::Create(); },
+                [this](std::string const& filepath) { return Texture::Create(this->ParseFilepath(filepath)); },
+                [](uint32_t width, uint32_t height, sol::table imageData) 
+                {
+                    std::vector<unsigned char> pixels;
+                    for (auto& [key, value] : imageData) 
+                    {
+                        pixels.push_back(value.as<unsigned char>());
+                    }
+
+                    return Texture::Create(pixels.data(), width, height);
+                }
+            ),
+            "get_id", &Texture::GetID,
+            "get_width", &Texture::GetWidth,
+            "get_height", &Texture::GetHeight,
+            "bind", sol::overload(
+                [](std::shared_ptr<Texture> texture) { texture->Bind(); },
+                [](std::shared_ptr<Texture> texture, uint32_t unit) { texture->Bind(unit); }
+            ),
+            "set_data", [](std::shared_ptr<Texture> texture, uint32_t width, uint32_t height, sol::table imageData) 
+            {
+                std::vector<unsigned char> pixels;
+                for (auto& [key, value] : imageData) 
+                {
+                    pixels.push_back(value.as<unsigned char>());
+                }
+
+                texture->SetData(pixels.data(), width, height);
+            }
+        );
+
         this->m_state.new_usertype<Mesh>("Mesh", sol::constructors<>(),
-            "new", [](std::string const& filepath) { return Mesh::Create(filepath); }
+            "new", [this](std::string const& filepath) { return Mesh::Create(this->ParseFilepath(filepath)); }
         );
 
         this->m_state.new_usertype<Material>("Material", sol::constructors<>(),

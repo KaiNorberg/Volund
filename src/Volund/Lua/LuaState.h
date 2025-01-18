@@ -26,6 +26,8 @@ namespace Volund
 
     private:
 
+        std::string ParseFilepath(std::string const& filepath);
+
         std::string m_cwd;
         sol::state m_state;
         sol::object m_scene;
