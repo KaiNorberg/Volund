@@ -59,7 +59,15 @@ namespace Volund
             return this->m_state.script_file(std::filesystem::path(this->m_cwd) / std::filesystem::path(filepath));
         });
 
+        this->m_state.set_function("print", [this](std::string const& string) {
+            VOLUND_INFO(string.c_str());
+        });
+
         this->m_state.new_usertype<Vec3>("Vec3", sol::constructors<Vec3(), Vec3(float), Vec3(float, float, float)>()
+        );
+
+        this->m_state.new_usertype<Shader>("Shader", sol::constructors<>(),
+            "new", [](std::string const& filepath) { return Shader::Create(filepath); }
         );
 
         this->m_state.new_usertype<Mesh>("Mesh", sol::constructors<>(),
@@ -67,7 +75,43 @@ namespace Volund
         );
 
         this->m_state.new_usertype<Material>("Material", sol::constructors<>(),
-            "new", []() { return Material::Create(); }
+            "new", [](std::shared_ptr<Shader> shader) { return Material::Create(shader); },
+            "set_int", [](std::shared_ptr<Material> material, std::string const& name, IntUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_float", [](std::shared_ptr<Material> material, std::string const& name, FloatUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_double", [](std::shared_ptr<Material> material, std::string const& name, DoubleUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_vec2", [](std::shared_ptr<Material> material, std::string const& name, Vec2UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_vec3", [](std::shared_ptr<Material> material, std::string const& name, Vec3UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_vec4", [](std::shared_ptr<Material> material, std::string const& name, Vec4UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_mat4x4", [](std::shared_ptr<Material> material, std::string const& name, Mat4x4UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_texture", [](std::shared_ptr<Material> material, std::string const& name, TextureUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_framebuffer", [](std::shared_ptr<Material> material, std::string const& name, FramebufferUniformType value)
+            {
+                material->Set(name, value);
+            }
         );
 
         this->m_state.new_usertype<Scene>("Scene", sol::constructors<Scene()>(),
@@ -75,9 +119,22 @@ namespace Volund
             "register", &Scene::Register,
 
             //AddComponent
-            "add_transform", &Scene::AddComponent<Transform>,
-            "add_camera", &Scene::AddComponent<Camera>,
-            "add_mesh_renderer", &Scene::AddComponent<MeshRenderer>
+            "add_camera", [](std::shared_ptr<Scene> scene, Entity entity)
+            {
+                return scene->AddComponent<Camera>(entity);
+            },
+            "add_mesh_renderer", [](std::shared_ptr<Scene> scene, Entity entity, std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material)
+            {
+                return scene->AddComponent<MeshRenderer>(entity, mesh, material);
+            },
+            "add_point_light", [](std::shared_ptr<Scene> scene, Entity entity)
+            {
+                return scene->AddComponent<PointLight>(entity);
+            },            
+            "add_transform", [](std::shared_ptr<Scene> scene, Entity entity, Vec3 pos, Vec3 rotation, Vec3 scale)
+            {
+                return scene->AddComponent<Transform>(entity, pos, rotation, scale);
+            }
         );
 
         this->m_scene = this->m_state.script("return Scene.new()");

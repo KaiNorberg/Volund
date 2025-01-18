@@ -31,7 +31,7 @@ namespace Volund
         std::shared_ptr<Mesh> newMesh = Mesh::Create();
         std::shared_ptr<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
 
-        VOLUND_INFO("Loading Asset (%s)... ", filepath.c_str());
+        VOLUND_INFO("Loading Mesh (%s)... ", filepath.c_str());
 
 		if (ResourceLibrary::IsResource(filepath))
 		{

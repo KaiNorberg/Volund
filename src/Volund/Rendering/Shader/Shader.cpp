@@ -29,7 +29,9 @@ namespace Volund
 	{
 		std::shared_ptr<ShaderLoader> loader = std::make_shared<ShaderLoader>(filepath);
 
-		return Shader::Create(loader->GetSource(), loader->GetBlueprint());
+        VOLUND_INFO("Loading Shader (%s)... ", filepath.c_str());
+		auto shader = Shader::Create(loader->GetSource(), loader->GetBlueprint());
+		return shader;
 	}
 
 	std::shared_ptr<Shader> Shader::Create(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)

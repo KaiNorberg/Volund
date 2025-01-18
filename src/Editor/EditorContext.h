@@ -32,7 +32,7 @@ private:
 
     friend class Editor;
 
-    bool m_paused = false;
+    bool m_paused = true;
 
     std::shared_ptr<VL::Dispatcher> m_dispatcher;
 };

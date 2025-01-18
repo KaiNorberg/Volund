@@ -124,13 +124,27 @@ return table
 
 scene = Scene.new()
 
+simpleShader = Shader.new("://Simple.shader")
+
+cubeMesh = Mesh.new("://Cube.obj")
+
+blueMaterial = Material.new(simpleShader)
+blueMaterial:set_vec3("Albedo", Vec3.new(0.0, 0.0, 1.0))
+blueMaterial:set_float("Metallic", 0.7)
+blueMaterial:set_vec3("Ambient", Vec3.new(0.0))
+blueMaterial:set_float("Roughness", 0.7)
+
 camera = scene:register()
-scene:add_transform(camera, Vec3.new(0.0, 2.0, 8.0), Vec3.new(0.0), Vec3.new(1.0))
+scene:add_transform(camera, Vec3.new(0.0, 7.5, 0.0), Vec3.new(0.0), Vec3.new(1.0))
 scene:add_camera(camera)
+
+light = scene:register()
+scene:add_transform(light, Vec3.new(0.0, 2.0, 8.0), Vec3.new(0.0), Vec3.new(1.0))
+scene:add_point_light(light)
 
 blueCube = scene:register()
 scene:add_transform(blueCube, Vec3.new(7.5, 3.0, -7.8), Vec3.new(0.0), Vec3.new(1.0))
-scene:add_mesh_renderer(blueCube, Mesh.new("://Cube.obj"), require("Materials/Blue.mat.lua"))
+scene:add_mesh_renderer(blueCube, cubeMesh, blueMaterial)
 
 --- ... ---
 

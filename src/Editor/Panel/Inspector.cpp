@@ -88,9 +88,9 @@ void Inspector::OnProcedure(const VL::Event& e)
 			auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
 
 			std::string label = "##Color" + std::to_string((uint64_t)pointLight.get());
-			ImGui::ColorPicker3(label.c_str(), &pointLight->Color.x, ImGuiColorEditFlags_Float);
+			ImGui::ColorPicker3(label.c_str(), &pointLight->color.x, ImGuiColorEditFlags_Float);
 
-			ImGuiFloat("Brightness", pointLight->Brightness);
+			ImGuiFloat("Brightness", pointLight->brightness);
 		});
 
 		this->ImGuiComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene](int i)

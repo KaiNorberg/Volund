@@ -44,8 +44,8 @@ namespace Volund
 					auto pointLight = component.As<PointLight>();
 
 					RendererLight light;
-					light.Brightness = pointLight->Brightness;
-					light.Color = pointLight->Color;
+					light.Brightness = pointLight->brightness;
+					light.Color = pointLight->color;
 					light.pos = position;
 
 					this->Submit(light);

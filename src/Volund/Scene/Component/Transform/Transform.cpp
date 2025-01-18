@@ -44,8 +44,7 @@ namespace Volund
 		return modelMatrix;
 	}
 
-
-	Transform::Transform(Vec3 pos, Vec3 rotation, Vec3 scale)
+    Transform::Transform(Vec3 pos, Vec3 rotation, Vec3 scale)
 	{
 		this->pos = pos;
 		this->quat = Quat(rotation);

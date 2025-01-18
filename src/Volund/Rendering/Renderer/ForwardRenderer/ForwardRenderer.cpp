@@ -43,19 +43,19 @@ namespace Volund
 			for (const auto& model : this->m_data.Models)
 			{
 				if (model.material == nullptr)
-				{
+				{					
 					continue;
 				}
 
 				auto shader = model.material->GetShader();
 
 				if (shader == nullptr || shader->GetId() == 0)
-				{
+				{					
 					continue;
 				}
 
 				if (model.mesh == nullptr)
-				{
+				{						
 					continue;
 				}
 
