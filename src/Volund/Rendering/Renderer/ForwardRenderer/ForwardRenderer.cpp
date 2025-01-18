@@ -6,32 +6,32 @@ namespace Volund
 {
 	void ForwardRenderer::Begin()
 	{
-		this->m_Data = Renderer::Data();
+		this->m_data = Renderer::Data();
 	}
 
 	void ForwardRenderer::End()
 	{
-		std::sort(this->m_Data.Models.begin(), this->m_Data.Models.end(), [](const RendererModel& a, const RendererModel& b)
+		std::sort(this->m_data.Models.begin(), this->m_data.Models.end(), [](const RendererModel& a, const RendererModel& b)
 		{
 			return a.material < b.material;
 		});
 
-		this->m_LightsBuffer->LightAmount = std::min((uint32_t)this->m_Data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
-		for (uint64_t i = 0; i < this->m_LightsBuffer->LightAmount; i++)
+		this->m_lightsBuffer->LightAmount = std::min((uint32_t)this->m_data.Lights.size(), (uint32_t)VOLUND_FORWARD_RENDERER_MAX_LIGHTS);
+		for (uint64_t i = 0; i < this->m_lightsBuffer->LightAmount; i++)
 		{
-			Vec3 lightColor = this->m_Data.Lights[i].Color * this->m_Data.Lights[i].Brightness;
-			Vec3 lightPosition = this->m_Data.Lights[i].Position;
+			Vec3 lightColor = this->m_data.Lights[i].Color * this->m_data.Lights[i].Brightness;
+			Vec3 lightPosition = this->m_data.Lights[i].pos;
 
-			this->m_LightsBuffer->LightColors[i] = Vec4(lightColor.x, lightColor.y, lightColor.z, 0.0f);
-			this->m_LightsBuffer->LightPositions[i] = Vec4(lightPosition.x, lightPosition.y, lightPosition.z, 0.0f);
+			this->m_lightsBuffer->LightColors[i] = Vec4(lightColor.x, lightColor.y, lightColor.z, 0.0f);
+			this->m_lightsBuffer->LightPositions[i] = Vec4(lightPosition.x, lightPosition.y, lightPosition.z, 0.0f);
 		}
-		this->m_LightsBuffer.Update();
+		this->m_lightsBuffer.Update();
 
-		for (const auto& eye : this->m_Data.Eyes)
+		for (const auto& eye : this->m_data.Eyes)
 		{
-			this->m_CameraBuffer->ProjectionMatrix = eye.ProjectionMatrix;
-			this->m_CameraBuffer->ViewMatrix = eye.ViewMatrix;
-			this->m_CameraBuffer.Update();
+			this->m_cameraBuffer->ProjectionMatrix = eye.ProjectionMatrix;
+			this->m_cameraBuffer->ViewMatrix = eye.ViewMatrix;
+			this->m_cameraBuffer.Update();
 
 			eye.Target->Bind();
 			auto& targetSpec = eye.Target->GetSpec();
@@ -40,22 +40,22 @@ namespace Volund
 			Volund::RenderingAPI::SetViewPort(0, 0, (int32_t)targetSpec.Width, (int32_t)targetSpec.Height);
 
 			std::shared_ptr<Material> prevMaterial = nullptr;
-			for (const auto& model : this->m_Data.Models)
+			for (const auto& model : this->m_data.Models)
 			{
 				if (model.material == nullptr)
-				{
+				{					
 					continue;
 				}
 
 				auto shader = model.material->GetShader();
 
 				if (shader == nullptr || shader->GetId() == 0)
-				{
+				{					
 					continue;
 				}
 
 				if (model.mesh == nullptr)
-				{
+				{						
 					continue;
 				}
 

@@ -19,7 +19,7 @@ namespace Volund
 					auto transform = component.As<Transform>();
 
 					modelMatrix = transform->GetModelMatrix();
-					position = transform->Position;
+					position = transform->pos;
 
 					break;
 				}
@@ -44,9 +44,9 @@ namespace Volund
 					auto pointLight = component.As<PointLight>();
 
 					RendererLight light;
-					light.Brightness = pointLight->Brightness;
-					light.Color = pointLight->Color;
-					light.Position = position;
+					light.Brightness = pointLight->brightness;
+					light.Color = pointLight->color;
+					light.pos = position;
 
 					this->Submit(light);
 				}
@@ -66,23 +66,18 @@ namespace Volund
 		}
 	}
 
-	void Renderer::Submit(std::shared_ptr<GameState> gameState, std::shared_ptr<Framebuffer> target)
-	{
-		this->Submit(gameState->GetScene(), target);
-	}
-
 	void Renderer::Submit(const RendererModel& model)
 	{
-		this->m_Data.Models.push_back(model);
+		this->m_data.Models.push_back(model);
 	}
 
 	void Renderer::Submit(const RendererLight& light)
 	{
-		this->m_Data.Lights.push_back(light);
+		this->m_data.Lights.push_back(light);
 	}
 
 	void Renderer::Submit(const RendererEye& eye)
 	{
-		this->m_Data.Eyes.push_back(eye);
+		this->m_data.Eyes.push_back(eye);
 	}
 }

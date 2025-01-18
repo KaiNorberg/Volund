@@ -12,5 +12,5 @@ public:
 
 private:
 
-    std::shared_ptr<VL::Material> m_SelectedMaterial;
+    std::shared_ptr<VL::Material> m_selectedMaterial;
 };

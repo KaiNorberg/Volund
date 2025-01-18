@@ -15,18 +15,18 @@ namespace Volund
 		{
 			if (enabled)
 			{
-				this->m_LayerMask |= 1UL << (index - 1);
+				this->m_layerMask |= 1UL << (index - 1);
 			}
 			else
 			{
-				this->m_LayerMask &= ~(1UL << (index - 1));
+				this->m_layerMask &= ~(1UL << (index - 1));
 			}
 		}
 	}
 
 	uint32_t Camera::GetLayerMask()
 	{
-		return this->m_LayerMask;
+		return this->m_layerMask;
 	}
 
 	Mat4x4 Camera::GetViewMatrix() const
@@ -35,7 +35,7 @@ namespace Volund
 
 		if (entityTransform != nullptr)
 		{
-			return Math::ViewMatrix(entityTransform->Position, entityTransform->Position + entityTransform->GetFront(),
+			return Math::ViewMatrix(entityTransform->pos, entityTransform->pos + entityTransform->GetFront(),
 				entityTransform->GetUp());
 		}
 		else
@@ -83,11 +83,11 @@ namespace Volund
 			VOLUND_ASSERT(entityTransform != nullptr, "Camera component unable to retrive transform component!");
 
 			RendererEye eye;
-			eye.Target = this->m_TargetBuffer;
+			eye.Target = this->m_targetBuffer;
 			eye.ProjectionMatrix = this->GetProjectionMatrix((float)spec.Width / (float)spec.Height);
 			eye.ViewMatrix = this->GetViewMatrix();
-			eye.Position = entityTransform->Position;
-			eye.LayerMask = this->m_LayerMask;
+			eye.pos = entityTransform->pos;
+			eye.LayerMask = this->m_layerMask;
 
 			Renderer::Submit(eye);*/
 		}

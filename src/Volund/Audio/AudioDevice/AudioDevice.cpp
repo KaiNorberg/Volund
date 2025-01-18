@@ -10,15 +10,15 @@ namespace Volund
 {
 	ALCdevice* AudioDevice::GetDevice() const
 	{
-		return this->m_Device;
+		return this->m_device;
 	}
 
 	AudioDevice::AudioDevice(std::string const& device)
 	{
 		VOLUND_INFO("Retriving audio device %d...", device.c_str());
 
-		this->m_Device = alcOpenDevice(device.c_str());
-		if (!this->m_Device)
+		this->m_device = alcOpenDevice(device.c_str());
+		if (!this->m_device)
 		{
 			VOLUND_ERROR("Unable to open alc device!");
 		}
@@ -27,7 +27,7 @@ namespace Volund
 	AudioDevice::~AudioDevice()
 	{
 		ALCboolean successful;
-		if (!ALC_CALL(alcCloseDevice, successful, this->m_Device, this->m_Device))
+		if (!ALC_CALL(alcCloseDevice, successful, this->m_device, this->m_device))
 		{
 			//Do nothing
 		}

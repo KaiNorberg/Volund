@@ -31,9 +31,9 @@ namespace Volund
 
     private:
 
-        uint32_t m_Id;
+        uint32_t m_id;
 
-        std::shared_ptr<VertexBuffer> m_VertexBuffer;
-        std::shared_ptr<IndexBuffer> m_IndexBuffer;
+        std::shared_ptr<VertexBuffer> m_vertexBuffer;
+        std::shared_ptr<IndexBuffer> m_indexBuffer;
     };
 }

@@ -21,7 +21,7 @@ namespace Volund
         AudioContext(std::shared_ptr<AudioDevice> device);
         ~AudioContext();
     private:
-        ALCdevice* m_Device;
-        ALCcontext* m_Context;
+        ALCdevice* m_device;
+        ALCcontext* m_context;
     };
 }

@@ -6,8 +6,8 @@ namespace Volund
 {
 	void AudioModule::OnAttach(Application* app)
 	{
-		this->m_Device = std::make_shared<AudioDevice>(nullptr);
-		this->m_Context = std::make_shared<AudioContext>(this->m_Device);
+		this->m_device = std::make_shared<AudioDevice>(nullptr);
+		this->m_context = std::make_shared<AudioContext>(this->m_device);
 	}
 
 	void AudioModule::OnDetach()

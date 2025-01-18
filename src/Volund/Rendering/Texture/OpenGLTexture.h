@@ -24,10 +24,10 @@ namespace Volund
 
     private:
 
-        uint32_t m_Height = 5;
+        uint32_t m_height = 5;
 
-        uint32_t m_Width = 5;
+        uint32_t m_width = 5;
 
-        uint32_t m_Id = 0;
+        uint32_t m_id = 0;
     };
 }

@@ -3,14 +3,6 @@
 #include <Volund.h>
 #include <memory>
 
-namespace Volund
-{
-    std::shared_ptr<Application> Entry()
-    {
-        return std::shared_ptr<Editor>(new Editor());
-    }
-}
-
 int main()
 {
 	VOLUND_PROFILE_FUNCTION();

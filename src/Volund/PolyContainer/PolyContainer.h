@@ -46,7 +46,7 @@ namespace Volund
 
     private:
 
-        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>> m_Data;
+        std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>> m_data;
     };
 
     template<typename T>
@@ -55,7 +55,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        this->m_Data[typeId].push_back(std::make_shared<D>(entry));
+        this->m_data[typeId].push_back(std::make_shared<D>(entry));
     }
 
     template<typename T>
@@ -64,7 +64,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        this->m_Data[typeId].push_back(entry);
+        this->m_data[typeId].push_back(entry);
     }
 
     template<typename T>
@@ -73,7 +73,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        this->m_Data[typeId].push_back(std::shared_ptr<D>(entry));
+        this->m_data[typeId].push_back(std::shared_ptr<D>(entry));
     }
 
     template<typename T>
@@ -82,9 +82,9 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        if (this->m_Data.contains(typeId) && this->m_Data[typeId].size() > index)
+        if (this->m_data.contains(typeId) && this->m_data[typeId].size() > index)
         {
-            this->m_Data[typeId].erase(this->m_Data[typeId].begin() + index);
+            this->m_data[typeId].erase(this->m_data[typeId].begin() + index);
         }
     }
 
@@ -94,7 +94,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        return std::dynamic_pointer_cast<D>(this->m_Data[typeId][index]);
+        return std::dynamic_pointer_cast<D>(this->m_data[typeId][index]);
     }
 
     template<typename T>
@@ -103,7 +103,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        return this->m_Data.contains(typeId);
+        return this->m_data.contains(typeId);
     }
 
     template<typename T>
@@ -112,7 +112,7 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        return this->m_Data[typeId].size();
+        return this->m_data[typeId].size();
     }
 
     template<typename T>
@@ -121,30 +121,30 @@ namespace Volund
     {
         static uint64_t typeId = Utils::GetTypeId<D>();
 
-        return this->m_Data[typeId];
+        return this->m_data[typeId];
     }
 
     template<typename T>
     inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::iterator PolyContainer<T>::begin()
     {
-        return this->m_Data.begin();
+        return this->m_data.begin();
     }
 
     template<typename T>
     inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::iterator PolyContainer<T>::end()
     {
-        return this->m_Data.end();
+        return this->m_data.end();
     }
 
     template<typename T>
     inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::const_iterator PolyContainer<T>::begin() const
     {
-        return this->m_Data.begin();
+        return this->m_data.begin();
     }
 
     template<typename T>
     inline std::unordered_map<uint64_t, std::vector<std::shared_ptr<T>>>::const_iterator PolyContainer<T>::end() const
     {
-        return this->m_Data.end();
+        return this->m_data.end();
     }
 }

@@ -33,8 +33,8 @@ namespace Volund
 
         void Init(Entity entity, std::weak_ptr<Scene> scene);
 
-        Entity m_Entity = 0;
+        Entity m_entity = 0;
 
-        std::weak_ptr<Scene> m_Scene;
+        std::weak_ptr<Scene> m_scene;
     };
 }

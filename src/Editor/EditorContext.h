@@ -2,13 +2,16 @@
 
 #include <Volund.h>
 
-#define EDITOR_EVENT_LOAD_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 1)
-#define EDITOR_EVENT_RELOAD_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 2)
-#define EDITOR_EVENT_SAVE_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 3)
-#define EDITOR_EVENT_NEW_SCENE (VOLUND_HIGHEST_EVENT_TYPE + 4)
-#define EDITOR_EVENT_RESET (VOLUND_HIGHEST_EVENT_TYPE + 5)
-#define EDITOR_EVENT_PLAY (VOLUND_HIGHEST_EVENT_TYPE + 6)
-#define EDITOR_EVENT_PAUSE (VOLUND_HIGHEST_EVENT_TYPE + 7)
+#include <memory>
+
+#define EDITOR_CMD_LOAD_SCENE (VOLUND_EVENT_USER + 1)
+#define EDITOR_CMD_RELOAD_SCENE (VOLUND_EVENT_USER + 2)
+#define EDITOR_CMD_SAVE_SCENE (VOLUND_EVENT_USER + 3)
+#define EDITOR_CMD_NEW_SCENE (VOLUND_EVENT_USER + 4)
+#define EDITOR_CMD_PLAY (VOLUND_EVENT_USER + 5)
+#define EDITOR_CMD_PAUSE (VOLUND_EVENT_USER + 6)
+
+#define EDITOR_EVENT_RESET (VOLUND_EVENT_USER + 10)
 
 class Editor;
 
@@ -16,9 +19,8 @@ class EditorContext
 {
 public:
 
-    VL::Entity SelectedEntity = VOLUND_NULL_ENTITY;
-
-    std::shared_ptr<VL::GameState> GameState;
+    VL::Entity selectedEntity = VOLUND_ENTITY_NULL;
+    std::shared_ptr<VL::LuaState> state;
 
     bool IsPaused();
 
@@ -30,7 +32,7 @@ private:
 
     friend class Editor;
 
-    bool m_Paused;
+    bool m_paused = true;
 
-    std::shared_ptr<VL::Dispatcher> m_Dispatcher;
+    std::shared_ptr<VL::Dispatcher> m_dispatcher;
 };

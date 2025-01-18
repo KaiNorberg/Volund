@@ -33,14 +33,14 @@ namespace Volund
 
 	bool ModelLoader::Valid()
 	{
-		return this->m_Valid;
+		return this->m_valid;
 	}
 
 	int f = 0;
 
 	void ModelLoader::ParseOBJ(std::string const& content)
 	{
-		this->m_Valid = true;
+		this->m_valid = true;
 
 		std::vector<Vec3> geometry;
 		std::vector<Vec3> normals;
@@ -86,7 +86,7 @@ namespace Volund
 					else
 					{
 						VOLUND_WARNING("Corrupt vertex detected in .obj file!");
-						this->m_Valid = false;
+						this->m_valid = false;
 					}
 				}
 				else if (words[0] == "vt") //Is texturecoord
@@ -98,7 +98,7 @@ namespace Volund
 					else
 					{
 						VOLUND_WARNING("Corrupt texture coord detected in .obj file!");
-						this->m_Valid = false;
+						this->m_valid = false;
 					}
 				}
 				else if (words[0] == "vn") //Is normal
@@ -110,7 +110,7 @@ namespace Volund
 					else
 					{
 						VOLUND_WARNING("Corrupt texture coord detected in .obj file!");
-						this->m_Valid = false;
+						this->m_valid = false;
 					}
 				}
 			}
@@ -150,7 +150,7 @@ namespace Volund
 				else
 				{
 					VOLUND_WARNING("Corrupt face detected in .obj file!");
-					this->m_Valid = false;
+					this->m_valid = false;
 				}
 			}
 			break;

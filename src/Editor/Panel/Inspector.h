@@ -21,11 +21,11 @@ private:
 template<typename T>
 inline void Inspector::ImGuiComponent(std::string const& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
-    auto gameState = this->m_Context->GameState;
+    auto scene = this->m_context->state->SceneRef();
 
-    for (int i = 0; i < gameState->ComponentAmount<T>(entity); i++)
+    for (int i = 0; i < scene->ComponentAmount<T>(entity); i++)
     {
-        void* ptrID = gameState->GetComponent<T>(entity, i).get();
+        void* ptrID = scene->GetComponent<T>(entity, i).get();
 
         bool open = ImGui::TreeNodeEx(ptrID, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, name.c_str());
 
@@ -33,7 +33,7 @@ inline void Inspector::ImGuiComponent(std::string const& name, VL::Entity entity
         {
             if (ImGui::MenuItem("Delete"))
             {
-                gameState->DeleteComponent<T>(entity, i);
+                scene->RemoveComponent<T>(entity, i);
             }
 
             ImGui::EndPopup();

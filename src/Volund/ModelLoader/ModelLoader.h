@@ -19,6 +19,6 @@ namespace Volund
 
     private:
 
-        bool m_Valid;
+        bool m_valid;
     };
 }

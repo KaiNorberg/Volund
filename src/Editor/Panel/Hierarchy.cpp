@@ -8,11 +8,11 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_Context->GameState;
+		auto scene = this->m_context->state->SceneRef();
 
 		if (ImGui::Button("+"))
 		{
-			gameState->AllocateEntity();
+			scene->Register();
 		}
 
 		ImGui::SameLine();
@@ -21,12 +21,12 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 		ImGui::SameLine();
 		ImGui::InputText(" ", searchTerm, 64);
 
-		for (auto& [entity, container] : *gameState)
+		for (auto& [entity, container] : *scene)
 		{
 			std::string entityName;
-			if (gameState->HasComponent<VL::Tag>(entity))
+			if (scene->HasComponent<VL::Tag>(entity))
 			{
-				entityName = gameState->GetComponent<VL::Tag>(entity)->String;
+				entityName = scene->GetComponent<VL::Tag>(entity)->string;
 			}
 			else
 			{
@@ -48,12 +48,12 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 
 bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 {
-	auto gameState = this->m_Context->GameState;
-	auto& selectedEntity = this->m_Context->SelectedEntity;
+	auto scene = this->m_context->state->SceneRef();
+	auto& selectedEntity = this->m_context->selectedEntity;
 
 	ImGui::PushID((void*)entity);
 
-	bool Open = false;
+	bool open = false;
 
 	ImGuiTreeNodeFlags Flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 	if (entity == selectedEntity)
@@ -61,25 +61,25 @@ bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 		Flags = Flags | ImGuiTreeNodeFlags_Selected;
 	}
 
-	Open = ImGui::TreeNodeEx((void*)entity, Flags, entityName.c_str());
+	open = ImGui::TreeNodeEx((void*)entity, Flags, entityName.c_str());
 
 	if (ImGui::IsItemClicked())
 	{
 		selectedEntity = entity;
 	}
 
-	if (Open)
+	if (open)
 	{
 		ImGui::TreePop();
 	}
 
-	bool EntityAlive = true;
+	bool entityAlive = true;
 	if (ImGui::BeginPopupContextItem())
 	{
 		if (ImGui::MenuItem("Delete"))
 		{
-			gameState->DeallocateEntity(entity);
-			EntityAlive = false;
+			scene->Unregister(entity);
+			entityAlive = false;
 		}
 
 		ImGui::EndPopup();
@@ -87,12 +87,12 @@ bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 
 	ImGui::PopID();
 
-	return EntityAlive;
+	return entityAlive;
 }
 
 Hierarchy::Hierarchy(std::shared_ptr<EditorContext> context)
 {
 	this->SetName("Hierarchy");
 
-	this->m_Context = context;
+	this->m_context = context;
 }

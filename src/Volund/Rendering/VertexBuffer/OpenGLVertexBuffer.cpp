@@ -7,12 +7,12 @@ namespace Volund
 {
 	AABB OpenGLVertexBuffer::GetAABB()
 	{
-		return this->m_AABB;
+		return this->m_aABB;
 	}
 
 	void OpenGLVertexBuffer::Bind()
 	{
-		glBindBuffer(GL_ARRAY_BUFFER, this->m_Id);
+		glBindBuffer(GL_ARRAY_BUFFER, this->m_id);
 	}
 
 	void OpenGLVertexBuffer::Unbind()
@@ -22,30 +22,30 @@ namespace Volund
 
 	uint32_t OpenGLVertexBuffer::GetCount()
 	{
-		return this->m_Count;
+		return this->m_count;
 	}
 
 	void OpenGLVertexBuffer::SetLayout(const VertexLayout& layout)
 	{
-		this->m_Layout = layout;
+		this->m_layout = layout;
 	}
 
 	VertexLayout OpenGLVertexBuffer::GetLayout()
 	{
-		return this->m_Layout;
+		return this->m_layout;
 	}
 
 	OpenGLVertexBuffer::OpenGLVertexBuffer(const float vertices[], const uint64_t count)
 	{
-		glCreateBuffers(1, &this->m_Id);
-		glBindBuffer(GL_ARRAY_BUFFER, this->m_Id);
+		glCreateBuffers(1, &this->m_id);
+		glBindBuffer(GL_ARRAY_BUFFER, this->m_id);
 		glBufferData(GL_ARRAY_BUFFER, count * sizeof(float), vertices, GL_STATIC_DRAW);
 
-		this->m_AABB = AABB(vertices, count);
+		this->m_aABB = AABB(vertices, count);
 	}
 
 	OpenGLVertexBuffer::~OpenGLVertexBuffer()
 	{
-		glDeleteBuffers(1, &this->m_Id);
+		glDeleteBuffers(1, &this->m_id);
 	}
 }

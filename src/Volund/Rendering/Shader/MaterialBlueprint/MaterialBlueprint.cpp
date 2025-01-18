@@ -4,7 +4,7 @@ namespace Volund
 {
 	bool MaterialBlueprint::Contains(std::string const& name)
 	{
-		for (auto& uniform : this->m_Uniforms)
+		for (auto& uniform : this->m_uniforms)
 		{
 			if (uniform->GetName() == name)
 			{
@@ -17,11 +17,11 @@ namespace Volund
 
 	const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator MaterialBlueprint::begin() const
 	{
-		return this->m_Uniforms.begin();
+		return this->m_uniforms.begin();
 	}
 
 	const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator MaterialBlueprint::end() const
 	{
-		return this->m_Uniforms.end();
+		return this->m_uniforms.end();
 	}
 }

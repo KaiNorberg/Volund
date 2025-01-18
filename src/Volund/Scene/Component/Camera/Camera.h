@@ -33,6 +33,6 @@ namespace Volund
 
     private:
 
-        uint32_t m_LayerMask = std::numeric_limits<uint32_t>::max();
+        uint32_t m_layerMask = std::numeric_limits<uint32_t>::max();
     };
 }

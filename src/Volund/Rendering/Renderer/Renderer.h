@@ -9,7 +9,6 @@
 #include "Rendering/Uniform/Uniform.h"
 
 #include "Scene/Scene.h"
-#include "GameState/GameState.h"
 
 #define VOLUND_UNIFORM_NAME_MODELMATRIX "_ModelMatrix"
 
@@ -28,7 +27,7 @@ namespace Volund
     {
         RGB Color;
         float Brightness;
-        Vec3 Position;
+        Vec3 pos;
     };
 
     struct RendererEye
@@ -51,8 +50,6 @@ namespace Volund
 
         void Submit(std::shared_ptr<Scene> scene, std::shared_ptr<Framebuffer> target);
 
-        void Submit(std::shared_ptr<GameState> gameState, std::shared_ptr<Framebuffer> target);
-
         void Submit(const RendererModel& model);
 
         void Submit(const RendererLight& light);
@@ -70,6 +67,6 @@ namespace Volund
             std::vector<RendererModel> Models;
             std::vector<RendererEye> Eyes;
             std::vector<RendererLight> Lights;
-        } m_Data;
+        } m_data;
     };
 }

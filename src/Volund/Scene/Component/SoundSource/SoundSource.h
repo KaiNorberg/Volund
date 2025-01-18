@@ -29,12 +29,12 @@ namespace Volund
 
         void Procedure(const Event& e);
 
-        SoundSource() = default;
+        SoundSource(std::shared_ptr<AudioBuffer> buffer = nullptr);
 
     private:
 
-        bool m_HasAutoPlayed = false;
+        bool m_hasAutoPlayed = false;
 
-        AudioSource m_Source;
+        AudioSource m_source;
     };
 }

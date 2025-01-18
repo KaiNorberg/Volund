@@ -30,8 +30,8 @@ namespace Volund
 
     private:
 
-        ShaderSource m_Source;
+        ShaderSource m_source;
 
-        std::shared_ptr<MaterialBlueprint> m_MaterialBlueprint;
+        std::shared_ptr<MaterialBlueprint> m_materialBlueprint;
     };
 }

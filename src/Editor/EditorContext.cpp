@@ -2,19 +2,15 @@
 
 bool EditorContext::IsPaused()
 {
-	return this->m_Paused;
+	return this->m_paused;
 }
 
 void EditorContext::Enqueue(const VL::Event& e)
 {
-	this->m_Dispatcher->Enqueue(e);
+	this->m_dispatcher->Enqueue(e);
 }
 
-EditorContext::EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher)
+EditorContext::EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher) : m_dispatcher{dispatcher}
 {
-	this->m_Dispatcher = dispatcher;
-
-	this->GameState = VL::GameState::Create(dispatcher);
-
-	this->m_Paused = true;
+	this->state = std::make_shared<VL::LuaState>(".");
 }

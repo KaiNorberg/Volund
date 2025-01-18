@@ -19,65 +19,65 @@ namespace Volund
 
 	CHRONO_TIME_POINT Scene::GetStartTime()
 	{
-		return this->m_StartTime;
+		return this->m_startTime;
 	}
 
-	Entity Scene::AllocateEntity()
+	Entity Scene::Register()
 	{
 		uint32_t newEntityId = rand();
 
-		if (!this->m_FreeEntries.empty())
+		if (!this->m_freeEntries.empty())
 		{
-			uint32_t freeIndex = this->m_FreeEntries.back();
-			EntityEntry& bucket = this->m_EntityHeap[freeIndex];
-			this->m_FreeEntries.pop_back();
+			uint32_t freeIndex = this->m_freeEntries.back();
+			EntityEntry& bucket = this->m_entityHeap[freeIndex];
+			this->m_freeEntries.pop_back();
 
 			bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, freeIndex);
 			return bucket.entity;
 		}
 
 		EntityEntry bucket;
-		bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, this->m_EntityHeap.size());
+		bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, this->m_entityHeap.size());
 
-		this->m_EntityHeap.push_back(bucket);
+		this->m_entityHeap.push_back(bucket);
 
 		return bucket.entity;
 	}
 
-	void Scene::DeallocateEntity(Entity entity)
+	void Scene::Unregister(Entity entity)
 	{
-		if (!IsAllocated(entity))
+		if (!IsRegistered(entity))
 		{
-			VOLUND_ERROR("Attempted to deallocate unallocated entity!");
+			VOLUND_ERROR("Attempted to unregister unregistered entity!");
 		}
 
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		this->m_EntityHeap[entityIndex].entity = VOLUND_NULL_ENTITY;
-		this->m_EntityHeap[entityIndex].Components.clear();
-		m_FreeEntries.push_back(entityIndex);
+		this->m_entityHeap[entityIndex].entity = VOLUND_ENTITY_NULL;
+		this->m_entityHeap[entityIndex].Components.clear();
+		m_freeEntries.push_back(entityIndex);
 
-		while (!this->m_EntityHeap.empty() && this->m_EntityHeap.back().entity == VOLUND_NULL_ENTITY)
+		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().entity == VOLUND_ENTITY_NULL)
 		{
-			this->m_EntityHeap.pop_back();
-			auto it = std::find(this->m_FreeEntries.begin(), this->m_FreeEntries.end(), this->m_EntityHeap.size() - 1);
-			if (it != this->m_FreeEntries.end())
+			this->m_entityHeap.pop_back();
+			auto it = std::find(this->m_freeEntries.begin(), this->m_freeEntries.end(), this->m_entityHeap.size() - 1);
+			if (it != this->m_freeEntries.end())
 			{
-				this->m_FreeEntries.erase(it);
+				this->m_freeEntries.erase(it);
 			}
 		}
 	}
 
-	bool Scene::IsAllocated(Entity entity)
+	bool Scene::IsRegistered(Entity entity)
 	{
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		return this->m_EntityHeap.size() > entityIndex && this->m_EntityHeap[entityIndex].entity != VOLUND_NULL_ENTITY;
+		return this->m_entityHeap.size() > entityIndex && this->m_entityHeap[entityIndex].entity != VOLUND_ENTITY_NULL;
 	}
 
 	void Scene::Procedure(const Event& e)
 	{
-		for (auto& entry : this->m_EntityHeap)
+		for (auto& entry : this->m_entityHeap)
 		{
 			for (auto& [typeId, component] : entry)
 			{
@@ -88,12 +88,12 @@ namespace Volund
 
 	std::vector<Scene::EntityEntry>::iterator Scene::begin()
 	{
-		return this->m_EntityHeap.begin();
+		return this->m_entityHeap.begin();
 	}
 
 	std::vector<Scene::EntityEntry>::iterator Scene::end()
 	{
-		return this->m_EntityHeap.end();
+		return this->m_entityHeap.end();
 	}
 
 	std::vector<Scene::ComponentEntry>::iterator Scene::LowerBound(std::vector<ComponentEntry>& components, const size_t& typeId)
@@ -106,26 +106,21 @@ namespace Volund
 		return std::upper_bound(components.begin(), components.end(), typeId);
 	}
 
-	std::shared_ptr<Scene> Scene::Create()
-	{
-		return std::shared_ptr<Scene>(new Scene());
-	}
-
 	Scene::Scene()
 	{
-		this->m_StartTime = std::chrono::high_resolution_clock::now();
+		this->m_startTime = std::chrono::high_resolution_clock::now();
 	}
 
 	Scene::~Scene()
 	{
-		for (auto& entry : this->m_EntityHeap)
+		for (auto& entry : this->m_entityHeap)
 		{
 			for (auto& [typeId, component] : entry)
 			{
 				component->OnDestroy();
 			}
 		}
-		this->m_EntityHeap.clear();
+		this->m_entityHeap.clear();
 	}
 
 	bool operator<(const size_t& a, const Scene::ComponentEntry& b)

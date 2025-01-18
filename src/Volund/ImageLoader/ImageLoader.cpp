@@ -2,41 +2,42 @@
 
 #include "Logger.h"
 
+#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
 namespace Volund
 {
 	int32_t ImageLoader::GetWidth() const
 	{
-		return this->m_Width;
+		return this->m_width;
 	}
 
 	int32_t ImageLoader::GetHeight() const
 	{
-		return this->m_Height;
+		return this->m_height;
 	}
 
 	int32_t ImageLoader::GetChannels() const
 	{
-		return this->m_Channels;
+		return this->m_channels;
 	}
 
 	unsigned char* ImageLoader::GetData() const
 	{
-		return this->m_Data;
+		return this->m_data;
 	}
 
 	void ImageLoader::Load(std::string const& filepath)
 	{
-		if (this->m_Data != nullptr)
+		if (this->m_data != nullptr)
 		{
-			stbi_image_free(this->m_Data);
+			stbi_image_free(this->m_data);
 		}
 
 		stbi_set_flip_vertically_on_load(true);
-		this->m_Data = stbi_load(filepath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, 4);
+		this->m_data = stbi_load(filepath.c_str(), &this->m_width, &this->m_height, &this->m_channels, 4);
 
-		if (this->m_Data == nullptr)
+		if (this->m_data == nullptr)
 		{
 			VOLUND_WARNING("Unable to load image (%s)!", filepath.c_str());
 		}
@@ -49,6 +50,6 @@ namespace Volund
 
 	ImageLoader::~ImageLoader()
 	{
-		stbi_image_free(this->m_Data);
+		stbi_image_free(this->m_data);
 	}
 }

@@ -1,3 +1,4 @@
+--[[
 local table =
 {
 	FileType = "Material",
@@ -14,4 +15,8 @@ local table =
 	}
 }
 
-return table
+return table]]--
+
+
+
+material = Material.new()

@@ -13,8 +13,8 @@ namespace Volund
 
     private:
 
-        std::vector<Shader> m_PostEffects;
-        std::vector<Shader> m_PreEffects;
+        std::vector<Shader> m_postEffects;
+        std::vector<Shader> m_preEffects;
 
     };
 }

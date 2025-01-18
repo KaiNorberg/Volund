@@ -4,12 +4,12 @@ namespace Volund
 {
 	Vec4& Mat4x4::operator[](uint8_t index)
 	{
-		return this->m_Data[index];
+		return this->m_data[index];
 	}
 
 	const Vec4& Mat4x4::operator[](uint8_t index) const
 	{
-		return this->m_Data[index];
+		return this->m_data[index];
 	}
 
 	Mat4x4 Mat4x4::operator+(const Mat4x4& matrix) const
@@ -101,34 +101,34 @@ namespace Volund
 
 	void Mat4x4::operator+=(const Mat4x4& matrix)
 	{
-		this->m_Data[0] += matrix[0];
-		this->m_Data[1] += matrix[1];
-		this->m_Data[2] += matrix[2];
-		this->m_Data[3] += matrix[3];
+		this->m_data[0] += matrix[0];
+		this->m_data[1] += matrix[1];
+		this->m_data[2] += matrix[2];
+		this->m_data[3] += matrix[3];
 	}
 
 	void Mat4x4::operator+=(const float& scalar)
 	{
-		this->m_Data[0] += scalar;
-		this->m_Data[1] += scalar;
-		this->m_Data[2] += scalar;
-		this->m_Data[3] += scalar;
+		this->m_data[0] += scalar;
+		this->m_data[1] += scalar;
+		this->m_data[2] += scalar;
+		this->m_data[3] += scalar;
 	}
 
 	void Mat4x4::operator-=(const Mat4x4& matrix)
 	{
-		this->m_Data[0] -= matrix[0];
-		this->m_Data[1] -= matrix[1];
-		this->m_Data[2] -= matrix[2];
-		this->m_Data[3] -= matrix[3];
+		this->m_data[0] -= matrix[0];
+		this->m_data[1] -= matrix[1];
+		this->m_data[2] -= matrix[2];
+		this->m_data[3] -= matrix[3];
 	}
 
 	void Mat4x4::operator-=(const float& scalar)
 	{
-		this->m_Data[0] -= scalar;
-		this->m_Data[1] -= scalar;
-		this->m_Data[2] -= scalar;
-		this->m_Data[3] -= scalar;
+		this->m_data[0] -= scalar;
+		this->m_data[1] -= scalar;
+		this->m_data[2] -= scalar;
+		this->m_data[3] -= scalar;
 	}
 
 	void Mat4x4::operator*=(const Mat4x4& matrix)
@@ -139,46 +139,46 @@ namespace Volund
 
 	void Mat4x4::operator*=(const float& scalar)
 	{
-		this->m_Data[0] *= scalar;
-		this->m_Data[1] *= scalar;
-		this->m_Data[2] *= scalar;
-		this->m_Data[3] *= scalar;
+		this->m_data[0] *= scalar;
+		this->m_data[1] *= scalar;
+		this->m_data[2] *= scalar;
+		this->m_data[3] *= scalar;
 	}
 
 	Mat4x4::Mat4x4(const Vec4& vector1, const Vec4& vector2, const Vec4& vector3, const Vec4& vector4)
 	{
-		this->m_Data[0] = vector1;
-		this->m_Data[1] = vector2;
-		this->m_Data[2] = vector3;
-		this->m_Data[3] = vector4;
+		this->m_data[0] = vector1;
+		this->m_data[1] = vector2;
+		this->m_data[2] = vector3;
+		this->m_data[3] = vector4;
 	}
 
 	Mat4x4::Mat4x4(const std::array<float, 16> initList)
 	{
-		this->m_Data[0] = Vec4(initList[0], initList[1], initList[2], initList[3]);
-		this->m_Data[1] = Vec4(initList[4], initList[5], initList[6], initList[7]);
-		this->m_Data[2] = Vec4(initList[8], initList[9], initList[10], initList[11]);
-		this->m_Data[3] = Vec4(initList[12], initList[13], initList[14], initList[15]);
+		this->m_data[0] = Vec4(initList[0], initList[1], initList[2], initList[3]);
+		this->m_data[1] = Vec4(initList[4], initList[5], initList[6], initList[7]);
+		this->m_data[2] = Vec4(initList[8], initList[9], initList[10], initList[11]);
+		this->m_data[3] = Vec4(initList[12], initList[13], initList[14], initList[15]);
 	}
 
 	Mat4x4::Mat4x4(const Mat4x4& matrix)
 	{
-		this->m_Data = matrix.m_Data;
+		this->m_data = matrix.m_data;
 	}
 
 	Mat4x4::Mat4x4(const float& scalar)
 	{
-		this->m_Data[0] = Vec4(scalar, 0, 0, 0);
-		this->m_Data[1] = Vec4(0, scalar, 0, 0);
-		this->m_Data[2] = Vec4(0, 0, scalar, 0);
-		this->m_Data[3] = Vec4(0, 0, 0, scalar);
+		this->m_data[0] = Vec4(scalar, 0, 0, 0);
+		this->m_data[1] = Vec4(0, scalar, 0, 0);
+		this->m_data[2] = Vec4(0, 0, scalar, 0);
+		this->m_data[3] = Vec4(0, 0, 0, scalar);
 	}
 
 	Mat4x4::Mat4x4()
 	{
-		this->m_Data[0] = Vec4(1, 0, 0, 0);
-		this->m_Data[1] = Vec4(0, 1, 0, 0);
-		this->m_Data[2] = Vec4(0, 0, 1, 0);
-		this->m_Data[3] = Vec4(0, 0, 0, 1);
+		this->m_data[0] = Vec4(1, 0, 0, 0);
+		this->m_data[1] = Vec4(0, 1, 0, 0);
+		this->m_data[2] = Vec4(0, 0, 1, 0);
+		this->m_data[3] = Vec4(0, 0, 0, 1);
 	}
 }

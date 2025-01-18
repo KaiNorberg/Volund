@@ -10,22 +10,22 @@ namespace Volund
     {
     public:
 
-        float Speed = 1.0f;
+        float speed;
 
-        float Sensitivity = 1.0f;
+        float sensitivity;
 
         void Procedure(const Event& e);
 
         virtual void OnCreate();
 
-        CameraMovement() = default;
+        CameraMovement(float speed = 1.0f, float sensitivity = 1.0f);
 
     private:
 
-        Input m_Input;
+        Input m_input;
 
-        Vec3 m_Rotation = Vec3(0.0f);
+        Vec3 m_rotation = Vec3(0.0f);
 
-        IVec2 m_OldMousePosition = IVec2(0);
+        IVec2 m_oldMousePosition = IVec2(0);
     };
 } //namespace Volund

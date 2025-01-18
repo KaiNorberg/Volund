@@ -20,7 +20,7 @@ private:
 
     void DrawBackground();
 
-    std::shared_ptr<EditorContext> m_Context;
-    std::vector<std::shared_ptr<Panel>> m_Panels;
-    VL::Input m_Input;
+    std::shared_ptr<EditorContext> m_context;
+    std::vector<std::shared_ptr<Panel>> m_panels;
+    VL::Input m_input;
 };

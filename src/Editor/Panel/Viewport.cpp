@@ -6,28 +6,26 @@
 
 void Viewport::OnProcedure(const VL::Event& e)
 {
-	this->m_Input.Procedure(e);
+	this->m_input.Procedure(e);
 
 	switch (e.type)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_Context->GameState;
-
-		this->Render(gameState, ImVec2(this->m_FramebufferSize.x, this->m_FramebufferSize.y));
+		this->Render(this->m_context->state->SceneRef(), ImVec2(this->m_framebufferSize.x, this->m_framebufferSize.y));
 
 		ImVec2 buttonSize = ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight());
-		bool isPaused = this->m_Context->IsPaused();
+		bool isPaused = this->m_context->IsPaused();
 
 		ImGuiAlign("#######", 1.f);
 
 		ImGui::BeginDisabled(!isPaused);
-		if (ImGui::ImageButton("PlayButton", (ImTextureID)this->m_PlayIcon->GetID(),
+		if (ImGui::ImageButton("PlayButton", (ImTextureID)this->m_playIcon->GetID(),
 			buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
 		{
-			if (this->m_Context->IsPaused())
+			if (this->m_context->IsPaused())
 			{
-				this->m_Context->Enqueue(EDITOR_EVENT_PLAY);
+				this->m_context->Enqueue(EDITOR_CMD_PLAY);
 			}
 		}
 		ImGui::EndDisabled();
@@ -35,12 +33,12 @@ void Viewport::OnProcedure(const VL::Event& e)
 		ImGui::SameLine();
 
 		ImGui::BeginDisabled(isPaused);
-		if (ImGui::ImageButton("PauseButton", (ImTextureID)(uint64_t)this->m_PauseIcon->GetID(),
+		if (ImGui::ImageButton("PauseButton", (ImTextureID)(uint64_t)this->m_pauseIcon->GetID(),
 			buttonSize, ImVec2(0, 1), ImVec2(1, 0)))
 		{
-			if (!this->m_Context->IsPaused())
+			if (!this->m_context->IsPaused())
 			{
-				this->m_Context->Enqueue(EDITOR_EVENT_PAUSE);
+				this->m_context->Enqueue(EDITOR_CMD_PAUSE);
 			}
 		}
 		ImGui::EndDisabled();
@@ -48,16 +46,16 @@ void Viewport::OnProcedure(const VL::Event& e)
 		if (ImGui::BeginChild(this->GetId().c_str()))
 		{
 			ImVec2 viewportSize = ImGui::GetContentRegionAvail();
-			this->m_FramebufferSize = VL::Vec2(viewportSize.x, viewportSize.y);
+			this->m_framebufferSize = VL::Vec2(viewportSize.x, viewportSize.y);
 			ImVec2 cursorPosition = ImGui::GetCursorScreenPos();
 
-			if (!this->m_Context->IsPaused())
+			if (!this->m_context->IsPaused())
 			{
-				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_SceneFramebuffer->GetAttachment(0)), ImVec2(this->m_FramebufferSize.x, this->m_FramebufferSize.y), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_sceneFramebuffer->GetAttachment(0)), ImVec2(this->m_framebufferSize.x, this->m_framebufferSize.y), ImVec2(0, 1), ImVec2(1, 0));
 			}
 			else
 			{
-				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_EditorFramebuffer->GetAttachment(0)), ImVec2(this->m_FramebufferSize.x, this->m_FramebufferSize.y), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::Image(reinterpret_cast<void*>((uint64_t)this->m_editorFramebuffer->GetAttachment(0)), ImVec2(this->m_framebufferSize.x, this->m_framebufferSize.y), ImVec2(0, 1), ImVec2(1, 0));
 			}
 		}
 		ImGui::EndChild();
@@ -72,8 +70,8 @@ void Viewport::OnProcedure(const VL::Event& e)
 	break;
 	case EDITOR_EVENT_RESET:
 	{
-		this->m_EditorFramebuffer->Invalidate();
-		this->m_SceneFramebuffer->Invalidate();
+		this->m_editorFramebuffer->Invalidate();
+		this->m_sceneFramebuffer->Invalidate();
 	}
 	break;
 	}
@@ -81,96 +79,96 @@ void Viewport::OnProcedure(const VL::Event& e)
 
 void Viewport::UpdateCameraMovement(float timeStep, bool isWindowHovered)
 {
-	VL::IVec2 cursorDelta = this->m_Input.GetMousePosition() - this->m_OldMousePosition;
-	float scrollDelta = this->m_Input.GetScrollPosition() - this->m_OldScrollPosition;
+	VL::IVec2 cursorDelta = this->m_input.GetMousePosition() - this->m_oldMousePosition;
+	float scrollDelta = this->m_input.GetScrollPosition() - this->m_oldScrollPosition;
 	cursorDelta.x = std::clamp(cursorDelta.x, -10, 10);
 	cursorDelta.y = std::clamp(cursorDelta.y, -10, 10);
 	scrollDelta = std::clamp(scrollDelta, -10.0f, 10.0f);
 
-	if (isWindowHovered && this->m_Input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
+	if (isWindowHovered && this->m_input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
 	{
 		if (scrollDelta != 0.0f)
 		{
-			this->m_Distance -= (scrollDelta)*this->ZoomSpeed * this->m_Distance;
+			this->m_distance -= (scrollDelta)*this->ZoomSpeed * this->m_distance;
 		}
 
-		VL::Quat quaternion = VL::Quat(VL::Math::Radians(this->m_Rotation));
+		VL::Quat quaternion = VL::Quat(VL::Math::Radians(this->m_rotation));
 
 		VL::Vec3 front = quaternion * VL::Math::BACK;
 		VL::Vec3 right = quaternion * VL::Math::RIGHT;
 
-		if (this->m_Input.IsHeld('W'))
+		if (this->m_input.IsHeld('W'))
 		{
-			this->m_BallCenter += VL::Math::Normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_ballCenter += VL::Math::Normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_distance;
 		}
-		if (this->m_Input.IsHeld('S'))
+		if (this->m_input.IsHeld('S'))
 		{
-			this->m_BallCenter -= VL::Math::Normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_ballCenter -= VL::Math::Normalize(VL::Vec3(front.x, 0.0, front.z)) * float(timeStep) * this->MoveSpeed * this->m_distance;
 		}
-		if (this->m_Input.IsHeld('A'))
+		if (this->m_input.IsHeld('A'))
 		{
-			this->m_BallCenter -= VL::Math::Normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_ballCenter -= VL::Math::Normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_distance;
 		}
-		if (this->m_Input.IsHeld('D'))
+		if (this->m_input.IsHeld('D'))
 		{
-			this->m_BallCenter += VL::Math::Normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_ballCenter += VL::Math::Normalize(VL::Vec3(right.x, 0.0, right.z)) * float(timeStep) * this->MoveSpeed * this->m_distance;
 		}
-		if (this->m_Input.IsHeld(VOLUND_KEY_SPACE))
+		if (this->m_input.IsHeld(VOLUND_KEY_SPACE))
 		{
-			this->m_BallCenter += VL::Math::UP * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_ballCenter += VL::Math::UP * float(timeStep) * this->MoveSpeed * this->m_distance;
 		}
-		if (this->m_Input.IsHeld(VOLUND_KEY_SHIFT))
+		if (this->m_input.IsHeld(VOLUND_KEY_SHIFT))
 		{
-			this->m_BallCenter -= VL::Math::UP * float(timeStep) * this->MoveSpeed * this->m_Distance;
+			this->m_ballCenter -= VL::Math::UP * float(timeStep) * this->MoveSpeed * this->m_distance;
 		}
 
-		this->m_Rotation += VL::Vec3(-cursorDelta.y, -cursorDelta.x, 0.0f) * this->LookSpeed;
-		this->m_Rotation.x = std::clamp(this->m_Rotation.x, -89.9f, 89.9f);
+		this->m_rotation += VL::Vec3(-cursorDelta.y, -cursorDelta.x, 0.0f) * this->LookSpeed;
+		this->m_rotation.x = std::clamp(this->m_rotation.x, -89.9f, 89.9f);
 
-		this->m_Position = this->m_BallCenter - front * this->m_Distance;
+		this->m_position = this->m_ballCenter - front * this->m_distance;
 	}
 
-	this->m_OldScrollPosition = this->m_Input.GetScrollPosition();
-	this->m_OldMousePosition = this->m_Input.GetMousePosition();
+	this->m_oldScrollPosition = this->m_input.GetScrollPosition();
+	this->m_oldMousePosition = this->m_input.GetMousePosition();
 }
 
-void Viewport::Render(std::shared_ptr<VL::GameState> gameState, ImVec2 viewportSize)
+void Viewport::Render(std::shared_ptr<VL::Scene> scene, ImVec2 viewportSize)
 {
-	auto spec = this->m_SceneFramebuffer->GetSpec();
+	auto spec = this->m_sceneFramebuffer->GetSpec();
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
 	{
 		spec.Width = std::clamp((uint32_t)viewportSize.x, (uint32_t)1, (uint32_t)8000);
 		spec.Height = std::clamp((uint32_t)viewportSize.y, (uint32_t)1, (uint32_t)8000);
 
-		this->m_SceneFramebuffer->SetSpec(spec);
-		this->m_EditorFramebuffer->SetSpec(spec);
+		this->m_sceneFramebuffer->SetSpec(spec);
+		this->m_editorFramebuffer->SetSpec(spec);
 	}
 
-	VL::Vec3 front = VL::Math::Normalize(this->m_BallCenter - this->m_Position);
-	VL::Mat4x4 viewMatrix = VL::Math::ViewMatrix(this->m_Position, this->m_Position + front, VL::Math::UP * -1);
+	VL::Vec3 front = VL::Math::Normalize(this->m_ballCenter - this->m_position);
+	VL::Mat4x4 viewMatrix = VL::Math::ViewMatrix(this->m_position, this->m_position + front, VL::Math::UP * -1);
 	VL::Mat4x4 projectionMatrix = VL::Math::ProjectionMatrix(this->FOV, (float)spec.Width / (float)spec.Height, 0.1f, 1000.0f);
 
 	VL::RendererEye editorEye;
 	editorEye.ProjectionMatrix = projectionMatrix;
 	editorEye.ViewMatrix = viewMatrix;
-	editorEye.Target = this->m_EditorFramebuffer;
+	editorEye.Target = this->m_editorFramebuffer;
 	editorEye.LayerMask = -1;
-	editorEye.Effects.push_back(this->m_GridEffect);
+	editorEye.Effects.push_back(this->m_gridEffect);
 
-	this->m_Renderer->Begin();
-	this->m_Renderer->Submit(gameState, this->m_SceneFramebuffer);
-	this->m_Renderer->Submit(editorEye);
-	this->m_Renderer->End();
+	this->m_renderer->Begin();
+	this->m_renderer->Submit(scene, this->m_sceneFramebuffer);
+	this->m_renderer->Submit(editorEye);
+	this->m_renderer->End();
 }
 
 Viewport::Viewport(std::shared_ptr<EditorContext> context)
 {
 	this->SetName("Viewport");
 
-	this->m_Context = context;
+	this->m_context = context;
 
-	this->m_PlayIcon = VL::Texture::Create("data/icons/play.png");
-	this->m_PauseIcon = VL::Texture::Create("data/icons/pause.png");
+	this->m_playIcon = VL::Texture::Create("data/icons/play.png");
+	this->m_pauseIcon = VL::Texture::Create("data/icons/pause.png");
 
 	VL::FramebufferSpec spec;
 	spec.ColorAttachments = { VL::TextureSpec(VL::TextureFormat::RGBA16F) };
@@ -178,16 +176,16 @@ Viewport::Viewport(std::shared_ptr<EditorContext> context)
 	spec.Height = 1080;
 	spec.Width = 1920;
 
-	this->m_SceneFramebuffer = VL::Framebuffer::Create(spec);
-	this->m_EditorFramebuffer = VL::Framebuffer::Create(spec);
+	this->m_sceneFramebuffer = VL::Framebuffer::Create(spec);
+	this->m_editorFramebuffer = VL::Framebuffer::Create(spec);
 
-	this->m_Renderer = VL::ForwardRenderer::Create();
+	this->m_renderer = VL::ForwardRenderer::Create();
 
-	this->m_BallCenter = VL::Vec3(0, 1, 0);
-	this->m_Distance = 10.0f;
+	this->m_ballCenter = VL::Vec3(0, 1, 0);
+	this->m_distance = 10.0f;
 
-	this->m_Position = this->m_BallCenter + VL::Vec3(0.0, 0.0, 1.0) * this->m_Distance;
-	this->m_Rotation = VL::Vec3(0.0, 0.0, 0.0);
+	this->m_position = this->m_ballCenter + VL::Vec3(0.0, 0.0, 1.0) * this->m_distance;
+	this->m_rotation = VL::Vec3(0.0, 0.0, 0.0);
 
-	this->m_GridEffect = VL::Effect::Create(VL::Shader::Create("data/shaders/grid.shader"));
+	this->m_gridEffect = VL::Effect::Create(VL::Shader::Create("data/shaders/grid.shader"));
 }

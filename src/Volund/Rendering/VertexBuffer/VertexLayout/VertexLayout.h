@@ -39,9 +39,9 @@ namespace Volund
 
     private:
 
-        std::string m_Name;
+        std::string m_name;
 
-        VertexAttributeType m_Type;
+        VertexAttributeType m_type;
     };
 
     using VertexLayout = std::vector<VertexAttribute>;

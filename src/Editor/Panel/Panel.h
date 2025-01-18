@@ -23,10 +23,10 @@ public:
 
 protected:
 
-    bool m_IsActive = true;
-    bool m_IsWindowHovered = false;
-    std::string m_Name = "";
-	std::string m_Id = std::to_string(rand());
+    bool m_isActive = true;
+    bool m_isWindowHovered = false;
+    std::string m_name = "";
+	std::string m_id = std::to_string(rand());
 
-    std::shared_ptr<EditorContext> m_Context;
+    std::shared_ptr<EditorContext> m_context;
 };

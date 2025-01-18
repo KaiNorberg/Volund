@@ -17,7 +17,7 @@ namespace Volund
 
     protected:
 
-        uint32_t m_Id = 0;
+        uint32_t m_id = 0;
 
     private:
     };

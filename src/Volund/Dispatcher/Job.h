@@ -13,7 +13,7 @@ namespace Volund
     private:
         friend class Dispatcher;
 
-        Task m_Task;
-        Task m_CleanupTask;
+        Task m_task;
+        Task m_cleanupTask;
     };
 }

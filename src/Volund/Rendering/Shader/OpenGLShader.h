@@ -41,13 +41,13 @@ namespace Volund
 
         uint32_t GetUniformLocation(std::string const& name);
 
-        std::unordered_map<std::string, uint32_t> m_UniformLocations;
+        std::unordered_map<std::string, uint32_t> m_uniformLocations;
 
-        uint32_t m_Id = 0;
+        uint32_t m_id = 0;
 
-        int32_t m_NextTextureUnit = 0;
-        int32_t m_MaxTextureUnit = 0;
+        int32_t m_nextTextureUnit = 0;
+        int32_t m_maxTextureUnit = 0;
 
-        std::shared_ptr<MaterialBlueprint> m_MaterialBlueprint;
+        std::shared_ptr<MaterialBlueprint> m_materialBlueprint;
     };
 } //namespace Volund

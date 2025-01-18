@@ -8,13 +8,13 @@ namespace Volund
     {
     public:
 
-        RGB Color = RGB(1.0f);
+        RGB color;
 
-        float Brightness = 1.0f;
+        float brightness ;
 
         void Procedure(const Event& e);
 
-        PointLight();
+        PointLight(const RGB& color = RGB(1.0f), float brighness = 500.0f);
 
     private:
     };
