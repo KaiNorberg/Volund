@@ -84,4 +84,9 @@ namespace Volund
 		break;
 		}
 	}
+
+	SoundSource::SoundSource(std::shared_ptr<AudioBuffer> buffer)
+	{
+		this->m_source.SetBuffer(buffer);
+	}
 }
