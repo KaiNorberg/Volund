@@ -28,7 +28,7 @@ namespace Volund
     {
     public:
 
-        InstrumentorTimer(const std::string& Name);
+        InstrumentorTimer(std::string const& Name);
 
         ~InstrumentorTimer();
 

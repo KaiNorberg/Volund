@@ -5,15 +5,16 @@ add_requires("openal-soft", "glfw", "glad", "lua", "sol2")
 set_languages("cxx20");
 
 target("Volund")
-    set_kind("shared")
+    set_kind("static")
     add_packages("openal-soft", "glfw", "glad", "lua", "sol2")
     add_includedirs("vendor", "src/Volund")
     add_files("src/Volund/*.cpp", "src/Volund/**/*.cpp")
 
+-- Use this specific version of imgui instead of using the xrepo for access to docking.
 target("ImGui")
-    set_kind("static")
+    set_kind("shared")
     add_cxxflags("-fvisibility=default")
-    add_packages("glfw");
+    add_packages("glfw", "openal-soft", "sol2");
     add_includedirs("vendor/imgui", "vendor/glfw/include")
     add_files("vendor/imgui/imgui.cpp")
     add_files("vendor/imgui/imgui_draw.cpp")
@@ -26,6 +27,7 @@ target("ImGui")
 target("Editor")
     set_kind("binary")
     add_deps("Volund", "ImGui");
+    add_packages("openal-soft")
     add_includedirs("src/Volund", "vendor/imgui", "src/Editor")
     add_files("src/Editor/**/*.cpp", "src/Editor/*.cpp")
 

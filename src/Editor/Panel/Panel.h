@@ -12,7 +12,7 @@ public:
 
     bool IsWindowHovered();
 
-    void SetName(const std::string& name);
+    void SetName(std::string const& name);
     std::string GetName();
 	std::string GetId();
 

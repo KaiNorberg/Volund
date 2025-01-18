@@ -1,8 +1,6 @@
-#include "Dispatcher/Event.h"
-#include "PCH/PCH.h"
-
 #include "Application.h"
 
+#include "Dispatcher/Event.h"
 #include "Time/Time.h"
 
 namespace Volund
@@ -15,7 +13,6 @@ namespace Volund
 			return;
 		}
 
-		this->OnRun();
 		this->Loop();
 	}
 
@@ -36,7 +33,6 @@ namespace Volund
 
 	void Application::Terminate()
 	{
-		this->OnTerminate();
 		this->m_ShouldRun = false;
 	}
 

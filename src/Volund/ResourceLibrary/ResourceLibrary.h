@@ -1,14 +1,17 @@
 #pragma once
 
+#include <string>
+#include <unordered_map>
+
 namespace Volund
 {
     class ResourceLibrary
     {
     public:
 
-        static bool IsResource(const std::string& filepath);
+        static bool IsResource(std::string const& filepath);
 
-        static const char* Fetch(const std::string& filepath);
+        static const char* Fetch(std::string const& filepath);
 
         static const std::unordered_map<std::string, const char*>& Map();
 
@@ -16,7 +19,7 @@ namespace Volund
 
         ResourceLibrary();
 
-        static void CreateResource(const std::string& filepath, const char* content);
+        static void CreateResource(std::string const& filepath, const char* content);
 
         static inline std::unordered_map<std::string, const char*> m_Resources;
     };

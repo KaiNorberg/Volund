@@ -1,5 +1,6 @@
-#include "PCH/PCH.h"
 #include "Frustum.h"
+
+#include <Instrumentor.h>
 
 namespace Volund
 {
@@ -20,7 +21,7 @@ namespace Volund
 			{
 				axisVert.x = aabb.Max.x;
 			}
-			
+
 			// y-axis
 			if (m_FrustumPlanes[y].y < 0.0f)
 			{
@@ -50,7 +51,7 @@ namespace Volund
 		return true;
 	}
 
-	Frustum::Frustum(Mat4x4 viewProjMatrix)	
+	Frustum::Frustum(const Mat4x4& viewProjMatrix)
 	{
 		VOLUND_PROFILE_FUNCTION();
 

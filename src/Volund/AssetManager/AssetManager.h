@@ -1,10 +1,13 @@
 #pragma once
 
 #include "Dispatcher/Dispatcher.h"
-
 #include "PolyContainer/PolyContainer.h"
 
-#include "Lua/ScriptingEngine/ScriptingEngine.h"
+#define VOLUND_SERIAL_MATERIAL_SHADER "Shader"
+#define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
+
+#define VOLUND_SERIAL_FILE_TYPE_MATERIAL "Material"
+#define VOLUND_SERIAL_FILE_TYPE_SCENE "Scene"
 
 namespace Volund
 {
@@ -12,36 +15,34 @@ namespace Volund
     {
     public:
 
-        std::shared_ptr<Script> LoadScript(const std::string& filepath);
-
         template<typename T>
-        std::shared_ptr<T> Fetch(const std::string& filepath);
+        std::shared_ptr<T> Fetch(std::string const& filepath);
 
         template<typename T>
         std::string FetchFilepath(std::shared_ptr<T> asset);
 
         template<typename T>
-        void Serialize(std::shared_ptr<T> asset, const std::string& destinationPath);
+        void Serialize(std::shared_ptr<T> asset, std::string const& destinationPath);
 
-        std::string GetAbsolutePath(const std::string& relativePath);
+        std::string GetAbsolutePath(std::string const& relativePath);
 
         std::string GetRootDirectory();
 
-        static std::shared_ptr<AssetManager> Create(std::shared_ptr<Dispatcher> Dispatcher, const std::string& rootPath, std::shared_ptr<ScriptingEngine> scriptingEngine = nullptr);
+        static std::shared_ptr<AssetManager> Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootPath);
 
     private:
 
-        AssetManager(std::shared_ptr<Dispatcher> dispatcher, const std::string& rootPath, std::shared_ptr<ScriptingEngine> scriptingEngine = nullptr);
+        AssetManager(std::shared_ptr<Dispatcher> dispatcher, std::string const& rootPath);
 
-        std::string GetRelativePath(const std::string& absolutePath);
+        std::string GetRelativePath(std::string const& absolutePath);
 
-        std::string ShortPath(const std::string& path);
-
-        template<typename T>
-        std::shared_ptr<T> Load(const std::string& filepath, uint64_t lineId);
+        std::string ShortPath(std::string const& path);
 
         template<typename T>
-        void Push(const std::string& filepath, std::shared_ptr<T> assetData);
+        std::shared_ptr<T> Load(std::string const& filepath, uint64_t lineId);
+
+        template<typename T>
+        void Push(std::string const& filepath, std::shared_ptr<T> assetData);
 
         class PrimitiveAsset
         {
@@ -65,12 +66,10 @@ namespace Volund
         std::string m_RootDir;
 
         std::shared_ptr<Dispatcher> m_Dispatcher;
-
-        std::weak_ptr<ScriptingEngine> m_ScriptingEngine;
     };
 
     template<typename T>
-    inline std::shared_ptr<T> AssetManager::Fetch(const std::string& filepath)
+    inline std::shared_ptr<T> AssetManager::Fetch(std::string const& filepath)
     {
         static std::mutex mutex;
         std::unique_lock lock(mutex);
@@ -132,7 +131,7 @@ namespace Volund
     }
 
     template<typename T>
-    inline void AssetManager::Push(const std::string& filepath, std::shared_ptr<T> assetData)
+    inline void AssetManager::Push(std::string const& filepath, std::shared_ptr<T> assetData)
     {
         auto newAsset = std::make_shared<Asset<T>>();
         newAsset->Filepath = filepath;

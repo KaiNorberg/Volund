@@ -2,8 +2,6 @@
 
 #include "Dispatcher/Event.h"
 
-#include "Math/Math.h"
-
 #include <cstdint>
 
 #define VOLUND_KEY_AMOUNT 348
@@ -25,7 +23,6 @@ namespace Volund
     class Input
     {
     public:
-
         bool IsHeld(uint16_t keyCode) const;
         bool IsPressed(uint16_t keyCode);
 
@@ -33,20 +30,14 @@ namespace Volund
         bool IsMouseButtonPressed(uint16_t button);
 
         float GetScrollPosition() const;
-
         IVec2 GetMousePosition() const;
 
         void Procedure(const Event& e);
-
-        Input();
-
     private:
-
         IVec2 m_MousePosition = IVec2(0);
-
         float m_ScrollPosition = 0.0f;
 
-        bool m_MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT];
-        bool m_Keys[VOLUND_KEY_AMOUNT];
+        bool m_MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT] = {0};
+        bool m_Keys[VOLUND_KEY_AMOUNT] = {0};
     };
 }

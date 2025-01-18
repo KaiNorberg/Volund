@@ -3,6 +3,7 @@
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <misc/cpp/imgui_stdlib.h>
+#include <cstring>
 
 void ImGuiStartCombo()
 {
@@ -24,7 +25,7 @@ void ImGuiEndCombo()
 	ImGui::NextColumn();
 }
 
-void ImGuiAlign(const std::string& text, float alignment)
+void ImGuiAlign(std::string const& text, float alignment)
 {
 	ImGuiStyle& style = ImGui::GetStyle();
 
@@ -38,7 +39,7 @@ void ImGuiAlign(const std::string& text, float alignment)
 	}
 }
 
-bool ImGuiFile(const std::string& name, std::string& out)
+bool ImGuiFile(std::string const& name, std::string& out)
 {
 	bool outChanged = false;
 
@@ -79,7 +80,7 @@ bool ImGuiFile(const std::string& name, std::string& out)
 	return outChanged;
 }
 
-bool ImGuiString(const std::string& name, std::string& out)
+bool ImGuiString(std::string const& name, std::string& out)
 {
 	ImGui::PushID(name.c_str());
 
@@ -108,7 +109,7 @@ bool ImGuiString(const std::string& name, std::string& out)
 	}
 }
 
-bool ImGuiInt(const std::string& name, int value)
+bool ImGuiInt(std::string const& name, int value)
 {
 	ImGuiStartCombo();
 
@@ -127,7 +128,7 @@ bool ImGuiInt(const std::string& name, int value)
 	return changed;
 }
 
-bool ImGuiBool(const std::string& name, bool value)
+bool ImGuiBool(std::string const& name, bool value)
 {
 	ImGuiStartCombo();
 
@@ -144,7 +145,7 @@ bool ImGuiBool(const std::string& name, bool value)
 	return changed;
 }
 
-bool ImGuiFloat(const std::string& name, float value)
+bool ImGuiFloat(std::string const& name, float value)
 {
 	ImGuiStartCombo();
 
@@ -163,7 +164,7 @@ bool ImGuiFloat(const std::string& name, float value)
 	return changed;
 }
 
-bool ImGuiDouble(const std::string& name, double value)
+bool ImGuiDouble(std::string const& name, double value)
 {
 	ImGuiStartCombo();
 
@@ -182,7 +183,7 @@ bool ImGuiDouble(const std::string& name, double value)
 	return changed;
 }
 
-bool ImGuiVec2(const std::string& name, VL::Vec2& value, float speed, float defaultValue)
+bool ImGuiVec2(std::string const& name, VL::Vec2& value, float speed, float defaultValue)
 {
 	bool changed = false;
 
@@ -244,7 +245,7 @@ bool ImGuiVec2(const std::string& name, VL::Vec2& value, float speed, float defa
 	return changed;
 }
 
-bool ImGuiVec3(const std::string& name, VL::Vec3& value, float speed, float defaultValue)
+bool ImGuiVec3(std::string const& name, VL::Vec3& value, float speed, float defaultValue)
 {
 	bool changed = false;
 
@@ -324,7 +325,7 @@ bool ImGuiVec3(const std::string& name, VL::Vec3& value, float speed, float defa
 	return changed;
 }
 
-bool ImGuiVec4(const std::string& name, VL::Vec4& value, float speed, float defaultValue)
+bool ImGuiVec4(std::string const& name, VL::Vec4& value, float speed, float defaultValue)
 {
 	bool changed = false;
 
@@ -422,7 +423,7 @@ bool ImGuiVec4(const std::string& name, VL::Vec4& value, float speed, float defa
 	return changed;
 }
 
-void ImGuiColoredText(const std::string& text)
+void ImGuiColoredText(std::string const& text)
 {
 	ImGuiStyle* style = &ImGui::GetStyle();
 
@@ -487,7 +488,7 @@ void ImGuiColoredText(const std::string& text)
 	style->Colors[ImGuiCol_Text] = oldTextColor;
 }
 
-bool ImGuiListBegin(const std::string& name)
+bool ImGuiListBegin(std::string const& name)
 {
 	return ImGui::BeginListBox(name.c_str(), ImVec2(-FLT_MIN, -FLT_MIN));
 }
@@ -506,7 +507,7 @@ void ImGuiListEnd()
 	ImGui::EndListBox();
 }
 
-void ImGuiDragDropSource(const char* type, const std::string& payload)
+void ImGuiDragDropSource(const char* type, std::string const& payload)
 {
 	if (ImGui::BeginDragDropSource())
 	{

@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "MeshRenderer.h"
 
 #include "Scene/Scene.h"

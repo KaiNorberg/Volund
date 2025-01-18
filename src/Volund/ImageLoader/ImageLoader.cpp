@@ -1,7 +1,8 @@
-#include "PCH/PCH.h"
 #include "ImageLoader.h"
 
-#include "stb/stb_image.h"
+#include "Logger.h"
+
+#include <stb/stb_image.h>
 
 namespace Volund
 {
@@ -25,16 +26,15 @@ namespace Volund
 		return this->m_Data;
 	}
 
-	void ImageLoader::Load(const std::string& filepath, bool flip, int32_t desiredChannels)
+	void ImageLoader::Load(std::string const& filepath)
 	{
 		if (this->m_Data != nullptr)
 		{
 			stbi_image_free(this->m_Data);
 		}
 
-		stbi_set_flip_vertically_on_load(flip);
-
-		this->m_Data = stbi_load(filepath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, desiredChannels);
+		stbi_set_flip_vertically_on_load(true);
+		this->m_Data = stbi_load(filepath.c_str(), &this->m_Width, &this->m_Height, &this->m_Channels, 4);
 
 		if (this->m_Data == nullptr)
 		{
@@ -42,9 +42,9 @@ namespace Volund
 		}
 	}
 
-	ImageLoader::ImageLoader(const std::string& filepath, bool flip, int32_t desiredChannels)
+	ImageLoader::ImageLoader(std::string const& filepath)
 	{
-		this->Load(filepath, flip, desiredChannels);
+		this->Load(filepath);
 	}
 
 	ImageLoader::~ImageLoader()

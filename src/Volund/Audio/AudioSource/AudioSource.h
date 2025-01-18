@@ -1,13 +1,15 @@
 #pragma once
 
+#include "Math/Math.h"
 #include "Audio/AudioBuffer/AudioBuffer.h"
+
+#include <memory>
 
 namespace Volund
 {
     class AudioSource
     {
     public:
-
         void Play();
 
         void SetBuffer(std::shared_ptr<AudioBuffer> buffer);
@@ -29,13 +31,9 @@ namespace Volund
         float GetGain();
 
         AudioSource();
-
         ~AudioSource();
-
     private:
-
         std::shared_ptr<AudioBuffer> m_Buffer;
-
         uint32_t m_Source;
     };
 }

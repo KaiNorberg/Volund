@@ -1,7 +1,8 @@
-#include "PCH/PCH.h"
 #include "Quaternion.h"
 
 #include "Math/Math.h"
+
+#include <algorithm>
 
 namespace Volund
 {
@@ -81,7 +82,7 @@ namespace Volund
 			return atan2(y, x);
 		}
 	}
-	 
+
 	float Quat::Yaw() const
 	{
 		return asin(std::clamp(-2.0f * (this->x * this->z - this->w * this->y), -1.0f, 1.0f));
@@ -114,6 +115,7 @@ namespace Volund
 		this->y = c.x * s.y * c.z + s.x * c.y * s.z;
 		this->z = c.x * c.y * s.z - s.x * s.y * c.z;
 	}
+
 	Quat::Quat(float w, float x, float y, float z)
 	{
 		this->w = w;

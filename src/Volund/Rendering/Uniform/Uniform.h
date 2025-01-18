@@ -68,11 +68,11 @@ namespace Volund
 
         void UpdateShader(std::shared_ptr<Shader> shader) override;
 
-        static std::shared_ptr<Uniform<T>> Create(const std::string& name, const T& value);
+        static std::shared_ptr<Uniform<T>> Create(std::string const& name, const T& value);
 
     private:
 
-        Uniform(const std::string& name, const T& value);
+        Uniform(std::string const& name, const T& value);
 
         T m_Value;
     };

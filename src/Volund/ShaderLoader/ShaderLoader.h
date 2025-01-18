@@ -22,11 +22,11 @@ namespace Volund
 
         std::shared_ptr<MaterialBlueprint> GetBlueprint();
 
-        void Load(const std::string& filepath);
+        void Load(std::string const& filepath);
 
         ShaderLoader();
 
-        ShaderLoader(const std::string& filepath);
+        ShaderLoader(std::string const& filepath);
 
     private:
 

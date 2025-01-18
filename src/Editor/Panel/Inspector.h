@@ -15,11 +15,11 @@ public:
 private:
 
     template<typename T>
-    void ImGuiComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc);
+    void ImGuiComponent(std::string const& name, VL::Entity entity, std::function<void(int)> drawFunc);
 };
 
 template<typename T>
-inline void Inspector::ImGuiComponent(const std::string& name, VL::Entity entity, std::function<void(int)> drawFunc)
+inline void Inspector::ImGuiComponent(std::string const& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
     auto gameState = this->m_Context->GameState;
 

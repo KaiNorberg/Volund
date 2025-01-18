@@ -1,5 +1,10 @@
 #pragma once
 
+#include "Utils/Utils.h"
+#include "Logger.h"
+
+#include <cstdint>
+
 namespace Volund
 {
     class SerialTable;

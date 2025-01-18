@@ -1,6 +1,7 @@
-#include "PCH/PCH.h"
-
 #include "Math.h"
+
+#include <numeric>
+#include <cmath>
 
 namespace Volund::Math
 {
@@ -58,7 +59,7 @@ namespace Volund::Math
 
 	Mat4x4 ProjectionMatrix(float fovRadians, float aspectRatio, float near, float far)
 	{
-		if (abs(aspectRatio - std::numeric_limits<float>::epsilon()) > static_cast<float>(0))
+		if (abs(aspectRatio - std::numeric_limits<float>::epsilon()) > static_cast<float>(0)) // Change to fabs
 		{
 			float const tanHalfFov = tan(fovRadians / static_cast<float>(2));
 

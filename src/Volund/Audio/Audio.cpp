@@ -1,13 +1,13 @@
-#include "PCH/PCH.h"
-
 #include "Audio.h"
+
+#include "Logger.h"
 
 #include <AL/al.h>
 #include <AL/alext.h>
 
 namespace Volund
 {
-    bool CheckAlcErrors(const std::string& fileName, const std::uint_fast32_t line, ALCdevice* device)
+    bool CheckAlcErrors(std::string const& fileName, const std::uint_fast32_t line, ALCdevice* device)
     {
         ALCenum err = alcGetError(device);
         switch (err)
@@ -52,7 +52,7 @@ namespace Volund
         return false;
     }
 
-    bool CheckAlErrors(const std::string& fileName, const std::uint_fast32_t line)
+    bool CheckAlErrors(std::string const& fileName, const std::uint_fast32_t line)
     {
         ALenum err = alGetError();
         switch (err)

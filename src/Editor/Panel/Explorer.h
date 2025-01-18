@@ -23,5 +23,5 @@ private:
 
     bool m_ResourcesOpen = false;
 
-    void ImGuiFilesystemEntry(const std::string& payloadPath, const std::string& name, bool IsDirectory);
+    void ImGuiFilesystemEntry(std::string const& payloadPath, std::string const& name, bool IsDirectory);
 };

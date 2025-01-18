@@ -151,7 +151,7 @@ void Explorer::OnProcedure(const VL::Event& e)
 	}
 }
 
-void Explorer::ImGuiFilesystemEntry(const std::string& payloadPath, const std::string& name, bool isDirectory)
+void Explorer::ImGuiFilesystemEntry(std::string const& payloadPath, std::string const& name, bool isDirectory)
 {
 	ImGui::PushID(payloadPath.c_str());
 

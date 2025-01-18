@@ -8,13 +8,9 @@ namespace Volund
     class Quat
     {
     public:
-
         float w;
-
         float x;
-
         float y;
-
         float z;
 
         operator Mat4x4() const;
@@ -27,17 +23,13 @@ namespace Volund
         Vec3 EulerAngles() const;
 
         float Pitch() const;
-
         float Yaw() const;
-
         float Roll() const;
 
         Quat() = default;
 
         Quat(const Vec3& eulerAngles);
         Quat(float w, float x, float y, float z);
-
     private:
-
     };
 }

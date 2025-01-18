@@ -1,5 +1,11 @@
 #pragma once
 
+#include <string>
+#include <cstdint>
+
+#include <AL/al.h>
+#include <AL/alext.h>
+
 #ifndef AL_LIBTYPE_STATIC
 #define AL_LIBTYPE_STATIC
 #endif
@@ -7,13 +13,11 @@
 #define ALC_CALL(function, device, ...) alcCallImpl(__FILE__, __LINE__, function, device, __VA_ARGS__)
 #define AL_CALL(function, ...) alCallImpl(__FILE__, __LINE__, function, __VA_ARGS__)
 
-struct ALCdevice;
-
 namespace Volund
 {
-    bool CheckAlcErrors(const std::string& fileName, const std::uint_fast32_t line, ALCdevice* device);
+    bool CheckAlcErrors(std::string const& fileName, const std::uint_fast32_t line, ALCdevice* device);
 
-    bool CheckAlErrors(const std::string& fileName, const std::uint_fast32_t line);
+    bool CheckAlErrors(std::string const& fileName, const std::uint_fast32_t line);
 
     template<typename AlcFunction, typename... Params>
     auto alcCallImpl(const char* filename,

@@ -1,11 +1,11 @@
-#include "PCH/PCH.h"
-
 #include "Scene/Component/Components.h"
 
 #include "Audio/AudioBuffer/AudioBuffer.h"
 
-#include <sol/sol.hpp>
 #include "LuaUtils.h"
+#include "Lua/LuaTypes.h"
+
+#include <sol/sol.hpp>
 
 namespace Volund::LuaUtils
 {

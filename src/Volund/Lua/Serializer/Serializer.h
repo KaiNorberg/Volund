@@ -2,32 +2,35 @@
 
 #include "Lua/LuaTypes.h"
 
+#define VOLUND_SERIAL_DATA "Data"
+#define VOLUND_SERIAL_FILE_TYPE "FileType"
+
 namespace Volund
 {
     class Serializer
     {
     public:
 
-        void WriteToFile(const std::string& filepath);
+        void WriteToFile(std::string const& filepath);
 
         std::string GetOutput();
 
-        void StartTable(const std::string& name = "");
+        void StartTable(std::string const& name = "");
         void EndTable();
 
-        void Insert(const std::string& name, LuaInt value);
-        void Insert(const std::string& name, LuaFloat value);
-        void Insert(const std::string& name, LuaBool value);
-        void Insert(const std::string& name, const LuaString& value, bool asString = true);
-        void Insert(const std::string& name, const LuaVec2& value);
-        void Insert(const std::string& name, const LuaVec3& value);
-        void Insert(const std::string& name, const Vec4& value);
+        void Insert(std::string const& name, LuaInt value);
+        void Insert(std::string const& name, LuaFloat value);
+        void Insert(std::string const& name, LuaBool value);
+        void Insert(std::string const& name, const LuaString& value, bool asString = true);
+        void Insert(std::string const& name, const LuaVec2& value);
+        void Insert(std::string const& name, const LuaVec3& value);
+        void Insert(std::string const& name, const Vec4& value);
 
-        Serializer(const std::string& fileType);
+        Serializer(std::string const& fileType);
 
     private:
 
-        void InsertName(const std::string& name);
+        void InsertName(std::string const& name);
 
         void Indent();
 

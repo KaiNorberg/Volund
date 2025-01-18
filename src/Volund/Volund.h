@@ -1,7 +1,5 @@
 #pragma once
 
-#include "PCH/PCH.h"
-
 #include "Core/Core.h"
 
 #include "Math/Math.h"
@@ -15,6 +13,7 @@
 #include "Rendering/Texture/Texture.h"
 
 #include "Scene/Scene.h"
+#include "AssetManager/AssetManager.h"
 #include "Scene/Component/Components.h"
 #include "Window/Window.h"
 

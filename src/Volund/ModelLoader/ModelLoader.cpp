@@ -1,11 +1,15 @@
-#include "PCH/PCH.h"
 #include "ModelLoader.h"
 
 #include "Math/Math.h"
+#include "Utils/Utils.h"
+
+#include <fstream>
+#include <sstream>
+#include <unordered_map>
 
 namespace Volund
 {
-	void ModelLoader::LoadFile(const std::string& filepath)
+	void ModelLoader::LoadFile(std::string const& filepath)
 	{
 		std::ifstream file(filepath);
 
@@ -34,7 +38,7 @@ namespace Volund
 
 	int f = 0;
 
-	void ModelLoader::ParseOBJ(const std::string& content)
+	void ModelLoader::ParseOBJ(std::string const& content)
 	{
 		this->m_Valid = true;
 
@@ -141,7 +145,7 @@ namespace Volund
 								this->Vertices.push_back(scalar);
 							}
 						}
-					}						
+					}
 				}
 				else
 				{

@@ -1,9 +1,10 @@
 #pragma once
 
 #include "Vector.h"
-#include "Logger/Logger.h"
+#include "Logger.h"
 
 #include <cstdint>
+#include <cmath>
 
 namespace Volund
 {

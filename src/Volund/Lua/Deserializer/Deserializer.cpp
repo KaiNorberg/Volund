@@ -1,10 +1,12 @@
-#include "PCH/PCH.h"
 #include "Deserializer.h"
-
-#include <sol/sol.hpp>
 
 #include "Lua/LuaUtils/LuaUtils.h"
 #include "Lua/LuaTypes.h"
+#include "Instrumentor.h"
+#include "AssetManager/AssetManager.h"
+#include "Lua/Serializer/Serializer.h"
+
+#include <sol/sol.hpp>
 
 namespace Volund
 {
@@ -17,7 +19,7 @@ namespace Volund
 	{
 		VOLUND_WARNING("Data files are not allowed to require other files!");
 	}
-	
+
 	////////////////////////////////////////////////////////////////////
 
 	bool Deserializer::Valid()
@@ -25,7 +27,7 @@ namespace Volund
 		return this->m_Valid;
 	}
 
-	PrimitiveSerialObject& Deserializer::operator[](const std::string& key)
+	PrimitiveSerialObject& Deserializer::operator[](std::string const& key)
 	{
 		return this->m_Table[key];
 	}
@@ -50,13 +52,13 @@ namespace Volund
 		return this->m_Table.end();
 	}
 
-    Deserializer::Deserializer(const std::string& filepath, const std::string& fileType)
+    Deserializer::Deserializer(std::string const& filepath, std::string const& fileType)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
 		auto luaState = std::make_shared<sol::state>();
 		//this->m_SolState->open_libraries(sol::lib::base, sol::lib::table);
-		
+
 		//Global Functions
 
 		(*luaState)["require"] = DeserializerRequire;

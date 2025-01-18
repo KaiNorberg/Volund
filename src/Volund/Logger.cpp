@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "Logger.h"
 
 #include "Dialog/Dialog.h"
@@ -19,7 +18,7 @@ namespace Volund
 	}
 
 	uint64_t Logger::Log(LogSeverity severity, const char* format)
-	{		
+	{
 		std::string formatedString = this->FormatString(severity, format);
 		return Print(severity, formatedString);
 	}
@@ -41,7 +40,7 @@ namespace Volund
 		return this->m_Lines.end();
 	}
 
-	uint64_t Logger::Print(LogSeverity severity, const std::string& string)
+	uint64_t Logger::Print(LogSeverity severity, std::string const& string)
 	{
 		std::string line = VOLUND_LOGGERCOLOR_RED;
 		line += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " +*/ this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";

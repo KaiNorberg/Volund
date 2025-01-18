@@ -1,9 +1,9 @@
-#include "PCH/PCH.h"
 #include "AudioBuffer.h"
 
 #include "Audio/Audio.h"
-#include "AudioFile/AudioFile.h"
+#include "Logger.h"
 
+#include <AudioFile/AudioFile.h>
 #include <AL/al.h>
 #include <AL/alext.h>
 
@@ -14,7 +14,7 @@ namespace Volund
 		return this->m_Buffer;
 	}
 
-	AudioBuffer::AudioBuffer(const std::string& filepath)
+	AudioBuffer::AudioBuffer(std::string const& filepath)
 	{
 		AudioFile<float> file;
 		std::vector<uint8_t> pcmDataBytes;

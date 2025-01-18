@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstdint>
+#include <memory>
+
 namespace Volund
 {
     class Texture
@@ -18,7 +21,7 @@ namespace Volund
 
         static std::shared_ptr<Texture> Create();
 
-        static std::shared_ptr<Texture> Create(const std::string& filepath);
+        static std::shared_ptr<Texture> Create(std::string const& filepath);
 
         static std::shared_ptr<Texture> Create(unsigned char* data, uint32_t width, uint32_t height);
 

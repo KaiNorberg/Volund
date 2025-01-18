@@ -1,21 +1,20 @@
-#include "PCH/PCH.h"
 #include "SerialTable.h"
 
 namespace Volund
 {
-	void SerialTable::Erase(const std::string& key)
+	void SerialTable::Erase(std::string const& key)
 	{
 		this->m_Table.erase(key);
 	}
 
-	void SerialTable::Rename(const std::string& key, const std::string& newKey)
+	void SerialTable::Rename(std::string const& key, std::string const& newKey)
 	{
 		auto node = this->m_Table.extract(key);
 		node.key() = newKey;
 		this->m_Table.insert(std::move(node));
 	}
 
-	PrimitiveSerialObject& SerialTable::operator[](const std::string& key)
+	PrimitiveSerialObject& SerialTable::operator[](std::string const& key)
 	{
 		return *(this->m_Table[key].get());
 	}

@@ -17,12 +17,12 @@ namespace Volund
         std::shared_ptr<MaterialBlueprint> GetBlueprint();
 
         template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
-        void Set(const std::string& name, const T& value);
+        void Set(std::string const& name, const T& value);
 
         template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
-        bool Contains(const std::string& name) const;
+        bool Contains(std::string const& name) const;
 
-        void Erase(const std::string& name);
+        void Erase(std::string const& name);
 
         void UpdateShader();
 
@@ -48,7 +48,7 @@ namespace Volund
     };
 
     template<typename T, typename>
-    inline void Material::Set(const std::string& name, const T& value)
+    inline void Material::Set(std::string const& name, const T& value)
     {
         for (int i = 0; i < this->m_Uniforms.size(); i++)
         {
@@ -63,7 +63,7 @@ namespace Volund
     }
 
     template<typename T, typename>
-    inline bool Material::Contains(const std::string& name) const
+    inline bool Material::Contains(std::string const& name) const
     {
         for (int i = 0; i < this->m_Uniforms.size(); i++)
         {

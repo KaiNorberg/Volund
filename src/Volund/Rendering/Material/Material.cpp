@@ -1,9 +1,10 @@
-#include "PCH/PCH.h"
 #include "Material.h"
+
+#include "Instrumentor.h"
 
 namespace Volund
 {
-	void Material::Erase(const std::string& name)
+	void Material::Erase(std::string const& name)
 	{
 		for (int i = 0; i < this->m_Uniforms.size(); i++)
 		{

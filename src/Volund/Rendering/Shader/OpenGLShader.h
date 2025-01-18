@@ -12,18 +12,18 @@ namespace Volund
 
         uint32_t GetId() override;
 
-        bool HasUniform(const std::string& name) override;
+        bool HasUniform(std::string const& name) override;
 
-        void SetInt(const std::string& name, int value) override;
-        void SetFloat(const std::string& name, float value) override;
-        void SetDouble(const std::string& name, double value) override;
-        void SetVec2(const std::string& name, const Vec2& value) override;
-        void SetVec3(const std::string& name, const Vec3& value) override;
-        void SetVec4(const std::string& name, const Vec4& value) override;
-        //void SetMat3x3(const std::string& name, const Mat3x3& value, bool transpose = false) override;
-        void SetMat4x4(const std::string& name, const Mat4x4& value, bool transpose = false) override;
-        void SetTexture(const std::string& name, const std::shared_ptr<Texture>& value) override;
-        void SetFramebuffer(const std::string& name, const std::shared_ptr<Framebuffer>& value) override;
+        void SetInt(std::string const& name, int value) override;
+        void SetFloat(std::string const& name, float value) override;
+        void SetDouble(std::string const& name, double value) override;
+        void SetVec2(std::string const& name, const Vec2& value) override;
+        void SetVec3(std::string const& name, const Vec3& value) override;
+        void SetVec4(std::string const& name, const Vec4& value) override;
+        //void SetMat3x3(std::string const& name, const Mat3x3& value, bool transpose = false) override;
+        void SetMat4x4(std::string const& name, const Mat4x4& value, bool transpose = false) override;
+        void SetTexture(std::string const& name, const std::shared_ptr<Texture>& value) override;
+        void SetFramebuffer(std::string const& name, const std::shared_ptr<Framebuffer>& value) override;
 
         void Init(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint) override;
 
@@ -37,9 +37,9 @@ namespace Volund
 
     private:
 
-        uint32_t CompileShader(uint32_t type, const std::string& source);
+        uint32_t CompileShader(uint32_t type, std::string const& source);
 
-        uint32_t GetUniformLocation(const std::string& name);
+        uint32_t GetUniformLocation(std::string const& name);
 
         std::unordered_map<std::string, uint32_t> m_UniformLocations;
 

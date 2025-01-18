@@ -14,5 +14,5 @@ private:
 
     std::shared_ptr<EditorContext> m_Context;
 
-    bool ImGuiEntity(VL::Entity Entity, const std::string& EntityName);
+    bool ImGuiEntity(VL::Entity Entity, std::string const& EntityName);
 };

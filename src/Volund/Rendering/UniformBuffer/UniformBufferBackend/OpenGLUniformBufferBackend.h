@@ -2,6 +2,8 @@
 
 #include "UniformBufferBackend.h"
 
+#include <cstdint>
+
 namespace Volund
 {
     class OpenGLUniformBufferBackend : public UniformBufferBackend

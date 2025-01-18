@@ -2,6 +2,8 @@
 
 #include "AABB/AABB.h"
 
+#include <Math/Math.h>
+
 namespace Volund
 {
     class Frustum
@@ -10,10 +12,10 @@ namespace Volund
 
         bool ContainsAABB(const AABB& aabb) const;
 
-        Frustum(Mat4x4 viewProjMatrix);
+        Frustum(const Mat4x4& viewProjMatrix);
 
     private:
 
         Vec4 m_FrustumPlanes[6];
-    }; 
+    };
 }

@@ -1,29 +1,18 @@
-#include "PCH/PCH.h"
 #include "AssetManager.h"
 
+#include "Core/Core.h"
 #include "Rendering/Mesh/Mesh.h"
 #include "Rendering/Material/Material.h"
-
 #include "Audio/AudioBuffer/AudioBuffer.h"
-
 #include "ModelLoader/ModelLoader.h"
-
 #include "Scene/Component/Components.h"
-
 #include "Scene/Scene.h"
-
-#include "Lua/ScriptingEngine/ScriptingEngine.h"
-
 #include "ImageLoader/ImageLoader.h"
-
 #include "Lua/Deserializer/Deserializer.h"
 #include "Lua/Serializer/Serializer.h"
 
 #define VOLUND_SET_COMPONENT(table, member, name, type) if (table.Contains<type>(name)) {member = ((type)table[name]);}
 #define VOLUND_SET_COMPONENT_VIA_FUNC(table, func, name, type) if (table.Contains<type>(name)) {func((type)table[name]);}
-
-#define VOLUND_SERIAL_MATERIAL_SHADER "Shader"
-#define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
 
 namespace Volund
 {
@@ -42,7 +31,7 @@ namespace Volund
     };
 
     template<>
-    void AssetManager::Serialize<Material>(std::shared_ptr<Material> material, const std::string& destinationPath)
+    void AssetManager::Serialize<Material>(std::shared_ptr<Material> material, std::string const& destinationPath)
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
@@ -98,7 +87,7 @@ namespace Volund
     }
 
     template<>
-    void AssetManager::Serialize<Scene>(std::shared_ptr<Scene> scene, const std::string& destinationPath)
+    void AssetManager::Serialize<Scene>(std::shared_ptr<Scene> scene, std::string const& destinationPath)
     {
         std::string absolutePath = this->GetAbsolutePath(destinationPath);
 
@@ -206,58 +195,6 @@ namespace Volund
                 serializer.EndTable();
             }
 
-            for (int i = 0; i < scene->ComponentAmount<ScriptComponent>(entity); i++)
-            {
-                auto component = scene->GetComponent<ScriptComponent>(entity, i);
-                std::shared_ptr<Script> script = component->GetScript();
-
-                serializer.StartTable();
-                serializer.Insert("ComponentType", (LuaInt)LuaComponentID::ScriptComponent);
-
-                if (script != nullptr)
-                {
-                    serializer.Insert("Filepath", this->GetRelativePath(script->GetFilepath()));
-
-                    serializer.StartTable("PublicVars");
-                    for (const auto& publicVariable : script->GetPublicVariables())
-                    {
-                        if (script->Is<LuaInt>(publicVariable))
-                        {
-                            auto rawValue = script->Get<LuaInt>(publicVariable);
-                            serializer.Insert(publicVariable, rawValue);
-                        }
-                        else if (script->Is<LuaFloat>(publicVariable))
-                        {
-                            auto rawValue = script->Get<LuaFloat>(publicVariable);
-                            serializer.Insert(publicVariable, rawValue);
-                        }
-                        else if (script->Is<LuaString>(publicVariable))
-                        {
-                            auto rawValue = script->Get<LuaString>(publicVariable);
-                            serializer.Insert(publicVariable, rawValue);
-                        }
-                        else if (script->Is<LuaVec2>(publicVariable))
-                        {
-                            auto rawValue = script->Get<LuaVec2>(publicVariable);
-                            serializer.Insert(publicVariable, rawValue);
-                        }
-                        else if (script->Is<LuaVec3>(publicVariable))
-                        {
-                            auto rawValue = script->Get<LuaVec3>(publicVariable);
-                            serializer.Insert(publicVariable, rawValue);
-                        }
-                        else if (script->Is<Vec4>(publicVariable))
-                        {
-                            auto rawValue = script->Get<Vec4>(publicVariable);
-                            serializer.Insert(publicVariable, rawValue);
-                        }
-                    }
-                    serializer.EndTable();
-                }
-
-                serializer.EndTable();
-            }
-
             serializer.EndTable();
         }
         serializer.EndTable();
@@ -266,7 +203,7 @@ namespace Volund
     }
 
     template<>
-    std::shared_ptr<Scene> AssetManager::Load<Scene>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Scene> AssetManager::Load<Scene>(std::string const& filepath, uint64_t lineId)
     {
         auto scene = Scene::Create();
 
@@ -390,46 +327,6 @@ namespace Volund
                     auto newComponent = scene->CreateComponent<SoundListener>(entity);
                 }
                 break;
-                case LuaComponentID::ScriptComponent:
-                {
-                    auto newComponent = scene->CreateComponent<ScriptComponent>(entity);
-
-                    auto script = this->LoadScript(this->GetAbsolutePath(componentTable["Filepath"]));
-                    newComponent->SetScript(script);
-
-                    if (componentTable.Contains<SerialTable>("PublicVars"))
-                    {
-                        SerialTable publicVars = componentTable["PublicVars"];
-                        for (auto& [key, value] : publicVars)
-                        {
-                            if (value->Is<LuaInt>())
-                            {
-                                script->Set(key, value->As<LuaInt>());
-                            }
-                            else if (value->Is<LuaFloat>())
-                            {
-                                script->Set(key, value->As<LuaFloat>());
-                            }
-                            else if (value->Is<LuaString>())
-                            {
-                                script->Set(key, value->As<LuaString>());
-                            }
-                            else if (value->Is<LuaVec2>())
-                            {
-                                script->Set(key, value->As<LuaVec2>());
-                            }
-                            else if (value->Is<LuaVec3>())
-                            {
-                                script->Set(key, value->As<LuaVec3>());
-                            }
-                            else if (value->Is<Vec4>())
-                            {
-                                script->Set(key, value->As<Vec4>());
-                            }
-                        }
-                    }
-                }
-                break;
                 default:
                 {
                     VOLUND_WARNING("Unknown component id (%s)! Check for proper capitalization and spelling!", componentId);
@@ -445,7 +342,7 @@ namespace Volund
     }
 
     template<>
-    std::shared_ptr<Material> AssetManager::Load<Material>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Material> AssetManager::Load<Material>(std::string const& filepath, uint64_t lineId)
     {
         auto material = Material::Create();
 
@@ -505,7 +402,7 @@ namespace Volund
     }
 
     template<>
-    std::shared_ptr<Mesh> AssetManager::Load<Mesh>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Mesh> AssetManager::Load<Mesh>(std::string const& filepath, uint64_t lineId)
     {
         std::shared_ptr<Mesh> newMesh = Mesh::Create();
         std::shared_ptr<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
@@ -547,7 +444,7 @@ namespace Volund
     }
 
     template<>
-    std::shared_ptr<Texture> AssetManager::Load<Texture>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Texture> AssetManager::Load<Texture>(std::string const& filepath, uint64_t lineId)
     {
         std::shared_ptr<Texture> newTexture = Texture::Create();
 
@@ -572,7 +469,7 @@ namespace Volund
     }
 
     template<>
-    std::shared_ptr<Shader> AssetManager::Load<Shader>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<Shader> AssetManager::Load<Shader>(std::string const& filepath, uint64_t lineId)
     {
         std::shared_ptr<Shader> newShader = Shader::Create();
 
@@ -597,33 +494,11 @@ namespace Volund
     }
 
     template<>
-    std::shared_ptr<AudioBuffer> AssetManager::Load<AudioBuffer>(const std::string& filepath, uint64_t lineId)
+    std::shared_ptr<AudioBuffer> AssetManager::Load<AudioBuffer>(std::string const& filepath, uint64_t lineId)
     {
         auto newAudioBuffer = std::make_shared<AudioBuffer>(filepath);
 
         return newAudioBuffer;
-    }
-
-    std::shared_ptr<Script> AssetManager::LoadScript(const std::string& filepath)
-    {
-        uint64_t lineId = VOLUND_INFO("Loading Script (%s)... ", filepath.c_str());
-
-        if (!this->m_ScriptingEngine.expired())
-        {
-            auto scriptingEngine = this->m_ScriptingEngine.lock();
-
-            auto newScript = scriptingEngine->LoadScript(filepath);
-
-            VOLUND_UPDATE_LINE(lineId, "Done ");
-
-            return newScript;
-        }
-        else
-        {
-            VOLUND_UPDATE_LINE(lineId, "ERROR ");
-
-            return nullptr;
-        }
     }
 
     std::string AssetManager::GetRootDirectory()
@@ -631,12 +506,12 @@ namespace Volund
         return this->m_RootDir;
     }
 
-    std::shared_ptr<AssetManager> AssetManager::Create(std::shared_ptr<Dispatcher> Dispatcher, const std::string& rootDir, std::shared_ptr<ScriptingEngine> scriptingEngine)
+    std::shared_ptr<AssetManager> AssetManager::Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootDir)
     {
-        return std::shared_ptr<AssetManager>(new AssetManager(Dispatcher, rootDir, scriptingEngine));
+        return std::shared_ptr<AssetManager>(new AssetManager(Dispatcher, rootDir));
     }
 
-    std::string AssetManager::GetRelativePath(const std::string& absolutePath)
+    std::string AssetManager::GetRelativePath(std::string const& absolutePath)
     {
         if (!absolutePath.empty() && absolutePath[0] == ':')
         {
@@ -654,7 +529,7 @@ namespace Volund
         }
     }
 
-    std::string AssetManager::GetAbsolutePath(const std::string& relativePath)
+    std::string AssetManager::GetAbsolutePath(std::string const& relativePath)
     {
         if (!relativePath.empty() && relativePath[0] == ':')
         {
@@ -672,7 +547,7 @@ namespace Volund
         }
     }
 
-    std::string AssetManager::ShortPath(const std::string& path)
+    std::string AssetManager::ShortPath(std::string const& path)
     {
         std::string shortPath = path;
 
@@ -681,7 +556,7 @@ namespace Volund
         return shortPath;
     }
 
-    AssetManager::AssetManager(std::shared_ptr<Dispatcher> dispatcher, const std::string& rootDir, std::shared_ptr<ScriptingEngine> scriptingEngine)
+    AssetManager::AssetManager(std::shared_ptr<Dispatcher> dispatcher, std::string const& rootDir)
     {
         if (std::filesystem::is_directory(rootDir))
         {
@@ -693,6 +568,5 @@ namespace Volund
         }
 
         this->m_Dispatcher = dispatcher;
-        this->m_ScriptingEngine = scriptingEngine;
     }
 }

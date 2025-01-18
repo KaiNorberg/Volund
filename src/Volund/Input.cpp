@@ -1,5 +1,8 @@
-#include "PCH/PCH.h"
 #include "Input.h"
+
+#include "Instrumentor.h"
+
+#include <string.h>
 
 namespace Volund
 {
@@ -81,11 +84,5 @@ namespace Volund
 
 		}
 		}
-	}
-
-	Input::Input()
-	{
-		memset(this->m_MouseButtons, 0, VOLUND_MOUSE_BUTTON_AMOUNT * sizeof(this->m_MouseButtons[0]));
-		memset(this->m_Keys, 0, VOLUND_KEY_AMOUNT * sizeof(this->m_Keys[0]));
 	}
 }

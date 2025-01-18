@@ -51,7 +51,7 @@ namespace Volund
 
         bool IsCursorEnabled();
 
-        void SetTitle(const std::string& title);
+        void SetTitle(std::string const& title);
 
         void SetVsync(bool enabled);
 
@@ -61,7 +61,7 @@ namespace Volund
 
         void Flush();
 
-        void SetIcon(const std::string& filepath);
+        void SetIcon(std::string const& filepath);
 
         void ConnectWindowFocusCallback(GLFWwindowfocusfun callback);
         void ConnectCursorEnterCallback(GLFWcursorenterfun callback);
