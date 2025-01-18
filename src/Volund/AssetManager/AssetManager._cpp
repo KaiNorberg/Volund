@@ -226,7 +226,7 @@ namespace Volund
 
             SerialTable entityTable = value->As<SerialTable>();
 
-            Entity entity = scene->AllocateEntity();
+            Entity entity = scene->Register();
 
             for (auto& [key, value] : entityTable)
             {

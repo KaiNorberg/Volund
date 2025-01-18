@@ -18,8 +18,8 @@ private:
     std::shared_ptr<VL::Texture> m_directoryIcon;
     std::shared_ptr<VL::Texture> m_fileIcon;
 
-    std::filesystem::path m_currentDirectory;
-    std::filesystem::path m_oldParentDir;
+    std::filesystem::path m_cwd;
+    std::filesystem::path m_oldCwd;
 
     bool m_resourcesOpen = false;
 

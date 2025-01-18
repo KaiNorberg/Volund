@@ -1,12 +1,12 @@
 add_rules("mode.debug", "mode.release")
 set_license("LGPL-2.0")
 
-add_requires("openal-soft", "glfw", "glad", "lua", "sol2")
+add_requires("openal-soft", "glfw", "glad", "lua", "sol2", "stb")
 set_languages("cxx20");
 
 target("Volund")
     set_kind("static")
-    add_packages("openal-soft", "glfw", "glad", "lua", "sol2")
+    add_packages("openal-soft", "glfw", "glad", "lua", "sol2", "stb")
     add_includedirs("vendor", "src/Volund")
     add_files("src/Volund/*.cpp", "src/Volund/**/*.cpp")
 
@@ -15,7 +15,7 @@ target("ImGui")
     set_kind("shared")
     add_cxxflags("-fvisibility=default")
     add_packages("glfw", "openal-soft", "sol2");
-    add_includedirs("vendor/imgui", "vendor/glfw/include")
+    add_includedirs("vendor/imgui")
     add_files("vendor/imgui/imgui.cpp")
     add_files("vendor/imgui/imgui_draw.cpp")
     add_files("vendor/imgui/imgui_tables.cpp")

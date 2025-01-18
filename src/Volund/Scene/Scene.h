@@ -17,7 +17,7 @@ namespace Volund
 #define VOLUND_ENTITY_GET_ID(entity) (entity >> 32)
 #define VOLUND_ENTITY_GET_INDEX(entity) (entity & 0x00000000FFFFFFFF)
 
-#define VOLUND_NULL_ENTITY (::Volund::Entity)-1
+#define VOLUND_ENTITY_NULL (::Volund::Entity)-1
 
 namespace Volund
 {
@@ -48,11 +48,11 @@ namespace Volund
 
         CHRONO_TIME_POINT GetStartTime();
 
-        Entity AllocateEntity();
+        Entity Register();
 
-        void DeallocateEntity(Entity entity);
+        void Unregister(Entity entity);
 
-        bool IsAllocated(Entity entity);
+        bool IsRegistered(Entity entity);
 
         template<typename T, typename... Args>
         std::shared_ptr<T> CreateComponent(Entity entity, Args&&... args);
@@ -74,13 +74,11 @@ namespace Volund
         std::vector<EntityEntry>::iterator begin();
         std::vector<EntityEntry>::iterator end();
 
-        static std::shared_ptr<Scene> Create();
+        Scene();
 
         ~Scene();
 
     private:
-
-        Scene();
 
         static std::vector<ComponentEntry>::iterator LowerBound(std::vector<ComponentEntry>& components, const size_t& typeId);
 
@@ -112,7 +110,7 @@ namespace Volund
     {
         VOLUND_PROFILE_FUNCTION();
 
-        if (!IsAllocated(entity))
+        if (!IsRegistered(entity))
         {
             VOLUND_ERROR("Unallocated entity detected!");
         }
@@ -138,7 +136,7 @@ namespace Volund
     {
         VOLUND_PROFILE_FUNCTION();
 
-        if (!IsAllocated(entity))
+        if (!IsRegistered(entity))
         {
             VOLUND_ERROR("Unallocated entity detected!");
         }
@@ -165,7 +163,7 @@ namespace Volund
     {
         VOLUND_PROFILE_FUNCTION();
 
-        if (!IsAllocated(entity))
+        if (!IsRegistered(entity))
         {
             return false;
         }
@@ -185,7 +183,7 @@ namespace Volund
     {
         VOLUND_PROFILE_FUNCTION();
 
-        if (!IsAllocated(entity))
+        if (!IsRegistered(entity))
         {
             return false;
         }
@@ -206,7 +204,7 @@ namespace Volund
     {
         VOLUND_PROFILE_FUNCTION();
 
-        if (!IsAllocated(entity))
+        if (!IsRegistered(entity))
         {
             VOLUND_ERROR("Unallocated entity detected!");
         }

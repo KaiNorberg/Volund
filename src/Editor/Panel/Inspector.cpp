@@ -12,10 +12,10 @@ void Inspector::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_context->GameState;
-		auto selectedEntity = this->m_context->SelectedEntity;
+		auto scene = this->m_context->state->SceneRef();
+		auto selectedEntity = this->m_context->selectedEntity;
 
-		if (!gameState->IsAllocated(selectedEntity))
+		if (!scene->IsRegistered(selectedEntity))
 		{
 			ImGui::Text("No valid entity selected!");
 			return;
@@ -23,16 +23,16 @@ void Inspector::OnProcedure(const VL::Event& e)
 
 		//IMPORTANT: Remember to update the code below whenever a new component is implemented.
 
-		this->ImGuiComponent<VL::Tag>("Tag", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::Tag>("Tag", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto tag = gameState->GetComponent<VL::Tag>(selectedEntity, i);
+			auto tag = scene->GetComponent<VL::Tag>(selectedEntity, i);
 
 			ImGuiString("Tag", tag->String);
 		});
 
-		this->ImGuiComponent<VL::Transform>("Transform", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::Transform>("Transform", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto transform = gameState->GetComponent<VL::Transform>(selectedEntity, i);
+			auto transform = scene->GetComponent<VL::Transform>(selectedEntity, i);
 
 			VL::Vec3 position = transform->Position;
 			VL::Vec3 rotation = transform->GetRotation();
@@ -47,26 +47,26 @@ void Inspector::OnProcedure(const VL::Event& e)
 			transform->Scale = scale;
 		});
 
-		this->ImGuiComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto meshRenderer = gameState->GetComponent<VL::MeshRenderer>(selectedEntity, i);
+			/*auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
 
-			std::string materialPath = gameState->FetchFilepath<VL::Material>(meshRenderer->GetMaterial());
+			std::string materialPath = scene->FetchFilepath<VL::Material>(meshRenderer->GetMaterial());
 			if (ImGuiFile("Material", materialPath))
 			{
-				meshRenderer->SetMaterial(gameState->FetchAsset<VL::Material>(materialPath));
+				meshRenderer->SetMaterial(scene->FetchAsset<VL::Material>(materialPath));
 			}
 
-			std::string meshPath = gameState->FetchFilepath<VL::Mesh>(meshRenderer->GetMesh());
+			std::string meshPath = scene->FetchFilepath<VL::Mesh>(meshRenderer->GetMesh());
 			if (ImGuiFile("Mesh", meshPath))
 			{
-				meshRenderer->SetMesh(gameState->FetchAsset<VL::Mesh>(meshPath));
-			}
+				meshRenderer->SetMesh(scene->FetchAsset<VL::Mesh>(meshPath));
+			}*/
 		});
 
-		this->ImGuiComponent<VL::Camera>("Camera", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::Camera>("Camera", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto camera = gameState->GetComponent<VL::Camera>(selectedEntity, i);
+			auto camera = scene->GetComponent<VL::Camera>(selectedEntity, i);
 
 			//TODO: Add targetbuffer
 
@@ -75,17 +75,17 @@ void Inspector::OnProcedure(const VL::Event& e)
 			ImGuiFloat("NearPlane", camera->NearPlane);
 		});
 
-		this->ImGuiComponent<VL::CameraMovement>("CameraMovement", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::CameraMovement>("CameraMovement", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto cameraMovement = gameState->GetComponent<VL::CameraMovement>(selectedEntity, i);
+			auto cameraMovement = scene->GetComponent<VL::CameraMovement>(selectedEntity, i);
 
 			ImGuiFloat("Speed", cameraMovement->Speed);
 			ImGuiFloat("Sensitivity", cameraMovement->Sensitivity);
 		});
 
-		this->ImGuiComponent<VL::PointLight>("PointLight", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::PointLight>("PointLight", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto pointLight = gameState->GetComponent<VL::PointLight>(selectedEntity, i);
+			auto pointLight = scene->GetComponent<VL::PointLight>(selectedEntity, i);
 
 			std::string label = "##Color" + std::to_string((uint64_t)pointLight.get());
 			ImGui::ColorPicker3(label.c_str(), &pointLight->Color.x, ImGuiColorEditFlags_Float);
@@ -93,15 +93,15 @@ void Inspector::OnProcedure(const VL::Event& e)
 			ImGuiFloat("Brightness", pointLight->Brightness);
 		});
 
-		this->ImGuiComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::SoundSource>("SoundSource", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			auto soundSource = gameState->GetComponent<VL::SoundSource>(selectedEntity, i);
+			/*auto soundSource = scene->GetComponent<VL::SoundSource>(selectedEntity, i);
 
 			//Todo: Add variables
-			std::string audiobufferPath = gameState->FetchFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
+			std::string audiobufferPath = scene->FetchFilepath<VL::AudioBuffer>(soundSource->GetBuffer());
 			if (ImGuiFile("AudioBuffer", audiobufferPath))
 			{
-				soundSource->SetBuffer(gameState->FetchAsset<VL::AudioBuffer>(audiobufferPath));
+				soundSource->SetBuffer(scene->FetchAsset<VL::AudioBuffer>(audiobufferPath));
 			}
 
 			ImGuiBool("AutoPlay", soundSource->AutoPlay);
@@ -128,10 +128,10 @@ void Inspector::OnProcedure(const VL::Event& e)
 			if (oldLooping != newLooping)
 			{
 				soundSource->SetGain(newGain);
-			}
+			}*/
 		});
 
-		this->ImGuiComponent<VL::SoundListener>("SoundListener", selectedEntity, [this, selectedEntity, gameState](int i)
+		this->ImGuiComponent<VL::SoundListener>("SoundListener", selectedEntity, [this, selectedEntity, scene](int i)
 		{
 		});
 
@@ -145,42 +145,42 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 			if (ImGui::MenuItem("Tag"))
 			{
-				gameState->CreateComponent<VL::Tag>(selectedEntity);
+				scene->CreateComponent<VL::Tag>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Transform"))
 			{
-				gameState->CreateComponent<VL::Transform>(selectedEntity);
+				scene->CreateComponent<VL::Transform>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Camera"))
 			{
-				gameState->CreateComponent<VL::Camera>(selectedEntity);
+				scene->CreateComponent<VL::Camera>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("MeshRenderer"))
 			{
-				gameState->CreateComponent<VL::MeshRenderer>(selectedEntity);
+				scene->CreateComponent<VL::MeshRenderer>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("PointLight"))
 			{
-				gameState->CreateComponent<VL::PointLight>(selectedEntity);
+				scene->CreateComponent<VL::PointLight>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("CameraMovement"))
 			{
-				gameState->CreateComponent<VL::CameraMovement>(selectedEntity);
+				scene->CreateComponent<VL::CameraMovement>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("SoundSource"))
 			{
-				gameState->CreateComponent<VL::SoundSource>(selectedEntity);
+				scene->CreateComponent<VL::SoundSource>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("SoundListener"))
 			{
-				gameState->CreateComponent<VL::SoundListener>(selectedEntity);
+				scene->CreateComponent<VL::SoundListener>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 

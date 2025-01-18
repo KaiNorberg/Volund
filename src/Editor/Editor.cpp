@@ -19,18 +19,20 @@
 
 void Editor::Procedure(const VL::Event& e)
 {
+	auto scene = this->m_context->state->SceneRef();
+
 	this->m_input.Procedure(e);
 
 	if (this->m_context->IsPaused())
 	{
 		if (e.type == VOLUND_EVENT_RENDER)
 		{
-			this->m_context->GameState->Procedure(e);
+			scene->Procedure(e);
 		}
 	}
 	else
 	{
-		this->m_context->GameState->Procedure(e);
+		scene->Procedure(e);
 	}
 
 	if (e.type != VOLUND_EVENT_RENDER)
@@ -70,19 +72,19 @@ void Editor::Procedure(const VL::Event& e)
 		{
 			if (this->m_input.IsPressed('R'))
 			{
-				this->GetDispatcher()->Enqueue(EDITOR_EVENT_RELOAD_SCENE);
+				this->GetDispatcher()->Enqueue(EDITOR_CMD_RELOAD_SCENE);
 			}
 			else if (this->m_input.IsPressed('E'))
 			{
-				this->GetDispatcher()->Enqueue(EDITOR_EVENT_LOAD_SCENE);
+				this->GetDispatcher()->Enqueue(EDITOR_CMD_LOAD_SCENE);
 			}
 			else if (this->m_input.IsPressed('N'))
 			{
-				this->GetDispatcher()->Enqueue(EDITOR_EVENT_NEW_SCENE);
+				this->GetDispatcher()->Enqueue(EDITOR_CMD_NEW_SCENE);
 			}
 			else if (this->m_input.IsPressed('S'))
 			{
-				this->GetDispatcher()->Enqueue(EDITOR_EVENT_SAVE_SCENE);
+				this->GetDispatcher()->Enqueue(EDITOR_CMD_SAVE_SCENE);
 			}
 		}
 	}
@@ -92,66 +94,65 @@ void Editor::Procedure(const VL::Event& e)
 		this->Terminate();
 	}
 	break;
-	case EDITOR_EVENT_RELOAD_SCENE:
+	case EDITOR_CMD_RELOAD_SCENE:
 	{
-		this->m_context->GameState->ReloadScene();
+		//scene->ReloadScene();
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
-	case EDITOR_EVENT_LOAD_SCENE:
+	case EDITOR_CMD_LOAD_SCENE:
 	{
 		const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
-		if (!filepath.empty())
+		if (this->m_context->state->LoadScene(filepath) != nullptr)
 		{
-			this->m_context->GameState->LoadScene(filepath);
+			this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 		}
-		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
-	case EDITOR_EVENT_SAVE_SCENE:
+	case EDITOR_CMD_SAVE_SCENE:
 	{
-		this->m_context->GameState->SaveScene();
+		//scene->SaveScene();
 	}
 	break;
-	case EDITOR_EVENT_NEW_SCENE:
+	case EDITOR_CMD_NEW_SCENE:
 	{
-		const std::string filepath = VL::Dialog::OpenFolder(this->GetWindow());
+		/*const std::string filepath = VL::Dialog::OpenFolder(this->GetWindow());
 
 		if (!filepath.empty())
 		{
 			VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 			serializer.WriteToFile(filepath + "/scene.lua");
 
-			this->m_context->GameState->LoadScene(filepath + "/scene.lua");
-		}
+			scene->LoadScene(filepath + "/scene.lua");
+		}*/
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
-	case EDITOR_EVENT_PLAY:
+	case EDITOR_CMD_PLAY:
 	{
-		if (this->m_context->GameState == nullptr || !this->m_context->m_paused)
+		if (scene == nullptr || !this->m_context->m_paused)
 		{
 			return;
 		}
 
-		this->m_context->GameState->SaveScene();
-		this->m_context->GameState->ReloadScene();
+		//scene->SaveScene();
+		//scene->ReloadScene();
 
 		SetDarkImGuiStyle();
 
 		this->m_context->m_paused = false;
 	}
 	break;
-	case EDITOR_EVENT_PAUSE:
+	case EDITOR_CMD_PAUSE:
 	{
-		if (this->m_context->GameState == nullptr || this->m_context->m_paused)
+		if (scene == nullptr || this->m_context->m_paused)
 		{
 			return;
 		}
 
 		this->m_context->m_paused = true;
 
-		this->m_context->GameState->ReloadScene();
+		//scene->ReloadScene();
 
 		SetDefaultImGuiStyle();
 	}
@@ -172,7 +173,7 @@ Editor::Editor()
 
 	VL::RenderingAPI::Init(VL::GraphicsAPI::OpenGL);
 
-	this->AttachModule<VL::AudioModule>();
+	//this->AttachModule<VL::AudioModule>();
 
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
@@ -252,7 +253,7 @@ void Editor::DrawBackground()
 			{
 				if (ImGui::MenuItem("Scene", "Ctrl + E"))
 				{
-					this->GetDispatcher()->Enqueue(EDITOR_EVENT_LOAD_SCENE);
+					this->GetDispatcher()->Enqueue(EDITOR_CMD_LOAD_SCENE);
 				}
 
 				ImGui::EndMenu();
@@ -262,7 +263,7 @@ void Editor::DrawBackground()
 			{
 				if (ImGui::MenuItem("Scene", "Ctrl + S"))
 				{
-					this->GetDispatcher()->Enqueue(EDITOR_EVENT_SAVE_SCENE);
+					this->GetDispatcher()->Enqueue(EDITOR_CMD_SAVE_SCENE);
 				}
 
 				ImGui::EndMenu();
@@ -272,7 +273,7 @@ void Editor::DrawBackground()
 			{
 				if (ImGui::MenuItem("Scene", "Ctrl + R"))
 				{
-					this->GetDispatcher()->Enqueue(EDITOR_EVENT_RELOAD_SCENE);
+					this->GetDispatcher()->Enqueue(EDITOR_CMD_RELOAD_SCENE);
 				}
 
 				ImGui::EndMenu();

@@ -12,9 +12,7 @@ void Viewport::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_context->GameState;
-
-		this->Render(gameState, ImVec2(this->m_framebufferSize.x, this->m_framebufferSize.y));
+		this->Render(this->m_context->state->SceneRef(), ImVec2(this->m_framebufferSize.x, this->m_framebufferSize.y));
 
 		ImVec2 buttonSize = ImVec2(ImGui::GetTextLineHeight(), ImGui::GetTextLineHeight());
 		bool isPaused = this->m_context->IsPaused();
@@ -27,7 +25,7 @@ void Viewport::OnProcedure(const VL::Event& e)
 		{
 			if (this->m_context->IsPaused())
 			{
-				this->m_context->Enqueue(EDITOR_EVENT_PLAY);
+				this->m_context->Enqueue(EDITOR_CMD_PLAY);
 			}
 		}
 		ImGui::EndDisabled();
@@ -40,7 +38,7 @@ void Viewport::OnProcedure(const VL::Event& e)
 		{
 			if (!this->m_context->IsPaused())
 			{
-				this->m_context->Enqueue(EDITOR_EVENT_PAUSE);
+				this->m_context->Enqueue(EDITOR_CMD_PAUSE);
 			}
 		}
 		ImGui::EndDisabled();
@@ -134,7 +132,7 @@ void Viewport::UpdateCameraMovement(float timeStep, bool isWindowHovered)
 	this->m_oldMousePosition = this->m_input.GetMousePosition();
 }
 
-void Viewport::Render(std::shared_ptr<VL::GameState> gameState, ImVec2 viewportSize)
+void Viewport::Render(std::shared_ptr<VL::Scene> scene, ImVec2 viewportSize)
 {
 	auto spec = this->m_sceneFramebuffer->GetSpec();
 	if (viewportSize.x != spec.Width || viewportSize.y != spec.Height)
@@ -158,7 +156,7 @@ void Viewport::Render(std::shared_ptr<VL::GameState> gameState, ImVec2 viewportS
 	editorEye.Effects.push_back(this->m_gridEffect);
 
 	this->m_renderer->Begin();
-	this->m_renderer->Submit(gameState, this->m_sceneFramebuffer);
+	this->m_renderer->Submit(scene, this->m_sceneFramebuffer);
 	this->m_renderer->Submit(editorEye);
 	this->m_renderer->End();
 }

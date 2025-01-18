@@ -22,7 +22,7 @@ namespace Volund
 		return this->m_startTime;
 	}
 
-	Entity Scene::AllocateEntity()
+	Entity Scene::Register()
 	{
 		uint32_t newEntityId = rand();
 
@@ -44,20 +44,20 @@ namespace Volund
 		return bucket.entity;
 	}
 
-	void Scene::DeallocateEntity(Entity entity)
+	void Scene::Unregister(Entity entity)
 	{
-		if (!IsAllocated(entity))
+		if (!IsRegistered(entity))
 		{
-			VOLUND_ERROR("Attempted to deallocate unallocated entity!");
+			VOLUND_ERROR("Attempted to unregister unregistered entity!");
 		}
 
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		this->m_entityHeap[entityIndex].entity = VOLUND_NULL_ENTITY;
+		this->m_entityHeap[entityIndex].entity = VOLUND_ENTITY_NULL;
 		this->m_entityHeap[entityIndex].Components.clear();
 		m_freeEntries.push_back(entityIndex);
 
-		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().entity == VOLUND_NULL_ENTITY)
+		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().entity == VOLUND_ENTITY_NULL)
 		{
 			this->m_entityHeap.pop_back();
 			auto it = std::find(this->m_freeEntries.begin(), this->m_freeEntries.end(), this->m_entityHeap.size() - 1);
@@ -68,11 +68,11 @@ namespace Volund
 		}
 	}
 
-	bool Scene::IsAllocated(Entity entity)
+	bool Scene::IsRegistered(Entity entity)
 	{
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		return this->m_entityHeap.size() > entityIndex && this->m_entityHeap[entityIndex].entity != VOLUND_NULL_ENTITY;
+		return this->m_entityHeap.size() > entityIndex && this->m_entityHeap[entityIndex].entity != VOLUND_ENTITY_NULL;
 	}
 
 	void Scene::Procedure(const Event& e)
@@ -104,11 +104,6 @@ namespace Volund
 	std::vector<Scene::ComponentEntry>::iterator Scene::UpperBound(std::vector<ComponentEntry>& components, const size_t& typeId)
 	{
 		return std::upper_bound(components.begin(), components.end(), typeId);
-	}
-
-	std::shared_ptr<Scene> Scene::Create()
-	{
-		return std::shared_ptr<Scene>(new Scene());
 	}
 
 	Scene::Scene()

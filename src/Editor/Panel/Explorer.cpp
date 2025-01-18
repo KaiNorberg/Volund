@@ -8,15 +8,15 @@ void Explorer::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		std::filesystem::path rootDir = this->m_context->GameState->GetRootDirectory();
+		std::filesystem::path cwd = this->m_context->state->GetCwd();
 
-		if (rootDir != this->m_oldParentDir)
+		if (cwd != this->m_oldCwd)
 		{
-			this->m_currentDirectory = rootDir;
+			this->m_cwd = cwd;
 		}
-		this->m_oldParentDir = rootDir;
+		this->m_oldCwd = cwd;
 
-		if (!std::filesystem::is_directory(rootDir))
+		if (!std::filesystem::is_directory(cwd))
 		{
 			break;
 		}
@@ -39,31 +39,33 @@ void Explorer::OnProcedure(const VL::Event& e)
 			{
 				if (ImGui::MenuItem("Folder"))
 				{
-					std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_currentDirectory / "New Folder");
+					std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_cwd / "New Folder");
 					std::filesystem::create_directory(filepath);
 
 					ImGui::CloseCurrentPopup();
 				}
+
+				//TODO: Reimplement this
 				if (ImGui::MenuItem("Material"))
 				{
-					std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_currentDirectory / "New.material.lua");
+					/*std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_cwd / "New.material.lua");
 
 					VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
 					serializer.StartTable();
 					serializer.Insert("", "://Simple.shader");
 					serializer.EndTable();
-					serializer.WriteToFile(filepath.string());
+					serializer.WriteToFile(filepath.string());*/
 
 					ImGui::CloseCurrentPopup();
 				}
 				if (ImGui::MenuItem("Scene"))
 				{
-					std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_currentDirectory / "New.scene.lua");
+					/*std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_cwd / "New.scene.lua");
 
 					VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 					serializer.StartTable();
 					serializer.EndTable();
-					serializer.WriteToFile(filepath.string());
+					serializer.WriteToFile(filepath.string());*/
 
 					ImGui::CloseCurrentPopup();
 
@@ -77,9 +79,9 @@ void Explorer::OnProcedure(const VL::Event& e)
 
 		ImGui::Columns(columnCount, 0, false);
 
-		if (rootDir != this->m_currentDirectory && !this->m_resourcesOpen)
+		if (cwd != this->m_cwd && !this->m_resourcesOpen)
 		{
-			this->ImGuiFilesystemEntry(this->m_currentDirectory.parent_path().string(), "../", true);
+			this->ImGuiFilesystemEntry(this->m_cwd.parent_path().string(), "../", true);
 		}
 		else
 		{
@@ -122,7 +124,7 @@ void Explorer::OnProcedure(const VL::Event& e)
 		}
 		else
 		{
-			for (auto& directory : std::filesystem::directory_iterator(this->m_currentDirectory))
+			for (auto& directory : std::filesystem::directory_iterator(this->m_cwd))
 			{
 				if (!directory.is_directory())
 				{
@@ -133,7 +135,7 @@ void Explorer::OnProcedure(const VL::Event& e)
 				this->ImGuiFilesystemEntry(filepath.string(), filepath.filename().string(), true);
 			}
 
-			for (auto& file : std::filesystem::directory_iterator(this->m_currentDirectory))
+			for (auto& file : std::filesystem::directory_iterator(this->m_cwd))
 			{
 				if (file.is_directory())
 				{
@@ -204,7 +206,7 @@ void Explorer::ImGuiFilesystemEntry(std::string const& payloadPath, std::string 
 	{
 		if (ImGui::IsItemHovered() && ImGui::IsMouseDoubleClicked(ImGuiMouseButton_Left))
 		{
-			this->m_currentDirectory = payloadPath;
+			this->m_cwd = payloadPath;
 		}
 	}
 

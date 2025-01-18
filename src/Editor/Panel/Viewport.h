@@ -22,7 +22,7 @@ private:
 
     void UpdateCameraMovement(float timeStep, bool isWindowHovered);
 
-    void Render(std::shared_ptr<VL::GameState> gameState, ImVec2 viewportSize);
+    void Render(std::shared_ptr<VL::Scene> scene, ImVec2 viewportSize);
 
     VL::Vec2 m_framebufferSize = VL::Vec2(100, 100);
 

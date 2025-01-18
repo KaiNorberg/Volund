@@ -1,3 +1,4 @@
+--[[
 local table =
 {
 	FileType = "Scene",
@@ -119,3 +120,12 @@ local table =
 }
 
 return table
+]]--
+
+scene = Scene:new()
+scene:register()
+
+--- ... ---
+
+return scene
+

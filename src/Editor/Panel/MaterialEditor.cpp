@@ -12,12 +12,13 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_context->GameState;
+		/*auto scene = this->m_context->state->SceneRef();
+		auto state = this->m_context->state;
 
-		std::string materialPath = gameState->FetchFilepath<VL::Material>(this->m_selectedMaterial);
+		std::string materialPath = scene->FetchFilepath<VL::Material>(this->m_selectedMaterial);
 		if (ImGuiFile("Material/Effect", materialPath))
 		{
-			this->m_selectedMaterial = gameState->FetchAsset<VL::Material>(materialPath);
+			this->m_selectedMaterial = scene->FetchAsset<VL::Material>(materialPath);
 		}
 		ImGui::Separator();
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
@@ -33,11 +34,11 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
 		if (ImGui::BeginListBox("##MaterialEditorShader", listBoxSize))
 		{
-			std::string shaderPath = gameState->FetchFilepath<VL::Shader>(this->m_selectedMaterial->GetShader());
+			std::string shaderPath = scene->FetchFilepath<VL::Shader>(this->m_selectedMaterial->GetShader());
 			if (ImGuiFile("Shader", shaderPath))
 			{
 				changed = true;
-				this->m_selectedMaterial->SetShader(gameState->FetchAsset<VL::Shader>(shaderPath));
+				this->m_selectedMaterial->SetShader(scene->FetchAsset<VL::Shader>(shaderPath));
 			}
 
 			ImGui::EndListBox();
@@ -160,7 +161,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		if (changed && this->m_context->IsPaused())
 		{
 			gameState->Serialize(this->m_selectedMaterial, materialPath);
-		}
+		}*/
 	}
 	break;
 	case EDITOR_EVENT_RESET:

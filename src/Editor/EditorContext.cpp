@@ -10,11 +10,7 @@ void EditorContext::Enqueue(const VL::Event& e)
 	this->m_dispatcher->Enqueue(e);
 }
 
-EditorContext::EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher)
+EditorContext::EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher) : m_dispatcher{dispatcher}
 {
-	this->m_dispatcher = dispatcher;
-
-	this->State = NULL;
-
-	this->m_paused = true;
+	this->state = std::make_shared<VL::LuaState>(".");
 }
