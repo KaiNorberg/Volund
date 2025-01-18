@@ -25,7 +25,7 @@ namespace Volund::Math
 		return result;
 	}
 
-	Mat4x4 Scale(Mat4x4 const& matrix, Vec3 const& vector)
+	Mat4x4 scale(Mat4x4 const& matrix, Vec3 const& vector)
 	{
 		Mat4x4 result;
 		result[0] = matrix[0] * vector[0];

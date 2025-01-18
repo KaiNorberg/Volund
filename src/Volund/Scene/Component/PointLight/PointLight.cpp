@@ -19,7 +19,7 @@ namespace Volund
 			const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
 			/*RendererLight light;
-			light.Position = entityTransform->Position;
+			light.pos = entityTransform->pos;
 			light.Brightness = this->Brightness;
 			light.Color = this->Color;
 

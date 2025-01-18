@@ -538,9 +538,9 @@ std::string ImGuiDragDropTarget(const char* type)
 	return std::string();
 }
 
-VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize)
+VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& pos, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize)
 {
-	VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(Position.x, Position.y, Position.z, 1.0f);
+	VL::Vec4 ScreenPosition = ViewProjMatrix * VL::Vec4(pos.x, pos.y, pos.z, 1.0f);
 	ScreenPosition = (ScreenPosition / ScreenPosition.w) / 2.0f + 0.5f;
 	return VL::Vec2(WindowPos.x + ScreenPosition.x * WindowSize.x, WindowPos.y + (1.0f - ScreenPosition.y) * WindowSize.y);
 }

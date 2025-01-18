@@ -18,13 +18,13 @@ namespace Volund
 
         Mat4x4 GetModelMatrix() const;
 
-        Vec3 Position = Vec3(0.0f);
+        Vec3 pos;
 
-        Vec3 Scale = Vec3(1.0f);
+        Vec3 scale;
 
-        Quat Quaternion = Quat(1.0f);
+        Quat quat;
 
-        Transform();
+        Transform(Vec3 pos = Vec3(0.0f), Vec3 rotation = Vec3(0.0f), Vec3 scale = Vec3(1.0f));
 
     private:
 

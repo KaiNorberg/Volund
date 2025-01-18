@@ -122,8 +122,15 @@ local table =
 return table
 ]]--
 
-scene = Scene:new()
-scene:register()
+scene = Scene.new()
+
+camera = scene:register()
+scene:add_transform(camera, Vec3.new(0.0, 2.0, 8.0), Vec3.new(0.0), Vec3.new(1.0))
+scene:add_camera(camera)
+
+blueCube = scene:register()
+scene:add_transform(blueCube, Vec3.new(7.5, 3.0, -7.8), Vec3.new(0.0), Vec3.new(1.0))
+scene:add_mesh_renderer(blueCube, Mesh.new("://Cube.obj"), require("Materials/Blue.mat.lua"))
 
 --- ... ---
 

@@ -55,10 +55,10 @@ namespace Volund
         bool IsRegistered(Entity entity);
 
         template<typename T, typename... Args>
-        std::shared_ptr<T> CreateComponent(Entity entity, Args&&... args);
+        std::shared_ptr<T> AddComponent(Entity entity, Args&&... args);
 
         template<typename T>
-        void DeleteComponent(Entity entity, uint64_t index = 0);
+        void RemoveComponent(Entity entity, uint64_t index = 0);
 
         template<typename T>
         bool HasComponent(Entity entity, uint64_t index = 0);
@@ -106,7 +106,7 @@ namespace Volund
     }
 
     template<typename T, typename ...Args>
-    inline std::shared_ptr<T> Scene::CreateComponent(Entity entity, Args && ...args)
+    inline std::shared_ptr<T> Scene::AddComponent(Entity entity, Args && ...args)
     {
         VOLUND_PROFILE_FUNCTION();
 
@@ -132,7 +132,7 @@ namespace Volund
     }
 
     template <typename T>
-    inline void Scene::DeleteComponent(Entity entity, uint64_t index)
+    inline void Scene::RemoveComponent(Entity entity, uint64_t index)
     {
         VOLUND_PROFILE_FUNCTION();
 

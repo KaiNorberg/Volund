@@ -33,7 +33,7 @@ inline void Inspector::ImGuiComponent(std::string const& name, VL::Entity entity
         {
             if (ImGui::MenuItem("Delete"))
             {
-                scene->DeleteComponent<T>(entity, i);
+                scene->RemoveComponent<T>(entity, i);
             }
 
             ImGui::EndPopup();

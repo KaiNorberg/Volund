@@ -21,8 +21,8 @@ namespace Volund
 
 			const std::shared_ptr<Transform> entityTransform = this->GetScene()->GetComponent<Transform>(this->GetEntity());
 
-			this->m_listener.SetPosition(entityTransform->Position);
-			this->m_listener.SetVelocity((entityTransform->Position - oldPosition) * timeStep);
+			this->m_listener.SetPosition(entityTransform->pos);
+			this->m_listener.SetVelocity((entityTransform->pos - oldPosition) * timeStep);
 
 			this->m_listener.SetOrientation(entityTransform->GetFront(), entityTransform->GetUp());
 		}

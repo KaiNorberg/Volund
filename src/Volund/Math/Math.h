@@ -46,7 +46,7 @@ namespace Volund::Math
 
     Mat4x4 Translate(Mat4x4 const& matrix, Vec3 const& vector);
 
-    Mat4x4 Scale(Mat4x4 const& matrix, Vec3 const& vector);
+    Mat4x4 scale(Mat4x4 const& matrix, Vec3 const& vector);
 
     Quat LookAt(const Vec3& front, const Vec3& up);
 

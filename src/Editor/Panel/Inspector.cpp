@@ -34,17 +34,17 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 			auto transform = scene->GetComponent<VL::Transform>(selectedEntity, i);
 
-			VL::Vec3 position = transform->Position;
+			VL::Vec3 position = transform->pos;
 			VL::Vec3 rotation = transform->GetRotation();
-			VL::Vec3 scale = transform->Scale;
+			VL::Vec3 scale = transform->scale;
 
 			ImGuiVec3("Position", position, 0.1f, 0.0f);
 			ImGuiVec3("Rotation", rotation, 0.1f, 0.0f);
 			ImGuiVec3("Scale", scale, 0.1f, 1.0f);
 
-			transform->Position = position;
+			transform->pos = position;
 			transform->SetRotation(rotation);
-			transform->Scale = scale;
+			transform->scale = scale;
 		});
 
 		this->ImGuiComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
@@ -145,42 +145,42 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 			if (ImGui::MenuItem("Tag"))
 			{
-				scene->CreateComponent<VL::Tag>(selectedEntity);
+				scene->AddComponent<VL::Tag>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Transform"))
 			{
-				scene->CreateComponent<VL::Transform>(selectedEntity);
+				scene->AddComponent<VL::Transform>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("Camera"))
 			{
-				scene->CreateComponent<VL::Camera>(selectedEntity);
+				scene->AddComponent<VL::Camera>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("MeshRenderer"))
 			{
-				scene->CreateComponent<VL::MeshRenderer>(selectedEntity);
+				scene->AddComponent<VL::MeshRenderer>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("PointLight"))
 			{
-				scene->CreateComponent<VL::PointLight>(selectedEntity);
+				scene->AddComponent<VL::PointLight>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("CameraMovement"))
 			{
-				scene->CreateComponent<VL::CameraMovement>(selectedEntity);
+				scene->AddComponent<VL::CameraMovement>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("SoundSource"))
 			{
-				scene->CreateComponent<VL::SoundSource>(selectedEntity);
+				scene->AddComponent<VL::SoundSource>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 			if (ImGui::MenuItem("SoundListener"))
 			{
-				scene->CreateComponent<VL::SoundListener>(selectedEntity);
+				scene->AddComponent<VL::SoundListener>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 

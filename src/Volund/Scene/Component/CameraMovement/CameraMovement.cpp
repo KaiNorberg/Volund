@@ -25,19 +25,19 @@ namespace Volund
 
 			if (m_input.IsHeld('W'))
 			{
-				entityTransform->Position += entityTransform->GetFront() * float(ts) * this->Speed;
+				entityTransform->pos += entityTransform->GetFront() * float(ts) * this->Speed;
 			}
 			if (m_input.IsHeld('S'))
 			{
-				entityTransform->Position -= entityTransform->GetFront() * float(ts) * this->Speed;
+				entityTransform->pos -= entityTransform->GetFront() * float(ts) * this->Speed;
 			}
 			if (m_input.IsHeld('A'))
 			{
-				entityTransform->Position -= entityTransform->GetRight() * float(ts) * this->Speed;
+				entityTransform->pos -= entityTransform->GetRight() * float(ts) * this->Speed;
 			}
 			if (m_input.IsHeld('D'))
 			{
-				entityTransform->Position += entityTransform->GetRight() * float(ts) * this->Speed;
+				entityTransform->pos += entityTransform->GetRight() * float(ts) * this->Speed;
 			}
 
 			IVec2 delta = m_input.GetMousePosition() - this->m_oldMousePosition;

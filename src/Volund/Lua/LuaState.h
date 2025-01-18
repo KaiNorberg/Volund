@@ -18,7 +18,7 @@ namespace Volund
 
         std::shared_ptr<Scene> SceneRef();
 
-        std::shared_ptr<Scene> LoadScene(std::string const& file);
+        std::shared_ptr<Scene> LoadScene(std::string const& filepath);
 
         LuaState(std::string const& cwd = ".");
 

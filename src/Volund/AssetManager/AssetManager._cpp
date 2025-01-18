@@ -116,9 +116,9 @@ namespace Volund
 
                 serializer.StartTable();
                 serializer.Insert("ComponentType", (LuaInt)LuaComponentID::Transform);
-                serializer.Insert("Position", (LuaVec3)component->Position);
+                serializer.Insert("pos", (LuaVec3)component->pos);
                 serializer.Insert("Rotation", (LuaVec3)component->GetRotation());
-                serializer.Insert("Scale", (LuaVec3)component->Scale);
+                serializer.Insert("scale", (LuaVec3)component->scale);
                 serializer.EndTable();
             }
 
@@ -244,16 +244,16 @@ namespace Volund
                 {
                 case LuaComponentID::Transform:
                 {
-                    auto newComponent = scene->CreateComponent<Transform>(entity);
+                    auto newComponent = scene->AddComponent<Transform>(entity);
 
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->Position, "Position", Vec3);
-                    VOLUND_SET_COMPONENT(componentTable, newComponent->Scale, "Scale", Vec3);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->pos, "pos", Vec3);
+                    VOLUND_SET_COMPONENT(componentTable, newComponent->scale, "scale", Vec3);
                     VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetRotation, "Rotation", Vec3);
                 }
                 break;
                 case LuaComponentID::Camera:
                 {
-                    auto newComponent = scene->CreateComponent<Camera>(entity);
+                    auto newComponent = scene->AddComponent<Camera>(entity);
 
                     VOLUND_SET_COMPONENT(componentTable, newComponent->FOV, "FOV", LuaFloat);
                     VOLUND_SET_COMPONENT(componentTable, newComponent->NearPlane, "NearPlane", LuaFloat);
@@ -268,7 +268,7 @@ namespace Volund
                 break;
                 case LuaComponentID::CameraMovement:
                 {
-                    auto newComponent = scene->CreateComponent<CameraMovement>(entity);
+                    auto newComponent = scene->AddComponent<CameraMovement>(entity);
 
                     VOLUND_SET_COMPONENT(componentTable, newComponent->Speed, "Speed", LuaFloat);
                     VOLUND_SET_COMPONENT(componentTable, newComponent->Sensitivity, "Sensitivity", LuaFloat);
@@ -284,7 +284,7 @@ namespace Volund
                         std::shared_ptr<Mesh> mesh = this->Fetch<Mesh>(meshFilepath);
                         std::shared_ptr<Material> material = this->Fetch<Material>(materialFilepath);
 
-                        auto newComponent = scene->CreateComponent<MeshRenderer>(entity, mesh, material);
+                        auto newComponent = scene->AddComponent<MeshRenderer>(entity, mesh, material);
                     }
                     else
                     {
@@ -294,7 +294,7 @@ namespace Volund
                 break;
                 case LuaComponentID::PointLight:
                 {
-                    auto newComponent = scene->CreateComponent<PointLight>(entity);
+                    auto newComponent = scene->AddComponent<PointLight>(entity);
 
                     VOLUND_SET_COMPONENT(componentTable, newComponent->Color, "Color", Vec3);
                     VOLUND_SET_COMPONENT(componentTable, newComponent->Brightness, "Brightness", LuaFloat);
@@ -303,12 +303,12 @@ namespace Volund
                 case LuaComponentID::Tag:
                 {
                     std::string string = componentTable["String"];
-                    auto newComponent = scene->CreateComponent<Tag>(entity, string);
+                    auto newComponent = scene->AddComponent<Tag>(entity, string);
                 }
                 break;
                 case LuaComponentID::SoundSource:
                 {
-                    auto newComponent = scene->CreateComponent<SoundSource>(entity);
+                    auto newComponent = scene->AddComponent<SoundSource>(entity);
 
                     VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetLooping, "Looping", LuaBool);
                     VOLUND_SET_COMPONENT_VIA_FUNC(componentTable, newComponent->SetPitch, "Pitch", LuaFloat);
@@ -324,7 +324,7 @@ namespace Volund
                 break;
                 case LuaComponentID::SoundListener:
                 {
-                    auto newComponent = scene->CreateComponent<SoundListener>(entity);
+                    auto newComponent = scene->AddComponent<SoundListener>(entity);
                 }
                 break;
                 default:

@@ -20,7 +20,7 @@ namespace Volund
 		for (uint64_t i = 0; i < this->m_lightsBuffer->LightAmount; i++)
 		{
 			Vec3 lightColor = this->m_data.Lights[i].Color * this->m_data.Lights[i].Brightness;
-			Vec3 lightPosition = this->m_data.Lights[i].Position;
+			Vec3 lightPosition = this->m_data.Lights[i].pos;
 
 			this->m_lightsBuffer->LightColors[i] = Vec4(lightColor.x, lightColor.y, lightColor.z, 0.0f);
 			this->m_lightsBuffer->LightPositions[i] = Vec4(lightPosition.x, lightPosition.y, lightPosition.z, 0.0f);

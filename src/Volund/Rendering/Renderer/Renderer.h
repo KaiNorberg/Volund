@@ -27,7 +27,7 @@ namespace Volund
     {
         RGB Color;
         float Brightness;
-        Vec3 Position;
+        Vec3 pos;
     };
 
     struct RendererEye

@@ -35,7 +35,7 @@ namespace Volund
 
 		if (entityTransform != nullptr)
 		{
-			return Math::ViewMatrix(entityTransform->Position, entityTransform->Position + entityTransform->GetFront(),
+			return Math::ViewMatrix(entityTransform->pos, entityTransform->pos + entityTransform->GetFront(),
 				entityTransform->GetUp());
 		}
 		else
@@ -86,7 +86,7 @@ namespace Volund
 			eye.Target = this->m_targetBuffer;
 			eye.ProjectionMatrix = this->GetProjectionMatrix((float)spec.Width / (float)spec.Height);
 			eye.ViewMatrix = this->GetViewMatrix();
-			eye.Position = entityTransform->Position;
+			eye.pos = entityTransform->pos;
 			eye.LayerMask = this->m_layerMask;
 
 			Renderer::Submit(eye);*/

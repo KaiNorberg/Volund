@@ -29,6 +29,8 @@ namespace Volund
 
         static std::shared_ptr<Mesh> Create();
 
+        static std::shared_ptr<Mesh> Create(std::string const& filepath);
+
         static std::shared_ptr<Mesh> Create(std::shared_ptr<VertexBuffer> vertexBuffer, std::shared_ptr<IndexBuffer> indexBuffer);
 
         virtual ~Mesh() = default;

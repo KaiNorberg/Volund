@@ -19,7 +19,7 @@ namespace Volund
 					auto transform = component.As<Transform>();
 
 					modelMatrix = transform->GetModelMatrix();
-					position = transform->Position;
+					position = transform->pos;
 
 					break;
 				}
@@ -46,7 +46,7 @@ namespace Volund
 					RendererLight light;
 					light.Brightness = pointLight->Brightness;
 					light.Color = pointLight->Color;
-					light.Position = position;
+					light.pos = position;
 
 					this->Submit(light);
 				}

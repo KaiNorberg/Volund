@@ -43,4 +43,4 @@ void ImGuiDragDropSource(const char* type, std::string const& payload);
 
 std::string ImGuiDragDropTarget(const char* type);
 
-VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& Position, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
+VL::Vec2 ToScreenSpace(const VL::Mat4x4& ViewProjMatrix, const VL::Vec3& pos, const VL::Vec2& WindowPos, const VL::Vec2& WindowSize);
