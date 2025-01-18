@@ -26,7 +26,7 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 			std::string entityName;
 			if (scene->HasComponent<VL::Tag>(entity))
 			{
-				entityName = scene->GetComponent<VL::Tag>(entity)->String;
+				entityName = scene->GetComponent<VL::Tag>(entity)->string;
 			}
 			else
 			{

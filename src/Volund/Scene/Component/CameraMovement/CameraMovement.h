@@ -10,15 +10,15 @@ namespace Volund
     {
     public:
 
-        float speed = 1.0f;
+        float speed;
 
-        float sensitivity = 1.0f;
+        float sensitivity;
 
         void Procedure(const Event& e);
 
         virtual void OnCreate();
 
-        CameraMovement(float speed, float sensitivity);
+        CameraMovement(float speed = 1.0f, float sensitivity = 1.0f);
 
     private:
 

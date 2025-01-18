@@ -29,7 +29,7 @@ namespace Volund
 
         void Procedure(const Event& e);
 
-        SoundSource(std::shared_ptr<AudioBuffer> buffer);
+        SoundSource(std::shared_ptr<AudioBuffer> buffer = nullptr);
 
     private:
 

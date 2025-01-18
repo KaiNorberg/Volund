@@ -27,7 +27,7 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 			auto tag = scene->GetComponent<VL::Tag>(selectedEntity, i);
 
-			ImGuiString("Tag", tag->String);
+			ImGuiString("Tag", tag->string);
 		});
 
 		this->ImGuiComponent<VL::Transform>("Transform", selectedEntity, [this, selectedEntity, scene](int i)
@@ -79,8 +79,8 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 			auto cameraMovement = scene->GetComponent<VL::CameraMovement>(selectedEntity, i);
 
-			ImGuiFloat("Speed", cameraMovement->Speed);
-			ImGuiFloat("Sensitivity", cameraMovement->Sensitivity);
+			ImGuiFloat("Speed", cameraMovement->speed);
+			ImGuiFloat("Sensitivity", cameraMovement->sensitivity);
 		});
 
 		this->ImGuiComponent<VL::PointLight>("PointLight", selectedEntity, [this, selectedEntity, scene](int i)

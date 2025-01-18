@@ -264,8 +264,8 @@ namespace Volund
         this->m_state.new_usertype<Camera>("Camera", 
             sol::constructors<Camera()>(),
             "fov", &Camera::FOV,
-            "near_plane", &Camera::NearPlane,
-            "far_plane", &Camera::FarPlane,
+            "nearPlane", &Camera::NearPlane,
+            "farPlane", &Camera::FarPlane,
             "set_layer_mask", &Camera::SetLayerMask,
             "get_layer_mask", &Camera::GetLayerMask,
             "get_view_matrix", &Camera::GetViewMatrix,
@@ -311,7 +311,7 @@ namespace Volund
 
         this->m_state.new_usertype<SoundSource>("SoundSource", 
             sol::constructors<SoundSource(std::shared_ptr<AudioBuffer>)>(),
-            "auto_play", &SoundSource::AutoPlay,
+            "autoPlay", &SoundSource::AutoPlay,
             "play", &SoundSource::Play,
             "set_buffer", &SoundSource::SetBuffer,
             "get_buffer", &SoundSource::GetBuffer,
@@ -325,7 +325,7 @@ namespace Volund
 
         this->m_state.new_usertype<Tag>("Tag", 
             sol::constructors<Tag(std::string)>(),
-            "string", &Tag::String
+            "string", &Tag::string
         );
 
         this->m_state.new_usertype<Scene>("Scene", sol::constructors<Scene()>(),

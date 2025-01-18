@@ -106,7 +106,7 @@ namespace Volund
 
                 serializer.StartTable();
                 serializer.Insert("ComponentType", (LuaInt)LuaComponentID::Tag);
-                serializer.Insert("String", component->String);
+                serializer.Insert("String", component->string);
                 serializer.EndTable();
             }
 

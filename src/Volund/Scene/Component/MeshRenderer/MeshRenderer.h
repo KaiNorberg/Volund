@@ -27,9 +27,7 @@ namespace Volund
 
         void Procedure(const Event& e);
 
-        MeshRenderer() = default;
-
-        MeshRenderer(std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material);
+        MeshRenderer(std::shared_ptr<Mesh> mesh = nullptr, std::shared_ptr<Material> material = nullptr);
 
     private:
 
