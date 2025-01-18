@@ -34,10 +34,14 @@ namespace Volund
 
     std::shared_ptr<Scene> LuaState::LoadScene(std::string const& filepath)
     {
+        std::string oldCwd = this->m_cwd;
+        this->m_cwd = std::filesystem::absolute(filepath).parent_path();
+
         sol::object newScene = this->m_state.script_file(filepath);        
         if (!newScene.is<std::shared_ptr<Scene>>())
         {
             VOLUND_WARNING("New lua scene handle does not point to a scene");
+            this->m_cwd = oldCwd;
             return nullptr;
         }
 
@@ -51,11 +55,19 @@ namespace Volund
 
         this->m_state.open_libraries(sol::lib::base);
 
+        this->m_state.set_function("require", [this](std::string const& filepath) {
+            return this->m_state.script_file(std::filesystem::path(this->m_cwd) / std::filesystem::path(filepath));
+        });
+
         this->m_state.new_usertype<Vec3>("Vec3", sol::constructors<Vec3(), Vec3(float), Vec3(float, float, float)>()
         );
 
         this->m_state.new_usertype<Mesh>("Mesh", sol::constructors<>(),
             "new", [](std::string const& filepath) { return Mesh::Create(filepath); }
+        );
+
+        this->m_state.new_usertype<Material>("Material", sol::constructors<>(),
+            "new", []() { return Material::Create(); }
         );
 
         this->m_state.new_usertype<Scene>("Scene", sol::constructors<Scene()>(),
