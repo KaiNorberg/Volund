@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "UniformBufferBackend.h"
 
 #include "Rendering/RenderingAPI/RenderingAPI.h"

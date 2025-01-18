@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "Texture.h"
 
 #include "Rendering/RenderingAPI/RenderingAPI.h"

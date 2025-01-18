@@ -135,78 +135,6 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 		});
 
-		this->ImGuiComponent<VL::ScriptComponent>("Script", selectedEntity, [this, selectedEntity, gameState](int i)
-		{
-			auto scriptComponent = gameState->GetComponent<VL::ScriptComponent>(selectedEntity, i);
-			std::shared_ptr<VL::Script> script = scriptComponent->GetScript();
-
-			std::string scriptPath;
-			if (script != nullptr)
-			{
-				scriptPath = script->GetFilepath();
-			}
-			if (ImGuiFile("Script", scriptPath))
-			{
-				auto script = gameState->LoadScript(scriptPath);
-				scriptComponent->SetScript(script);
-			}
-
-			if (script != nullptr)
-			{
-				for (std::string const& identifier : script->GetPublicVariables())
-				{
-					if (script->Is<VL::LuaInt>(identifier))
-					{
-						int rawValue = (int)script->Get<VL::LuaInt>(identifier);
-						if (ImGuiInt(identifier, rawValue))
-						{
-							script->Set(identifier, (VL::LuaInt)rawValue);
-						}
-					}
-					else if (script->Is<VL::LuaFloat>(identifier))
-					{
-						auto rawValue = script->Get<VL::LuaFloat>(identifier);
-						if (ImGuiFloat(identifier, rawValue))
-						{
-							script->Set(identifier, (VL::LuaFloat)rawValue);
-						}
-					}
-					else if (script->Is<VL::LuaString>(identifier))
-					{
-						auto rawValue = script->Get<VL::LuaString>(identifier);
-						if (ImGuiString(identifier, rawValue))
-						{
-							script->Set(identifier, rawValue);
-						}
-					}
-					else if (script->Is<VL::LuaVec2>(identifier))
-					{
-						auto rawValue = (VL::Vec2)script->Get<VL::LuaVec2>(identifier);
-						if (ImGuiVec2(identifier, rawValue))
-						{
-							script->Set(identifier, (VL::LuaVec2)rawValue);
-						}
-					}
-					else if (script->Is<VL::LuaVec3>(identifier))
-					{
-						auto rawValue = (VL::Vec3)script->Get<VL::LuaVec3>(identifier);
-						if (ImGuiVec3(identifier, rawValue))
-						{
-							script->Set(identifier, (VL::LuaVec3)rawValue);
-						}
-					}
-					else if (script->Is<VL::LuaVec4>(identifier))
-					{
-						auto rawValue = script->Get<VL::LuaVec4>(identifier);
-						if (ImGuiVec4(identifier, rawValue))
-						{
-							script->Set(identifier, rawValue);
-						}
-					}
-				}
-			}
-		});
-
 		ImGuiAlign("Add Component", 0.5f);
 		if (ImGui::Button("Add Component"))
 		{
@@ -253,11 +181,6 @@ void Inspector::OnProcedure(const VL::Event& e)
 			if (ImGui::MenuItem("SoundListener"))
 			{
 				gameState->CreateComponent<VL::SoundListener>(selectedEntity);
-				ImGui::CloseCurrentPopup();
-			}
-			if (ImGui::MenuItem("Script"))
-			{
-				gameState->CreateComponent<VL::ScriptComponent>(selectedEntity);
 				ImGui::CloseCurrentPopup();
 			}
 

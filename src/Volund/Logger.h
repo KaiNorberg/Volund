@@ -5,6 +5,7 @@
 #include <vector>
 #include <stdexcept>
 #include <memory>
+#include <iostream>
 
 #define VOLUND_LOGGERCOLOR_BLACK   "\033[30m"
 #define VOLUND_LOGGERCOLOR_RED     "\033[31m"

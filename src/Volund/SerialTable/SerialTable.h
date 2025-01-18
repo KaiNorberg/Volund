@@ -2,6 +2,8 @@
 
 #include "SerialObject/SerialObject.h"
 
+#include <unordered_map>
+
 namespace Volund
 {
     class SerialTable

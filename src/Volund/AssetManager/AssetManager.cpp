@@ -1,5 +1,6 @@
 #include "AssetManager.h"
 
+#include "Core/Core.h"
 #include "Rendering/Mesh/Mesh.h"
 #include "Rendering/Material/Material.h"
 #include "Audio/AudioBuffer/AudioBuffer.h"
@@ -12,15 +13,6 @@
 
 #define VOLUND_SET_COMPONENT(table, member, name, type) if (table.Contains<type>(name)) {member = ((type)table[name]);}
 #define VOLUND_SET_COMPONENT_VIA_FUNC(table, func, name, type) if (table.Contains<type>(name)) {func((type)table[name]);}
-
-#define VOLUND_SERIAL_MATERIAL_SHADER "Shader"
-#define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
-
-#define VOLUND_SERIAL_DATA "Data"
-#define VOLUND_SERIAL_FILE_TYPE "FileType"
-
-#define VOLUND_SERIAL_FILE_TYPE_MATERIAL "Material"
-#define VOLUND_SERIAL_FILE_TYPE_SCENE "Scene"
 
 namespace Volund
 {
@@ -335,46 +327,6 @@ namespace Volund
                     auto newComponent = scene->CreateComponent<SoundListener>(entity);
                 }
                 break;
-                case LuaComponentID::ScriptComponent:
-                {
-                    auto newComponent = scene->CreateComponent<ScriptComponent>(entity);
-
-                    auto script = this->LoadScript(this->GetAbsolutePath(componentTable["Filepath"]));
-                    newComponent->SetScript(script);
-
-                    if (componentTable.Contains<SerialTable>("PublicVars"))
-                    {
-                        SerialTable publicVars = componentTable["PublicVars"];
-                        for (auto& [key, value] : publicVars)
-                        {
-                            if (value->Is<LuaInt>())
-                            {
-                                script->Set(key, value->As<LuaInt>());
-                            }
-                            else if (value->Is<LuaFloat>())
-                            {
-                                script->Set(key, value->As<LuaFloat>());
-                            }
-                            else if (value->Is<LuaString>())
-                            {
-                                script->Set(key, value->As<LuaString>());
-                            }
-                            else if (value->Is<LuaVec2>())
-                            {
-                                script->Set(key, value->As<LuaVec2>());
-                            }
-                            else if (value->Is<LuaVec3>())
-                            {
-                                script->Set(key, value->As<LuaVec3>());
-                            }
-                            else if (value->Is<Vec4>())
-                            {
-                                script->Set(key, value->As<Vec4>());
-                            }
-                        }
-                    }
-                }
-                break;
                 default:
                 {
                     VOLUND_WARNING("Unknown component id (%s)! Check for proper capitalization and spelling!", componentId);
@@ -549,36 +501,14 @@ namespace Volund
         return newAudioBuffer;
     }
 
-    std::shared_ptr<Script> AssetManager::LoadScript(std::string const& filepath)
-    {
-        uint64_t lineId = VOLUND_INFO("Loading Script (%s)... ", filepath.c_str());
-
-        if (!this->m_ScriptingEngine.expired())
-        {
-            auto scriptingEngine = this->m_ScriptingEngine.lock();
-
-            auto newScript = scriptingEngine->LoadScript(filepath);
-
-            VOLUND_UPDATE_LINE(lineId, "Done ");
-
-            return newScript;
-        }
-        else
-        {
-            VOLUND_UPDATE_LINE(lineId, "ERROR ");
-
-            return nullptr;
-        }
-    }
-
     std::string AssetManager::GetRootDirectory()
     {
         return this->m_RootDir;
     }
 
-    std::shared_ptr<AssetManager> AssetManager::Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootDir, std::shared_ptr<ScriptingEngine> scriptingEngine)
+    std::shared_ptr<AssetManager> AssetManager::Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootDir)
     {
-        return std::shared_ptr<AssetManager>(new AssetManager(Dispatcher, rootDir, scriptingEngine));
+        return std::shared_ptr<AssetManager>(new AssetManager(Dispatcher, rootDir));
     }
 
     std::string AssetManager::GetRelativePath(std::string const& absolutePath)
@@ -626,7 +556,7 @@ namespace Volund
         return shortPath;
     }
 
-    AssetManager::AssetManager(std::shared_ptr<Dispatcher> dispatcher, std::string const& rootDir, std::shared_ptr<ScriptingEngine> scriptingEngine)
+    AssetManager::AssetManager(std::shared_ptr<Dispatcher> dispatcher, std::string const& rootDir)
     {
         if (std::filesystem::is_directory(rootDir))
         {
@@ -638,6 +568,5 @@ namespace Volund
         }
 
         this->m_Dispatcher = dispatcher;
-        this->m_ScriptingEngine = scriptingEngine;
     }
 }

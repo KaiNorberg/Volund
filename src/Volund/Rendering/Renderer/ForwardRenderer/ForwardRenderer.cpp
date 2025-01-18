@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "ForwardRenderer.h"
 
 #include "Frustum/Frustum.h"

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 namespace Volund
 {
     class IndexBuffer

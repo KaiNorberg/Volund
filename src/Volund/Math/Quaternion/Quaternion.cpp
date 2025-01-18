@@ -2,6 +2,8 @@
 
 #include "Math/Math.h"
 
+#include <algorithm>
+
 namespace Volund
 {
 	Quat::operator Mat4x4() const

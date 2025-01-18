@@ -2,6 +2,9 @@
 
 #include "Lua/LuaTypes.h"
 
+#define VOLUND_SERIAL_DATA "Data"
+#define VOLUND_SERIAL_FILE_TYPE "FileType"
+
 namespace Volund
 {
     class Serializer

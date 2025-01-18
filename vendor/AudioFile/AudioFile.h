@@ -33,6 +33,7 @@
 #include <algorithm>
 #include <stdio.h>
 #include <string.h>
+#include <numeric>
 
 // disable some warnings on Windows
 #if defined (_MSC_VER)

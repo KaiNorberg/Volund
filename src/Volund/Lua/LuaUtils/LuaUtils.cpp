@@ -3,6 +3,7 @@
 #include "Audio/AudioBuffer/AudioBuffer.h"
 
 #include "LuaUtils.h"
+#include "Lua/LuaTypes.h"
 
 #include <sol/sol.hpp>
 

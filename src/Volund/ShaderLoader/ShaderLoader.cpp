@@ -1,11 +1,10 @@
-#include "PCH/PCH.h"
 #include "ShaderLoader.h"
 
 #include "ResourceLibrary/ResourceLibrary.h"
-
 #include "Rendering/Texture/Texture.h"
-
 #include "Rendering/Shader/Shader.h"
+
+#include <fstream>
 
 namespace Volund
 {

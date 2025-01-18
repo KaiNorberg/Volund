@@ -1,5 +1,8 @@
 #include "Serializer.h"
 
+#include <fstream>
+#include <algorithm>
+
 namespace Volund
 {
 	void Serializer::WriteToFile(std::string const& filepath)

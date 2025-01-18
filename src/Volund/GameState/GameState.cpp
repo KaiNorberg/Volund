@@ -25,8 +25,7 @@ namespace Volund
 
 	void GameState::LoadScene(std::string const& filepath)
 	{
-		this->m_ScriptingEngine = ScriptingEngine::Create();
-		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, filepath, this->m_ScriptingEngine);
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, filepath);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(filepath);
 	}
 
@@ -36,8 +35,7 @@ namespace Volund
 
 		std::string absoluteScenePath = this->m_AssetManager->GetAbsolutePath(scenePath);
 
-		this->m_ScriptingEngine = ScriptingEngine::Create();
-		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, absoluteScenePath, this->m_ScriptingEngine);
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, absoluteScenePath);
 		this->m_Scene = this->m_AssetManager->Fetch<Scene>(scenePath);
 	}
 
@@ -78,11 +76,6 @@ namespace Volund
 		return this->m_Scene->end();
 	}
 
-	std::shared_ptr<Script> GameState::LoadScript(std::string const& filepath)
-	{
-		return this->m_AssetManager->LoadScript(filepath);
-	}
-
 	std::string GameState::GetRootDirectory()
 	{
 		return this->m_AssetManager->GetRootDirectory();
@@ -102,8 +95,7 @@ namespace Volund
 	{
 		this->m_Dispatcher = dispatcher;
 
-		this->m_ScriptingEngine = ScriptingEngine::Create();
-		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, ".", this->m_ScriptingEngine);
+		this->m_AssetManager = AssetManager::Create(this->m_Dispatcher, ".");
 		this->m_Scene = Scene::Create();
 	}
 

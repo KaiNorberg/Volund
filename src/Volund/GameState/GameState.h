@@ -53,8 +53,6 @@ namespace Volund
         template<typename T>
         void Serialize(std::shared_ptr<T> asset, std::string const& filepath);
 
-        std::shared_ptr<Script> LoadScript(std::string const& filepath);
-
         std::string GetRootDirectory();
 
         std::vector<Scene::EntityEntry>::iterator begin();

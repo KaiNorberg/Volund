@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdint>
+#include <string>
+#include <vector>
+
 #define VOLUND_ATTRIBUTE_FLOAT 0b10
 #define VOLUND_ATTRIBUTE_INT   0b01
 

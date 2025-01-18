@@ -3,13 +3,17 @@
 #include "Dispatcher/Dispatcher.h"
 #include "PolyContainer/PolyContainer.h"
 
+#define VOLUND_SERIAL_MATERIAL_SHADER "Shader"
+#define VOLUND_SERIAL_MATERIAL_UNIFORMS "Uniforms"
+
+#define VOLUND_SERIAL_FILE_TYPE_MATERIAL "Material"
+#define VOLUND_SERIAL_FILE_TYPE_SCENE "Scene"
+
 namespace Volund
 {
     class AssetManager : public std::enable_shared_from_this<AssetManager>
     {
     public:
-
-        std::shared_ptr<Script> LoadScript(std::string const& filepath);
 
         template<typename T>
         std::shared_ptr<T> Fetch(std::string const& filepath);
@@ -24,11 +28,11 @@ namespace Volund
 
         std::string GetRootDirectory();
 
-        static std::shared_ptr<AssetManager> Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootPath, std::shared_ptr<ScriptingEngine> scriptingEngine = nullptr);
+        static std::shared_ptr<AssetManager> Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootPath);
 
     private:
 
-        AssetManager(std::shared_ptr<Dispatcher> dispatcher, std::string const& rootPath, std::shared_ptr<ScriptingEngine> scriptingEngine = nullptr);
+        AssetManager(std::shared_ptr<Dispatcher> dispatcher, std::string const& rootPath);
 
         std::string GetRelativePath(std::string const& absolutePath);
 
@@ -62,8 +66,6 @@ namespace Volund
         std::string m_RootDir;
 
         std::shared_ptr<Dispatcher> m_Dispatcher;
-
-        std::weak_ptr<ScriptingEngine> m_ScriptingEngine;
     };
 
     template<typename T>

@@ -2,6 +2,9 @@
 
 #include "Lua/LuaUtils/LuaUtils.h"
 #include "Lua/LuaTypes.h"
+#include "Instrumentor.h"
+#include "AssetManager/AssetManager.h"
+#include "Lua/Serializer/Serializer.h"
 
 #include <sol/sol.hpp>
 

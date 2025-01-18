@@ -19,7 +19,7 @@ public:
 	void Procedure(const VL::Event& e);
 	virtual void OnProcedure(const VL::Event& e) = 0;
 
-    virtual ~Panel();
+    virtual ~Panel() = default;
 
 protected:
 

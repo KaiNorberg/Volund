@@ -1,4 +1,3 @@
-#include "PCH/PCH.h"
 #include "Window.h"
 
 #include "ImageLoader/ImageLoader.h"
@@ -271,7 +270,7 @@ namespace Volund
 	void Window::SetIcon(std::string const& filepath)
 	{
 		GLFWimage images[1];
-		ImageLoader imageLoader = ImageLoader(filepath, false);
+		ImageLoader imageLoader = ImageLoader(filepath);
 		images[0].pixels = imageLoader.GetData();
 		images[0].height = imageLoader.GetHeight();
 		images[0].width = imageLoader.GetWidth();

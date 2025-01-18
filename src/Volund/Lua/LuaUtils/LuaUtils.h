@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SerialTable/SerialTable.h"
+#include <sol/sol.hpp>
 
 namespace Volund::LuaUtils
 {
