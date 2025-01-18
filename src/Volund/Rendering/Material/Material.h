@@ -40,34 +40,34 @@ namespace Volund
 
     private:
 
-        std::shared_ptr<Shader> m_Shader;
+        std::shared_ptr<Shader> m_shader;
 
-        std::shared_ptr<MaterialBlueprint> m_Blueprint;
+        std::shared_ptr<MaterialBlueprint> m_blueprint;
 
-        std::vector<std::shared_ptr<PrimitiveUniform>> m_Uniforms;
+        std::vector<std::shared_ptr<PrimitiveUniform>> m_uniforms;
     };
 
     template<typename T, typename>
     inline void Material::Set(std::string const& name, const T& value)
     {
-        for (int i = 0; i < this->m_Uniforms.size(); i++)
+        for (int i = 0; i < this->m_uniforms.size(); i++)
         {
-            if (this->m_Uniforms[i]->Is<T>() && this->m_Uniforms[i]->GetName() == name)
+            if (this->m_uniforms[i]->Is<T>() && this->m_uniforms[i]->GetName() == name)
             {
-                this->m_Uniforms[i]->Set<T>(value);
+                this->m_uniforms[i]->Set<T>(value);
                 return;
             }
         }
 
-        this->m_Uniforms.push_back(Uniform<T>::Create(name, value));
+        this->m_uniforms.push_back(Uniform<T>::Create(name, value));
     }
 
     template<typename T, typename>
     inline bool Material::Contains(std::string const& name) const
     {
-        for (int i = 0; i < this->m_Uniforms.size(); i++)
+        for (int i = 0; i < this->m_uniforms.size(); i++)
         {
-            if (this->m_Uniforms[i]->Is<T>() && this->m_Uniforms[i]->GetName() == name)
+            if (this->m_uniforms[i]->Is<T>() && this->m_uniforms[i]->GetName() == name)
             {
                 return true;
             }

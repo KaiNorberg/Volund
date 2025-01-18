@@ -8,7 +8,7 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_Context->GameState;
+		auto gameState = this->m_context->GameState;
 
 		if (ImGui::Button("+"))
 		{
@@ -48,8 +48,8 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 
 bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 {
-	auto gameState = this->m_Context->GameState;
-	auto& selectedEntity = this->m_Context->SelectedEntity;
+	auto gameState = this->m_context->GameState;
+	auto& selectedEntity = this->m_context->SelectedEntity;
 
 	ImGui::PushID((void*)entity);
 
@@ -94,5 +94,5 @@ Hierarchy::Hierarchy(std::shared_ptr<EditorContext> context)
 {
 	this->SetName("Hierarchy");
 
-	this->m_Context = context;
+	this->m_context = context;
 }

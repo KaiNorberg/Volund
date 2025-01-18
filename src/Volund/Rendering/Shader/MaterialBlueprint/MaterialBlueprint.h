@@ -23,21 +23,21 @@ namespace Volund
 
     private:
 
-        std::vector<std::shared_ptr<PrimitiveUniform>> m_Uniforms;
+        std::vector<std::shared_ptr<PrimitiveUniform>> m_uniforms;
     };
 
     template<typename T>
     inline void MaterialBlueprint::Insert(std::string const& name)
     {
-        this->m_Uniforms.push_back(Uniform<T>::Create(name, T(NULL)));
+        this->m_uniforms.push_back(Uniform<T>::Create(name, T(NULL)));
     }
 
     template<typename T>
     inline bool MaterialBlueprint::Contains(std::string const& name)
     {
-        for (int i = 0; i < this->m_Uniforms.size(); i++)
+        for (int i = 0; i < this->m_uniforms.size(); i++)
         {
-            if (this->m_Uniforms[i]->Is<T>() && this->m_Uniforms[i]->GetName() == name)
+            if (this->m_uniforms[i]->Is<T>() && this->m_uniforms[i]->GetName() == name)
             {
                 return true;
             }

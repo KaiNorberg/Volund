@@ -12,16 +12,16 @@ public:
 
 private:
 
-    float m_Padding = 16.0f;
-    float m_ThumbnailSize = 64.0f;
+    float m_padding = 16.0f;
+    float m_thumbnailSize = 64.0f;
 
-    std::shared_ptr<VL::Texture> m_DirectoryIcon;
-    std::shared_ptr<VL::Texture> m_FileIcon;
+    std::shared_ptr<VL::Texture> m_directoryIcon;
+    std::shared_ptr<VL::Texture> m_fileIcon;
 
-    std::filesystem::path m_CurrentDirectory;
-    std::filesystem::path m_OldParentDir;
+    std::filesystem::path m_currentDirectory;
+    std::filesystem::path m_oldParentDir;
 
-    bool m_ResourcesOpen = false;
+    bool m_resourcesOpen = false;
 
-    void ImGuiFilesystemEntry(std::string const& payloadPath, std::string const& name, bool IsDirectory);
+    void ImGuiFilesystemEntry(std::string const& payloadPath, std::string const& name, bool isDirectory);
 };

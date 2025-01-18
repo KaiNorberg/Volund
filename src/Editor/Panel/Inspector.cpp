@@ -12,8 +12,8 @@ void Inspector::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_Context->GameState;
-		auto selectedEntity = this->m_Context->SelectedEntity;
+		auto gameState = this->m_context->GameState;
+		auto selectedEntity = this->m_context->SelectedEntity;
 
 		if (!gameState->IsAllocated(selectedEntity))
 		{
@@ -195,5 +195,5 @@ Inspector::Inspector(std::shared_ptr<EditorContext> context)
 {
 	this->SetName("Inspector");
 
-	this->m_Context = context;
+	this->m_context = context;
 }

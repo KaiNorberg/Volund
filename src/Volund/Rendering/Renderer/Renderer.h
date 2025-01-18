@@ -67,6 +67,6 @@ namespace Volund
             std::vector<RendererModel> Models;
             std::vector<RendererEye> Eyes;
             std::vector<RendererLight> Lights;
-        } m_Data;
+        } m_data;
     };
 }

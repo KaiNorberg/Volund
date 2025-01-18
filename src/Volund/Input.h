@@ -34,10 +34,10 @@ namespace Volund
 
         void Procedure(const Event& e);
     private:
-        IVec2 m_MousePosition = IVec2(0);
-        float m_ScrollPosition = 0.0f;
+        IVec2 m_mousePosition = IVec2(0);
+        float m_scrollPosition = 0.0f;
 
-        bool m_MouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT] = {0};
-        bool m_Keys[VOLUND_KEY_AMOUNT] = {0};
+        bool m_mouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT] = {0};
+        bool m_keys[VOLUND_KEY_AMOUNT] = {0};
     };
 }

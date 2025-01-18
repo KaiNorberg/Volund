@@ -33,9 +33,9 @@ namespace Volund
 
     private:
 
-        uint32_t m_LayerMask = 1;
+        uint32_t m_layerMask = 1;
 
-        std::shared_ptr<Mesh> m_Mesh;
-        std::shared_ptr<Material> m_Material;
+        std::shared_ptr<Mesh> m_mesh;
+        std::shared_ptr<Material> m_material;
     };
 }

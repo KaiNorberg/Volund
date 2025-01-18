@@ -21,6 +21,6 @@ namespace Volund
 
         static void CreateResource(std::string const& filepath, const char* content);
 
-        static inline std::unordered_map<std::string, const char*> m_Resources;
+        static inline std::unordered_map<std::string, const char*> m_resources;
     };
 }

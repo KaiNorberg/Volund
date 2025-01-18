@@ -27,7 +27,7 @@ namespace Volund
 			break;
 		}
 
-		return floatId * (((uint32_t)this->m_Type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + intId * ((uint32_t)this->m_Type &
+		return floatId * (((uint32_t)this->m_type & VOLUND_ATTRIBUTE_FLOAT) >> 1) + intId * ((uint32_t)this->m_type &
 			VOLUND_ATTRIBUTE_INT);
 	}
 
@@ -38,17 +38,17 @@ namespace Volund
 
 	uint32_t VertexAttribute::GetElementCount() const
 	{
-		return ((uint32_t)this->m_Type >> 2);
+		return ((uint32_t)this->m_type >> 2);
 	}
 
 	std::string VertexAttribute::GetName() const
 	{
-		return this->m_Name;
+		return this->m_name;
 	}
 
 	VertexAttribute::VertexAttribute(const VertexAttributeType type, const std::string name)
 	{
-		this->m_Type = type;
-		this->m_Name = name;
+		this->m_type = type;
+		this->m_name = name;
 	}
 }

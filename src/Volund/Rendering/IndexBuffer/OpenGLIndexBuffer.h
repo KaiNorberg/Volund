@@ -19,8 +19,8 @@ namespace Volund
 
     private:
 
-        uint32_t m_Count;
+        uint32_t m_count;
 
-        uint32_t m_Id;
+        uint32_t m_id;
     };
 }

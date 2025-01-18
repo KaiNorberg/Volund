@@ -4,17 +4,17 @@
 
 namespace Volund
 {
-	Logger Logger::m_CoreLogger = Logger("VOLUND");
-	Logger Logger::m_ClientLogger = Logger("CLIENT");
+	Logger Logger::m_coreLogger = Logger("VOLUND");
+	Logger Logger::m_clientLogger = Logger("CLIENT");
 
 	Logger& Logger::GetCoreLogger()
 	{
-		return m_CoreLogger;
+		return m_coreLogger;
 	}
 
 	Logger& Logger::GetClientLogger()
 	{
-		return m_ClientLogger;
+		return m_clientLogger;
 	}
 
 	uint64_t Logger::Log(LogSeverity severity, const char* format)
@@ -25,25 +25,25 @@ namespace Volund
 
 	void Logger::UpdateLine(uint64_t lineId, const char* format)
 	{
-		m_Lines[FindLine(lineId)].Text += format;
+		m_lines[FindLine(lineId)].Text += format;
 
 		UpdateConsole();
 	}
 
 	std::vector<LogLine>::iterator Logger::begin()
 	{
-		return this->m_Lines.begin();
+		return this->m_lines.begin();
 	}
 
 	std::vector<LogLine>::iterator Logger::end()
 	{
-		return this->m_Lines.end();
+		return this->m_lines.end();
 	}
 
 	uint64_t Logger::Print(LogSeverity severity, std::string const& string)
 	{
 		std::string line = VOLUND_LOGGERCOLOR_RED;
-		line += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " +*/ this->m_Name + VOLUND_LOGGERCOLOR_WHITE + " - ";
+		line += /*std::format("{:%H:%M:%OS}", std::chrono::system_clock::now()) + " " +*/ this->m_name + VOLUND_LOGGERCOLOR_WHITE + " - ";
 		switch (severity)
 		{
 		case LogSeverity::Info:
@@ -75,22 +75,22 @@ namespace Volund
 			abort();
 		}
 
-		m_NewLineId++;
-		m_Lines.push_back({m_NewLineId, severity, line});
+		m_newLineId++;
+		m_lines.push_back({m_newLineId, severity, line});
 
-		if (m_Lines.size() > 100)
+		if (m_lines.size() > 100)
 		{
-			m_Lines.erase(m_Lines.begin(), m_Lines.begin() + 50);
+			m_lines.erase(m_lines.begin(), m_lines.begin() + 50);
 		}
 
-		return m_NewLineId;
+		return m_newLineId;
 	}
 
 	void Logger::UpdateConsole()
 	{
 		std::cout << "\x1b[H";
 
-		for (const auto& line : m_Lines)
+		for (const auto& line : m_lines)
 		{
 			std::cout << line.Text << std::endl;
 		}
@@ -100,14 +100,14 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		auto it = std::lower_bound(m_Lines.begin(), m_Lines.end(), lineId, [](const LogLine& a, uint64_t lineId)
+		auto it = std::lower_bound(m_lines.begin(), m_lines.end(), lineId, [](const LogLine& a, uint64_t lineId)
 		{
 			return a.Id < lineId;
 		});
 
-		if (it != m_Lines.end())
+		if (it != m_lines.end())
 		{
-			return it - m_Lines.begin();
+			return it - m_lines.begin();
 		}
 		else
 		{
@@ -117,7 +117,7 @@ namespace Volund
 
 	Logger::Logger(std::string const& name)
 	{
-		this->m_Name = name;
+		this->m_name = name;
 	}
 
 } //namespace Volund

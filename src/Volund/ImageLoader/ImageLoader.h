@@ -19,9 +19,9 @@ namespace Volund
         ImageLoader(std::string const& filepath);
         ~ImageLoader();
     private:
-        int32_t m_Width = 0;
-        int32_t m_Height = 0;
-        int32_t m_Channels = 0;
-        unsigned char* m_Data = nullptr;
+        int32_t m_width = 0;
+        int32_t m_height = 0;
+        int32_t m_channels = 0;
+        unsigned char* m_data = nullptr;
     };
 }

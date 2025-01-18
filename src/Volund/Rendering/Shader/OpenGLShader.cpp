@@ -9,18 +9,18 @@ namespace Volund
 	bool OpenGLShader::HasUniform(std::string const& name)
 	{
 		VOLUND_PROFILE_FUNCTION();
-		return m_UniformLocations.contains(name.data()) || glGetUniformLocation(this->m_Id, name.data()) != -1;
+		return m_uniformLocations.contains(name.data()) || glGetUniformLocation(this->m_id, name.data()) != -1;
 	}
 
 	void OpenGLShader::Bind()
 	{
 		VOLUND_PROFILE_FUNCTION();
-		glUseProgram(this->m_Id);
+		glUseProgram(this->m_id);
 	}
 
 	uint32_t OpenGLShader::GetId()
 	{
-		return this->m_Id;
+		return this->m_id;
 	}
 
 	void OpenGLShader::SetInt(std::string const& name, IntUniformType value)
@@ -91,37 +91,37 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->m_NextTextureUnit >= this->m_MaxTextureUnit)
+		if (this->m_nextTextureUnit >= this->m_maxTextureUnit)
 		{
-			this->m_NextTextureUnit = 0;
+			this->m_nextTextureUnit = 0;
 		}
 
-		glActiveTexture(GL_TEXTURE0 + this->m_NextTextureUnit);
+		glActiveTexture(GL_TEXTURE0 + this->m_nextTextureUnit);
 		glBindTexture(GL_TEXTURE_2D, value->GetID());
-		this->SetInt(name, this->m_NextTextureUnit);
+		this->SetInt(name, this->m_nextTextureUnit);
 
-		this->m_NextTextureUnit++;
+		this->m_nextTextureUnit++;
 	}
 
 	void OpenGLShader::SetFramebuffer(std::string const& name, const FramebufferUniformType& value)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->m_NextTextureUnit >= this->m_MaxTextureUnit)
+		if (this->m_nextTextureUnit >= this->m_maxTextureUnit)
 		{
-			this->m_NextTextureUnit = 0;
+			this->m_nextTextureUnit = 0;
 		}
 
-		glActiveTexture(GL_TEXTURE0 + this->m_NextTextureUnit);
+		glActiveTexture(GL_TEXTURE0 + this->m_nextTextureUnit);
 		glBindTexture(GL_TEXTURE_2D, value->GetAttachment(0));
-		this->SetInt(name, this->m_NextTextureUnit);
+		this->SetInt(name, this->m_nextTextureUnit);
 
-		this->m_NextTextureUnit++;
+		this->m_nextTextureUnit++;
 	}
 
 	void OpenGLShader::Init(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
 	{
-		this->m_MaterialBlueprint = materialBlueprint;
+		this->m_materialBlueprint = materialBlueprint;
 
 		uint32_t program = glCreateProgram();
 
@@ -164,7 +164,7 @@ namespace Volund
 			glDeleteShader(gs);
 		}
 
-		this->m_Id = program;
+		this->m_id = program;
 	}
 
 	uint32_t OpenGLShader::CompileShader(uint32_t type, std::string const& source)
@@ -194,38 +194,38 @@ namespace Volund
 
 	uint32_t OpenGLShader::GetUniformLocation(std::string const& name)
 	{
-		if (m_UniformLocations.contains(name.data()))
+		if (m_uniformLocations.contains(name.data()))
 		{
-			return m_UniformLocations[name.data()];
+			return m_uniformLocations[name.data()];
 		}
-		int32_t uniformLocation = glGetUniformLocation(this->m_Id, name.data());
+		int32_t uniformLocation = glGetUniformLocation(this->m_id, name.data());
 
 		if (uniformLocation == -1)
 		{
 			VOLUND_WARNING("Unknown Uniform specified (%s)", name.data());
 		}
 
-		m_UniformLocations[name.data()] = uniformLocation;
+		m_uniformLocations[name.data()] = uniformLocation;
 		return uniformLocation;
 	}
 
 	const std::shared_ptr<MaterialBlueprint> OpenGLShader::GetMaterialBlueprint()
 	{
-		return this->m_MaterialBlueprint;
+		return this->m_materialBlueprint;
 	}
 
 	OpenGLShader::OpenGLShader(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
 	{
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->m_MaxTextureUnit);
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->m_maxTextureUnit);
 
 		this->Init(source, materialBlueprint);
 	}
 
 	OpenGLShader::~OpenGLShader()
 	{
-		if (this->m_Id != 0)
+		if (this->m_id != 0)
 		{
-			glDeleteProgram(this->m_Id);
+			glDeleteProgram(this->m_id);
 		}
 	}
 } //namespace Volund

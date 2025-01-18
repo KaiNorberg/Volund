@@ -33,5 +33,5 @@ Output::Output(std::shared_ptr<EditorContext> context)
 {
 	this->SetName("Output");
 
-	this->m_Context = context;
+	this->m_context = context;
 }

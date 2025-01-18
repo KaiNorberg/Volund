@@ -56,8 +56,8 @@ namespace Volund
 
         RenderingAPI() = delete;
 
-        static inline std::shared_ptr<RenderingAPIInstance> m_Instance;
+        static inline std::shared_ptr<RenderingAPIInstance> m_instance;
 
-        static inline GraphicsAPI m_SelectedAPI;
+        static inline GraphicsAPI m_selectedAPI;
     };
 }

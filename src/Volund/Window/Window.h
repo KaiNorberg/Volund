@@ -79,6 +79,6 @@ namespace Volund
 
     private:
 
-        std::shared_ptr<WindowData> m_WindowData;
+        std::shared_ptr<WindowData> m_windowData;
     };
 }

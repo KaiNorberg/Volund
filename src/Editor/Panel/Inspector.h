@@ -21,7 +21,7 @@ private:
 template<typename T>
 inline void Inspector::ImGuiComponent(std::string const& name, VL::Entity entity, std::function<void(int)> drawFunc)
 {
-    auto gameState = this->m_Context->GameState;
+    auto gameState = this->m_context->GameState;
 
     for (int i = 0; i < gameState->ComponentAmount<T>(entity); i++)
     {

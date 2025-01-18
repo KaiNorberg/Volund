@@ -38,24 +38,24 @@ namespace Volund
 
     private:
 
-        std::unordered_map<std::string, std::shared_ptr<PrimitiveSerialObject>> m_Table;
+        std::unordered_map<std::string, std::shared_ptr<PrimitiveSerialObject>> m_table;
     };
 
     template<typename T>
     bool SerialTable::Contains(std::string const& key) const
     {
-        return this->m_Table.contains(key) && this->m_Table.at(key)->Is<T>();
+        return this->m_table.contains(key) && this->m_table.at(key)->Is<T>();
     }
 
     template<typename T>
     inline void SerialTable::Insert(std::string const& key, const T& value)
     {
-        this->m_Table[key] = std::make_shared<SerialObject<T>>(value);
+        this->m_table[key] = std::make_shared<SerialObject<T>>(value);
     }
 
     template<typename T>
     inline bool SerialTable::Is(std::string const& key) const
     {
-        return this->m_Table.at(key)->GetTypeHash() == Utils::GetTypeId<T>();
+        return this->m_table.at(key)->GetTypeHash() == Utils::GetTypeId<T>();
     }
 }

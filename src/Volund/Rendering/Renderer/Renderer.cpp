@@ -68,16 +68,16 @@ namespace Volund
 
 	void Renderer::Submit(const RendererModel& model)
 	{
-		this->m_Data.Models.push_back(model);
+		this->m_data.Models.push_back(model);
 	}
 
 	void Renderer::Submit(const RendererLight& light)
 	{
-		this->m_Data.Lights.push_back(light);
+		this->m_data.Lights.push_back(light);
 	}
 
 	void Renderer::Submit(const RendererEye& eye)
 	{
-		this->m_Data.Eyes.push_back(eye);
+		this->m_data.Eyes.push_back(eye);
 	}
 }

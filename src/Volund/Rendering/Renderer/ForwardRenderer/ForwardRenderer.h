@@ -37,7 +37,7 @@ namespace Volund
             Vec4 LightPositions[VOLUND_FORWARD_RENDERER_MAX_LIGHTS];
         };
 
-        UniformBuffer<CameraBuffer> m_CameraBuffer = UniformBuffer<CameraBuffer>(VOLUND_FORWARD_RENDERER_BINDING_CAMERA);
-        UniformBuffer<LightsBuffer> m_LightsBuffer = UniformBuffer<LightsBuffer>(VOLUND_FORWARD_RENDERER_BINDING_LIGHTS);
+        UniformBuffer<CameraBuffer> m_cameraBuffer = UniformBuffer<CameraBuffer>(VOLUND_FORWARD_RENDERER_BINDING_CAMERA);
+        UniformBuffer<LightsBuffer> m_lightsBuffer = UniformBuffer<LightsBuffer>(VOLUND_FORWARD_RENDERER_BINDING_LIGHTS);
     };
 }

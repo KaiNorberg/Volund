@@ -12,17 +12,17 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		auto gameState = this->m_Context->GameState;
+		auto gameState = this->m_context->GameState;
 
-		std::string materialPath = gameState->FetchFilepath<VL::Material>(this->m_SelectedMaterial);
+		std::string materialPath = gameState->FetchFilepath<VL::Material>(this->m_selectedMaterial);
 		if (ImGuiFile("Material/Effect", materialPath))
 		{
-			this->m_SelectedMaterial = gameState->FetchAsset<VL::Material>(materialPath);
+			this->m_selectedMaterial = gameState->FetchAsset<VL::Material>(materialPath);
 		}
 		ImGui::Separator();
 		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
 
-		if (this->m_SelectedMaterial == nullptr)
+		if (this->m_selectedMaterial == nullptr)
 		{
 			ImGui::Text("Invalid material!");
 			return;
@@ -33,24 +33,24 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 		ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
 		if (ImGui::BeginListBox("##MaterialEditorShader", listBoxSize))
 		{
-			std::string shaderPath = gameState->FetchFilepath<VL::Shader>(this->m_SelectedMaterial->GetShader());
+			std::string shaderPath = gameState->FetchFilepath<VL::Shader>(this->m_selectedMaterial->GetShader());
 			if (ImGuiFile("Shader", shaderPath))
 			{
 				changed = true;
-				this->m_SelectedMaterial->SetShader(gameState->FetchAsset<VL::Shader>(shaderPath));
+				this->m_selectedMaterial->SetShader(gameState->FetchAsset<VL::Shader>(shaderPath));
 			}
 
 			ImGui::EndListBox();
 		}
 
-		auto materialBlueprint = this->m_SelectedMaterial->GetBlueprint();
+		auto materialBlueprint = this->m_selectedMaterial->GetBlueprint();
 		if (materialBlueprint == nullptr)
 		{
 			ImGui::Text("Material is missing a shader or a blueprint!");
 			return;
 		}
 
-		for (auto& uniform : (*this->m_SelectedMaterial))
+		for (auto& uniform : (*this->m_selectedMaterial))
 		{
 			std::string uniformName = uniform->GetName();
 
@@ -121,7 +121,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 					std::string texturePath = gameState->FetchFilepath<VL::Texture>(uniform->As<VL::TextureUniformType>());
 					if (ImGuiFile(name, texturePath))
 					{
-						this->m_SelectedMaterial->Set(uniformName, gameState->FetchAsset<VL::Texture>(texturePath));
+						this->m_selectedMaterial->Set(uniformName, gameState->FetchAsset<VL::Texture>(texturePath));
 						changed = true;
 					}
 				}
@@ -147,7 +147,7 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 					if (ImGui::MenuItem("Delete"))
 					{
 						changed = true;
-						this->m_SelectedMaterial->Erase(uniformName);
+						this->m_selectedMaterial->Erase(uniformName);
 						ImGui::CloseCurrentPopup();
 					}
 					ImGui::EndPopup();
@@ -157,15 +157,15 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
 
-		if (changed && this->m_Context->IsPaused())
+		if (changed && this->m_context->IsPaused())
 		{
-			gameState->Serialize(this->m_SelectedMaterial, materialPath);
+			gameState->Serialize(this->m_selectedMaterial, materialPath);
 		}
 	}
 	break;
 	case EDITOR_EVENT_RESET:
 	{
-		this->m_SelectedMaterial = nullptr;
+		this->m_selectedMaterial = nullptr;
 	}
 	break;
 	}
@@ -175,5 +175,5 @@ MaterialEditor::MaterialEditor(std::shared_ptr<EditorContext> context)
 {
 	this->SetName("Material/Effect Editor");
 
-	this->m_Context = context;
+	this->m_context = context;
 }

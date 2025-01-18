@@ -34,12 +34,12 @@ namespace Volund
 
     private:
 
-        uint32_t m_Id;
+        uint32_t m_id;
 
-        FramebufferSpec m_Spec;
+        FramebufferSpec m_spec;
 
-        std::vector<uint32_t> m_ColorAttachments;
+        std::vector<uint32_t> m_colorAttachments;
 
-        uint32_t m_DepthAttachment = 0;
+        uint32_t m_depthAttachment = 0;
     };
 }

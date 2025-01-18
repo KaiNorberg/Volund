@@ -33,7 +33,7 @@ namespace Volund
         AudioSource();
         ~AudioSource();
     private:
-        std::shared_ptr<AudioBuffer> m_Buffer;
-        uint32_t m_Source;
+        std::shared_ptr<AudioBuffer> m_buffer;
+        uint32_t m_source;
     };
 }

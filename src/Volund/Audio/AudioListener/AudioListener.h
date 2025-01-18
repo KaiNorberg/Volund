@@ -17,6 +17,6 @@ namespace Volund
         AudioListener();
         ~AudioListener();
     private:
-        static inline uint32_t m_AudioListenerCount = 0;
+        static inline uint32_t m_audioListenerCount = 0;
     };
 }

@@ -17,6 +17,6 @@ namespace Volund
         AudioDevice(std::string const& device);
         ~AudioDevice();
     private:
-        ALCdevice* m_Device;
+        ALCdevice* m_device;
     };
 }

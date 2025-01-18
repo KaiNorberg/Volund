@@ -23,21 +23,21 @@ namespace Volund
     private:
         void Loop();
 
-        bool m_ShouldTerminate = false;
-        uint8_t m_ActiveWorkerCount = 0;
-        std::queue<Task> m_TaskQueue;
-        std::vector<std::thread> m_Workers;
-        std::condition_variable m_Condition;
-        std::mutex m_Mutex;
+        bool m_shouldTerminate = false;
+        uint8_t m_activeWorkerCount = 0;
+        std::queue<Task> m_taskQueue;
+        std::vector<std::thread> m_workers;
+        std::condition_variable m_condition;
+        std::mutex m_mutex;
     };
 
     template<typename Func, typename ...Args>
     inline void ThreadPool::Submit(Func&& func, Args && ...args)
     {
         {
-            std::unique_lock<std::mutex> lock(this->m_Mutex);
-            this->m_TaskQueue.emplace([=] { func(std::forward<Args>(args)...); });
+            std::unique_lock<std::mutex> lock(this->m_mutex);
+            this->m_taskQueue.emplace([=] { func(std::forward<Args>(args)...); });
         }
-        this->m_Condition.notify_one();
+        this->m_condition.notify_one();
     }
 }

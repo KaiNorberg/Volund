@@ -212,30 +212,30 @@ namespace Volund
 
 	GLFWwindow* Window::GetGlfwWindow()
 	{
-		return this->m_WindowData->GlfwWindow;
+		return this->m_windowData->GlfwWindow;
 	}
 
 	void Window::SetCursorEnabled(bool enabled)
 	{
-		this->m_WindowData->IsCursorEnabled = enabled;
+		this->m_windowData->IsCursorEnabled = enabled;
 		if (enabled)
 		{
-			glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+			glfwSetInputMode(this->m_windowData->GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 		}
 		else
 		{
-			glfwSetInputMode(this->m_WindowData->GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+			glfwSetInputMode(this->m_windowData->GlfwWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 		}
 	}
 
 	bool Window::IsCursorEnabled()
 	{
-		return this->m_WindowData->IsCursorEnabled;
+		return this->m_windowData->IsCursorEnabled;
 	}
 
 	void Window::SetTitle(const std::string &title)
 	{
-		glfwSetWindowTitle(this->m_WindowData->GlfwWindow, title.c_str());
+		glfwSetWindowTitle(this->m_windowData->GlfwWindow, title.c_str());
 	}
 
 	void Window::SetVsync(const bool enabled)
@@ -245,18 +245,18 @@ namespace Volund
 
 	Vec2 Window::GetSize()
 	{
-		return Vec2(this->m_WindowData->Width, this->m_WindowData->Height);
+		return Vec2(this->m_windowData->Width, this->m_windowData->Height);
 	}
 
 	float Window::GetAspectRatio()
 	{
-		if (this->m_WindowData->Width == 0 || this->m_WindowData->Height == 0)
+		if (this->m_windowData->Width == 0 || this->m_windowData->Height == 0)
 		{
 			return 0;
 		}
 		else
 		{
-			return (float)this->m_WindowData->Width / (float)this->m_WindowData->Height;
+			return (float)this->m_windowData->Width / (float)this->m_windowData->Height;
 		}
 	}
 
@@ -264,7 +264,7 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		glfwSwapBuffers(this->m_WindowData->GlfwWindow);
+		glfwSwapBuffers(this->m_windowData->GlfwWindow);
 	}
 
 	void Window::SetIcon(std::string const& filepath)
@@ -275,60 +275,60 @@ namespace Volund
 		images[0].height = imageLoader.GetHeight();
 		images[0].width = imageLoader.GetWidth();
 
-		glfwSetWindowIcon(this->m_WindowData->GlfwWindow, 1, images);
+		glfwSetWindowIcon(this->m_windowData->GlfwWindow, 1, images);
 	}
 
     void Window::ConnectWindowFocusCallback(GLFWwindowfocusfun callback)
     {
-		this->m_WindowData->WindowFocusCallbacks.push_back(callback);
+		this->m_windowData->WindowFocusCallbacks.push_back(callback);
     }
 
     void Window::ConnectCursorEnterCallback(GLFWcursorenterfun callback)
     {
-		this->m_WindowData->CursorEnterCallbacks.push_back(callback);
+		this->m_windowData->CursorEnterCallbacks.push_back(callback);
     }
 
     void Window::ConnectWindowCloseCallback(GLFWwindowclosefun callback)
     {
-		this->m_WindowData->WindowCloseCallbacks.push_back(callback);
+		this->m_windowData->WindowCloseCallbacks.push_back(callback);
     }
 
     void Window::ConnectWindowSizeCallback(GLFWwindowsizefun callback)
     {
-		this->m_WindowData->WindowSizeCallbacks.push_back(callback);
+		this->m_windowData->WindowSizeCallbacks.push_back(callback);
     }
 
     void Window::ConnectKeyCallback(GLFWkeyfun callback)
     {
-		this->m_WindowData->KeyCallbacks.push_back(callback);
+		this->m_windowData->KeyCallbacks.push_back(callback);
     }
 
     void Window::ConnectCursorPositionCallback(GLFWcursorposfun callback)
     {
-		this->m_WindowData->CursorPositionCallbacks.push_back(callback);
+		this->m_windowData->CursorPositionCallbacks.push_back(callback);
     }
 
     void Window::ConnectMouseButtonCallback(GLFWmousebuttonfun callback)
     {
-		this->m_WindowData->MouseButtonCallbacks.push_back(callback);
+		this->m_windowData->MouseButtonCallbacks.push_back(callback);
     }
 
     void Window::ConnectScrollCallback(GLFWscrollfun callback)
     {
-		this->m_WindowData->ScrollCallbacks.push_back(callback);
+		this->m_windowData->ScrollCallbacks.push_back(callback);
     }
 
     void Window::ConnectCharCallback(GLFWcharfun callback)
     {
-		this->m_WindowData->CharCallbacks.push_back(callback);
+		this->m_windowData->CharCallbacks.push_back(callback);
     }
 
     Window::Window(std::shared_ptr<Dispatcher> Dispatcher, uint64_t Width, uint64_t Height, bool FullScreen)
 	{
 		VOLUND_INFO("Creating window...");
 
-		this->m_WindowData = std::make_shared<WindowData>();
-		this->m_WindowData->EventDispatcher = Dispatcher;
+		this->m_windowData = std::make_shared<WindowData>();
+		this->m_windowData->EventDispatcher = Dispatcher;
 
 		if (!glfwInit())
 		{
@@ -347,36 +347,36 @@ namespace Volund
 			glfwWindowHint(GLFW_REFRESH_RATE, mode->refreshRate);
 
 			GLFWwindow *window = glfwCreateWindow(mode->width, mode->height, "Volund", monitor, 0);
-			this->m_WindowData->Height = mode->height;
-			this->m_WindowData->Width = mode->width;
+			this->m_windowData->Height = mode->height;
+			this->m_windowData->Width = mode->width;
 		}
 		else
 		{
-			this->m_WindowData->GlfwWindow = glfwCreateWindow(Width, Height, "Volund", 0, 0);
+			this->m_windowData->GlfwWindow = glfwCreateWindow(Width, Height, "Volund", 0, 0);
 
-			this->m_WindowData->Height = Height;
-			this->m_WindowData->Width = Width;
+			this->m_windowData->Height = Height;
+			this->m_windowData->Width = Width;
 		}
 
-		if (!this->m_WindowData->GlfwWindow)
+		if (!this->m_windowData->GlfwWindow)
 		{
 			glfwTerminate();
 			return;
 		}
 
-		glfwMakeContextCurrent(this->m_WindowData->GlfwWindow);
+		glfwMakeContextCurrent(this->m_windowData->GlfwWindow);
 
-		glfwSetWindowUserPointer(this->m_WindowData->GlfwWindow, this->m_WindowData.get());
+		glfwSetWindowUserPointer(this->m_windowData->GlfwWindow, this->m_windowData.get());
 
-		glfwSetWindowFocusCallback(this->m_WindowData->GlfwWindow, WindowFocusDispatcher);
-		glfwSetCursorEnterCallback(this->m_WindowData->GlfwWindow, CursorEnterDispatcher);
-		glfwSetWindowCloseCallback(this->m_WindowData->GlfwWindow, WindowCloseDispatcher);
-		glfwSetFramebufferSizeCallback(this->m_WindowData->GlfwWindow, WindowSizeDispatcher);
-		glfwSetKeyCallback(this->m_WindowData->GlfwWindow, KeyDispatcher);
-		glfwSetCursorPosCallback(this->m_WindowData->GlfwWindow, CursorPositionDispatcher);
-		glfwSetMouseButtonCallback(this->m_WindowData->GlfwWindow, MouseButtonDispatcher);
-		glfwSetScrollCallback(this->m_WindowData->GlfwWindow, ScrollDispatcher);
-		glfwSetCharCallback(this->m_WindowData->GlfwWindow, CharDispatcher);
+		glfwSetWindowFocusCallback(this->m_windowData->GlfwWindow, WindowFocusDispatcher);
+		glfwSetCursorEnterCallback(this->m_windowData->GlfwWindow, CursorEnterDispatcher);
+		glfwSetWindowCloseCallback(this->m_windowData->GlfwWindow, WindowCloseDispatcher);
+		glfwSetFramebufferSizeCallback(this->m_windowData->GlfwWindow, WindowSizeDispatcher);
+		glfwSetKeyCallback(this->m_windowData->GlfwWindow, KeyDispatcher);
+		glfwSetCursorPosCallback(this->m_windowData->GlfwWindow, CursorPositionDispatcher);
+		glfwSetMouseButtonCallback(this->m_windowData->GlfwWindow, MouseButtonDispatcher);
+		glfwSetScrollCallback(this->m_windowData->GlfwWindow, ScrollDispatcher);
+		glfwSetCharCallback(this->m_windowData->GlfwWindow, CharDispatcher);
 
 		this->ConnectWindowCloseCallback(DefaultWindowCloseCallback);
 		this->ConnectWindowSizeCallback(DefaultWindowSizeCallback);
@@ -392,7 +392,7 @@ namespace Volund
 
 	Window::~Window()
 	{
-		glfwDestroyWindow(this->m_WindowData->GlfwWindow);
+		glfwDestroyWindow(this->m_windowData->GlfwWindow);
 		glfwTerminate();
 	}
 

@@ -46,6 +46,6 @@ namespace Volund
 
     private:
 
-        std::array<Vec4, 4> m_Data;
+        std::array<Vec4, 4> m_data;
     };
 }

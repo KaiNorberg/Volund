@@ -86,10 +86,10 @@ namespace Volund
 
         static std::vector<ComponentEntry>::iterator UpperBound(std::vector<ComponentEntry>& components, const size_t& typeId);
 
-        std::vector<EntityEntry> m_EntityHeap;
-        std::vector<uint32_t> m_FreeEntries;
+        std::vector<EntityEntry> m_entityHeap;
+        std::vector<uint32_t> m_freeEntries;
 
-        CHRONO_TIME_POINT m_StartTime;
+        CHRONO_TIME_POINT m_startTime;
     };
 
     bool operator<(const size_t& a, const Scene::ComponentEntry& b);
@@ -118,7 +118,7 @@ namespace Volund
         }
 
         uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
-        auto& entry = this->m_EntityHeap[entityIndex];
+        auto& entry = this->m_entityHeap[entityIndex];
 
         std::shared_ptr<T> newComponent = std::make_shared<T>(args...);
         newComponent->Init(entity, this->weak_from_this());
@@ -144,7 +144,7 @@ namespace Volund
         }
 
         uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
-        auto& entry = this->m_EntityHeap[entityIndex];
+        auto& entry = this->m_entityHeap[entityIndex];
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
@@ -171,7 +171,7 @@ namespace Volund
         }
 
         uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
-        auto& entry = this->m_EntityHeap[entityIndex];
+        auto& entry = this->m_entityHeap[entityIndex];
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
@@ -191,7 +191,7 @@ namespace Volund
         }
 
         uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
-        auto& entry = this->m_EntityHeap[entityIndex];
+        auto& entry = this->m_entityHeap[entityIndex];
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
@@ -212,7 +212,7 @@ namespace Volund
         }
 
         uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
-        auto& entry = this->m_EntityHeap[entityIndex];
+        auto& entry = this->m_entityHeap[entityIndex];
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 

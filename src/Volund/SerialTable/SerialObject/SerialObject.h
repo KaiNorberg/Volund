@@ -51,7 +51,7 @@ namespace Volund
 
     private:
 
-        T m_Data;
+        T m_data;
     };
 
     template<typename T>
@@ -107,13 +107,13 @@ namespace Volund
     {
         //VOLUND_SERIAL_TYPE_ASSERT(T);
 
-        return this->m_Data;
+        return this->m_data;
     }
 
     template<typename T>
     inline void SerialObject<T>::Set(const T& data)
     {
-        this->m_Data = data;
+        this->m_data = data;
     }
 
     template<typename T>
@@ -121,7 +121,7 @@ namespace Volund
     {
         //VOLUND_SERIAL_TYPE_ASSERT(T);
 
-        return this->m_Data;
+        return this->m_data;
     }
 
     template<typename T>
@@ -137,7 +137,7 @@ namespace Volund
     {
         //VOLUND_SERIAL_TYPE_ASSERT(T);
 
-        this->m_Data = data;
+        this->m_data = data;
     }
 }
 

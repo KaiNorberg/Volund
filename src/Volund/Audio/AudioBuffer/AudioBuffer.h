@@ -16,6 +16,6 @@ namespace Volund
         AudioBuffer(std::string const& filepath);
         ~AudioBuffer();
     private:
-        uint32_t m_Buffer = 0;
+        uint32_t m_buffer = 0;
     };
 }

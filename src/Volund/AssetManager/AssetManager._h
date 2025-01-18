@@ -61,11 +61,11 @@ namespace Volund
             std::weak_ptr<T> Data;
         };
 
-        PolyContainer<PrimitiveAsset> m_Data;
+        PolyContainer<PrimitiveAsset> m_data;
 
-        std::string m_RootDir;
+        std::string m_rootDir;
 
-        std::shared_ptr<Dispatcher> m_Dispatcher;
+        std::shared_ptr<Dispatcher> m_dispatcher;
     };
 
     template<typename T>
@@ -77,9 +77,9 @@ namespace Volund
         std::string absolutePath = this->GetAbsolutePath(filepath);
         std::string relativePath = this->GetRelativePath(filepath);
 
-        if (m_Data.Contains<Asset<T>>())
+        if (m_data.Contains<Asset<T>>())
         {
-            auto& view = m_Data.View<Asset<T>>();
+            auto& view = m_data.View<Asset<T>>();
 
             for (int i = 0; i < view.size(); i++)
             {
@@ -90,7 +90,7 @@ namespace Volund
                     {
                         uint64_t lineId = VOLUND_INFO("Asset expired, retrieving new asset (%s)... ", relativePath.c_str());
 
-                        this->m_Data.Erase<Asset<T>>(i);
+                        this->m_data.Erase<Asset<T>>(i);
                         auto asset = this->Fetch<T>(relativePath);
 
                         VOLUND_UPDATE_LINE(lineId, "Done");
@@ -114,9 +114,9 @@ namespace Volund
     template<typename T>
     inline std::string AssetManager::FetchFilepath(std::shared_ptr<T> asset)
     {
-        if (m_Data.Contains<Asset<T>>())
+        if (m_data.Contains<Asset<T>>())
         {
-            auto& view = m_Data.View<Asset<T>>();
+            auto& view = m_data.View<Asset<T>>();
 
             for (int i = 0; i < view.size(); i++)
             {
@@ -137,6 +137,6 @@ namespace Volund
         newAsset->Filepath = filepath;
         newAsset->Data = assetData;
         newAsset->Identifier = assetData.get();
-        this->m_Data.PushBack(newAsset);
+        this->m_data.PushBack(newAsset);
     }
 }

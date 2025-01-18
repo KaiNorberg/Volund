@@ -50,7 +50,7 @@ namespace Volund
 
     protected:
 
-        std::string m_Name;
+        std::string m_name;
 
     private:
     };
@@ -74,7 +74,7 @@ namespace Volund
 
         Uniform(std::string const& name, const T& value);
 
-        T m_Value;
+        T m_value;
     };
 }
 

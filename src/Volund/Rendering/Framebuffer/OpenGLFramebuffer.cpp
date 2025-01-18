@@ -11,12 +11,12 @@ namespace Volund
 {
 	uint32_t OpenGLFramebuffer::GetID() const
 	{
-		return this->m_Id;
+		return this->m_id;
 	}
 
 	void OpenGLFramebuffer::Bind()
 	{
-		glBindFramebuffer(GL_FRAMEBUFFER, this->m_Id);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->m_id);
 	}
 
 	void OpenGLFramebuffer::Unbind()
@@ -26,49 +26,49 @@ namespace Volund
 
 	void OpenGLFramebuffer::Invalidate()
 	{
-		if (this->m_Id != 0)
+		if (this->m_id != 0)
 		{
-			glDeleteFramebuffers(1, &this->m_Id);
+			glDeleteFramebuffers(1, &this->m_id);
 
-			for (int i = 0; i < this->m_ColorAttachments.size(); i++)
+			for (int i = 0; i < this->m_colorAttachments.size(); i++)
 			{
-				glDeleteTextures(1, &this->m_ColorAttachments[i]);
+				glDeleteTextures(1, &this->m_colorAttachments[i]);
 			}
 
-			if (this->m_DepthAttachment != 0)
+			if (this->m_depthAttachment != 0)
 			{
-				glDeleteTextures(1, &this->m_DepthAttachment);
+				glDeleteTextures(1, &this->m_depthAttachment);
 			}
 
-			this->m_ColorAttachments.clear();
-			this->m_DepthAttachment = 0;
+			this->m_colorAttachments.clear();
+			this->m_depthAttachment = 0;
 		}
 
-		glGenFramebuffers(1, &this->m_Id);
-		glBindFramebuffer(GL_FRAMEBUFFER, this->m_Id);
+		glGenFramebuffers(1, &this->m_id);
+		glBindFramebuffer(GL_FRAMEBUFFER, this->m_id);
 
-		for (int i = 0; i < this->m_Spec.ColorAttachments.size(); i++)
+		for (int i = 0; i < this->m_spec.ColorAttachments.size(); i++)
 		{
 			uint32_t newAttachment;
 
 			glGenTextures(1, &newAttachment);
 			glBindTexture(GL_TEXTURE_2D, newAttachment);
 
-			switch (this->m_Spec.ColorAttachments[i].Format)
+			switch (this->m_spec.ColorAttachments[i].Format)
 			{
 			case TextureFormat::RGBA8:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, this->m_spec.Width, this->m_spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 			}
 			break;
 			case TextureFormat::RGBA16F:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA16F, this->m_spec.Width, this->m_spec.Height, 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
 			}
 			break;
 			case TextureFormat::RGBA32UI:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, this->m_Spec.Width, this->m_Spec.Height, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, nullptr);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32UI, this->m_spec.Width, this->m_spec.Height, 0, GL_RGBA_INTEGER, GL_UNSIGNED_INT, nullptr);
 			}
 			break;
 			default:
@@ -83,23 +83,23 @@ namespace Volund
 
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, newAttachment, 0);
 
-			this->m_ColorAttachments.push_back(newAttachment);
+			this->m_colorAttachments.push_back(newAttachment);
 		}
 
-		if (this->m_Spec.DepthAttachment.Format != TextureFormat::None)
+		if (this->m_spec.DepthAttachment.Format != TextureFormat::None)
 		{
-			glGenTextures(1, &this->m_DepthAttachment);
-			glBindTexture(GL_TEXTURE_2D, this->m_DepthAttachment);
+			glGenTextures(1, &this->m_depthAttachment);
+			glBindTexture(GL_TEXTURE_2D, this->m_depthAttachment);
 
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			switch (this->m_Spec.DepthAttachment.Format)
+			switch (this->m_spec.DepthAttachment.Format)
 			{
 			case TextureFormat::Depth24Stencil8:
 			{
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, this->m_Spec.Width, this->m_Spec.Height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
-				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this->m_DepthAttachment, 0);
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH24_STENCIL8, this->m_spec.Width, this->m_spec.Height, 0, GL_DEPTH_STENCIL, GL_UNSIGNED_INT_24_8, nullptr);
+				glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_TEXTURE_2D, this->m_depthAttachment, 0);
 			}
 			break;
 			default:
@@ -117,7 +117,7 @@ namespace Volund
 
 	/*int32_t OpenGLFramebuffer::ReadPixel(uint32_t attachment, uint32_t x, uint32_t y)
 	{
-		if (attachment < this->m_ColorAttachments.size())
+		if (attachment < this->m_colorAttachments.size())
 		{
 			this->Bind();
 			glReadBuffer(GL_COLOR_ATTACHMENT0 + attachment);
@@ -135,8 +135,8 @@ namespace Volund
 
 	void OpenGLFramebuffer::BlitTo(const std::shared_ptr<Framebuffer>& drawFramebuffer)
 	{
-		glBlitNamedFramebuffer(this->m_Id, drawFramebuffer->GetID(),
-			0, 0, this->m_Spec.Width, this->m_Spec.Height,
+		glBlitNamedFramebuffer(this->m_id, drawFramebuffer->GetID(),
+			0, 0, this->m_spec.Width, this->m_spec.Height,
 			0, 0, drawFramebuffer->GetSpec().Width, drawFramebuffer->GetSpec().Height,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	}
@@ -148,44 +148,44 @@ namespace Volund
 		int width, height;
 		glfwGetWindowSize(context, &width, &height);
 
-		glBlitNamedFramebuffer(this->m_Id, 0,
-			0, 0, this->m_Spec.Width, this->m_Spec.Height,
+		glBlitNamedFramebuffer(this->m_id, 0,
+			0, 0, this->m_spec.Width, this->m_spec.Height,
 			0, 0, width, height,
 			GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT, GL_NEAREST);
 	}
 
 	uint32_t OpenGLFramebuffer::GetAttachment(const uint32_t index)
 	{
-		if (index >= this->m_ColorAttachments.size())
+		if (index >= this->m_colorAttachments.size())
 		{
 			VOLUND_ERROR("Index out of range!");
 			return 0;
 		}
 		else
 		{
-			return this->m_ColorAttachments[index];
+			return this->m_colorAttachments[index];
 		}
 	}
 
 	uint32_t OpenGLFramebuffer::GetDepthAttachment()
 	{
-		return this->m_DepthAttachment;
+		return this->m_depthAttachment;
 	}
 
 	void OpenGLFramebuffer::SetSpec(const FramebufferSpec& spec)
 	{
-		this->m_Spec = spec;
+		this->m_spec = spec;
 		this->Invalidate();
 	}
 
 	const FramebufferSpec OpenGLFramebuffer::GetSpec() const
 	{
-		return this->m_Spec;
+		return this->m_spec;
 	}
 
 	OpenGLFramebuffer::OpenGLFramebuffer(const FramebufferSpec& spec)
 	{
-		this->m_Spec = spec;
+		this->m_spec = spec;
 		this->Invalidate();
 
 		this->Bind();
@@ -195,22 +195,22 @@ namespace Volund
 
 	OpenGLFramebuffer::~OpenGLFramebuffer()
 	{
-		if (this->m_Id != 0)
+		if (this->m_id != 0)
 		{
-			glDeleteFramebuffers(1, &this->m_Id);
+			glDeleteFramebuffers(1, &this->m_id);
 
-			for (int i = 0; i < this->m_ColorAttachments.size(); i++)
+			for (int i = 0; i < this->m_colorAttachments.size(); i++)
 			{
-				glDeleteTextures(1, &this->m_ColorAttachments[i]);
+				glDeleteTextures(1, &this->m_colorAttachments[i]);
 			}
 
-			if (this->m_DepthAttachment != 0)
+			if (this->m_depthAttachment != 0)
 			{
-				glDeleteTextures(1, &this->m_DepthAttachment);
+				glDeleteTextures(1, &this->m_depthAttachment);
 			}
 
-			this->m_ColorAttachments.clear();
-			this->m_DepthAttachment = 0;
+			this->m_colorAttachments.clear();
+			this->m_depthAttachment = 0;
 		}
 	}
 }

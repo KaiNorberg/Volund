@@ -16,6 +16,6 @@ namespace Volund
 
     private:
 
-        Vec4 m_FrustumPlanes[6];
+        Vec4 m_frustumPlanes[6];
     };
 }

@@ -6,11 +6,11 @@ namespace Volund
 {
 	void Material::Erase(std::string const& name)
 	{
-		for (int i = 0; i < this->m_Uniforms.size(); i++)
+		for (int i = 0; i < this->m_uniforms.size(); i++)
 		{
-			if (this->m_Uniforms[i]->GetName() == name)
+			if (this->m_uniforms[i]->GetName() == name)
 			{
-				this->m_Uniforms.erase(this->m_Uniforms.begin() + i);
+				this->m_uniforms.erase(this->m_uniforms.begin() + i);
 				return;
 			}
 		}
@@ -20,48 +20,48 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		if (this->m_Shader == nullptr)
+		if (this->m_shader == nullptr)
 		{
 			return;
 		}
 
-		for (int i = 0; i < this->m_Uniforms.size(); i++)
+		for (int i = 0; i < this->m_uniforms.size(); i++)
 		{
-			this->m_Uniforms[i]->UpdateShader(this->m_Shader);
+			this->m_uniforms[i]->UpdateShader(this->m_shader);
 		}
 	}
 
 	std::vector<std::shared_ptr<PrimitiveUniform>>::iterator Material::begin()
 	{
-		return this->m_Uniforms.begin();
+		return this->m_uniforms.begin();
 	}
 
 	std::vector<std::shared_ptr<PrimitiveUniform>>::iterator Material::end()
 	{
-		return this->m_Uniforms.end();
+		return this->m_uniforms.end();
 	}
 
 	std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator Material::begin() const
 	{
-		return this->m_Uniforms.begin();
+		return this->m_uniforms.begin();
 	}
 
 	std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator Material::end() const
 	{
-		return this->m_Uniforms.end();
+		return this->m_uniforms.end();
 	}
 
 	void Material::SetShader(std::shared_ptr<Shader> shader)
 	{
-		this->m_Shader = shader;
-		this->m_Blueprint = shader->GetMaterialBlueprint();
+		this->m_shader = shader;
+		this->m_blueprint = shader->GetMaterialBlueprint();
 
-		if (this->m_Blueprint == nullptr)
+		if (this->m_blueprint == nullptr)
 		{
 			return;
 		}
 
-		for (auto& uniform : (*this->m_Blueprint))
+		for (auto& uniform : (*this->m_blueprint))
 		{
 			if (uniform->Is<IntUniformType>() && !this->Contains<IntUniformType>(uniform->GetName()))
 			{
@@ -96,18 +96,18 @@ namespace Volund
 
 	std::shared_ptr<Shader> Material::GetShader()
 	{
-		return this->m_Shader;
+		return this->m_shader;
 	}
 
 	std::shared_ptr<MaterialBlueprint> Material::GetBlueprint()
 	{
-		if (this->m_Shader == nullptr)
+		if (this->m_shader == nullptr)
 		{
 			return nullptr;
 		}
 		else
 		{
-			return this->m_Shader->GetMaterialBlueprint();
+			return this->m_shader->GetMaterialBlueprint();
 		}
 	}
 

@@ -24,27 +24,27 @@ private:
 
     void Render(std::shared_ptr<VL::GameState> gameState, ImVec2 viewportSize);
 
-    VL::Vec2 m_FramebufferSize = VL::Vec2(100, 100);
+    VL::Vec2 m_framebufferSize = VL::Vec2(100, 100);
 
-    VL::Input m_Input;
+    VL::Input m_input;
 
-    std::shared_ptr<VL::Texture> m_PlayIcon;
-    std::shared_ptr<VL::Texture> m_PauseIcon;
+    std::shared_ptr<VL::Texture> m_playIcon;
+    std::shared_ptr<VL::Texture> m_pauseIcon;
 
-    std::shared_ptr<VL::Framebuffer> m_Viewportbuffer;
+    std::shared_ptr<VL::Framebuffer> m_viewportbuffer;
 
-    VL::Vec3 m_Position;
-    VL::Vec3 m_BallCenter;
-    VL::Vec3 m_Rotation;
-    float m_Distance;
+    VL::Vec3 m_position;
+    VL::Vec3 m_ballCenter;
+    VL::Vec3 m_rotation;
+    float m_distance;
 
-    VL::IVec2 m_OldMousePosition;
-    float m_OldScrollPosition;
+    VL::IVec2 m_oldMousePosition;
+    float m_oldScrollPosition;
 
-    std::shared_ptr<VL::Renderer> m_Renderer;
+    std::shared_ptr<VL::Renderer> m_renderer;
 
-    std::shared_ptr<VL::Effect> m_GridEffect;
+    std::shared_ptr<VL::Effect> m_gridEffect;
 
-    std::shared_ptr<VL::Framebuffer> m_SceneFramebuffer;
-    std::shared_ptr<VL::Framebuffer> m_EditorFramebuffer;
+    std::shared_ptr<VL::Framebuffer> m_sceneFramebuffer;
+    std::shared_ptr<VL::Framebuffer> m_editorFramebuffer;
 };

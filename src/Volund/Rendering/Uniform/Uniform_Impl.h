@@ -37,13 +37,13 @@ namespace Volund
     template<typename T, typename U>
     inline T& Uniform<T, U>::Get()
     {
-        return this->m_Value;
+        return this->m_value;
     }
 
     template<typename T, typename U>
     inline void Uniform<T, U>::Set(const T& value)
     {
-        this->m_Value = value;
+        this->m_value = value;
     }
 
     template<typename T, typename U>
@@ -61,7 +61,7 @@ namespace Volund
     template<typename T, typename U>
     inline Volund::Uniform<T, U>::Uniform(std::string const& name, const T& value)
     {
-        this->m_Name = name;
-        this->m_Value = value;
+        this->m_name = name;
+        this->m_value = value;
     }
 }

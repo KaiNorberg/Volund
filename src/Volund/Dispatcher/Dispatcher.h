@@ -27,15 +27,15 @@ namespace Volund
 
     private:
 
-        std::mutex m_Mutex;
+        std::mutex m_mutex;
 
-        std::function<void(const Event&)> m_EventCallback;
+        std::function<void(const Event&)> m_eventCallback;
 
-        std::shared_ptr<ThreadPool> m_ThreadPool;
+        std::shared_ptr<ThreadPool> m_threadPool;
 
-        std::queue<Job> m_JobQueue;
-        std::queue<Task> m_CleanupQueue;
-        std::queue<Event> m_EventQueue;
-        std::queue<Task> m_DeferredQueue;
+        std::queue<Job> m_jobQueue;
+        std::queue<Task> m_cleanupQueue;
+        std::queue<Event> m_eventQueue;
+        std::queue<Task> m_deferredQueue;
     };
 }

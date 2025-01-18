@@ -6,14 +6,14 @@ namespace Volund
 	{
 		ResourceLibrary singleton;
 
-		return m_Resources.contains(filepath);
+		return m_resources.contains(filepath);
 	}
 
 	const char* ResourceLibrary::Fetch(std::string const& filepath)
     {
 		if (IsResource(filepath))
 		{
-			return m_Resources[filepath];
+			return m_resources[filepath];
 		}
 		else
 		{
@@ -23,12 +23,12 @@ namespace Volund
 
 	const std::unordered_map<std::string, const char*>& ResourceLibrary::Map()
 	{
-		return m_Resources;
+		return m_resources;
 	}
 
 	void ResourceLibrary::CreateResource(std::string const& filepath, const char* content)
 	{
-		m_Resources[filepath] = content;
+		m_resources[filepath] = content;
 	}
 
 	ResourceLibrary::ResourceLibrary()

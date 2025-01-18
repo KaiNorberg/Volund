@@ -12,7 +12,7 @@ public:
 
 private:
 
-    std::shared_ptr<EditorContext> m_Context;
+    std::shared_ptr<EditorContext> m_context;
 
     bool ImGuiEntity(VL::Entity Entity, std::string const& EntityName);
 };

@@ -76,13 +76,13 @@ namespace Volund
 
         static uint64_t FindLine(uint64_t lineId);
 
-        static Logger m_CoreLogger;
-        static Logger m_ClientLogger;
+        static Logger m_coreLogger;
+        static Logger m_clientLogger;
 
-        static inline std::vector<LogLine> m_Lines;
-        static inline uint64_t m_NewLineId;
+        static inline std::vector<LogLine> m_lines;
+        static inline uint64_t m_newLineId;
 
-        std::string m_Name;
+        std::string m_name;
     };
 
     template<typename... Args>

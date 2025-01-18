@@ -395,7 +395,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Enqueue(Job(task, nullptr));
+        this->m_dispatcher->Enqueue(Job(task, nullptr));
         //task();
 
         return material;
@@ -437,7 +437,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Enqueue(Job(task, cleanupTask));
+        this->m_dispatcher->Enqueue(Job(task, cleanupTask));
         //task(); cleanupTask();
 
         return newMesh;
@@ -462,7 +462,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Enqueue(Job(task, cleanupTask));
+        this->m_dispatcher->Enqueue(Job(task, cleanupTask));
         //task(); cleanupTask();
 
         return newTexture;
@@ -487,7 +487,7 @@ namespace Volund
             VOLUND_UPDATE_LINE(lineId, "Done ");
         };
 
-        this->m_Dispatcher->Enqueue(Job(task, cleanupTask));
+        this->m_dispatcher->Enqueue(Job(task, cleanupTask));
         //task(); cleanupTask();
 
         return newShader;
@@ -503,7 +503,7 @@ namespace Volund
 
     std::string AssetManager::GetRootDirectory()
     {
-        return this->m_RootDir;
+        return this->m_rootDir;
     }
 
     std::shared_ptr<AssetManager> AssetManager::Create(std::shared_ptr<Dispatcher> Dispatcher, std::string const& rootDir)
@@ -520,7 +520,7 @@ namespace Volund
         else if (std::filesystem::exists(absolutePath))
         {
             std::string cleanPath = this->ShortPath(absolutePath);
-            return std::filesystem::relative(cleanPath, this->m_RootDir).string();
+            return std::filesystem::relative(cleanPath, this->m_rootDir).string();
         }
         else
         {
@@ -543,7 +543,7 @@ namespace Volund
         else
         {
             std::string cleanPath = this->ShortPath(relativePath);
-            return this->m_RootDir + VOLUND_PATH_SEPERATOR + cleanPath;
+            return this->m_rootDir + VOLUND_PATH_SEPERATOR + cleanPath;
         }
     }
 
@@ -560,13 +560,13 @@ namespace Volund
     {
         if (std::filesystem::is_directory(rootDir))
         {
-            this->m_RootDir = rootDir;
+            this->m_rootDir = rootDir;
         }
         else
         {
-            this->m_RootDir = std::filesystem::path(rootDir).parent_path().string();
+            this->m_rootDir = std::filesystem::path(rootDir).parent_path().string();
         }
 
-        this->m_Dispatcher = dispatcher;
+        this->m_dispatcher = dispatcher;
     }
 }

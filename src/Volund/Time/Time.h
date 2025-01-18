@@ -20,7 +20,7 @@ namespace Volund
 
     private:
 
-        CHRONO_TIME_POINT m_Start;
+        CHRONO_TIME_POINT m_start;
     };
 
     class TimeStep
@@ -37,6 +37,6 @@ namespace Volund
 
     private:
 
-        double m_Step = 0.0f;
+        double m_step = 0.0f;
     };
 }

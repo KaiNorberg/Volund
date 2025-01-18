@@ -9,79 +9,79 @@ namespace Volund
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->m_EventQueue.push(e);
+		this->m_eventQueue.push(e);
 	}
 
 	void Dispatcher::Enqueue(const Job& job)
 	{
 		VOLUND_PROFILE_FUNCTION();
 
-		this->m_JobQueue.push(job);
+		this->m_jobQueue.push(job);
 	}
 
 	void Dispatcher::Enqueue(const Task& deferredTask)
 	{
-		this->m_DeferredQueue.push(deferredTask);
+		this->m_deferredQueue.push(deferredTask);
 	}
 
 	void Dispatcher::Dispatch()
 	{
-		if (this->m_JobQueue.empty() && this->m_CleanupQueue.empty() && this->m_ThreadPool->GetActiveWorkerCount() == 0)
+		if (this->m_jobQueue.empty() && this->m_cleanupQueue.empty() && this->m_threadPool->GetActiveWorkerCount() == 0)
 		{
-			while (!this->m_DeferredQueue.empty())
+			while (!this->m_deferredQueue.empty())
 			{
-				Task deferredTask = this->m_DeferredQueue.front();
-				this->m_DeferredQueue.pop();
+				Task deferredTask = this->m_deferredQueue.front();
+				this->m_deferredQueue.pop();
 
 				deferredTask();
 			}
 		}
 
-		while (!this->m_EventQueue.empty())
+		while (!this->m_eventQueue.empty())
 		{
-			Event e = this->m_EventQueue.front();
-			this->m_EventQueue.pop();
+			Event e = this->m_eventQueue.front();
+			this->m_eventQueue.pop();
 
 			if ((e.type & VOLUND_EVENT_FLAG_ASYNC) != 0)
 			{
-				this->m_ThreadPool->Submit([this, e]()
+				this->m_threadPool->Submit([this, e]()
 				{
-					this->m_EventCallback(e);
+					this->m_eventCallback(e);
 				});
 			}
 			else
 			{
-				this->m_EventCallback(e);
+				this->m_eventCallback(e);
 			}
 		}
 
-		while (!this->m_JobQueue.empty())
+		while (!this->m_jobQueue.empty())
 		{
-			Job job = this->m_JobQueue.front();
-			this->m_JobQueue.pop();
+			Job job = this->m_jobQueue.front();
+			this->m_jobQueue.pop();
 
-			this->m_ThreadPool->Submit([this, job]()
+			this->m_threadPool->Submit([this, job]()
 			{
-				if (job.m_Task != nullptr)
+				if (job.m_task != nullptr)
 				{
-					job.m_Task();
+					job.m_task();
 				}
 
-				if (job.m_CleanupTask != nullptr)
+				if (job.m_cleanupTask != nullptr)
 				{
-					std::unique_lock lock(this->m_Mutex);
+					std::unique_lock lock(this->m_mutex);
 
-					this->m_CleanupQueue.push(job.m_CleanupTask);
+					this->m_cleanupQueue.push(job.m_cleanupTask);
 				}
 			});
 		}
 
-		std::unique_lock lock(this->m_Mutex);
+		std::unique_lock lock(this->m_mutex);
 
-		while (!this->m_CleanupQueue.empty())
+		while (!this->m_cleanupQueue.empty())
 		{
-			Task cleanupTask = this->m_CleanupQueue.front();
-			this->m_CleanupQueue.pop();
+			Task cleanupTask = this->m_cleanupQueue.front();
+			this->m_cleanupQueue.pop();
 
 			cleanupTask();
 		}
@@ -89,8 +89,8 @@ namespace Volund
 
 	Dispatcher::Dispatcher(std::function<void(const Event&)> eventCallback)
 	{
-		this->m_EventCallback = eventCallback;
-		this->m_ThreadPool = std::make_shared<ThreadPool>(8);
+		this->m_eventCallback = eventCallback;
+		this->m_threadPool = std::make_shared<ThreadPool>(8);
 	}
 
 	Dispatcher::~Dispatcher()

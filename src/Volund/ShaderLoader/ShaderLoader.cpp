@@ -10,12 +10,12 @@ namespace Volund
 {
 	ShaderSource ShaderLoader::GetSource()
 	{
-		return this->m_Source;
+		return this->m_source;
 	}
 
 	std::shared_ptr<MaterialBlueprint> ShaderLoader::GetBlueprint()
 	{
-		return this->m_MaterialBlueprint;
+		return this->m_materialBlueprint;
 	}
 
 	void ShaderLoader::Load(std::string const& filepath)
@@ -111,39 +111,39 @@ namespace Volund
 
                     if (words[1] == "int" || words[1] == "bool")
                     {
-                        this->m_MaterialBlueprint->Insert<IntUniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<IntUniformType>(uniformName);
                     }
                     else if (words[1] == "float")
                     {
-                        this->m_MaterialBlueprint->Insert<FloatUniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<FloatUniformType>(uniformName);
                     }
                     else if (words[1] == "double")
                     {
-                        this->m_MaterialBlueprint->Insert<DoubleUniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<DoubleUniformType>(uniformName);
                     }
                     else if (words[1].ends_with("vec2"))
                     {
-                        this->m_MaterialBlueprint->Insert<Vec2UniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<Vec2UniformType>(uniformName);
                     }
                     else if (words[1].ends_with("vec3"))
                     {
-                        this->m_MaterialBlueprint->Insert<Vec3UniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<Vec3UniformType>(uniformName);
                     }
                     else if (words[1].ends_with("vec4"))
                     {
-                        this->m_MaterialBlueprint->Insert<Vec4UniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<Vec4UniformType>(uniformName);
                     }
                     else if (words[1].starts_with("sampler"))
                     {
-                        this->m_MaterialBlueprint->Insert<TextureUniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<TextureUniformType>(uniformName);
                     }
                     /*else if (words[1].starts_with("mat3"))
                     {
-                        this->m_MaterialBlueprint->Insert<UniformMat3x3>(uniformName);
+                        this->m_materialBlueprint->Insert<UniformMat3x3>(uniformName);
                     }*/
                     else if (words[1].starts_with("mat4"))
                     {
-                        this->m_MaterialBlueprint->Insert<Mat4x4UniformType>(uniformName);
+                        this->m_materialBlueprint->Insert<Mat4x4UniformType>(uniformName);
                     }
                     else
                     {
@@ -151,19 +151,19 @@ namespace Volund
                     }
                 }
 
-                m_Source[(int32_t)type] += line + '\n';
+                m_source[(int32_t)type] += line + '\n';
             }
         }
 	}
 
     ShaderLoader::ShaderLoader()
     {
-        this->m_MaterialBlueprint = std::make_shared<MaterialBlueprint>();
+        this->m_materialBlueprint = std::make_shared<MaterialBlueprint>();
     }
 
 	ShaderLoader::ShaderLoader(std::string const& filepath)
 	{
-        this->m_MaterialBlueprint = std::make_shared<MaterialBlueprint>();
+        this->m_materialBlueprint = std::make_shared<MaterialBlueprint>();
 
 		this->Load(filepath);
 	}

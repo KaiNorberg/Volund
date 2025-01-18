@@ -36,10 +36,10 @@ namespace Volund
         void Loop();
         void EventCallback(const Event& e);
 
-        bool m_ShouldRun = true;
-        std::shared_ptr<Window> m_Window;
-        std::shared_ptr<Dispatcher> m_Dispatcher;
-        PolyContainer<Module> m_Modules;
+        bool m_shouldRun = true;
+        std::shared_ptr<Window> m_window;
+        std::shared_ptr<Dispatcher> m_dispatcher;
+        PolyContainer<Module> m_modules;
     protected:
         void Terminate();
     };
@@ -53,7 +53,7 @@ namespace Volund
         }
 
         std::shared_ptr<T> newModule = std::make_shared<T>(args...);
-        this->m_Modules.PushBack(newModule);
+        this->m_modules.PushBack(newModule);
         newModule->OnAttach(this);
         return newModule;
     }
@@ -66,12 +66,12 @@ namespace Volund
             VOLUND_ERROR("Application does not have Module of specifed type!");
         }
 
-        return this->m_Modules.Get<T>();
+        return this->m_modules.Get<T>();
     }
 
     template<typename T>
     inline bool Application::HasModule()
     {
-        return this->m_Modules.Contains<T>();
+        return this->m_modules.Contains<T>();
     }
 }

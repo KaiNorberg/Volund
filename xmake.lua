@@ -27,7 +27,7 @@ target("ImGui")
 target("Editor")
     set_kind("binary")
     add_deps("Volund", "ImGui");
-    add_packages("openal-soft")
+    add_packages("openal-soft", "sol2")
     add_includedirs("src/Volund", "vendor/imgui", "src/Editor")
     add_files("src/Editor/**/*.cpp", "src/Editor/*.cpp")
 

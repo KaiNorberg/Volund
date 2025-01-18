@@ -19,7 +19,7 @@ namespace Volund
 
     private:
 
-        std::shared_ptr<AudioDevice> m_Device;
-        std::shared_ptr<AudioContext> m_Context;
+        std::shared_ptr<AudioDevice> m_device;
+        std::shared_ptr<AudioContext> m_context;
     };
 }

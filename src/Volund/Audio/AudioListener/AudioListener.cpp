@@ -28,8 +28,8 @@ namespace Volund
 
     AudioListener::AudioListener()
 	{
-        m_AudioListenerCount++;
-        if (m_AudioListenerCount >= 2)
+        m_audioListenerCount++;
+        if (m_audioListenerCount >= 2)
         {
             VOLUND_ERROR("Unable to create multiple AudioListeners!");
         }
@@ -37,6 +37,6 @@ namespace Volund
 
     AudioListener::~AudioListener()
     {
-        m_AudioListenerCount--;
+        m_audioListenerCount--;
     }
 }

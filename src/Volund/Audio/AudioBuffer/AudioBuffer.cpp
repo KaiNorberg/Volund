@@ -11,7 +11,7 @@ namespace Volund
 {
 	uint32_t AudioBuffer::GetBuffer() const
 	{
-		return this->m_Buffer;
+		return this->m_buffer;
 	}
 
 	AudioBuffer::AudioBuffer(std::string const& filepath)
@@ -44,16 +44,16 @@ namespace Volund
 			VOLUND_WARNING("Invalid bit depth of %d in sound file (%s)!", file.getBitDepth(), filepath.c_str());
 		}
 
-		AL_CALL(alGenBuffers, 1, &this->m_Buffer);
-		AL_CALL(alBufferData, this->m_Buffer, audioFormat, pcmDataBytes.data(), pcmDataBytes.size(), file.getSampleRate());
+		AL_CALL(alGenBuffers, 1, &this->m_buffer);
+		AL_CALL(alBufferData, this->m_buffer, audioFormat, pcmDataBytes.data(), pcmDataBytes.size(), file.getSampleRate());
 	}
 
 	AudioBuffer::~AudioBuffer()
 	{
-		if (this->m_Buffer != 0 && alIsBuffer(this->m_Buffer))
+		if (this->m_buffer != 0 && alIsBuffer(this->m_buffer))
 		{
-			AL_CALL(alDeleteBuffers, 1, &this->m_Buffer);
-			this->m_Buffer = 0;
+			AL_CALL(alDeleteBuffers, 1, &this->m_buffer);
+			this->m_buffer = 0;
 		}
 	}
 }

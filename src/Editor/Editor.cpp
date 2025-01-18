@@ -19,23 +19,23 @@
 
 void Editor::Procedure(const VL::Event& e)
 {
-	this->m_Input.Procedure(e);
+	this->m_input.Procedure(e);
 
-	if (this->m_Context->IsPaused())
+	if (this->m_context->IsPaused())
 	{
 		if (e.type == VOLUND_EVENT_RENDER)
 		{
-			this->m_Context->GameState->Procedure(e);
+			this->m_context->GameState->Procedure(e);
 		}
 	}
 	else
 	{
-		this->m_Context->GameState->Procedure(e);
+		this->m_context->GameState->Procedure(e);
 	}
 
 	if (e.type != VOLUND_EVENT_RENDER)
 	{
-    	for (auto& panel : this->m_Panels)
+    	for (auto& panel : this->m_panels)
     	{
             panel->Procedure(e);
     	}
@@ -53,7 +53,7 @@ void Editor::Procedure(const VL::Event& e)
 		{
 			this->DrawBackground();
 
-			for (auto& panel : this->m_Panels)
+			for (auto& panel : this->m_panels)
 			{
 			    panel->Procedure(e);
 			}
@@ -66,21 +66,21 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case VOLUND_EVENT_KEY:
 	{
-		if (this->m_Input.IsHeld(VOLUND_KEY_CONTROL))
+		if (this->m_input.IsHeld(VOLUND_KEY_CONTROL))
 		{
-			if (this->m_Input.IsPressed('R'))
+			if (this->m_input.IsPressed('R'))
 			{
 				this->GetDispatcher()->Enqueue(EDITOR_EVENT_RELOAD_SCENE);
 			}
-			else if (this->m_Input.IsPressed('E'))
+			else if (this->m_input.IsPressed('E'))
 			{
 				this->GetDispatcher()->Enqueue(EDITOR_EVENT_LOAD_SCENE);
 			}
-			else if (this->m_Input.IsPressed('N'))
+			else if (this->m_input.IsPressed('N'))
 			{
 				this->GetDispatcher()->Enqueue(EDITOR_EVENT_NEW_SCENE);
 			}
-			else if (this->m_Input.IsPressed('S'))
+			else if (this->m_input.IsPressed('S'))
 			{
 				this->GetDispatcher()->Enqueue(EDITOR_EVENT_SAVE_SCENE);
 			}
@@ -94,7 +94,7 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_EVENT_RELOAD_SCENE:
 	{
-		this->m_Context->GameState->ReloadScene();
+		this->m_context->GameState->ReloadScene();
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
@@ -103,14 +103,14 @@ void Editor::Procedure(const VL::Event& e)
 		const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
 		if (!filepath.empty())
 		{
-			this->m_Context->GameState->LoadScene(filepath);
+			this->m_context->GameState->LoadScene(filepath);
 		}
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
 	case EDITOR_EVENT_SAVE_SCENE:
 	{
-		this->m_Context->GameState->SaveScene();
+		this->m_context->GameState->SaveScene();
 	}
 	break;
 	case EDITOR_EVENT_NEW_SCENE:
@@ -122,36 +122,36 @@ void Editor::Procedure(const VL::Event& e)
 			VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
 			serializer.WriteToFile(filepath + "/scene.lua");
 
-			this->m_Context->GameState->LoadScene(filepath + "/scene.lua");
+			this->m_context->GameState->LoadScene(filepath + "/scene.lua");
 		}
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
 	case EDITOR_EVENT_PLAY:
 	{
-		if (this->m_Context->GameState == nullptr || !this->m_Context->m_Paused)
+		if (this->m_context->GameState == nullptr || !this->m_context->m_paused)
 		{
 			return;
 		}
 
-		this->m_Context->GameState->SaveScene();
-		this->m_Context->GameState->ReloadScene();
+		this->m_context->GameState->SaveScene();
+		this->m_context->GameState->ReloadScene();
 
 		SetDarkImGuiStyle();
 
-		this->m_Context->m_Paused = false;
+		this->m_context->m_paused = false;
 	}
 	break;
 	case EDITOR_EVENT_PAUSE:
 	{
-		if (this->m_Context->GameState == nullptr || this->m_Context->m_Paused)
+		if (this->m_context->GameState == nullptr || this->m_context->m_paused)
 		{
 			return;
 		}
 
-		this->m_Context->m_Paused = true;
+		this->m_context->m_paused = true;
 
-		this->m_Context->GameState->ReloadScene();
+		this->m_context->GameState->ReloadScene();
 
 		SetDefaultImGuiStyle();
 	}
@@ -193,14 +193,14 @@ Editor::Editor()
 	window->ConnectKeyCallback(ImGui_ImplGlfw_KeyCallback);
 	window->ConnectCharCallback(ImGui_ImplGlfw_CharCallback);
 
-	this->m_Context = std::make_shared<EditorContext>(this->GetDispatcher());
+	this->m_context = std::make_shared<EditorContext>(this->GetDispatcher());
 
-	this->m_Panels.push_back(std::make_shared<Viewport>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Output>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Inspector>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Explorer>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<Hierarchy>(this->m_Context));
-	this->m_Panels.push_back(std::make_shared<MaterialEditor>(this->m_Context));
+	this->m_panels.push_back(std::make_shared<Viewport>(this->m_context));
+	this->m_panels.push_back(std::make_shared<Output>(this->m_context));
+	this->m_panels.push_back(std::make_shared<Inspector>(this->m_context));
+	this->m_panels.push_back(std::make_shared<Explorer>(this->m_context));
+	this->m_panels.push_back(std::make_shared<Hierarchy>(this->m_context));
+	this->m_panels.push_back(std::make_shared<MaterialEditor>(this->m_context));
 
 	SetDefaultImGuiStyle();
 

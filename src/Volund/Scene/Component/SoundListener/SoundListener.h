@@ -16,6 +16,6 @@ namespace Volund
 
     private:
 
-        AudioListener m_Listener;
+        AudioListener m_listener;
     };
 }
