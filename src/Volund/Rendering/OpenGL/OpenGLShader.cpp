@@ -135,7 +135,7 @@ namespace Volund
 			glGetShaderiv(id, GL_INFO_LOG_LENGTH, &length);
 			char* message = new char[length];
 			glGetShaderInfoLog(id, length, &length, message);
-			VOLUND_WARNING("Failed to compile shader: %s", message);
+			VOLUND_WARNING("Failed to compile shader: {}", message);
 			delete message;
 			glDeleteShader(id);
 			return 0;
@@ -154,7 +154,7 @@ namespace Volund
 
 		if (uniformLocation == -1)
 		{
-			VOLUND_WARNING("Unknown Uniform specified (%s)", name.data());
+			VOLUND_WARNING("Unknown Uniform specified ({})", name.data());
 		}
 
 		m_uniformLocations[name.data()] = uniformLocation;
@@ -173,7 +173,7 @@ namespace Volund
 
 	OpenGLShader::OpenGLShader(std::string const& filepath)
 	{		
-        VOLUND_INFO("Loading Shader (%s)... ", filepath.c_str());
+        VOLUND_LOG_LOADING("shader", filepath);
 		ShaderLoader loader = ShaderLoader(filepath);
 		auto source = loader.GetSource();
 		this->m_materialBlueprint = loader.GetBlueprint();
@@ -222,6 +222,8 @@ namespace Volund
 		}
 
 		this->m_id = program;
+
+		VOLUND_LOG_LOADING_SUCCESS("shader", filepath);
 	}
 
 	OpenGLShader::~OpenGLShader()

@@ -62,7 +62,7 @@ namespace Volund
 	{
 		if (abs(aspectRatio - std::numeric_limits<float>::epsilon()) > 0.0f)
 		{
-			return Math::ProjectionMatrix(Math::Radians(this->FOV), aspectRatio, this->NearPlane, this->FarPlane);
+			return Math::ProjectionMatrix(Math::Radians(this->fov), aspectRatio, this->nearPlane, this->farPlane);
 		}
 		else
 		{
@@ -100,8 +100,10 @@ namespace Volund
 		}
 	}
 
-	void Camera::OnCreate()
+	Camera::Camera(float fov, float nearPlane, float farPlane)
 	{
-
+		this->fov = fov;
+		this->nearPlane = nearPlane;
+		this->farPlane = farPlane;
 	}
 }

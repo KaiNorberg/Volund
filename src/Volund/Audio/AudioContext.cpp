@@ -43,9 +43,9 @@ namespace Volund
 
 		this->MakeCurrent();
 
-		VOLUND_INFO("OpenAL Renderer: %s", alGetString(AL_RENDERER));
-		VOLUND_INFO("OpenAL Version: %s", alGetString(AL_VERSION));
-		VOLUND_INFO("OpenAL Vendor: %s", alGetString(AL_VENDOR));
+		VOLUND_INFO("OpenAL Renderer: {}", alGetString(AL_RENDERER));
+		VOLUND_INFO("OpenAL Version: {}", alGetString(AL_VERSION));
+		VOLUND_INFO("OpenAL Vendor: {}", alGetString(AL_VENDOR));
 	}
 
 	AudioContext::~AudioContext()

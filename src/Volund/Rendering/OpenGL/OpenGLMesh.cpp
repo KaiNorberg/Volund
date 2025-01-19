@@ -86,7 +86,7 @@ namespace Volund
 
 	OpenGLMesh::OpenGLMesh(std::string const& filepath)
 	{        
-		VOLUND_INFO("Loading Mesh (%s)... ", filepath.c_str());
+		VOLUND_LOG_LOADING("mesh", filepath);
 		
 		std::shared_ptr<ModelLoader> modelLoader = std::make_shared<ModelLoader>();
 		if (ResourceLibrary::IsResource(filepath))
@@ -99,7 +99,8 @@ namespace Volund
 
 			if (!modelLoader->Valid())
 			{
-				VOLUND_WARNING("Failed to load mesh %s!", filepath.c_str());
+				VOLUND_LOG_LOADING_FAIL("mesh", filepath, "invalid file");
+				return;
 			}
 		}
 
@@ -112,6 +113,8 @@ namespace Volund
 		this->SetVertexBuffer(vertexBuffer);
 		this->SetIndexBuffer(indexBuffer);
 		this->m_filepath = filepath;
+
+		VOLUND_LOG_LOADING_SUCCESS("mesh", filepath);
 	}
 
 	OpenGLMesh::OpenGLMesh(std::shared_ptr<VertexBuffer> VertexBuffer, std::shared_ptr<IndexBuffer> IndexBuffer)

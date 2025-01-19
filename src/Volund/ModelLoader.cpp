@@ -15,7 +15,7 @@ namespace Volund
 
 		if (!file)
 		{
-			VOLUND_WARNING("Unable to load mesh file (%s)!", filepath.c_str());
+			VOLUND_WARNING("Unable to load mesh file ({})!", filepath.c_str());
 		}
 
 		std::stringstream stringStream;
@@ -27,7 +27,7 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_WARNING("Unable to read unknown model file type (%s)!", filepath.data());
+			VOLUND_WARNING("Unable to read unknown model file type ({})!", filepath.data());
 		}
 	}
 

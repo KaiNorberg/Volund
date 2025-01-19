@@ -9,6 +9,11 @@
 
 namespace Volund
 {
+	std::string AudioBuffer::GetFilepath()
+	{
+		return this->m_filepath;
+	}
+
 	uint32_t AudioBuffer::GetBuffer() const
 	{
 		return this->m_buffer;
@@ -16,12 +21,13 @@ namespace Volund
 
 	AudioBuffer::AudioBuffer(std::string const& filepath)
 	{
+		this->m_filepath = filepath;
 		AudioFile<float> file;
 		std::vector<uint8_t> pcmDataBytes;
 
 		if (!file.load(filepath))
 		{
-			VOLUND_WARNING("Unable to load sound file (%s)!", filepath.c_str());
+			VOLUND_WARNING("Unable to load sound file ({})!", filepath.c_str());
 			return;
 		}
 		file.writePCMToBuffer(pcmDataBytes);
@@ -41,7 +47,7 @@ namespace Volund
 		}
 		else
 		{
-			VOLUND_WARNING("Invalid bit depth of %d in sound file (%s)!", file.getBitDepth(), filepath.c_str());
+			VOLUND_WARNING("Invalid bit depth of {} in sound file ({})!", file.getBitDepth(), filepath.c_str());
 		}
 
 		AL_CALL(alGenBuffers, 1, &this->m_buffer);

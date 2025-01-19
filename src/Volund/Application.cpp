@@ -78,11 +78,11 @@ namespace Volund
 	Application::Application()
 	{
 #ifdef _DEBUG
-		VOLUND_INFO("Initializing application (Debug)...");
+		VOLUND_INFO("Application Init (Debug)");
 #elif defined(NDEBUG)
-		VOLUND_INFO("Initializing application (Release)...");
+		VOLUND_INFO("Application Init (Release)");
 #else
-		VOLUND_WARNING("Initializing application (Unknown)...");
+		VOLUND_WARNING("Application Init (Unknown)");
 #endif
 
 		this->m_dispatcher = std::make_shared<Dispatcher>([this](const Event& e)

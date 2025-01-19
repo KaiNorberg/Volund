@@ -1,10 +1,10 @@
 #include "Rendering/Texture.h"
 
 #include "Rendering/OpenGL/OpenGLTexture.h"
+#include "ImageLoader.h"
+#include "Logger.h"
 
 #include <glad/glad.h>
-
-#include "ImageLoader.h"
 
 namespace Volund
 {
@@ -58,9 +58,11 @@ namespace Volund
 
     OpenGLTexture::OpenGLTexture(std::string const& filepath)
     {
+		VOLUND_LOG_LOADING("texture", filepath);
 		this->m_filepath = filepath;
 		ImageLoader loader = ImageLoader(filepath);
 		this->SetData(loader.GetData(), loader.GetWidth(), loader.GetHeight());
+		VOLUND_LOG_LOADING_SUCCESS("texture", filepath);
     }
 
     OpenGLTexture::OpenGLTexture(unsigned char* data, uint32_t width, uint32_t height)

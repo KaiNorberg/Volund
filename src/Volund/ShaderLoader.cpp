@@ -31,7 +31,7 @@ namespace Volund
 
             if (!file)
             {
-                VOLUND_WARNING("Failed to load shader %s!", filepath.c_str());
+                VOLUND_WARNING("Failed to load shader {}!", filepath.c_str());
                 return;
             }
 
@@ -72,7 +72,7 @@ namespace Volund
                     }
                     else
                     {
-                        VOLUND_WARNING("Corrupt volund directive detected in shader file (%s), unknown shader type!", filepath.c_str());
+                        VOLUND_WARNING("Corrupt volund directive detected in shader file ({}), unknown shader type!", filepath.c_str());
                     }
                 }
                 else if (words[0] == "#VOLUND_MATERIAL_START")
@@ -83,7 +83,7 @@ namespace Volund
                     }
                     else
                     {
-                        VOLUND_WARNING("Corrupt volund directive detected in shader file (%s), inMaterial = true!", filepath.c_str());
+                        VOLUND_WARNING("Corrupt volund directive detected in shader file ({}), inMaterial = true!", filepath.c_str());
                     }
                 }
                 else if (words[0] == "#VOLUND_MATERIAL_END")
@@ -94,12 +94,12 @@ namespace Volund
                     }
                     else
                     {
-                        VOLUND_WARNING("Corrupt volund directive detected in shader file (%s), inMaterial = false!", filepath.c_str());
+                        VOLUND_WARNING("Corrupt volund directive detected in shader file ({}), inMaterial = false!", filepath.c_str());
                     }
                 }
                 else
                 {
-                    VOLUND_WARNING("Corrupt volund directive detected in shader file (%s), unknown volund directive!", filepath.c_str());
+                    VOLUND_WARNING("Corrupt volund directive detected in shader file ({}), unknown volund directive!", filepath.c_str());
                 }
             }
             else
@@ -147,7 +147,7 @@ namespace Volund
                     }
                     else
                     {
-                        VOLUND_WARNING("Corrupt uniform type detected in shader file (%s)!", filepath.c_str());
+                        VOLUND_WARNING("Corrupt uniform type detected in shader file ({})!", filepath.c_str());
                     }
                 }
 

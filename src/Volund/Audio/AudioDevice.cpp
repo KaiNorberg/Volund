@@ -15,7 +15,7 @@ namespace Volund
 
 	AudioDevice::AudioDevice(std::string const& device)
 	{
-		VOLUND_INFO("Retriving audio device %d...", device.c_str());
+		VOLUND_INFO("Retriving audio device {}...", device.c_str());
 
 		this->m_device = alcOpenDevice(device.c_str());
 		if (!this->m_device)

@@ -39,7 +39,7 @@ namespace Volund
 
 		if (this->m_data == nullptr)
 		{
-			VOLUND_WARNING("Unable to load image (%s)!", filepath.c_str());
+			VOLUND_WARNING("Unable to load image ({})!", filepath.c_str());
 		}
 	}
 

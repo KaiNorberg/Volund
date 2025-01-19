@@ -101,9 +101,8 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_CMD_LOAD_SCENE:
 	{
-		//const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
-		const std::string filepath = "/home/kai/Documents/GitHub/Volund/examples/Simple/simple.scene.lua";
-		if (this->m_context->state->LoadScene(filepath) != nullptr)
+		const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
+		if (filepath != "" && this->m_context->state->LoadScene(filepath) != nullptr)
 		{
 			this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 		}
@@ -111,7 +110,7 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_CMD_SAVE_SCENE:
 	{
-		this->m_context->state->SaveScene(".");
+		this->m_context->state->SaveScene(this->m_context->state->GetSceneFilepath());
 	}
 	break;
 	case EDITOR_CMD_NEW_SCENE:
@@ -181,7 +180,7 @@ Editor::Editor()
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.IniFilename = "data/imgui.ini";
-	io.Fonts->AddFontFromFileTTF("data/fonts/OpenSans-Regular.ttf", 18.0f);
+	io.Fonts->AddFontFromFileTTF("data/fonts/FiraCode-Regular.ttf", 15.5f);
 
 	ImGui_ImplGlfw_InitForOpenGL(window->GetGlfwWindow(), false);
 	ImGui_ImplOpenGL3_Init();

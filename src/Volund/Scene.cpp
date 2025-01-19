@@ -9,12 +9,12 @@ namespace Volund
 {
 	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::begin()
 	{
-		return this->components.begin();
+		return this->m_components.begin();
 	}
 
 	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::end()
 	{
-		return this->components.end();
+		return this->m_components.end();
 	}
 
 	CHRONO_TIME_POINT Scene::GetStartTime()
@@ -32,16 +32,13 @@ namespace Volund
 			EntityEntry& bucket = this->m_entityHeap[freeIndex];
 			this->m_freeEntries.pop_back();
 
-			bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, freeIndex);
-			return bucket.entity;
+			bucket.m_entity = VOLUND_ENTITY_CREATE(newEntityId, freeIndex);
+			return bucket.m_entity;
 		}
 
-		EntityEntry bucket;
-		bucket.entity = VOLUND_ENTITY_CREATE(newEntityId, this->m_entityHeap.size());
-
+		EntityEntry bucket(VOLUND_ENTITY_CREATE(newEntityId, this->m_entityHeap.size()));
 		this->m_entityHeap.push_back(bucket);
-
-		return bucket.entity;
+		return bucket.m_entity;
 	}
 
 	void Scene::Unregister(Entity entity)
@@ -53,11 +50,11 @@ namespace Volund
 
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		this->m_entityHeap[entityIndex].entity = VOLUND_ENTITY_NULL;
-		this->m_entityHeap[entityIndex].components.clear();
+		this->m_entityHeap[entityIndex].m_entity = VOLUND_ENTITY_NULL;
+		this->m_entityHeap[entityIndex].m_components.clear();
 		m_freeEntries.push_back(entityIndex);
 
-		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().entity == VOLUND_ENTITY_NULL)
+		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().m_entity == VOLUND_ENTITY_NULL)
 		{
 			this->m_entityHeap.pop_back();
 			auto it = std::find(this->m_freeEntries.begin(), this->m_freeEntries.end(), this->m_entityHeap.size() - 1);
@@ -72,7 +69,7 @@ namespace Volund
 	{
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
-		return this->m_entityHeap.size() > entityIndex && this->m_entityHeap[entityIndex].entity != VOLUND_ENTITY_NULL;
+		return this->m_entityHeap.size() > entityIndex && this->m_entityHeap[entityIndex].m_entity != VOLUND_ENTITY_NULL;
 	}
 
 	void Scene::Procedure(const Event& e)
@@ -113,23 +110,16 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		for (auto& entry : this->m_entityHeap)
-		{
-			for (auto& [typeId, component] : entry)
-			{
-				component->OnDestroy();
-			}
-		}
 		this->m_entityHeap.clear();
 	}
 
 	bool operator<(const size_t& a, const Scene::ComponentEntry& b)
 	{
-		return a < b.TypeId;
+		return a < b.GetTypeId();
 	}
 
 	bool operator<(const Scene::ComponentEntry& a, const size_t& b)
 	{
-		return a.TypeId < b;
+		return a.GetTypeId() < b;
 	}
 }

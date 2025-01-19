@@ -3,6 +3,7 @@
 #include "Utils.h"
 
 #include <imgui.h>
+#include <thread>
 
 void Output::OnProcedure(const VL::Event& e)
 {
@@ -10,22 +11,21 @@ void Output::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		std::vector<std::string> textList;
+		std::string line;
+		while (std::getline(this->m_stream, line)) 
+		{
+			this->m_lines.push_back(line);
+		}
+		this->m_stream.clear();
 
 		if (ImGuiListBegin("##outputWindow"))
 		{
-			for (const auto& line : VOLUND_LOGGER)
+			for (uint64_t i = 0; i < this->m_lines.size(); i++)
 			{
-				ImGuiColoredText(line.Text);
+				ImGuiColoredText(this->m_lines[i]);
 			}
-
 			ImGuiListEnd();
 		}
-	}
-	break;
-	case EDITOR_EVENT_RESET:
-	{
-
 	}
 	break;
 	}
@@ -36,4 +36,7 @@ Output::Output(std::shared_ptr<EditorContext> context)
 	this->SetName("Output");
 
 	this->m_context = context;
+
+	VOLUND_LOGGER.GetCoreLogger().AddListener(&this->m_stream);
+	VOLUND_LOGGER.GetClientLogger().AddListener(&this->m_stream);
 }

@@ -177,7 +177,7 @@ void Explorer::ImGuiFilesystemEntry(std::string const& payloadPath, std::string 
 		{
 			std::filesystem::path sourcePath = filePayload;
 			std::filesystem::path targetPath = std::filesystem::path(payloadPath) / sourcePath.filename().string();
-			VOLUND_INFO("%s, %s", sourcePath.string().c_str(), targetPath.string().c_str());
+			VOLUND_INFO("{}, {}", sourcePath.string().c_str(), targetPath.string().c_str());
 
 			if (std::filesystem::exists(sourcePath))
 			{

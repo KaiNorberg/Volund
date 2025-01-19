@@ -70,9 +70,9 @@ void Inspector::OnProcedure(const VL::Event& e)
 
 			//TODO: Add targetbuffer
 
-			ImGuiFloat("FOV", camera->FOV);
-			ImGuiFloat("FarPlane", camera->FarPlane);
-			ImGuiFloat("NearPlane", camera->NearPlane);
+			ImGuiFloat("FOV", camera->fov);
+			ImGuiFloat("FarPlane", camera->farPlane);
+			ImGuiFloat("NearPlane", camera->nearPlane);
 		});
 
 		this->ImGuiComponent<VL::CameraMovement>("CameraMovement", selectedEntity, [this, selectedEntity, scene](int i)

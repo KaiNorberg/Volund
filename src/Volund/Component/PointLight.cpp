@@ -13,9 +13,9 @@ namespace Volund
 		
 	}
 
-	PointLight::PointLight(const RGB& color, float brighness)
+	PointLight::PointLight(const RGB& color, float brightness)
 	{
 		this->color = color;
-		this->brightness = brighness;
+		this->brightness = brightness;
 	}
 }

@@ -75,23 +75,23 @@ namespace Volund
 		switch (severity)
 		{
 		case GL_DEBUG_SEVERITY_HIGH:
-			VOLUND_ERROR(output.c_str());
+			VOLUND_ERROR("{}", output);
 			break;
 
 		case GL_DEBUG_SEVERITY_MEDIUM:
-			VOLUND_WARNING(output.c_str());
+			VOLUND_WARNING("{}", output);
 			break;
 
 		case GL_DEBUG_SEVERITY_LOW:
-			VOLUND_WARNING(output.c_str());
+			VOLUND_WARNING("{}", output);
 			break;
 
 		case GL_DEBUG_SEVERITY_NOTIFICATION:
-			VOLUND_INFO(output.c_str());
+			VOLUND_INFO("{}", output);
 			break;
 
 		default:
-			VOLUND_ERROR(output.c_str());
+			VOLUND_ERROR("{}", output);
 			break;
 		}
 	}
@@ -174,8 +174,8 @@ namespace Volund
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
 		glDebugMessageCallback(ErrorCallback, nullptr);
 
-		VOLUND_INFO("OpenGL Renderer: %s", glGetString(GL_RENDERER));
-		VOLUND_INFO("OpenGL Version: %s", glGetString(GL_VERSION));
-		VOLUND_INFO("OpenGL Vendor: %s", glGetString(GL_VENDOR));
+		VOLUND_INFO("OpenGL Renderer: {}", glGetString(GL_RENDERER));
+		VOLUND_INFO("OpenGL Version: {}", glGetString(GL_VERSION));
+		VOLUND_INFO("OpenGL Vendor: {}", glGetString(GL_VENDOR));
 	}
 }

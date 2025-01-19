@@ -13,7 +13,7 @@ namespace Volund
         });
 
         state->m_state.set_function("print", [state](std::string const& string) {
-            VOLUND_INFO(string.c_str());
+            VOLUND_INFO("{}", string);
         });
 
         state->m_state.new_usertype<Vec2>("Vec2", 
@@ -170,6 +170,10 @@ namespace Volund
             "new", [state](std::string const& filepath) { return Mesh::Create(state->AbsolutePath(filepath)); }
         );
 
+        state->m_state.new_usertype<AudioBuffer>("AudioBuffer", sol::constructors<>(),
+            "new", [state](std::string const& filepath) { return std::make_shared<AudioBuffer>(state->AbsolutePath(filepath)); }
+        );
+
         state->m_state.new_usertype<Material>("Material", sol::constructors<>(),
             "new", [](std::shared_ptr<Shader> shader) { return Material::Create(shader); },
             "set_shader", &Material::SetShader,
@@ -248,9 +252,9 @@ namespace Volund
 
         state->m_state.new_usertype<Camera>("Camera", 
             sol::constructors<Camera()>(),
-            "fov", &Camera::FOV,
-            "nearPlane", &Camera::NearPlane,
-            "farPlane", &Camera::FarPlane,
+            "fov", &Camera::fov,
+            "nearPlane", &Camera::nearPlane,
+            "farPlane", &Camera::farPlane,
             "set_layer_mask", &Camera::SetLayerMask,
             "get_layer_mask", &Camera::GetLayerMask,
             "get_view_matrix", &Camera::GetViewMatrix,
@@ -322,25 +326,25 @@ namespace Volund
             "is_registered", &Scene::IsRegistered,
 
             // Add Component Methods
-            "add_camera", [](std::shared_ptr<Scene> scene, Entity entity)
+            "add_camera", [](std::shared_ptr<Scene> scene, Entity entity, float fov, float nearPlane, float farPlane)
             {
-                return scene->AddComponent<Camera>(entity);
+                return scene->AddComponent<Camera>(entity, fov, nearPlane, farPlane);
+            },
+            "add_camera_movement", [](std::shared_ptr<Scene> scene, Entity entity, float speed, float sensitivity)
+            {
+                return scene->AddComponent<CameraMovement>(entity, speed, sensitivity);
             },
             "add_mesh_renderer", [](std::shared_ptr<Scene> scene, Entity entity, std::shared_ptr<Mesh> mesh, std::shared_ptr<Material> material)
             {
                 return scene->AddComponent<MeshRenderer>(entity, mesh, material);
             },
-            "add_point_light", [](std::shared_ptr<Scene> scene, Entity entity)
+            "add_point_light", [](std::shared_ptr<Scene> scene, Entity entity, const RGB& color, float brightness)
             {
                 return scene->AddComponent<PointLight>(entity);
             },            
-            "add_transform", [](std::shared_ptr<Scene> scene, Entity entity, Vec3 pos, Vec3 rotation, Vec3 scale)
+            "add_transform", [](std::shared_ptr<Scene> scene, Entity entity, const Vec3& pos, const Vec3& rotation, const Vec3& scale)
             {
                 return scene->AddComponent<Transform>(entity, pos, rotation, scale);
-            },
-            "add_camera_movement", [](std::shared_ptr<Scene> scene, Entity entity, float speed = 1.0f, float sensitivity = 1.0f)
-            {
-                return scene->AddComponent<CameraMovement>(entity, speed, sensitivity);
             },
             "add_sound_listener", [](std::shared_ptr<Scene> scene, Entity entity)
             {

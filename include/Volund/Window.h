@@ -19,20 +19,20 @@ namespace Volund
 {
     struct WindowData
     {
-        uint64_t Width = 0;
-        uint64_t Height = 0;
-        GLFWwindow* GlfwWindow = nullptr;
-        bool IsCursorEnabled = true;
-        std::shared_ptr<Dispatcher> EventDispatcher;
-        std::vector<GLFWwindowfocusfun> WindowFocusCallbacks;
-        std::vector<GLFWcursorenterfun> CursorEnterCallbacks;
-        std::vector<GLFWwindowclosefun> WindowCloseCallbacks;
-        std::vector<GLFWwindowsizefun> WindowSizeCallbacks;
-        std::vector<GLFWkeyfun> KeyCallbacks;
-        std::vector<GLFWcursorposfun> CursorPositionCallbacks;
-        std::vector<GLFWmousebuttonfun> MouseButtonCallbacks;
-        std::vector<GLFWscrollfun> ScrollCallbacks;
-        std::vector<GLFWcharfun> CharCallbacks;
+        uint64_t width = 0;
+        uint64_t height = 0;
+        GLFWwindow* glfwWindow = nullptr;
+        bool isCursorEnabled = true;
+        std::shared_ptr<Dispatcher> dispatcher;
+        std::vector<GLFWwindowfocusfun> windowFocusCallbacks;
+        std::vector<GLFWcursorenterfun> cursorEnterCallbacks;
+        std::vector<GLFWwindowclosefun> windowCloseCallbacks;
+        std::vector<GLFWwindowsizefun> windowSizeCallbacks;
+        std::vector<GLFWkeyfun> keyCallbacks;
+        std::vector<GLFWcursorposfun> cursorPositionCallbacks;
+        std::vector<GLFWmousebuttonfun> mouseButtonCallbacks;
+        std::vector<GLFWscrollfun> scrollCallbacks;
+        std::vector<GLFWcharfun> charCallbacks;
     };
 
     class Window
@@ -57,7 +57,7 @@ namespace Volund
         void ConnectMouseButtonCallback(GLFWmousebuttonfun callback);
         void ConnectScrollCallback(GLFWscrollfun callback);
         void ConnectCharCallback(GLFWcharfun callback);
-        Window(std::shared_ptr<Dispatcher> Dispatcher, uint64_t width, uint64_t height, bool fullScreen);
+        Window(std::shared_ptr<Dispatcher> dispatcher, uint64_t width, uint64_t height, bool fullScreen);
         ~Window();
     private:
         std::shared_ptr<WindowData> m_windowData;

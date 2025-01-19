@@ -60,13 +60,11 @@ namespace Volund
 		}
 	}
 
-	void CameraMovement::OnCreate()
-	{
-		this->m_oldMousePosition = m_input.GetMousePosition();
-	}
     CameraMovement::CameraMovement(float speed, float sensitivity)
     {
 		this->speed = speed;
 		this->sensitivity = sensitivity;
+		this->m_oldMousePosition = this->m_input.GetMousePosition();
 	}
+
 } // namespace Volund

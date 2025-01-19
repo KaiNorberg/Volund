@@ -12,7 +12,6 @@ namespace Volund
         float speed;
         float sensitivity;
         void Procedure(const Event& e);
-        virtual void OnCreate();
         CameraMovement(float speed = 1.0f, float sensitivity = 1.0f);
     private:
         Input m_input;

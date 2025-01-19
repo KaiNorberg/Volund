@@ -21,8 +21,9 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 		ImGui::SameLine();
 		ImGui::InputText(" ", searchTerm, 64);
 
-		for (auto& [entity, container] : *scene)
+		for (auto& entityEntry : *scene)
 		{
+			VL::Entity entity = entityEntry.Get();
 			std::string entityName;
 			if (scene->HasComponent<VL::Tag>(entity))
 			{

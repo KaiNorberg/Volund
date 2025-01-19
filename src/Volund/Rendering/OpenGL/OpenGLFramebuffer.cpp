@@ -124,7 +124,7 @@ namespace Volund
 			uint32_t pixel[4] = { 0, 0, 0, 0 };
 			glReadPixels(x, y, 1, 1, GL_RGBA, GL_UNSIGNED_INT, &pixel);
 
-			VOLUND_INFO("%u, %u, %u, %u", pixel[0], pixel[1], pixel[2], pixel[3]);
+			VOLUND_INFO("{}, {}, {}, {}", pixel[0], pixel[1], pixel[2], pixel[3]);
 			return 0;
 		}
 		else

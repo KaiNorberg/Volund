@@ -249,7 +249,7 @@ bool ImGuiVec3(std::string const& name, VL::Vec3& value, float speed, float defa
 {
 	bool changed = false;
 
-	ImGui::PushID((void*)name.data());
+	ImGui::PushID(ImHashStr(name.c_str()));
 
 	ImGui::Columns(2);
 	ImGui::SetColumnWidth(0, 100);

@@ -43,28 +43,35 @@ namespace Volund
 
     std::shared_ptr<Scene> LuaState::LoadScene(std::string const& filepath)
     {
+        VOLUND_LOG_LOADING("scene", filepath);
+
         std::string oldCwd = this->m_cwd;
         this->m_cwd = std::filesystem::absolute(filepath).parent_path();
 
         sol::object newScene = this->ScriptFile(filepath);        
         if (!newScene.is<std::shared_ptr<Scene>>())
         {
-            VOLUND_WARNING("New lua scene handle does not point to a scene");
+            VOLUND_LOG_LOADING_FAIL("scene", filepath, "invalid object type");
             this->m_cwd = oldCwd;
             return nullptr;
         }
 
         this->m_scene = newScene;
         this->m_sceneFilepath = filepath;
+
+        VOLUND_LOG_LOADING_SUCCESS("scene", filepath);
         return this->m_scene.as<std::shared_ptr<Scene>>();
     }
 
     void LuaState::SaveScene(std::string const& filepath)
     {
+        VOLUND_INFO("Saving scene to '{}'", filepath);
+
         std::unordered_map<Shader*, std::string> shaders;
         std::unordered_map<Texture*, std::string> textures;
         std::unordered_map<Mesh*, std::string> meshes;
         std::unordered_map<Material*, std::string> materials;
+        std::unordered_map<AudioBuffer*, std::string> audioBuffers;
 
         std::string assetSection;
         std::string entitySection;
@@ -91,6 +98,12 @@ namespace Volund
                 std::shared_ptr<Mesh> mesh = object.as<std::shared_ptr<Mesh>>();
                 meshes[mesh.get()] = string;
                 assetSection += string + " = Mesh.new(\"" + this->RelativePath(mesh->GetFilepath()) + "\")\n";
+            }
+            else if (object.is<std::shared_ptr<AudioBuffer>>())
+            {
+                std::shared_ptr<AudioBuffer> audioBuffer = object.as<std::shared_ptr<AudioBuffer>>();
+                audioBuffers[audioBuffer.get()] = string;
+                assetSection += string + " = AudioBuffer.new(\"" + this->RelativePath(audioBuffer->GetFilepath()) + "\")\n";
             }
         }
 
@@ -163,14 +176,88 @@ namespace Volund
 
         std::shared_ptr<Scene> scene = this->SceneRef();
 
-        for (auto& entry : (*scene))
+        for (auto& entityEntry : (*scene))
         {
-            std::string key = "e" + std::to_string(entry.entity);
+            std::string key = "e" + std::to_string(entityEntry.Get());
             entitySection += key + " = " + "scene:register()\n";
+
+            for (auto& componentEntry : entityEntry)
+            {
+                if (componentEntry.Is<Camera>())
+                {
+                    std::shared_ptr<Camera> camera = componentEntry.As<Camera>();
+                    entitySection += "scene:add_camera(" + key + ", " +
+                        std::to_string(camera->fov) + ", " +
+                        std::to_string(camera->nearPlane) + ", " +
+                        std::to_string(camera->farPlane) + ")\n";
+                }
+                else if (componentEntry.Is<CameraMovement>())
+                {
+                    std::shared_ptr<CameraMovement> cameraMovement = componentEntry.As<CameraMovement>();
+                    entitySection += "scene:add_camera_movement(" + key + ", " +
+                        std::to_string(cameraMovement->speed) + ", " +
+                        std::to_string(cameraMovement->sensitivity) + ")\n";
+                }
+                else if (componentEntry.Is<MeshRenderer>())
+                {
+                    std::shared_ptr<MeshRenderer> meshRenderer = componentEntry.As<MeshRenderer>();
+
+                    std::string meshKey = meshes[meshRenderer->GetMesh().get()];
+                    std::string materialKey = materials[meshRenderer->GetMaterial().get()];
+
+                    entitySection += "scene:add_mesh_renderer(" + key + ", " +
+                        meshKey + ", " +
+                        materialKey + ")\n";
+                }
+                else if (componentEntry.Is<PointLight>())
+                {
+                    std::shared_ptr<PointLight> pointLight = componentEntry.As<PointLight>();
+
+                    entitySection += "scene:add_point_light(" + key + ", Vec3.new(" +
+                        std::to_string(pointLight->color.r) + ", " +  std::to_string(pointLight->color.g) + ", " +  std::to_string(pointLight->color.b) + "), " +
+                        std::to_string(pointLight->brightness) + ")\n";
+                }
+                else if (componentEntry.Is<SoundListener>())
+                {
+                    entitySection += "scene:add_sound_listener(" + key + ")\n";
+                }
+                else if (componentEntry.Is<SoundSource>())
+                {
+                    std::shared_ptr<SoundSource> soundSource = componentEntry.As<SoundSource>();
+
+                    std::string audioBufferKey = audioBuffers[soundSource->GetBuffer().get()];
+
+                    entitySection += "scene:add_sound_source(" + key + ", " + audioBufferKey + ")\n";
+                }
+                else if (componentEntry.Is<Tag>())
+                {
+                    std::shared_ptr<Tag> tag = componentEntry.As<Tag>();
+
+                    entitySection += "scene:add_tag(" + key + ", \"" + tag->string + "\")\n";
+                }
+                else if (componentEntry.Is<Transform>())
+                {
+                    std::shared_ptr<Transform> transform = componentEntry.As<Transform>();
+
+                    Vec3 rotation = transform->GetRotation();
+
+                    entitySection += "scene:add_transform(" + key + ", Vec3.new(" +
+                        std::to_string(transform->pos.x) + ", " +  std::to_string(transform->pos.y) + ", " +  std::to_string(transform->pos.z) + "), Vec3.new(" +
+                        std::to_string(rotation.x) + ", " +  std::to_string(rotation.y) + ", " +  std::to_string(rotation.z) + "), Vec3.new(" +
+                        std::to_string(transform->scale.x) + ", " +  std::to_string(transform->scale.y) + ", " +  std::to_string(transform->scale.z) + "))\n";
+
+                }
+            }
         }
 
         std::ofstream file;
-        file.open("/home/kai/Documents/GitHub/Volund/test.lua");
+        file.open(filepath);
+        if (!file)
+        {
+            VOLUND_WARNING("Failed to save scene '{}' - failed to open file", filepath);
+            return;
+        }
+
         file << "scene = Scene.new()\n";
         file << "--- Assets ---\n";
         file << assetSection;
@@ -178,6 +265,8 @@ namespace Volund
         file << entitySection;
         file << "return scene\n";
         file.close();
+
+        VOLUND_INFO("Successfully saved scene '{}'", filepath);
     }
 
     std::string LuaState::AbsolutePath(std::string const& relativePath)
