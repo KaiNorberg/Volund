@@ -1,5 +1,7 @@
 #include "Output.h"
 
+#include "Utils.h"
+
 #include <imgui.h>
 
 void Output::OnProcedure(const VL::Event& e)

@@ -1,6 +1,6 @@
 #include "Logger.h"
 
-#include "Dialog/Dialog.h"
+#include "Dialog.h"
 
 namespace Volund
 {

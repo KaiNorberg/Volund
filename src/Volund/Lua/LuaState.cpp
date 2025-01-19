@@ -1,8 +1,8 @@
-#include "LuaState.h"
+#include "Lua/LuaState.h"
 
 #include <filesystem>
 
-#include "Scene/Component/Components.h"
+#include "Component/Components.h"
 
 namespace Volund
 {
