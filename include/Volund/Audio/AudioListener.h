@@ -13,7 +13,6 @@ namespace Volund
         void SetPosition(const Vec3& position);
         void SetOrientation(const Vec3& front, const Vec3& up);
         void SetVelocity(const Vec3& velocity);
-
         AudioListener();
         ~AudioListener();
     private:

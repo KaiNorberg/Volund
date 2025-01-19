@@ -17,12 +17,10 @@ namespace Volund
         void Submit(Func&& func, Args&&... args);
         bool Busy();
         uint8_t GetActiveWorkerCount();
-
         ThreadPool(uint8_t threadCount);
         ~ThreadPool();
     private:
         void Loop();
-
         bool m_shouldTerminate = false;
         uint8_t m_activeWorkerCount = 0;
         std::queue<Task> m_taskQueue;

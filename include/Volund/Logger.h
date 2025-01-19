@@ -49,39 +49,25 @@ namespace Volund
     class Logger
     {
     public:
-
         static Logger& GetCoreLogger();
         static Logger& GetClientLogger();
-
         template<typename... Args>
         uint64_t Log(LogSeverity severity, const char* format, Args&&... args);
-
         uint64_t Log(LogSeverity severity, const char* format);
-
         void UpdateLine(uint64_t lineId, const char* format);
-
         std::vector<LogLine>::iterator begin();
         std::vector<LogLine>::iterator end();
-
         Logger(std::string const& name);
-
     private:
-
         template<typename... Args>
         std::string FormatString(LogSeverity severity, const char* format, Args&&... args);
-
         uint64_t Print(LogSeverity severity, std::string const& string);
-
         static void UpdateConsole();
-
         static uint64_t FindLine(uint64_t lineId);
-
         static Logger m_coreLogger;
         static Logger m_clientLogger;
-
         static inline std::vector<LogLine> m_lines;
         static inline uint64_t m_newLineId;
-
         std::string m_name;
     };
 

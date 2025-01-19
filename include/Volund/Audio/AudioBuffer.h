@@ -12,7 +12,6 @@ namespace Volund
     {
     public:
         uint32_t GetBuffer() const;
-
         AudioBuffer(std::string const& filepath);
         ~AudioBuffer();
     private:

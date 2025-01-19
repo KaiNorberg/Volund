@@ -7,20 +7,14 @@ namespace Volund
     class MaterialBlueprint
     {
     public:
-
         template<typename T>
         void Insert(std::string const& name);
-
         template<typename T>
         bool Contains(std::string const& name);
-
         bool Contains(std::string const& name);
-
         const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator begin() const;
         const std::vector<std::shared_ptr<PrimitiveUniform>>::const_iterator end() const;
-
     private:
-
         std::vector<std::shared_ptr<PrimitiveUniform>> m_uniforms;
     };
 

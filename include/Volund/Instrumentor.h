@@ -9,33 +9,22 @@ namespace Volund
     struct InstrumentorNode
     {
         std::string Name;
-
         std::chrono::time_point<std::chrono::steady_clock> Start;
         std::chrono::time_point<std::chrono::steady_clock> End;
-
         std::shared_ptr<InstrumentorNode> Parent;
-
         std::vector<std::shared_ptr<InstrumentorNode>> Children;
-
         std::string FormatTime();
-
         std::string FormatName();
-
         std::string Serialize(int Depth);
     };
 
     class InstrumentorTimer
     {
     public:
-
         InstrumentorTimer(std::string const& Name);
-
         ~InstrumentorTimer();
-
     private:
-
         friend class Instrumentor;
-
         std::shared_ptr<InstrumentorNode> _Node;
     };
 
@@ -43,15 +32,10 @@ namespace Volund
     {
     public:
     private:
-
         friend class InstrumentorTimer;
-
         Instrumentor();
-
         ~Instrumentor();
-
         static inline std::shared_ptr<InstrumentorNode> FirstNode;
-
         static inline std::shared_ptr<InstrumentorNode> CurrentNode;
     };
 }

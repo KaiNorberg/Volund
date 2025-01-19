@@ -29,10 +29,8 @@ namespace Volund
         {
             size_t TypeId = 0;
             std::shared_ptr<Component> component;
-
             template<typename T>
             bool Is();
-
             template<typename T>
             std::shared_ptr<T> As();
         };
@@ -41,7 +39,6 @@ namespace Volund
         {
             Entity entity;
             std::vector<ComponentEntry> Components;
-
             std::vector<ComponentEntry>::iterator begin();
             std::vector<ComponentEntry>::iterator end();
         };

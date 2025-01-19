@@ -67,8 +67,8 @@ namespace Volund
     struct Event
     {
         uint32_t type;
-
-        uint32_t args[2] = {0, 0};
+        uint32_t args[2] = {0, 0
+    };
 
         Event(uint32_t t) { this->type = t; }
     };

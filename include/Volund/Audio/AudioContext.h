@@ -16,7 +16,6 @@ namespace Volund
     public:
         ALCcontext* GetContext() const;
         void MakeCurrent();
-
         AudioContext(const AudioDevice& device);
         AudioContext(std::shared_ptr<AudioDevice> device);
         ~AudioContext();

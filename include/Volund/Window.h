@@ -21,13 +21,9 @@ namespace Volund
     {
         uint64_t Width = 0;
         uint64_t Height = 0;
-
         GLFWwindow* GlfwWindow = nullptr;
-
         bool IsCursorEnabled = true;
-
         std::shared_ptr<Dispatcher> EventDispatcher;
-
         std::vector<GLFWwindowfocusfun> WindowFocusCallbacks;
         std::vector<GLFWcursorenterfun> CursorEnterCallbacks;
         std::vector<GLFWwindowclosefun> WindowCloseCallbacks;
@@ -42,27 +38,16 @@ namespace Volund
     class Window
     {
     public:
-
         void Update();
-
         GLFWwindow* GetGlfwWindow();
-
         void SetCursorEnabled(bool enabled);
-
         bool IsCursorEnabled();
-
         void SetTitle(std::string const& title);
-
         void SetVsync(bool enabled);
-
         Vec2 GetSize();
-
         float GetAspectRatio();
-
         void Flush();
-
         void SetIcon(std::string const& filepath);
-
         void ConnectWindowFocusCallback(GLFWwindowfocusfun callback);
         void ConnectCursorEnterCallback(GLFWcursorenterfun callback);
         void ConnectWindowCloseCallback(GLFWwindowclosefun callback);
@@ -72,13 +57,9 @@ namespace Volund
         void ConnectMouseButtonCallback(GLFWmousebuttonfun callback);
         void ConnectScrollCallback(GLFWscrollfun callback);
         void ConnectCharCallback(GLFWcharfun callback);
-
         Window(std::shared_ptr<Dispatcher> Dispatcher, uint64_t width, uint64_t height, bool fullScreen);
-
         ~Window();
-
     private:
-
         std::shared_ptr<WindowData> m_windowData;
     };
 }

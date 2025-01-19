@@ -49,6 +49,17 @@ namespace Volund
         return this->m_scene.as<std::shared_ptr<Scene>>();
     }
 
+    void LuaState::SaveScene(std::string const& filepath)
+    {
+        std::vector<std::shared_ptr<Shader>> shaders;
+        std::vector<std::shared_ptr<Texture>> textures;
+        std::vector<std::shared_ptr<Mesh>> meshes;
+        std::vector<std::shared_ptr<Material>> materials;
+
+        std::string assetSection;
+        std::string entitySection;
+    }
+
     std::string LuaState::ParseFilepath(std::string const& filepath)
     {
         if (ResourceLibrary::IsResource(filepath))
@@ -193,7 +204,6 @@ namespace Volund
 
         this->m_state.new_usertype<Texture>("Texture", 
             "new", sol::overload(
-                []() { return Texture::Create(); },
                 [this](std::string const& filepath) { return Texture::Create(this->ParseFilepath(filepath)); },
                 [](uint32_t width, uint32_t height, sol::table imageData) 
                 {

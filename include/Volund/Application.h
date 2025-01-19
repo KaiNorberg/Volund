@@ -15,27 +15,21 @@ namespace Volund
     public:
         void Run();
         bool ShouldRun() const;
-
         std::shared_ptr<Window> GetWindow();
         std::shared_ptr<Dispatcher> GetDispatcher();
-
         template <typename T, typename... Args>
         std::shared_ptr<T> AttachModule(Args&&... args);
         template<typename T>
         std::shared_ptr<T> GetModule();
         template<typename T>
         bool HasModule();
-
         virtual void Procedure(const Event& e) {}
-
         Application();
         virtual ~Application();
     private:
         friend class Dispatcher;
-
         void Loop();
         void EventCallback(const Event& e);
-
         bool m_shouldRun = true;
         std::shared_ptr<Window> m_window;
         std::shared_ptr<Dispatcher> m_dispatcher;

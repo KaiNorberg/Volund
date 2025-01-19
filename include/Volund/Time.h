@@ -13,30 +13,20 @@ namespace Volund
     class Timer
     {
     public:
-
         Timer();
-
         ~Timer();
-
     private:
-
         CHRONO_TIME_POINT m_start;
     };
 
     class TimeStep
     {
     public:
-
         TimeStep(double step = 0.0);
-
         operator double() const;
-
         double GetSeconds() const;
-
         double GetMilliseconds() const;
-
     private:
-
         double m_step = 0.0f;
     };
 }

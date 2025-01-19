@@ -12,20 +12,15 @@ namespace Volund
     class ForwardRenderer : public Renderer
     {
     public:
-
         void Begin() override;
-
         void End() override;
-
         static std::shared_ptr<ForwardRenderer> Create();
-
     private:
-
         struct alignas(16) CameraBuffer
         {
-            Mat4x4 ViewMatrix = Mat4x4(1.0f);
-            Mat4x4 ProjectionMatrix = Mat4x4(1.0f);
-        };
+        Mat4x4 ViewMatrix = Mat4x4(1.0f);
+        Mat4x4 ProjectionMatrix = Mat4x4(1.0f);
+    };
 
 
         struct alignas(16) LightsBuffer

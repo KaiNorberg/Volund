@@ -8,13 +8,9 @@ namespace Volund
     class EffectVolume : public Component
     {
     public:
-
         void Procedure(const Event& e);
-
     private:
-
         std::vector<Shader> m_postEffects;
         std::vector<Shader> m_preEffects;
-
     };
 }

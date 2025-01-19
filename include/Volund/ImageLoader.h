@@ -12,9 +12,7 @@ namespace Volund
         int32_t GetHeight() const;
         int32_t GetChannels() const;
         unsigned char* GetData() const;
-
         void Load(std::string const& filepath);
-
         ImageLoader() = default;
         ImageLoader(std::string const& filepath);
         ~ImageLoader();

@@ -18,7 +18,7 @@ namespace Volund
 		glUseProgram(this->m_id);
 	}
 
-	uint32_t OpenGLShader::GetId()
+	uint32_t OpenGLShader::GetId() const
 	{
 		return this->m_id;
 	}
@@ -119,54 +119,6 @@ namespace Volund
 		this->m_nextTextureUnit++;
 	}
 
-	void OpenGLShader::Init(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
-	{
-		this->m_materialBlueprint = materialBlueprint;
-
-		uint32_t program = glCreateProgram();
-
-		uint32_t vs = 0;
-		if (source[(int)ShaderSourceType::Vertex].length() > 1)
-		{
-			vs = CompileShader(GL_VERTEX_SHADER, source[(int)ShaderSourceType::Vertex].data());
-			glAttachShader(program, vs);
-		}
-
-		uint32_t fs = 0;
-		if (source[(int)ShaderSourceType::Fragment].length() > 1)
-		{
-			fs = CompileShader(GL_FRAGMENT_SHADER, source[(int)ShaderSourceType::Fragment].data());
-			glAttachShader(program, fs);
-		}
-
-		uint32_t gs = 0;
-		if (source[(int)ShaderSourceType::Geometry].length() > 1)
-		{
-			gs = CompileShader(GL_GEOMETRY_SHADER, source[(int)ShaderSourceType::Geometry].data());
-			glAttachShader(program, gs);
-		}
-
-		glLinkProgram(program);
-		glValidateProgram(program);
-
-		if (vs != 0)
-		{
-			glDeleteShader(vs);
-		}
-
-		if (fs != 0)
-		{
-			glDeleteShader(fs);
-		}
-
-		if (gs != 0)
-		{
-			glDeleteShader(gs);
-		}
-
-		this->m_id = program;
-	}
-
 	uint32_t OpenGLShader::CompileShader(uint32_t type, std::string const& source)
 	{
 		uint32_t id = glCreateShader(type);
@@ -209,16 +161,67 @@ namespace Volund
 		return uniformLocation;
 	}
 
-	const std::shared_ptr<MaterialBlueprint> OpenGLShader::GetMaterialBlueprint()
+	const std::shared_ptr<MaterialBlueprint> OpenGLShader::GetMaterialBlueprint() const
 	{
 		return this->m_materialBlueprint;
 	}
 
-	OpenGLShader::OpenGLShader(const ShaderSource& source, std::shared_ptr<MaterialBlueprint> materialBlueprint)
+	std::string OpenGLShader::GetFilepath() const
 	{
-		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->m_maxTextureUnit);
+		return this->m_filepath;
+	}
 
-		this->Init(source, materialBlueprint);
+	OpenGLShader::OpenGLShader(std::string const& filepath)
+	{		
+        VOLUND_INFO("Loading Shader (%s)... ", filepath.c_str());
+		ShaderLoader loader = ShaderLoader(filepath);
+		auto source = loader.GetSource();
+		this->m_materialBlueprint = loader.GetBlueprint();
+		this->m_filepath = filepath;
+
+		glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &this->m_maxTextureUnit);
+		uint32_t program = glCreateProgram();
+
+		uint32_t vs = 0;
+		if (source[(int)ShaderSourceType::Vertex].length() > 1)
+		{
+			vs = CompileShader(GL_VERTEX_SHADER, source[(int)ShaderSourceType::Vertex].data());
+			glAttachShader(program, vs);
+		}
+
+		uint32_t fs = 0;
+		if (source[(int)ShaderSourceType::Fragment].length() > 1)
+		{
+			fs = CompileShader(GL_FRAGMENT_SHADER, source[(int)ShaderSourceType::Fragment].data());
+			glAttachShader(program, fs);
+		}
+
+		uint32_t gs = 0;
+		if (source[(int)ShaderSourceType::Geometry].length() > 1)
+		{
+			gs = CompileShader(GL_GEOMETRY_SHADER, source[(int)ShaderSourceType::Geometry].data());
+			glAttachShader(program, gs);
+		}
+
+		glLinkProgram(program);
+		glValidateProgram(program);
+
+		if (vs != 0)
+		{
+			glDeleteShader(vs);
+		}
+
+		if (fs != 0)
+		{
+			glDeleteShader(fs);
+		}
+
+		if (gs != 0)
+		{
+			glDeleteShader(gs);
+		}
+
+		this->m_id = program;
 	}
 
 	OpenGLShader::~OpenGLShader()

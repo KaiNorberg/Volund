@@ -7,34 +7,39 @@
 
 namespace Volund
 {
-	std::shared_ptr<Texture> Texture::Create()
-	{
+	std::shared_ptr<Texture> Texture::Create(std::string const& filepath)
+	{		
 		switch (RenderingAPI::GetSelectedAPI())
 		{
 		case GraphicsAPI::OpenGL:
 		{
-			return std::make_shared<OpenGLTexture>();
+			return std::make_shared<OpenGLTexture>(filepath);
 		}
 		break;
 		default:
 		{
-			VOLUND_ERROR("Creating a Texture2D without a specified GraphicsAPI!");
+			VOLUND_ERROR("Creating a Texture without a specified GraphicsAPI!");
 			return nullptr;
 		}
 		break;
 		}
 	}
 
-	std::shared_ptr<Texture> Texture::Create(std::string const& filepath)
-	{
-		ImageLoader loader = ImageLoader(filepath);
-		return Texture::Create(loader.GetData(), loader.GetWidth(), loader.GetHeight());
-	}
-
 	std::shared_ptr<Texture> Texture::Create(unsigned char* data, uint32_t width, uint32_t height)
-	{
-		auto texture = Texture::Create();
-		texture->SetData(data, width, height);
-		return texture;
+	{		
+		switch (RenderingAPI::GetSelectedAPI())
+		{
+		case GraphicsAPI::OpenGL:
+		{
+			return std::make_shared<OpenGLTexture>(data, width, height);
+		}
+		break;
+		default:
+		{
+			VOLUND_ERROR("Creating a Texture without a specified GraphicsAPI!");
+			return nullptr;
+		}
+		break;
+		}
 	}
 }

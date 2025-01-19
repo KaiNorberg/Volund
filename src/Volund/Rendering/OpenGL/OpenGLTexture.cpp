@@ -8,7 +8,12 @@
 
 namespace Volund
 {
-	uint32_t OpenGLTexture::GetID() const
+	std::string OpenGLTexture::GetFilepath() const
+	{
+		return this->m_filepath;
+	}
+
+    uint32_t OpenGLTexture::GetID() const
 	{
 		return this->m_id;
 	}
@@ -34,6 +39,11 @@ namespace Volund
 		this->m_width = width;
 		this->m_height = height;
 
+		if (this->m_id != 0)
+		{
+			glDeleteTextures(1, &this->m_id);
+		}
+
 		glCreateTextures(GL_TEXTURE_2D, 1, &this->m_id);
 		glBindTexture(GL_TEXTURE_2D, this->m_id);
 
@@ -46,10 +56,17 @@ namespace Volund
 		glTextureParameteri(this->m_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	}
 
-	OpenGLTexture::OpenGLTexture()
-	{
+    OpenGLTexture::OpenGLTexture(std::string const& filepath)
+    {
+		this->m_filepath = filepath;
+		ImageLoader loader = ImageLoader(filepath);
+		this->SetData(loader.GetData(), loader.GetWidth(), loader.GetHeight());
+    }
 
-	}
+    OpenGLTexture::OpenGLTexture(unsigned char* data, uint32_t width, uint32_t height)
+    {
+		this->SetData(data, width, height);
+    }
 
 	OpenGLTexture::~OpenGLTexture()
 	{

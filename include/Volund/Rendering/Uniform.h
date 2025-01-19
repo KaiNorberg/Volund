@@ -28,30 +28,19 @@ namespace Volund
     class PrimitiveUniform
     {
     public:
-
         template<typename T>
         bool Is() const;
-
         template<typename T>
         T& As();
-
         template<typename T>
         void Set(const T& value);
-
         std::string GetName() const;
-
         virtual uint64_t GetTypeId() const = 0;
-
         virtual void UpdateShader(std::shared_ptr<Shader> shader) = 0;
-
         PrimitiveUniform() = default;
-
         virtual ~PrimitiveUniform() = default;
-
     protected:
-
         std::string m_name;
-
     private:
     };
 
@@ -59,21 +48,13 @@ namespace Volund
     class Uniform : public PrimitiveUniform
     {
     public:
-
         T& Get();
-
         void Set(const T& value);
-
         uint64_t GetTypeId() const override;
-
         void UpdateShader(std::shared_ptr<Shader> shader) override;
-
         static std::shared_ptr<Uniform<T>> Create(std::string const& name, const T& value);
-
     private:
-
         Uniform(std::string const& name, const T& value);
-
         T m_value;
     };
 }

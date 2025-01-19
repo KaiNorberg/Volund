@@ -26,21 +26,13 @@ namespace Volund
     class VertexAttribute
     {
     public:
-
         uint32_t GetDataType() const;
-
         uint32_t GetByteSize() const;
-
         uint32_t GetElementCount() const;
-
         std::string GetName() const;
-
         VertexAttribute(VertexAttributeType type, std::string name = "");
-
     private:
-
         std::string m_name;
-
         VertexAttributeType m_type;
     };
 

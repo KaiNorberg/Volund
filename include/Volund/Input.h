@@ -25,19 +25,16 @@ namespace Volund
     public:
         bool IsHeld(uint16_t keyCode) const;
         bool IsPressed(uint16_t keyCode);
-
         bool IsMouseButtonHeld(uint16_t button) const;
         bool IsMouseButtonPressed(uint16_t button);
-
         float GetScrollPosition() const;
         IVec2 GetMousePosition() const;
-
         void Procedure(const Event& e);
     private:
         IVec2 m_mousePosition = IVec2(0);
         float m_scrollPosition = 0.0f;
-
-        bool m_mouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT] = {0};
+        bool m_mouseButtons[VOLUND_MOUSE_BUTTON_AMOUNT] = {0
+    };
         bool m_keys[VOLUND_KEY_AMOUNT] = {0};
     };
 }

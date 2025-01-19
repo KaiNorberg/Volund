@@ -17,21 +17,13 @@ namespace Volund
     class ShaderLoader
     {
     public:
-
         ShaderSource GetSource();
-
         std::shared_ptr<MaterialBlueprint> GetBlueprint();
-
         void Load(std::string const& filepath);
-
         ShaderLoader();
-
         ShaderLoader(std::string const& filepath);
-
     private:
-
         ShaderSource m_source;
-
         std::shared_ptr<MaterialBlueprint> m_materialBlueprint;
     };
 }

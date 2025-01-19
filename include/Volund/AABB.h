@@ -11,9 +11,7 @@ namespace Volund
     public:
         Vec3 Min;
         Vec3 Max;
-
         AABB ToWorldSpace(const Mat4x4& modelMatrix);
-
         AABB() = default;
         AABB(const float points[], const uint32_t count);
         AABB(const std::vector<float>& points);
