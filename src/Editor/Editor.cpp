@@ -101,7 +101,8 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_CMD_LOAD_SCENE:
 	{
-		const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
+		//const std::string filepath = VL::Dialog::OpenFile(this->GetWindow());
+		const std::string filepath = "/home/kai/Documents/GitHub/Volund/examples/Simple/simple.scene.lua";
 		if (this->m_context->state->LoadScene(filepath) != nullptr)
 		{
 			this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
@@ -110,7 +111,7 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_CMD_SAVE_SCENE:
 	{
-		//scene->SaveScene();
+		this->m_context->state->SaveScene(".");
 	}
 	break;
 	case EDITOR_CMD_NEW_SCENE:

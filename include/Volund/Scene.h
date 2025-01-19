@@ -38,7 +38,7 @@ namespace Volund
         struct EntityEntry
         {
             Entity entity;
-            std::vector<ComponentEntry> Components;
+            std::vector<ComponentEntry> components;
             std::vector<ComponentEntry>::iterator begin();
             std::vector<ComponentEntry>::iterator end();
         };
@@ -121,9 +121,9 @@ namespace Volund
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
-        auto insertPos = UpperBound(entry.Components, componentTypeId);
+        auto insertPos = UpperBound(entry.components, componentTypeId);
         ComponentEntry newEntry = ComponentEntry(Utils::GetTypeId<T>(), newComponent);
-        entry.Components.insert(insertPos, newEntry);
+        entry.components.insert(insertPos, newEntry);
 
         return newComponent;
     }
@@ -143,11 +143,11 @@ namespace Volund
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
-        auto componentEntry = LowerBound(entry.Components, componentTypeId) + index;
+        auto componentEntry = LowerBound(entry.components, componentTypeId) + index;
 
-        if (componentEntry < entry.Components.end() && (*componentEntry).TypeId == componentTypeId)
+        if (componentEntry < entry.components.end() && (*componentEntry).TypeId == componentTypeId)
         {
-            entry.Components.erase(componentEntry);
+            entry.components.erase(componentEntry);
         }
         else
         {
@@ -170,9 +170,9 @@ namespace Volund
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
-        auto componentEntry = LowerBound(entry.Components, componentTypeId) + index;
+        auto componentEntry = LowerBound(entry.components, componentTypeId) + index;
 
-        return componentEntry < entry.Components.end() && (*componentEntry).TypeId == componentTypeId;
+        return componentEntry < entry.components.end() && (*componentEntry).TypeId == componentTypeId;
     }
 
     template<typename T>
@@ -190,8 +190,8 @@ namespace Volund
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
-        auto lower = LowerBound(entry.Components, componentTypeId);
-        auto upper = UpperBound(entry.Components, componentTypeId);
+        auto lower = LowerBound(entry.components, componentTypeId);
+        auto upper = UpperBound(entry.components, componentTypeId);
 
         return upper - lower;
     }
@@ -211,9 +211,9 @@ namespace Volund
 
         size_t componentTypeId = Utils::GetTypeId<T>();
 
-        auto componentEntry = LowerBound(entry.Components, componentTypeId) + index;
+        auto componentEntry = LowerBound(entry.components, componentTypeId) + index;
 
-        if (componentEntry < entry.Components.end() && (*componentEntry).TypeId == componentTypeId)
+        if (componentEntry < entry.components.end() && (*componentEntry).TypeId == componentTypeId)
         {
             return (*componentEntry).As<T>();
         }

@@ -34,7 +34,7 @@ namespace Volund
 			stbi_image_free(this->m_data);
 		}
 
-		stbi_set_flip_vertically_on_load(true);
+		stbi_set_flip_vertically_on_load(this->m_flip);
 		this->m_data = stbi_load(filepath.c_str(), &this->m_width, &this->m_height, &this->m_channels, 4);
 
 		if (this->m_data == nullptr)
@@ -43,8 +43,9 @@ namespace Volund
 		}
 	}
 
-	ImageLoader::ImageLoader(std::string const& filepath)
+	ImageLoader::ImageLoader(std::string const& filepath, bool flip)
 	{
+		this->m_flip = flip;
 		this->Load(filepath);
 	}
 

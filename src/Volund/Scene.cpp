@@ -9,12 +9,12 @@ namespace Volund
 {
 	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::begin()
 	{
-		return this->Components.begin();
+		return this->components.begin();
 	}
 
 	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::end()
 	{
-		return this->Components.end();
+		return this->components.end();
 	}
 
 	CHRONO_TIME_POINT Scene::GetStartTime()
@@ -54,7 +54,7 @@ namespace Volund
 		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
 
 		this->m_entityHeap[entityIndex].entity = VOLUND_ENTITY_NULL;
-		this->m_entityHeap[entityIndex].Components.clear();
+		this->m_entityHeap[entityIndex].components.clear();
 		m_freeEntries.push_back(entityIndex);
 
 		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().entity == VOLUND_ENTITY_NULL)
