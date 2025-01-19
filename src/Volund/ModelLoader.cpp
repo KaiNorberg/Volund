@@ -36,8 +36,6 @@ namespace Volund
 		return this->m_valid;
 	}
 
-	int f = 0;
-
 	void ModelLoader::ParseOBJ(std::string const& content)
 	{
 		this->m_valid = true;
