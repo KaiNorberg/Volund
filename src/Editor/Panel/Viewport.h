@@ -20,7 +20,7 @@ public:
 
 private:
 
-    void UpdateCameraMovement(float timeStep, bool isWindowHovered);
+    void UpdateCameraMovement(float timeStep, bool isWindowHovered, bool force = false);
 
     void Render(std::shared_ptr<VL::Scene> scene, ImVec2 viewportSize);
 

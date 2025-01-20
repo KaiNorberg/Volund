@@ -49,19 +49,19 @@ void Inspector::OnProcedure(const VL::Event& e)
 
 		this->ImGuiComponent<VL::MeshRenderer>("MeshRenderer", selectedEntity, [this, selectedEntity, scene](int i)
 		{
-			/*auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
+			auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
 
-			std::string materialPath = scene->FetchFilepath<VL::Material>(meshRenderer->GetMaterial());
-			if (ImGuiFile("Material", materialPath))
+			std::string materialKey = this->m_context->state->GetKey(meshRenderer->GetMaterial());
+			if (ImGuiAsset("Material", materialKey))
 			{
-				meshRenderer->SetMaterial(scene->FetchAsset<VL::Material>(materialPath));
+
 			}
 
-			std::string meshPath = scene->FetchFilepath<VL::Mesh>(meshRenderer->GetMesh());
-			if (ImGuiFile("Mesh", meshPath))
+			std::string meshKey = this->m_context->state->GetKey(meshRenderer->GetMesh());
+			if (ImGuiAsset("Mesh", meshKey))
 			{
-				meshRenderer->SetMesh(scene->FetchAsset<VL::Mesh>(meshPath));
-			}*/
+
+			}
 		});
 
 		this->ImGuiComponent<VL::Camera>("Camera", selectedEntity, [this, selectedEntity, scene](int i)

@@ -154,7 +154,7 @@ namespace Volund
 
         auto componentEntry = LowerBound(entry.m_components, componentTypeId) + index;
 
-        if (componentEntry < entry.m_components.end() && componentEntry->m_typeId == componentTypeId)
+        if (componentEntry != entry.m_components.end() && componentEntry->m_typeId == componentTypeId)
         {
             entry.m_components.erase(componentEntry);
         }
@@ -222,7 +222,7 @@ namespace Volund
 
         auto componentEntry = LowerBound(entry.m_components, componentTypeId) + index;
 
-        if (componentEntry < entry.m_components.end() && componentEntry->m_typeId == componentTypeId)
+        if (componentEntry != entry.m_components.end() && componentEntry->m_typeId == componentTypeId)
         {
             return componentEntry->As<T>();
         }

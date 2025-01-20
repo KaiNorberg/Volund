@@ -46,18 +46,6 @@ void Explorer::OnProcedure(const VL::Event& e)
 				}
 
 				//TODO: Reimplement this
-				if (ImGui::MenuItem("Material"))
-				{
-					/*std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_cwd / "New.material.lua");
-
-					VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_MATERIAL);
-					serializer.StartTable();
-					serializer.Insert("", "://Simple.shader");
-					serializer.EndTable();
-					serializer.WriteToFile(filepath.string());*/
-
-					ImGui::CloseCurrentPopup();
-				}
 				if (ImGui::MenuItem("Scene"))
 				{
 					/*std::filesystem::path filepath = VL::Utils::GenerateUniquePath(this->m_cwd / "New.scene.lua");
@@ -215,7 +203,7 @@ void Explorer::ImGuiFilesystemEntry(std::string const& payloadPath, std::string 
 		ImGui::OpenPopup("File manip");
 	}
 
-	if (ImGui::BeginPopup("File manip"))
+	if (!payloadPath.empty() && !VL::ResourceLibrary::IsResource(payloadPath) && ImGui::BeginPopup("File manip"))
 	{
 		if (isDirectory)
 		{

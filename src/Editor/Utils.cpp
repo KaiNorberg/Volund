@@ -66,9 +66,40 @@ bool ImGuiFile(std::string const& name, std::string& out)
 		if (payload != nullptr)
 		{
 			const char* path = (const char*)payload->Data;
-
 			out = path;
+			outChanged = true;
+		}
 
+		ImGui::EndDragDropTarget();
+	}
+
+	ImGuiEndCombo();
+
+	return outChanged;
+}
+
+bool ImGuiAsset(std::string const& name, std::string& out)
+{
+	bool outChanged = false;
+
+	ImGuiStartCombo();
+
+	ImGuiColoredText(name.c_str());
+	ImGuiNextColumn();
+
+	float LineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
+	ImVec2 ButtonSize(-FLT_MIN, LineHeight);
+
+	ImGui::Button((out.empty() ? (std::string)"Drag an asset here" : out).c_str(), ButtonSize);
+
+	if (ImGui::BeginDragDropTarget())
+	{
+		const ImGuiPayload* payload = ImGui::AcceptDragDropPayload(IMGUI_DRAG_DROP_ASSET);
+
+		if (payload != nullptr)
+		{
+			const char* newKey = (const char*)payload->Data;
+			out = newKey;
 			outChanged = true;
 		}
 

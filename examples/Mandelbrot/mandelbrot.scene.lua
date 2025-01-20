@@ -1,44 +1,20 @@
-local table =
-{
-	FileType = "Scene",
-	Data = 
-	{
-		{
-			{
-				ComponentType = 6,
-				String = "Mandelbrot"
-			},
-			{
-				ComponentType = 7,
-				Position = Vec3:new(0.000000, 1.000000, 0.000000),
-				Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
-				Scale = Vec3:new(1.000000, 1.000000, 1.000000)
-			},
-			{
-				ComponentType = 3,
-				Mesh = "://Quad.obj",
-				Material = "Materials/Mandelbrot.mat.lua"
-			}
-		},
-		{
-			{
-				ComponentType = 6,
-				String = "Camera"
-			},
-			{
-				ComponentType = 7,
-				Position = Vec3:new(0.000000, 1.000000, 0.500000),
-				Rotation = Vec3:new(0.000000, -0.000000, 0.000000),
-				Scale = Vec3:new(1.000000, 1.000000, 1.000000)
-			},
-			{
-				ComponentType = 1,
-				FOV = 80.000000,
-				NearPlane = 0.100000,
-				FarPlane = 100.000000
-			}
-		}
-	}
-}
+scene = Scene.new()
 
-return table
+quadMesh = Mesh.new("://Quad.obj")
+mandelbrotShader = Shader.new("Shaders/Mandelbrot.shader")
+mandelbrotMaterial = Material.new(mandelbrotShader)
+mandelbrotMaterial:set_int("MaxIterations", 1000)
+mandelbrotMaterial:set_vec2("Position", Vec2.new(0.5, 0.0))
+mandelbrotMaterial:set_float("Scale", 0.2)
+mandelbrotMaterial:set_int("Julia", 0)
+mandelbrotMaterial:set_float("JuliaC", 0.5)
+
+mandelbrot = scene:register()
+scene:add_transform(mandelbrot, Vec3.new(0.0, 1.0, 0.0), Vec3.new(0.0, 0.0, 0.0), Vec3.new(1.0))
+scene:add_mesh_renderer(mandelbrot, quadMesh, mandelbrotMaterial)
+
+camera = scene:register();
+scene:add_transform(camera, Vec3.new(0.0, 1.0, 0.5), Vec3.new(0.0, 0.0, 0.0), Vec3.new(1.0))
+scene:add_camera(camera, 80.0, 0.1, 100.0)
+
+return scene

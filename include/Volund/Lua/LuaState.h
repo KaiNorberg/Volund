@@ -20,6 +20,8 @@ namespace Volund
         void SaveScene(std::string const& filepath);
         std::string AbsolutePath(std::string const& relativePath);
         std::string RelativePath(std::string const& absolutePath);
+        template<typename T>
+        std::string GetKey(std::shared_ptr<T> object);
         LuaState(std::string const& cwd = ".");
         ~LuaState();
     private:
@@ -29,4 +31,22 @@ namespace Volund
         sol::state m_state;
         sol::object m_scene;
     };
+
+    template <typename T> 
+    inline std::string LuaState::GetKey(std::shared_ptr<T> object)
+    {	
+        sol::global_table global = this->m_state.globals();
+        for (auto& [key, globalObject] : global)
+        {
+            if (globalObject.is<std::shared_ptr<T>>())
+            {
+                if (globalObject.as<std::shared_ptr<T>>() == object)
+                {
+                    return key.as<std::string>();
+                }
+            }
+        }
+
+        return "";
+    }
 }

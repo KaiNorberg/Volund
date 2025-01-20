@@ -29,14 +29,21 @@ inline void Inspector::ImGuiComponent(std::string const& name, VL::Entity entity
 
         bool open = ImGui::TreeNodeEx(ptrID, ImGuiTreeNodeFlags_DefaultOpen | ImGuiTreeNodeFlags_Framed, name.c_str());
 
+        bool deleted = false;
         if (ImGui::BeginPopupContextItem())
         {
             if (ImGui::MenuItem("Delete"))
             {
                 scene->RemoveComponent<T>(entity, i);
+                deleted = true;
             }
 
             ImGui::EndPopup();
+        }
+
+        if (deleted)
+        {
+            return;
         }
 
         if (open)

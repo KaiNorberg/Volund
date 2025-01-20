@@ -6,6 +6,7 @@
 
 #define IMGUI_DRAG_DROP_FILE "IMGUI_DRAG_DROP_FILE"
 #define IMGUI_DRAG_DROP_DIR "IMGUI_DRAG_DROP_DIR"
+#define IMGUI_DRAG_DROP_ASSET "IMGUI_DRAG_DROP_ASSET"
 
 void ImGuiStartCombo();
 
@@ -16,6 +17,8 @@ void ImGuiEndCombo();
 void ImGuiAlign(std::string const& text, float alignment);
 
 bool ImGuiFile(std::string const& name, std::string& out);
+
+bool ImGuiAsset(std::string const& name, std::string& out);
 
 bool ImGuiString(std::string const& name, std::string& out);
 

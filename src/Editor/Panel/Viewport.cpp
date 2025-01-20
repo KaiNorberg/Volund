@@ -77,7 +77,7 @@ void Viewport::OnProcedure(const VL::Event& e)
 	}
 }
 
-void Viewport::UpdateCameraMovement(float timeStep, bool isWindowHovered)
+void Viewport::UpdateCameraMovement(float timeStep, bool isWindowHovered, bool force)
 {
 	VL::IVec2 cursorDelta = this->m_input.GetMousePosition() - this->m_oldMousePosition;
 	float scrollDelta = this->m_input.GetScrollPosition() - this->m_oldScrollPosition;
@@ -85,7 +85,7 @@ void Viewport::UpdateCameraMovement(float timeStep, bool isWindowHovered)
 	cursorDelta.y = std::clamp(cursorDelta.y, -10, 10);
 	scrollDelta = std::clamp(scrollDelta, -10.0f, 10.0f);
 
-	if (isWindowHovered && this->m_input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT))
+	if (force || (isWindowHovered && this->m_input.IsMouseButtonHeld(VOLUND_MOUSE_BUTTON_RIGHT)))
 	{
 		if (scrollDelta != 0.0f)
 		{
@@ -183,9 +183,8 @@ Viewport::Viewport(std::shared_ptr<EditorContext> context)
 
 	this->m_ballCenter = VL::Vec3(0, 1, 0);
 	this->m_distance = 10.0f;
-
-	this->m_position = this->m_ballCenter + VL::Vec3(0.0, 0.0, 1.0) * this->m_distance;
-	this->m_rotation = VL::Vec3(0.0, 0.0, 0.0);
+	this->m_rotation = VL::Vec3(-45.0, -45.0, 0.0);	
+	this->UpdateCameraMovement(0.0, false, true);
 
 	this->m_gridEffect = VL::Effect::Create(VL::Shader::Create("data/shaders/grid.shader"));
 }

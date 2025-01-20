@@ -15,6 +15,7 @@
 #include <imgui_internal.h>
 #include <memory>
 #include <misc/cpp/imgui_stdlib.h>
+#include <fstream>
 
 void Editor::Procedure(const VL::Event& e)
 {
@@ -95,7 +96,7 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_CMD_RELOAD_SCENE:
 	{
-		//scene->ReloadScene();
+		this->m_context->state->LoadScene(this->m_context->state->GetSceneFilepath());
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
 	}
 	break;
@@ -115,16 +116,26 @@ void Editor::Procedure(const VL::Event& e)
 	break;
 	case EDITOR_CMD_NEW_SCENE:
 	{
-		/*const std::string filepath = VL::Dialog::OpenFolder(this->GetWindow());
+		const std::string filepath = VL::Dialog::OpenFolder(this->GetWindow());
 
-		if (!filepath.empty())
+		if (filepath.empty())
 		{
-			VL::Serializer serializer(VOLUND_SERIAL_FILE_TYPE_SCENE);
-			serializer.WriteToFile(filepath + "/scene.lua");
+			break;
+		}
 
-			scene->LoadScene(filepath + "/scene.lua");
-		}*/
+		if (std::filesystem::exists(filepath + "/new_scene.lua"))
+		{
+			VOLUND_WARNING("Scene already exists");
+			break;
+		}
+
+		std::ofstream file(filepath + "/new_scene.lua");
+		file << "return Scene.new()";
+		file.close();
+
+		this->m_context->state->LoadScene(filepath + "/new_scene.lua");
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
+		
 	}
 	break;
 	case EDITOR_CMD_PLAY:
@@ -134,8 +145,8 @@ void Editor::Procedure(const VL::Event& e)
 			return;
 		}
 
-		//scene->SaveScene();
-		//scene->ReloadScene();
+		this->m_context->state->SaveScene(this->m_context->state->GetSceneFilepath());
+		this->m_context->state->LoadScene(this->m_context->state->GetSceneFilepath());
 
 		SetDarkImGuiStyle();
 
@@ -151,7 +162,7 @@ void Editor::Procedure(const VL::Event& e)
 
 		this->m_context->m_paused = true;
 
-		//scene->ReloadScene();
+		this->m_context->state->LoadScene(this->m_context->state->GetSceneFilepath());
 
 		SetDefaultImGuiStyle();
 	}
@@ -248,6 +259,16 @@ void Editor::DrawBackground()
 	{
 		if (ImGui::BeginMenu("File"))
 		{
+			if (ImGui::BeginMenu("New"))
+			{
+				if (ImGui::MenuItem("Scene"))
+				{
+					this->GetDispatcher()->Enqueue(EDITOR_CMD_NEW_SCENE);
+				}
+
+				ImGui::EndMenu();
+			}
+
 			if (ImGui::BeginMenu("Load"))
 			{
 				if (ImGui::MenuItem("Scene", "Ctrl + E"))
