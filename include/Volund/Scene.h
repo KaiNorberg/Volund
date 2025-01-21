@@ -97,7 +97,10 @@ namespace Volund
 
         EntityRecord& record = m_entites[m_indirectionTable[entity.index].recordIndex];
         uint64_t typeId = Utils::GetTypeId<T>();
-        auto it = record.Find(typeId, 0);
+		auto it = std::upper_bound(record.m_components.begin(), record.m_components.end(), typeId,
+		[](uint64_t type, const ComponentEntry& entry) {
+			return entry.GetTypeId() > type;
+		});
 
         auto component = std::make_shared<T>(std::forward<Args>(args)...);
         component->Init(record.m_entity, this->weak_from_this());
