@@ -1,19 +1,18 @@
 #pragma once
 
 #include "../Time.h"
-
 #include "../Event.h"
+#include "../Entity.h"
 
 namespace Volund
 {
     class Scene;
 
-    using Entity = uint64_t;
-
     class Component
     {
     public:
         virtual void Procedure(const Event& e) {}
+        virtual void OnInit() {};
         Entity GetEntity() const;
         std::shared_ptr<Scene> GetScene() const;
         Component() = default;
@@ -21,7 +20,7 @@ namespace Volund
     private:
         friend class Scene;
         void Init(Entity entity, std::weak_ptr<Scene> scene);
-        Entity m_entity = 0;
+        Entity m_entity;
         std::weak_ptr<Scene> m_scene;
     };
 }

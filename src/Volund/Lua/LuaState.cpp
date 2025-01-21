@@ -176,12 +176,12 @@ namespace Volund
 
         std::shared_ptr<Scene> scene = this->SceneRef();
 
-        for (auto& entityEntry : (*scene))
+        for (auto& EntityRecord : (*scene))
         {
-            std::string key = "e" + std::to_string(entityEntry.Get());
+            std::string key = "e" + std::to_string(EntityRecord.Get().AsInt());
             entitySection += key + " = " + "scene:register()\n";
 
-            for (auto& componentEntry : entityEntry)
+            for (auto& componentEntry : EntityRecord)
             {
                 if (componentEntry.Is<Camera>())
                 {

@@ -21,9 +21,9 @@ void Hierarchy::OnProcedure(const VL::Event& e)
 		ImGui::SameLine();
 		ImGui::InputText(" ", searchTerm, 64);
 
-		for (auto& entityEntry : *scene)
+		for (auto& EntityRecord : *scene)
 		{
-			VL::Entity entity = entityEntry.Get();
+			VL::Entity entity = EntityRecord.Get();
 			std::string entityName;
 			if (scene->HasComponent<VL::Tag>(entity))
 			{
@@ -52,7 +52,7 @@ bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 	auto scene = this->m_context->state->SceneRef();
 	auto& selectedEntity = this->m_context->selectedEntity;
 
-	ImGui::PushID((void*)entity);
+	ImGui::PushID((void*)entity.AsInt());
 
 	bool open = false;
 
@@ -62,7 +62,7 @@ bool Hierarchy::ImGuiEntity(VL::Entity entity, std::string const& entityName)
 		Flags = Flags | ImGuiTreeNodeFlags_Selected;
 	}
 
-	open = ImGui::TreeNodeEx((void*)entity, Flags, entityName.c_str());
+	open = ImGui::TreeNodeEx((void*)entity.AsInt(), Flags, entityName.c_str());
 
 	if (ImGui::IsItemClicked())
 	{

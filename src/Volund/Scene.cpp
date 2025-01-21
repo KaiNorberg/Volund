@@ -7,14 +7,35 @@
 
 namespace Volund
 {
-	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::begin()
+	std::vector<Scene::ComponentEntry>::iterator Scene::EntityRecord::begin()
 	{
 		return this->m_components.begin();
 	}
 
-	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::end()
+	std::vector<Scene::ComponentEntry>::iterator Scene::EntityRecord::end()
 	{
 		return this->m_components.end();
+	}
+
+    std::vector<Scene::ComponentEntry>::iterator Scene::EntityRecord::Find(uint64_t typeId, uint64_t index)
+	{
+		auto it = std::lower_bound(this->m_components.begin(), this->m_components.end(), typeId,
+		[](const ComponentEntry& entry, uint64_t type) {
+			return entry.GetTypeId() < type;
+		});
+		
+		while (index > 0 && it != m_components.end() && it->GetTypeId() == typeId)
+		{
+			++it;
+			--index;
+		}
+		
+		if (it != m_components.end() && it->GetTypeId() == typeId)
+		{
+			return it;
+		}
+		
+    	return this->m_components.end();
 	}
 
 	CHRONO_TIME_POINT Scene::GetStartTime()
@@ -24,21 +45,30 @@ namespace Volund
 
 	Entity Scene::Register()
 	{
-		uint32_t newEntityId = rand();
-
-		if (!this->m_freeEntries.empty())
+		for (uint64_t i = 0; i < this->m_indirectionTable.size(); i++)
 		{
-			uint32_t freeIndex = this->m_freeEntries.back();
-			EntityEntry& bucket = this->m_entityHeap[freeIndex];
-			this->m_freeEntries.pop_back();
+			if (this->m_indirectionTable[i].avail)
+			{		
+				Entity entity;
+				entity.index = i;
+				entity.generation = this->m_newGeneration++;
 
-			bucket.m_entity = VOLUND_ENTITY_CREATE(newEntityId, freeIndex);
-			return bucket.m_entity;
+				this->m_entites.push_back(EntityRecord(entity));
+				this->m_indirectionTable[i].recordIndex = this->m_entites.size() - 1;
+				this->m_indirectionTable[i].generation = entity.generation;
+				this->m_indirectionTable[i].avail = false;
+
+				return entity;
+			}
 		}
 
-		EntityEntry bucket(VOLUND_ENTITY_CREATE(newEntityId, this->m_entityHeap.size()));
-		this->m_entityHeap.push_back(bucket);
-		return bucket.m_entity;
+		Entity entity;
+		entity.index = this->m_indirectionTable.size();
+		entity.generation = this->m_newGeneration++;
+		
+		this->m_entites.push_back(EntityRecord(entity));
+		this->m_indirectionTable.push_back((IndirectionEntry){this->m_entites.size() - 1, entity.generation, false});
+		return entity;
 	}
 
 	void Scene::Unregister(Entity entity)
@@ -48,59 +78,42 @@ namespace Volund
 			VOLUND_ERROR("Attempted to unregister unregistered entity!");
 		}
 
-		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
+    	uint64_t recordIndex = this->m_indirectionTable[entity.index].recordIndex;
 
-		this->m_entityHeap[entityIndex].m_entity = VOLUND_ENTITY_NULL;
-		this->m_entityHeap[entityIndex].m_components.clear();
-		m_freeEntries.push_back(entityIndex);
-
-		while (!this->m_entityHeap.empty() && this->m_entityHeap.back().m_entity == VOLUND_ENTITY_NULL)
+		if (recordIndex < this->m_entites.size() - 1)
 		{
-			this->m_entityHeap.pop_back();
-			auto it = std::find(this->m_freeEntries.begin(), this->m_freeEntries.end(), this->m_entityHeap.size() - 1);
-			if (it != this->m_freeEntries.end())
-			{
-				this->m_freeEntries.erase(it);
-			}
+			this->m_entites[recordIndex] = std::move(m_entites.back());
+			this->m_indirectionTable[this->m_entites[recordIndex].m_entity.index].recordIndex = recordIndex;
 		}
+		
+		this->m_entites.pop_back();
+		this->m_indirectionTable[entity.index].avail = true;
 	}
 
 	bool Scene::IsRegistered(Entity entity)
 	{
-		uint64_t entityIndex = VOLUND_ENTITY_GET_INDEX(entity);
-
-		return this->m_entityHeap.size() > entityIndex && this->m_entityHeap[entityIndex].m_entity != VOLUND_ENTITY_NULL;
+    	return entity.index < m_indirectionTable.size() && entity.generation == m_indirectionTable[entity.index].generation && !m_indirectionTable[entity.index].avail;	
 	}
 
 	void Scene::Procedure(const Event& e)
 	{
-		for (auto& entry : this->m_entityHeap)
+		for (auto& entity : this->m_entites)
 		{
-			for (auto& [typeId, component] : entry)
+			for (auto& [typeId, component] : entity)
 			{
 				component->Procedure(e);
 			}
 		}
 	}
 
-	std::vector<Scene::EntityEntry>::iterator Scene::begin()
+	std::vector<Scene::EntityRecord>::iterator Scene::begin()
 	{
-		return this->m_entityHeap.begin();
+		return this->m_entites.begin();
 	}
 
-	std::vector<Scene::EntityEntry>::iterator Scene::end()
+	std::vector<Scene::EntityRecord>::iterator Scene::end()
 	{
-		return this->m_entityHeap.end();
-	}
-
-	std::vector<Scene::ComponentEntry>::iterator Scene::LowerBound(std::vector<ComponentEntry>& components, const size_t& typeId)
-	{
-		return std::lower_bound(components.begin(), components.end(), typeId);
-	}
-
-	std::vector<Scene::ComponentEntry>::iterator Scene::UpperBound(std::vector<ComponentEntry>& components, const size_t& typeId)
-	{
-		return std::upper_bound(components.begin(), components.end(), typeId);
+		return this->m_entites.end();
 	}
 
 	Scene::Scene()
@@ -110,7 +123,7 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		this->m_entityHeap.clear();
+		this->m_entites.clear();
 	}
 
 	bool operator<(const size_t& a, const Scene::ComponentEntry& b)

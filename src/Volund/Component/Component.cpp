@@ -17,5 +17,6 @@ namespace Volund
 	{
 		this->m_entity = entity;
 		this->m_scene = scene;
+		this->OnInit();
 	}
 }
