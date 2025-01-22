@@ -1,6 +1,6 @@
-#include "Time.h"
+#include "Time.hpp"
 
-#include "Logger.h"
+#include "Logger.hpp"
 
 namespace Volund
 {

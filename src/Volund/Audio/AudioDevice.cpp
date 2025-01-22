@@ -1,7 +1,7 @@
-#include "Audio/AudioDevice.h"
+#include "Audio/AudioDevice.hpp"
 
-#include "Audio/Audio.h"
-#include "Logger.h"
+#include "Audio/Audio.hpp"
+#include "Logger.hpp"
 
 #include <AL/al.h>
 #include <AL/alext.h>

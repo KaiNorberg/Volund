@@ -1,6 +1,6 @@
-#include "Audio/AudioModule.h"
+#include "Audio/AudioModule.hpp"
 
-#include "Audio/Audio.h"
+#include "Audio/Audio.hpp"
 
 namespace Volund
 {

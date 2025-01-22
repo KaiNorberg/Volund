@@ -1,5 +1,5 @@
-#include "Vector4.h"
-#include "Lua/LuaAPI.h"
+#include "Vector4.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {
@@ -31,5 +31,5 @@ namespace Volund
             ),
             "operator[]", [](Vec4& v, uint8_t index) { return v[index]; }
         );
-    });
+    });    
 }

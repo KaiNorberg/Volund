@@ -1,6 +1,6 @@
 
-#include "Component/Tag.h"
-#include "Lua/LuaAPI.h"
+#include "Component/Tag.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

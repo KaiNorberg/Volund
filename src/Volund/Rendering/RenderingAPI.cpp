@@ -1,8 +1,8 @@
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/RenderingAPI.hpp"
 
-#include "Rendering/OpenGL/OpenGLRenderingAPI.h"
+#include "Rendering/OpenGL/OpenGLRenderingAPI.hpp"
 
-#include "Instrumentor.h"
+#include "Instrumentor.hpp"
 
 namespace Volund
 {

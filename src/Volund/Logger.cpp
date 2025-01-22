@@ -1,6 +1,6 @@
-#include "Logger.h"
+#include "Logger.hpp"
 
-#include "Dialog.h"
+#include "Dialog.hpp"
 
 #include <cstdarg>
 

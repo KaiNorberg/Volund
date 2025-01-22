@@ -1,7 +1,7 @@
-#include "Dispatcher.h"
-#include "Input.h"
+#include "Dispatcher.hpp"
+#include "Input.hpp"
 
-#include "Application.h"
+#include "Application.hpp"
 
 namespace Volund
 {

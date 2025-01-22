@@ -1,9 +1,9 @@
 
-#include "Rendering/VertexBuffer.h"
+#include "Rendering/VertexBuffer.hpp"
 
-#include "Rendering/OpenGL/OpenGLVertexBuffer.h"
+#include "Rendering/OpenGL/OpenGLVertexBuffer.hpp"
 
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/RenderingAPI.hpp"
 
 #define BIT_MASK 0b1110000000111
 

@@ -1,4 +1,4 @@
-#include "ResourceLibrary/ResourceLibrary.h"
+#include "ResourceLibrary/ResourceLibrary.hpp"
 
 namespace Volund
 {

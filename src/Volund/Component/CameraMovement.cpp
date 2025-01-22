@@ -1,8 +1,8 @@
 
-#include "Component/CameraMovement.h"
-#include "Component/Transform.h"
-#include "Lua/LuaAPI.h"
-#include "Scene.h"
+#include "Component/CameraMovement.hpp"
+#include "Component/Transform.hpp"
+#include "Lua/LuaAPI.hpp"
+#include "Scene.hpp"
 
 namespace Volund
 {

@@ -1,8 +1,8 @@
-#include "Audio/AudioBuffer.h"
+#include "Audio/AudioBuffer.hpp"
 
-#include "Audio/Audio.h"
-#include "Logger.h"
-#include "Lua/LuaAPI.h"
+#include "Audio/Audio.hpp"
+#include "Logger.hpp"
+#include "Lua/LuaAPI.hpp"
 
 #include <AudioFile/AudioFile.h>
 #include <AL/al.h>

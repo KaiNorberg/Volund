@@ -1,11 +1,11 @@
 
-#include "Component/Camera.h"
+#include "Component/Camera.hpp"
 
-#include "Scene.h"
-#include "Component/Transform.h"
-#include "Window.h"
-#include "Rendering/Renderer.h"
-#include "Lua/LuaAPI.h"
+#include "Scene.hpp"
+#include "Component/Transform.hpp"
+#include "Window.hpp"
+#include "Rendering/Renderer.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

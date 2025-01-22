@@ -1,9 +1,9 @@
-#include "Component/MeshRenderer.h"
+#include "Component/MeshRenderer.hpp"
 
-#include "Scene.h"
-#include "Component/Transform.h"
-#include "Lua/LuaAPI.h"
-#include "Rendering/Renderer.h"
+#include "Scene.hpp"
+#include "Component/Transform.hpp"
+#include "Lua/LuaAPI.hpp"
+#include "Rendering/Renderer.hpp"
 
 namespace Volund
 {

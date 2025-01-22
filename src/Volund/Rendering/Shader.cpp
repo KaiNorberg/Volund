@@ -1,8 +1,8 @@
 
-#include "Rendering/Shader.h"
-#include "Rendering/OpenGL/OpenGLShader.h"
-#include "Rendering/RenderingAPI.h"
-#include "Lua/LuaAPI.h"
+#include "Rendering/Shader.hpp"
+#include "Rendering/OpenGL/OpenGLShader.hpp"
+#include "Rendering/RenderingAPI.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

@@ -1,6 +1,6 @@
 
-#include "Component/Transform.h"
-#include "Lua/LuaAPI.h"
+#include "Component/Transform.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {
@@ -40,7 +40,7 @@ namespace Volund
 
 		modelMatrix = Math::Translate(modelMatrix, this->pos);
 		modelMatrix *= Mat4x4(this->quat);
-		modelMatrix = Math::scale(modelMatrix, this->scale);
+		modelMatrix = Math::Scale(modelMatrix, this->scale);
 
 		return modelMatrix;
 	}

@@ -1,6 +1,6 @@
-#include "Viewport.h"
+#include "Viewport.hpp"
 
-#include "Utils.h"
+#include "Utils.hpp"
 
 #include <imgui.h>
 

@@ -6,10 +6,14 @@ add_requires("openal-soft", "glfw", "glad", "lua", "sol2", "stb", "imgui v1.89.5
     glfw = true,
     opengl3 = true
 }})
+
 set_languages("cxx20")
 
 target("Volund")
-    set_kind("shared")
+    set_kind("shared")    
+    if is_plat("windows") then
+        add_links("comdlg32")
+    end
     add_defines("VOLUND_BUILD")
     add_packages("openal-soft", "glfw", "glad", "lua", "sol2", "stb")
     add_includedirs("include", "vendor", "include/Volund")
@@ -21,10 +25,8 @@ target("Editor")
     add_packages("openal-soft", "glfw", "sol2", "imgui")
     add_includedirs("include", "vendor", "src/Editor")
     add_files("src/Editor/**/*.cpp", "src/Editor/*.cpp")
-    -- Add imgui backend files explicitly if they're in your project
     add_files("vendor/imgui_backends/imgui_impl_glfw.cpp")
     add_files("vendor/imgui_backends/imgui_impl_opengl3.cpp")
-
     after_build(function (target)
         os.cp("data", target:targetdir())
     end)

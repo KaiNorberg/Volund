@@ -1,8 +1,8 @@
-#include "Lua/LuaState.h"
+#include "Lua/LuaState.hpp"
 
-#include "Component/Components.h"
-#include "Lua/LuaAPI.h"
-#include "Scene.h"
+#include "Component/Components.hpp"
+#include "Lua/LuaAPI.hpp"
+#include "Scene.hpp"
 
 #include <filesystem>
 #include <fstream>
@@ -47,7 +47,7 @@ namespace Volund
         VOLUND_LOG_LOADING("scene", filepath);
 
         std::string oldCwd = this->m_cwd;
-        this->m_cwd = std::filesystem::absolute(filepath).parent_path();
+        this->m_cwd = std::filesystem::absolute(filepath).parent_path().string();
 
         sol::object newScene = this->ScriptFile(filepath);        
         if (!newScene.is<std::shared_ptr<Scene>>())
@@ -277,7 +277,7 @@ namespace Volund
             return relativePath;
         }
 
-        return std::filesystem::path(this->m_cwd) / std::filesystem::path(relativePath);
+        return (std::filesystem::path(this->m_cwd) / std::filesystem::path(relativePath)).string();
     }
 
     std::string LuaState::RelativePath(std::string const& absolutePath)
@@ -287,13 +287,13 @@ namespace Volund
             return absolutePath;
         }
 
-        return std::filesystem::relative(absolutePath, this->m_cwd);
+        return std::filesystem::relative(absolutePath, this->m_cwd).string();
     }
 
 
     LuaState::LuaState(std::string const& cwd)
     {
-        this->m_cwd = std::filesystem::absolute(cwd);
+        this->m_cwd = std::filesystem::absolute(cwd).string();
 
         LuaAPI::Bind(this);
 

@@ -1,7 +1,7 @@
-#include "Rendering/Mesh.h"
-#include "Rendering/RenderingAPI.h"
-#include "Rendering/OpenGL/OpenGLMesh.h"
-#include "Lua/LuaAPI.h"
+#include "Rendering/Mesh.hpp"
+#include "Rendering/RenderingAPI.hpp"
+#include "Rendering/OpenGL/OpenGLMesh.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

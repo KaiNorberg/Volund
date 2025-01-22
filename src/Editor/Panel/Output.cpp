@@ -1,6 +1,6 @@
-#include "Output.h"
+#include "Output.hpp"
 
-#include "Utils.h"
+#include "Utils.hpp"
 
 #include <imgui.h>
 #include <thread>

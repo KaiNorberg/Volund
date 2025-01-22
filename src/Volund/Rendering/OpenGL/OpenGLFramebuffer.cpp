@@ -1,8 +1,8 @@
-#include "Rendering/Framebuffer.h"
-#include "Rendering/OpenGL/OpenGLFramebuffer.h"
+#include "Rendering/Framebuffer.hpp"
+#include "Rendering/OpenGL/OpenGLFramebuffer.hpp"
 
-#include "Rendering/RenderingAPI.h"
-#include "Rendering/Uniform.h"
+#include "Rendering/RenderingAPI.hpp"
+#include "Rendering/Uniform.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

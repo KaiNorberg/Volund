@@ -1,7 +1,7 @@
-#include "ModelLoader.h"
+#include "ModelLoader.hpp"
 
-#include "Math.h"
-#include "Utils.h"
+#include "Math.hpp"
+#include "Utils.hpp"
 
 #include <fstream>
 #include <sstream>

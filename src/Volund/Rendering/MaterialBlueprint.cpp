@@ -1,4 +1,4 @@
-#include "Rendering/MaterialBlueprint.h"
+#include "Rendering/MaterialBlueprint.hpp"
 
 namespace Volund
 {

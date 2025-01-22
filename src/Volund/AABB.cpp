@@ -1,6 +1,6 @@
-#include "AABB.h"
+#include "AABB.hpp"
 
-#include "Instrumentor.h"
+#include "Instrumentor.hpp"
 
 namespace Volund
 {

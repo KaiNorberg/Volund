@@ -1,8 +1,8 @@
-#include "ShaderLoader.h"
+#include "ShaderLoader.hpp"
 
-#include "ResourceLibrary/ResourceLibrary.h"
-#include "Rendering/Texture.h"
-#include "Rendering/Shader.h"
+#include "ResourceLibrary/ResourceLibrary.hpp"
+#include "Rendering/Texture.hpp"
+#include "Rendering/Shader.hpp"
 
 #include <fstream>
 

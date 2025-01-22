@@ -1,7 +1,7 @@
-#include "Application.h"
+#include "Application.hpp"
 
-#include "Event.h"
-#include "Time.h"
+#include "Event.hpp"
+#include "Time.hpp"
 
 namespace Volund
 {
@@ -39,14 +39,6 @@ namespace Volund
 	void Application::EventCallback(const Event& e)
 	{
 		this->Procedure(e);
-
-		for (const auto& [typeId, view] : this->m_modules)
-		{
-			for (const auto& module : view)
-			{
-				module->Procedure(e);
-			}
-		}
 	}
 
 	void Application::Loop()
@@ -96,16 +88,6 @@ namespace Volund
 
 	Application::~Application()
 	{
-		for (auto& [TypeID, View] : this->m_modules)
-		{
-			for (auto& module : View)
-			{
-				module->OnDetach();
-
-				module.reset();
-			}
-		}
-
 		VOLUND_INFO("Application terminated");
 	}
 }

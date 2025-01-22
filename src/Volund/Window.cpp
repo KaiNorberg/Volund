@@ -1,6 +1,6 @@
-#include "Window.h"
+#include "Window.hpp"
 
-#include "ImageLoader.h"
+#include "ImageLoader.hpp"
 
 #include <GLFW/glfw3.h>
 

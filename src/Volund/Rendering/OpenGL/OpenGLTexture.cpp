@@ -1,8 +1,8 @@
-#include "Rendering/Texture.h"
+#include "Rendering/Texture.hpp"
 
-#include "Rendering/OpenGL/OpenGLTexture.h"
-#include "ImageLoader.h"
-#include "Logger.h"
+#include "Rendering/OpenGL/OpenGLTexture.hpp"
+#include "ImageLoader.hpp"
+#include "Logger.hpp"
 
 #include <glad/glad.h>
 

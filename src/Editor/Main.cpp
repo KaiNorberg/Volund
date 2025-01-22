@@ -1,6 +1,6 @@
-#include "Editor.h"
+#include "Editor.hpp"
 
-#include <Volund/Volund.h>
+#include <Volund/Volund.hpp>
 #include <memory>
 
 int main()
