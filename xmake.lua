@@ -18,7 +18,7 @@ target("Volund")
 target("Editor")
     set_kind("binary")
     add_deps("Volund")
-    add_packages("openal-soft", "sol2", "imgui")
+    add_packages("openal-soft", "glfw", "sol2", "imgui")
     add_includedirs("include", "vendor", "src/Editor")
     add_files("src/Editor/**/*.cpp", "src/Editor/*.cpp")
     -- Add imgui backend files explicitly if they're in your project
