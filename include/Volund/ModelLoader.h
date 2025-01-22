@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class ModelLoader
+    class VOLUND_API ModelLoader
     {
     public:
         std::vector<float> Vertices;

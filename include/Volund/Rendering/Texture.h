@@ -1,11 +1,13 @@
 #pragma once
 
+#include "../Core.h"
+
 #include <cstdint>
 #include <memory>
 
 namespace Volund
 {
-    class Texture
+    class VOLUND_API Texture
     {
     public:
         virtual std::string GetFilepath() const = 0;

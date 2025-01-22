@@ -9,7 +9,7 @@
 
 namespace Volund
 {
-    class ForwardRenderer : public Renderer
+    class VOLUND_API ForwardRenderer : public Renderer
     {
     public:
         void Begin() override;

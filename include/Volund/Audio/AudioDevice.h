@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Core.h"
+
 #include <AL/al.h>
 #include <AL/alext.h>
 
@@ -9,7 +11,7 @@ struct ALCdevice;
 
 namespace Volund
 {
-    class AudioDevice
+    class VOLUND_API AudioDevice
     {
     public:
         ALCdevice* GetDevice() const;

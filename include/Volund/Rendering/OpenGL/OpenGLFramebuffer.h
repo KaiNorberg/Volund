@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class OpenGLFramebuffer : public Framebuffer
+    class VOLUND_API OpenGLFramebuffer : public Framebuffer
     {
     public:
         uint32_t GetID() const override;

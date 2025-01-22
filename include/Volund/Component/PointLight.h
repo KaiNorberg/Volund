@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Component.h"
+#include "../Vector3.h"
 
 namespace Volund
 {
-    class PointLight : public Component
+    class VOLUND_API PointLight : public Component
     {
     public:
         RGB color;

@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class VertexBuffer
+    class VOLUND_API VertexBuffer
     {
     public:
         virtual AABB GetAABB() = 0;

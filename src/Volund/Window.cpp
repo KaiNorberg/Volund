@@ -243,9 +243,14 @@ namespace Volund
 		glfwSwapInterval(enabled);
 	}
 
-	Vec2 Window::GetSize()
+	uint64_t Window::GetWidth()
 	{
-		return Vec2(this->m_windowData->width, this->m_windowData->height);
+		return this->m_windowData->width;
+	}
+
+	uint64_t Window::GetHeight()
+	{
+		return this->m_windowData->height;
 	}
 
 	float Window::GetAspectRatio()

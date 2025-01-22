@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Core.h"
+
 #include <cstdint>
 #include <string>
 
@@ -8,7 +10,7 @@
 
 namespace Volund
 {
-    class AudioBuffer
+    class VOLUND_API AudioBuffer
     {
     public:
         std::string GetFilepath();

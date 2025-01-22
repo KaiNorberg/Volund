@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-    class Dialog
+    class VOLUND_API Dialog
     {
     public:
         static std::string InputBox(std::string const& title, std::string const& message, std::string const& defaultInput = "");

@@ -5,7 +5,7 @@
 
 namespace Volund
 {
-    class Quat
+    class VOLUND_API Quat
     {
     public:
         float w;

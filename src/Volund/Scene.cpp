@@ -7,17 +7,17 @@
 
 namespace Volund
 {
-	std::vector<Scene::ComponentEntry>::iterator Scene::EntityRecord::begin()
+	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::begin()
 	{
 		return this->m_components.begin();
 	}
 
-	std::vector<Scene::ComponentEntry>::iterator Scene::EntityRecord::end()
+	std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::end()
 	{
 		return this->m_components.end();
 	}
 
-    std::vector<Scene::ComponentEntry>::iterator Scene::EntityRecord::Find(uint64_t typeId, uint64_t index)
+    std::vector<Scene::ComponentEntry>::iterator Scene::EntityEntry::Find(uint64_t typeId, uint64_t index)
 	{
 		auto it = std::lower_bound(this->m_components.begin(), this->m_components.end(), typeId,
 		[](const ComponentEntry& entry, uint64_t type) {
@@ -53,7 +53,7 @@ namespace Volund
 				entity.index = i;
 				entity.generation = this->m_newGeneration++;
 
-				this->m_entites.push_back(EntityRecord(entity));
+				this->m_entites.push_back(EntityEntry(entity));
 				this->m_indirectionTable[i].recordIndex = this->m_entites.size() - 1;
 				this->m_indirectionTable[i].generation = entity.generation;
 				this->m_indirectionTable[i].avail = false;
@@ -66,7 +66,7 @@ namespace Volund
 		entity.index = this->m_indirectionTable.size();
 		entity.generation = this->m_newGeneration++;
 		
-		this->m_entites.push_back(EntityRecord(entity));
+		this->m_entites.push_back(EntityEntry(entity));
 		this->m_indirectionTable.push_back((IndirectionEntry){this->m_entites.size() - 1, entity.generation, false});
 		return entity;
 	}
@@ -106,12 +106,12 @@ namespace Volund
 		}
 	}
 
-	std::vector<Scene::EntityRecord>::iterator Scene::begin()
+	std::vector<Scene::EntityEntry>::iterator Scene::begin()
 	{
 		return this->m_entites.begin();
 	}
 
-	std::vector<Scene::EntityRecord>::iterator Scene::end()
+	std::vector<Scene::EntityEntry>::iterator Scene::end()
 	{
 		return this->m_entites.end();
 	}

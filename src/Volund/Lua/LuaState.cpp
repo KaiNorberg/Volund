@@ -1,12 +1,13 @@
 #include "Lua/LuaState.h"
 
+#include "Component/Components.h"
+#include "Lua/LuaAPI.h"
+#include "Scene.h"
+
 #include <filesystem>
 #include <fstream>
 #include <unordered_map>
 #include <string>
-
-#include "Component/Components.h"
-#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -176,12 +177,12 @@ namespace Volund
 
         std::shared_ptr<Scene> scene = this->SceneRef();
 
-        for (auto& EntityRecord : (*scene))
+        for (auto& EntityEntry : (*scene))
         {
-            std::string key = "e" + std::to_string(EntityRecord.Get().AsInt());
+            std::string key = "e" + std::to_string(EntityEntry.Get().AsInt());
             entitySection += key + " = " + "scene:register()\n";
 
-            for (auto& componentEntry : EntityRecord)
+            for (auto& componentEntry : EntityEntry)
             {
                 if (componentEntry.Is<Camera>())
                 {

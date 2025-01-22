@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class OpenGLMesh : public Mesh
+    class VOLUND_API OpenGLMesh : public Mesh
     {
     public:
         std::string GetFilepath() const override;

@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-    class MeshRenderer : public Component
+    class VOLUND_API MeshRenderer : public Component
     {
     public:
         bool IsValid();

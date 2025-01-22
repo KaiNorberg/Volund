@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class SoundListener : public Component
+    class VOLUND_API SoundListener : public Component
     {
     public:
         void Procedure(const Event& e);

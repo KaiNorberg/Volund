@@ -13,7 +13,7 @@ namespace Volund
         OpenGL
     };
 
-    class RenderingAPIInstance
+    class VOLUND_API RenderingAPIInstance
     {
     public:
         virtual IVec2 GetViewSize() = 0;
@@ -25,7 +25,7 @@ namespace Volund
         virtual ~RenderingAPIInstance() = default;
     };
 
-    class RenderingAPI
+    class VOLUND_API RenderingAPI
     {
     public:
         static IVec2 GetViewSize();

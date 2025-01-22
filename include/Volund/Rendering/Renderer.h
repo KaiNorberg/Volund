@@ -37,7 +37,7 @@ namespace Volund
         std::vector<std::shared_ptr<Effect>> Effects;
     };
 
-    class Renderer
+    class VOLUND_API Renderer
     {
     public:
         virtual void Begin() = 0;

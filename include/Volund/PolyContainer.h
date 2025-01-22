@@ -7,10 +7,10 @@
 namespace Volund
 {
     /// <summary>
-    /// Short for polymorphic container, a PolyContainer class can store any type that can be type cast from T.
+    /// Short for polymorphic container, a PolyContainer class VOLUND_API can store any type that can be type cast from T.
     /// </summary>
     template<typename T>
-    class PolyContainer
+    class VOLUND_API PolyContainer
     {
     public:
         template<typename D>

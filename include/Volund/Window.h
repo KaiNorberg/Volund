@@ -35,7 +35,7 @@ namespace Volund
         std::vector<GLFWcharfun> charCallbacks;
     };
 
-    class Window
+    class VOLUND_API Window
     {
     public:
         void Update();
@@ -44,7 +44,8 @@ namespace Volund
         bool IsCursorEnabled();
         void SetTitle(std::string const& title);
         void SetVsync(bool enabled);
-        Vec2 GetSize();
+        uint64_t GetWidth();
+        uint64_t GetHeight();
         float GetAspectRatio();
         void Flush();
         void SetIcon(std::string const& filepath);

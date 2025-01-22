@@ -1,19 +1,18 @@
 #pragma once
 
-#include "Input.h"
 #include "Instrumentor.h"
 #include "Event.h"
 #include "Entity.h"
+#include "Logger.h"
 #include "Component/Component.h"
-#include "PolyContainer.h"
 #include "Rendering/Framebuffer.h"
 
 namespace Volund
 {
-    class Scene : public std::enable_shared_from_this<Scene>
+    class VOLUND_API Scene : public std::enable_shared_from_this<Scene>
     {
     public:
-        class ComponentEntry
+        class VOLUND_API ComponentEntry
         {
         public:
             template<typename T>
@@ -27,14 +26,14 @@ namespace Volund
             uint64_t m_typeId = 0;
             std::shared_ptr<Component> m_component;
         };
-        class EntityRecord
+        class VOLUND_API EntityEntry
         {
         public:
             std::vector<ComponentEntry>::iterator begin();
             std::vector<ComponentEntry>::iterator end();
             std::vector<ComponentEntry>::iterator Find(uint64_t typeId, uint64_t index);
             Entity Get() { return this->m_entity; }
-            EntityRecord(Entity entity) : m_entity(entity) {}
+            EntityEntry(Entity entity) : m_entity(entity) {}
         private:
             friend class Scene;
             Entity m_entity;
@@ -61,12 +60,12 @@ namespace Volund
         template<typename T>
         std::shared_ptr<T> GetComponent(Entity entity, uint64_t index = 0);
         void Procedure(const Event& e);
-        std::vector<EntityRecord>::iterator begin();
-        std::vector<EntityRecord>::iterator end();
+        std::vector<EntityEntry>::iterator begin();
+        std::vector<EntityEntry>::iterator end();
         Scene();
         ~Scene();
     private:
-        std::vector<EntityRecord> m_entites;
+        std::vector<EntityEntry> m_entites;
         std::vector<IndirectionEntry> m_indirectionTable;
         uint32_t m_newGeneration = 1;
         CHRONO_TIME_POINT m_startTime;
@@ -95,7 +94,7 @@ namespace Volund
             return nullptr;
         }
 
-        EntityRecord& record = m_entites[m_indirectionTable[entity.index].recordIndex];
+        EntityEntry& record = m_entites[m_indirectionTable[entity.index].recordIndex];
         uint64_t typeId = Utils::GetTypeId<T>();
 		auto it = std::upper_bound(record.m_components.begin(), record.m_components.end(), typeId,
 		[](uint64_t type, const ComponentEntry& entry) {
@@ -120,7 +119,7 @@ namespace Volund
             VOLUND_ERROR("Attempted to remove component from unregistered entity!");
         }
 
-        EntityRecord& record = m_entites[m_indirectionTable[entity.index].recordIndex];
+        EntityEntry& record = m_entites[m_indirectionTable[entity.index].recordIndex];
         uint64_t typeId = Utils::GetTypeId<T>();
         auto it = record.Find(typeId, index);
         if (it != record.m_components.end())
@@ -139,7 +138,7 @@ namespace Volund
             return false;
         }
 
-        EntityRecord& record = m_entites[m_indirectionTable[entity.index].recordIndex];
+        EntityEntry& record = m_entites[m_indirectionTable[entity.index].recordIndex];
         uint64_t typeId = Utils::GetTypeId<T>();
         auto it = record.Find(typeId, index);
         return it != record.m_components.end();
@@ -155,7 +154,7 @@ namespace Volund
             return 0;
         }
 
-        EntityRecord& record = m_entites[m_indirectionTable[entity.index].recordIndex];
+        EntityEntry& record = m_entites[m_indirectionTable[entity.index].recordIndex];
         uint64_t typeId = Utils::GetTypeId<T>();
         auto it = record.Find(typeId, 0);
 
@@ -180,7 +179,7 @@ namespace Volund
             return nullptr;
         }
 
-        EntityRecord& record = m_entites[m_indirectionTable[entity.index].recordIndex];
+        EntityEntry& record = m_entites[m_indirectionTable[entity.index].recordIndex];
         uint64_t typeId = Utils::GetTypeId<T>();
         auto it = record.Find(typeId, index);
         

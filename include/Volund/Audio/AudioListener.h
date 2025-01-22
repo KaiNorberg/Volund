@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-    class AudioListener
+    class VOLUND_API AudioListener
     {
     public:
         void SetPosition(const Vec3& position);

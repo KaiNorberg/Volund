@@ -1,9 +1,8 @@
 
 #include "Component/SoundListener.h"
-
 #include "Component/Transform.h"
-
 #include "Scene.h"
+#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -33,5 +32,12 @@ namespace Volund
 		}
 		break;
 		}
-	}
+	}    
+	
+	VOLUND_USERTYPE_COMPONENT_REGISTER(SoundListener,
+    [](LuaState* state){
+        state->NewUsertype<SoundListener>("SoundListener", 
+            sol::constructors<>()
+        );
+    });
 }

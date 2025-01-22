@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core.h"
+
 #include <string>
 #include <cstdint>
 #include <vector>
@@ -55,7 +57,7 @@ namespace Volund
         Error
     };
 
-    class Logger
+    class VOLUND_API Logger
     {
     public:
         static Logger& GetCoreLogger();

@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class MaterialBlueprint
+    class VOLUND_API MaterialBlueprint
     {
     public:
         template<typename T>

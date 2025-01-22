@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-    class AudioSource
+    class VOLUND_API AudioSource
     {
     public:
         void Play();

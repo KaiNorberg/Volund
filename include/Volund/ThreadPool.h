@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core.h"
+
 #include <functional>
 #include <cstdint>
 #include <queue>
@@ -10,7 +12,7 @@ namespace Volund
 {
     using Task = std::function<void()>;
 
-    class ThreadPool
+    class VOLUND_API ThreadPool
     {
     public:
         template<typename Func, typename... Args>

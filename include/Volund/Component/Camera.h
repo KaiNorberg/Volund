@@ -1,11 +1,12 @@
 #pragma once
 
 #include "Component.h"
+#include "../Matrix4x4.h"
 #include "../Rendering/Framebuffer.h"
 
 namespace Volund
 {
-    class Camera : public Component
+    class VOLUND_API Camera : public Component
     {
     public:
         float fov;

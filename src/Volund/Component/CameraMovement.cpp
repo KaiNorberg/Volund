@@ -1,8 +1,7 @@
 
 #include "Component/CameraMovement.h"
-
 #include "Component/Transform.h"
-
+#include "Lua/LuaAPI.h"
 #include "Scene.h"
 
 namespace Volund
@@ -66,5 +65,14 @@ namespace Volund
 		this->sensitivity = sensitivity;
 		this->m_oldMousePosition = this->m_input.GetMousePosition();
 	}
+
+    VOLUND_USERTYPE_COMPONENT_REGISTER(CameraMovement,
+    [](LuaState* state){
+        state->NewUsertype<CameraMovement>("CameraMovement", 
+            sol::constructors<>(),
+            "speed", &CameraMovement::speed,
+            "sensitivity", &CameraMovement::sensitivity
+        );
+    }, float, float);
 
 } // namespace Volund

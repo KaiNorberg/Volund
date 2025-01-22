@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class Tag : public Component
+    class VOLUND_API Tag : public Component
     {
     public:
         std::string string;

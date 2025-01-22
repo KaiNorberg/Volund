@@ -5,7 +5,7 @@
 
 namespace Volund
 {
-    class Material
+    class VOLUND_API Material
     {
     public:
         void SetShader(std::shared_ptr<Shader> shader);

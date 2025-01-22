@@ -10,7 +10,7 @@
 
 namespace Volund
 {
-    class Application
+    class VOLUND_API Application
     {
     public:
         void Run();

@@ -4,12 +4,11 @@
 #include "VertexBuffer.h"
 
 #include "../AABB.h"
-
 #include "../ResourceLibrary/ResourceLibrary.h"
 
 namespace Volund
 {
-    class Mesh
+    class VOLUND_API Mesh
     {
     public:
         virtual std::string GetFilepath() const = 0;

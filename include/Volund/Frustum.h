@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class Frustum
+    class VOLUND_API Frustum
     {
     public:
         bool ContainsAABB(const AABB& aabb) const;

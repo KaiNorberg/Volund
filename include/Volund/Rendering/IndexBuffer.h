@@ -1,10 +1,12 @@
 #pragma once
 
+#include "../Core.h"
+
 #include <memory>
 
 namespace Volund
 {
-    class IndexBuffer
+    class VOLUND_API IndexBuffer
     {
     public:
         virtual void Bind() = 0;

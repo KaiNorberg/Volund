@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class SoundSource : public Component
+    class VOLUND_API SoundSource : public Component
     {
     public:
         bool AutoPlay = false;

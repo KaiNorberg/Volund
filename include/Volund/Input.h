@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Event.h"
+#include "Vector2.h"
 
 #include <cstdint>
 
@@ -20,7 +21,7 @@
 
 namespace Volund
 {
-    class Input
+    class VOLUND_API Input
     {
     public:
         bool IsHeld(uint16_t keyCode) const;

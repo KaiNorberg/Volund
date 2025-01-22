@@ -4,8 +4,8 @@
 #include "Scene.h"
 #include "Component/Transform.h"
 #include "Window.h"
-
 #include "Rendering/Renderer.h"
+#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -105,5 +105,20 @@ namespace Volund
 		this->fov = fov;
 		this->nearPlane = nearPlane;
 		this->farPlane = farPlane;
-	}
+	}  
+
+    VOLUND_USERTYPE_COMPONENT_REGISTER(Camera,
+    [](LuaState* state){
+        state->NewUsertype<Camera>("Camera", 
+            sol::constructors<>(),
+            "fov", &Camera::fov,
+            "nearPlane", &Camera::nearPlane,
+            "farPlane", &Camera::farPlane,
+            "set_layer_mask", &Camera::SetLayerMask,
+            "get_layer_mask", &Camera::GetLayerMask,
+            "get_view_matrix", &Camera::GetViewMatrix,
+            "get_origin_view_matrix", &Camera::GetOriginViewMatrix,
+            "get_projection_matrix", &Camera::GetProjectionMatrix
+        );
+    }, float, float, float);
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Core.h"
+
 #include <chrono>
 
 #ifdef _WIN32
@@ -10,7 +12,7 @@
 
 namespace Volund
 {
-    class Timer
+    class VOLUND_API Timer
     {
     public:
         Timer();
@@ -19,7 +21,7 @@ namespace Volund
         CHRONO_TIME_POINT m_start;
     };
 
-    class TimeStep
+    class VOLUND_API TimeStep
     {
     public:
         TimeStep(double step = 0.0);

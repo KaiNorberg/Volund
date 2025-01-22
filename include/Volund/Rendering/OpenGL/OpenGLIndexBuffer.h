@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class OpenGLIndexBuffer : public IndexBuffer
+    class VOLUND_API OpenGLIndexBuffer : public IndexBuffer
     {
     public:
         void Bind() override;

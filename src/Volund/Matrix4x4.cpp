@@ -1,5 +1,7 @@
 #include "Matrix4x4.h"
 
+#include "Lua/LuaAPI.h"
+
 namespace Volund
 {
 	Vec4& Mat4x4::operator[](uint8_t index)
@@ -181,4 +183,31 @@ namespace Volund
 		this->m_data[2] = Vec4(0, 0, 1, 0);
 		this->m_data[3] = Vec4(0, 0, 0, 1);
 	}
+
+	VOLUND_USERTYPE_REGISTER(Mat4x4,
+    [](LuaState* state){
+        state->NewUsertype<Mat4x4>("Mat4x4", 
+            sol::constructors<
+                Mat4x4(), 
+                Mat4x4(float), 
+                Mat4x4(const Vec4&, const Vec4&, const Vec4&, const Vec4&),
+                Mat4x4(const std::array<float, 16>&)
+            >(),
+            "operator+", sol::overload(
+                [](const Mat4x4& a, const Mat4x4& b) { return a + b; },
+                [](const Mat4x4& a, float b) { return a + b; }
+            ),
+            "operator-", sol::overload(
+                [](const Mat4x4& a, const Mat4x4& b) { return a - b; },
+                [](const Mat4x4& a, float b) { return a - b; }
+            ),
+            "operator*", sol::overload(
+                [](const Mat4x4& a, const Mat4x4& b) { return a * b; },
+                [](const Mat4x4& a, float b) { return a * b; },
+                [](const Mat4x4& a, const Vec4& v) { return a * v; },
+                [](const Mat4x4& a, const Vec3& v) { return a * v; }
+            ),
+            "operator[]", [](Mat4x4& m, uint8_t index) { return m[index]; }
+        );
+    });
 }

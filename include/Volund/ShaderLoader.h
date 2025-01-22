@@ -14,7 +14,7 @@ namespace Volund
         Geometry = 2,
     };
 
-    class ShaderLoader
+    class VOLUND_API ShaderLoader
     {
     public:
         ShaderSource GetSource();

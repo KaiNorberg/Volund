@@ -1,11 +1,13 @@
 #pragma once
 
+#include "Core.h"
+
 #include <cstdint>
 #include <string>
 
 namespace Volund
 {
-    class ImageLoader
+    class VOLUND_API ImageLoader
     {
     public:
         int32_t GetWidth() const;

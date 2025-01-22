@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class OpenGLVertexBuffer : public VertexBuffer
+    class VOLUND_API OpenGLVertexBuffer : public VertexBuffer
     {
     public:
         AABB GetAABB() override;

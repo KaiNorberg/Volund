@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class OpenGLUniformBufferBackend : public UniformBufferBackend
+    class VOLUND_API OpenGLUniformBufferBackend : public UniformBufferBackend
     {
     public:
         void SetData(const void* data, uint32_t size, uint32_t offset) override;

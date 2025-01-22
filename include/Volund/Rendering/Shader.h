@@ -3,16 +3,13 @@
 #include "Texture.h"
 #include "Framebuffer.h"
 #include "Uniform.h"
-
 #include "../ResourceLibrary/ResourceLibrary.h"
-
 #include "MaterialBlueprint.h"
-
 #include "../ShaderLoader.h"
 
 namespace Volund
 {
-    class Shader
+    class VOLUND_API Shader
     {
     public:
         virtual void Bind() = 0;

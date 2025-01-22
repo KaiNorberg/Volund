@@ -2,7 +2,7 @@
 
 #include "Scene.h"
 #include "Component/Transform.h"
-
+#include "Lua/LuaAPI.h"
 #include "Rendering/Renderer.h"
 
 namespace Volund
@@ -56,4 +56,18 @@ namespace Volund
 		this->m_mesh = mesh;
 		this->m_material = material;
 	}
+
+    VOLUND_USERTYPE_COMPONENT_REGISTER(MeshRenderer,
+    [](LuaState* state){
+        state->NewUsertype<MeshRenderer>("MeshRenderer", 
+            sol::constructors<>(),
+            "is_valid", &MeshRenderer::IsValid,
+            "set_layer", &MeshRenderer::SetLayer,
+            "get_layer_mask", &MeshRenderer::GetLayerMask,
+            "set_mesh", &MeshRenderer::SetMesh,
+            "set_material", &MeshRenderer::SetMaterial,
+            "get_mesh", &MeshRenderer::GetMesh,
+            "get_material", &MeshRenderer::GetMaterial
+        );
+    }, std::shared_ptr<Mesh>, std::shared_ptr<Material>);
 }

@@ -1,10 +1,11 @@
 #pragma once
 
 #include "Component.h"
+#include "../Math.h"
 
 namespace Volund
 {
-    class Transform : public Component
+    class VOLUND_API Transform : public Component
     {
     public:
         void SetRotation(const Vec3& rotation);
@@ -17,7 +18,7 @@ namespace Volund
         Vec3 pos;
         Vec3 scale;
         Quat quat;
-        Transform(Vec3 pos = Vec3(0.0f), Vec3 rotation = Vec3(0.0f), Vec3 scale = Vec3(1.0f));
+        Transform(const Vec3& pos = Vec3(0.0f), const Vec3& rotation = Vec3(0.0f), const Vec3& scale = Vec3(1.0f));
     private:
     };
 }

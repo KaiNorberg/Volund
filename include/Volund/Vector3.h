@@ -2,6 +2,7 @@
 
 #include "Vector.h"
 #include "Logger.h"
+#include "Core.h"
 
 #include <cstdint>
 #include <cmath>
@@ -9,7 +10,7 @@
 namespace Volund
 {
     template<typename T>
-    class Vector<3, T>
+    class VOLUND_API Vector<3, T>
     {
     public:
 

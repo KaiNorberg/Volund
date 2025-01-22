@@ -5,8 +5,8 @@
 namespace Volund
 {
     class Dispatcher;
-
-    class Job
+    
+    class VOLUND_API Job
     {
     public:
         Job(Task task, Task cleanupTask);

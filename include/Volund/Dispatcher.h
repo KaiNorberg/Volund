@@ -9,7 +9,7 @@
 
 namespace Volund
 {
-    class Dispatcher
+    class VOLUND_API Dispatcher
     {
     public:
         void Enqueue(const Event& e);

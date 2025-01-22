@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Math.h"
-
 #include <vector>
 #include <string_view>
 #include <filesystem>

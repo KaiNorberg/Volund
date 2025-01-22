@@ -6,7 +6,7 @@
 
 namespace Volund
 {
-    class AABB
+    class VOLUND_API AABB
     {
     public:
         Vec3 Min;

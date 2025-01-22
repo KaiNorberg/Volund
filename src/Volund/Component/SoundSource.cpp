@@ -1,9 +1,8 @@
 
 #include "Component/SoundSource.h"
-
 #include "Component/Transform.h"
-
 #include "Scene.h"
+#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -89,4 +88,21 @@ namespace Volund
 	{
 		this->m_source.SetBuffer(buffer);
 	}
+
+    VOLUND_USERTYPE_COMPONENT_REGISTER(SoundSource,
+    [](LuaState* state){
+        state->NewUsertype<SoundSource>("SoundSource", 
+            sol::constructors<>(),
+            "autoPlay", &SoundSource::AutoPlay,
+            "play", &SoundSource::Play,
+            "set_buffer", &SoundSource::SetBuffer,
+            "get_buffer", &SoundSource::GetBuffer,
+            "set_pitch", &SoundSource::SetPitch,
+            "get_pitch", &SoundSource::GetPitch,
+            "set_looping", &SoundSource::SetLooping,
+            "get_looping", &SoundSource::GetLooping,
+            "set_gain", &SoundSource::SetGain,
+            "get_gain", &SoundSource::GetGain
+        );
+    }, std::shared_ptr<AudioBuffer>);
 }

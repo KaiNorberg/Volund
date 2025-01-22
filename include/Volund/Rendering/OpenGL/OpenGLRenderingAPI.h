@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-    class OpenGLRenderingAPI : public RenderingAPIInstance
+    class VOLUND_API OpenGLRenderingAPI : public RenderingAPIInstance
     {
     public:
         IVec2 GetViewSize() override;

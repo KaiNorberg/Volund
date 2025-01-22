@@ -1,20 +1,25 @@
 #pragma once
 
-#include "../Scene.h"
+#include "../Core.h"
 
 #include <sol/sol.hpp>
 
 namespace Volund
 {
     class LuaAPI;
+    class Scene;
 
-    class LuaState
+    class VOLUND_API LuaState
     {
     public:
         std::string GetCwd();
         std::string GetSceneFilepath();
         sol::protected_function_result Script(std::string const& script);
         sol::protected_function_result ScriptFile(std::string const& file);
+        template <typename T, typename... Args>
+		sol::usertype<T> NewUsertype(Args&&... args) {
+			return this->m_state.new_usertype<T>(std::forward<Args>(args)...);
+		}
         std::shared_ptr<Scene> SceneRef();
         std::shared_ptr<Scene> LoadScene(std::string const& filepath);
         void SaveScene(std::string const& filepath);

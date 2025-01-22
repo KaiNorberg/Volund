@@ -1,12 +1,12 @@
 #pragma once
 
 #include "Component.h"
-
 #include "../Input.h"
+#include "../Math.h"
 
 namespace Volund
 {
-    class CameraMovement : public Component
+    class VOLUND_API CameraMovement : public Component
     {
     public:
         float speed;

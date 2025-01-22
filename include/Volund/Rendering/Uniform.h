@@ -25,7 +25,7 @@ namespace Volund
     using TextureUniformType = std::shared_ptr<Texture>;
     using FramebufferUniformType = std::shared_ptr<Framebuffer>;
 
-    class PrimitiveUniform
+    class VOLUND_API PrimitiveUniform
     {
     public:
         template<typename T>
@@ -45,7 +45,7 @@ namespace Volund
     };
 
     template<typename T, VOLUND_TEMPLATE_UNIFORM_TYPES_ONLY>
-    class Uniform : public PrimitiveUniform
+    class VOLUND_API Uniform : public PrimitiveUniform
     {
     public:
         T& Get();

@@ -5,7 +5,7 @@
 namespace Volund
 {
     template<typename T>
-    class UniformBuffer
+    class VOLUND_API UniformBuffer
     {
     public:
         T* operator ->();

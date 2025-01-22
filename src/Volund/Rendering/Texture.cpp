@@ -2,8 +2,8 @@
 
 #include "Rendering/RenderingAPI.h"
 #include "ImageLoader.h"
-
 #include "Rendering/OpenGL/OpenGLTexture.h"
+#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -41,5 +41,41 @@ namespace Volund
 		}
 		break;
 		}
-	}
+	}    
+	
+	VOLUND_USERTYPE_REGISTER(Texture,
+    [](LuaState* state){
+        state->NewUsertype<Texture>("Texture", 
+            "new", sol::overload(
+                [state](std::string const& filepath) { return Texture::Create(state->AbsolutePath(filepath)); },
+                [](uint32_t width, uint32_t height, sol::table imageData) 
+                {
+                    std::vector<unsigned char> pixels;
+                    for (auto& [key, value] : imageData) 
+                    {
+                        pixels.push_back(value.as<unsigned char>());
+                    }
+
+                    return Texture::Create(pixels.data(), width, height);
+                }
+            ),
+            "get_id", &Texture::GetID,
+            "get_width", &Texture::GetWidth,
+            "get_height", &Texture::GetHeight,
+            "bind", sol::overload(
+                [](std::shared_ptr<Texture> texture) { texture->Bind(); },
+                [](std::shared_ptr<Texture> texture, uint32_t unit) { texture->Bind(unit); }
+            ),
+            "set_data", [](std::shared_ptr<Texture> texture, uint32_t width, uint32_t height, sol::table imageData) 
+            {
+                std::vector<unsigned char> pixels;
+                for (auto& [key, value] : imageData) 
+                {
+                    pixels.push_back(value.as<unsigned char>());
+                }
+
+                texture->SetData(pixels.data(), width, height);
+            }
+        );
+    });
 }

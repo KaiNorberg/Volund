@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class OpenGLShader : public Shader
+    class VOLUND_API OpenGLShader : public Shader
     {
     public:
         void Bind() override;

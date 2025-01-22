@@ -4,11 +4,13 @@
 #include "../Event.h"
 #include "../Entity.h"
 
+#include <sol/sol.hpp>
+
 namespace Volund
 {
-    class Scene;
+    class VOLUND_API Scene;
 
-    class Component
+    class VOLUND_API Component
     {
     public:
         virtual void Procedure(const Event& e) {}

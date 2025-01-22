@@ -7,7 +7,7 @@
 
 namespace Volund
 {
-    class AudioModule : public Module
+    class VOLUND_API AudioModule : public Module
     {
     public:
         void OnAttach(Application* app) override;

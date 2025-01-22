@@ -11,7 +11,7 @@ struct ALCcontext;
 
 namespace Volund
 {
-    class AudioContext
+    class VOLUND_API AudioContext
     {
     public:
         ALCcontext* GetContext() const;

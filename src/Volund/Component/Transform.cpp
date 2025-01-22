@@ -1,5 +1,6 @@
 
 #include "Component/Transform.h"
+#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -44,10 +45,26 @@ namespace Volund
 		return modelMatrix;
 	}
 
-    Transform::Transform(Vec3 pos, Vec3 rotation, Vec3 scale)
+    Transform::Transform(const Vec3& pos, const Vec3& rotation, const Vec3& scale)
 	{
 		this->pos = pos;
 		this->quat = Quat(rotation);
 		this->scale = scale;
 	}
+
+    VOLUND_USERTYPE_COMPONENT_REGISTER(Transform,
+    [](LuaState* state){
+        state->NewUsertype<Transform>("Transform", 
+            sol::constructors<>(),
+            "pos", &Transform::pos,
+            "scale", &Transform::scale,
+            "set_rotation", &Transform::SetRotation,
+            "get_rotation", &Transform::GetRotation,
+            "add_rotation", &Transform::AddRotation,
+            "get_front", &Transform::GetFront,
+            "get_right", &Transform::GetRight,
+            "get_up", &Transform::GetUp,
+            "get_model_matrix", &Transform::GetModelMatrix
+        );
+    }, const Vec3&, const Vec3&, const Vec3&);
 }

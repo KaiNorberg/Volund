@@ -1,6 +1,6 @@
 #include "Rendering/Material.h"
-
 #include "Instrumentor.h"
+#include "Lua/LuaAPI.h"
 
 namespace Volund
 {
@@ -124,5 +124,82 @@ namespace Volund
 	Material::Material(std::shared_ptr<Shader> shader)
 	{
 		this->SetShader(shader);
-	}
+	}    
+	
+	VOLUND_USERTYPE_REGISTER(Material,
+    [](LuaState* state){
+        state->NewUsertype<Material>("Material", sol::constructors<>(),
+            "new", [](std::shared_ptr<Shader> shader) { return Material::Create(shader); },
+            "set_shader", &Material::SetShader,
+            "get_shader", &Material::GetShader,
+            "contains_int", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<IntUniformType>(name); 
+            },
+            "contains_float", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<FloatUniformType>(name); 
+            },
+            "contains_vec2", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<Vec2UniformType>(name); 
+            },
+            "contains_vec3", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<Vec3UniformType>(name); 
+            },
+            "contains_vec4", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<Vec4UniformType>(name); 
+            },
+            "contains_mat4x4", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<Mat4x4UniformType>(name); 
+            },
+            "contains_texture", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<TextureUniformType>(name); 
+            },
+            "contains_framebuffer", [](std::shared_ptr<Material> material, std::string const& name) 
+            { 
+                return material->Contains<FramebufferUniformType>(name); 
+            },
+            "set_int", [](std::shared_ptr<Material> material, std::string const& name, IntUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_float", [](std::shared_ptr<Material> material, std::string const& name, FloatUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_double", [](std::shared_ptr<Material> material, std::string const& name, DoubleUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_vec2", [](std::shared_ptr<Material> material, std::string const& name, Vec2UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_vec3", [](std::shared_ptr<Material> material, std::string const& name, Vec3UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_vec4", [](std::shared_ptr<Material> material, std::string const& name, Vec4UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_mat4x4", [](std::shared_ptr<Material> material, std::string const& name, Mat4x4UniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_texture", [](std::shared_ptr<Material> material, std::string const& name, TextureUniformType value)
+            {
+                material->Set(name, value);
+            },
+            "set_framebuffer", [](std::shared_ptr<Material> material, std::string const& name, FramebufferUniformType value)
+            {
+                material->Set(name, value);
+            }
+        );
+    });
 }

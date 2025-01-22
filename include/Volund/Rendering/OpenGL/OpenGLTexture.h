@@ -4,7 +4,7 @@
 
 namespace Volund
 {
-    class OpenGLTexture : public Texture
+    class VOLUND_API OpenGLTexture : public Texture
     {
     public:
         std::string GetFilepath() const override;

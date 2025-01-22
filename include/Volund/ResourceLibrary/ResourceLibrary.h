@@ -1,11 +1,13 @@
 #pragma once
 
+#include "../Core.h"
+
 #include <string>
 #include <unordered_map>
 
 namespace Volund
 {
-    class ResourceLibrary
+    class VOLUND_API ResourceLibrary
     {
     public:
         static bool IsResource(std::string const& filepath);

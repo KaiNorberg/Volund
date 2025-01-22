@@ -2,6 +2,7 @@
 
 #include "Audio/Audio.h"
 #include "Logger.h"
+#include "Lua/LuaAPI.h"
 
 #include <AudioFile/AudioFile.h>
 #include <AL/al.h>
@@ -62,4 +63,11 @@ namespace Volund
 			this->m_buffer = 0;
 		}
 	}
+
+	VOLUND_USERTYPE_REGISTER(AudioBuffer,
+    [](LuaState* state){
+        state->NewUsertype<AudioBuffer>("AudioBuffer", sol::constructors<>(),
+            "new", [state](std::string const& filepath) { return std::make_shared<AudioBuffer>(state->AbsolutePath(filepath)); }
+        );
+    });
 }

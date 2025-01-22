@@ -18,7 +18,7 @@ namespace Volund
         std::string Serialize(int Depth);
     };
 
-    class InstrumentorTimer
+    class VOLUND_API InstrumentorTimer
     {
     public:
         InstrumentorTimer(std::string const& Name);
@@ -28,7 +28,7 @@ namespace Volund
         std::shared_ptr<InstrumentorNode> _Node;
     };
 
-    class Instrumentor
+    class VOLUND_API Instrumentor
     {
     public:
     private:

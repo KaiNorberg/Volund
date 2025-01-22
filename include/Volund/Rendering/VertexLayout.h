@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../Core.h"
+
 #include <cstdint>
 #include <string>
 #include <vector>
@@ -23,7 +25,7 @@ namespace Volund
         Int4 = VOLUND_ATTRIBUTE_INT + (4 << 2)
     };
 
-    class VertexAttribute
+    class VOLUND_API VertexAttribute
     {
     public:
         uint32_t GetDataType() const;

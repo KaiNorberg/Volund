@@ -1,6 +1,7 @@
 #pragma once
 
 #include "TextureSpec.h"
+#include "../Core.h"
 
 #include <vector>
 #include <cstdint>
@@ -20,7 +21,7 @@ namespace Volund
         bool SwapChainTarget = false;
     };
 
-    class Framebuffer
+    class VOLUND_API Framebuffer
     {
     public:
         virtual uint32_t GetID() const = 0;
