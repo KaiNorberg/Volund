@@ -37,7 +37,8 @@ namespace Volund
             std::string snakeCaseName;
             for (char c : name) 
             {
-                if (std::isupper(c) && !snakeCaseName.empty()) {
+                if (std::isupper(c) && !snakeCaseName.empty()) 
+                {
                     snakeCaseName += '_';
                 }
                 snakeCaseName += std::tolower(c);

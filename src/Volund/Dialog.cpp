@@ -42,6 +42,7 @@ namespace Volund
         bool cursorEnabled = window->IsCursorEnabled();
 
         window->SetCursorEnabled(true);
+        
         const char* ret = tinyfd_openFileDialog("", std::filesystem::current_path().string().c_str(), 0, 0, "", 0);
         window->SetCursorEnabled(cursorEnabled);
 

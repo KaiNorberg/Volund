@@ -10,9 +10,9 @@
 #include "Panel/MaterialEditor.h"
 
 #include <imgui.h>
-#include <backends/imgui_impl_opengl3.h>
-#include <backends/imgui_impl_glfw.h>
 #include <imgui_internal.h>
+#include <imgui_backends/imgui_impl_opengl3.h>
+#include <imgui_backends/imgui_impl_glfw.h>
 #include <memory>
 #include <misc/cpp/imgui_stdlib.h>
 #include <fstream>
@@ -216,6 +216,11 @@ Editor::Editor()
 	SetDefaultImGuiStyle();
 
 	ImGui::LoadIniSettingsFromDisk("data/imgui.ini");
+}
+
+Editor::~Editor()
+{
+	ImGui::SaveIniSettingsToDisk("data/imgui.ini");
 }
 
 bool Editor::BeginDockSpace()
