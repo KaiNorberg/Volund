@@ -23,8 +23,8 @@ namespace Volund
 
         for (auto& record : m_records)
         {
+            VOLUND_INFO("Binding usertype '{}'", record.name);
             record.usertypeFunc(state);
-            VOLUND_INFO("{}", record.name);
         }
         
         state->m_state.new_usertype<Entity>("Entity");

@@ -43,7 +43,6 @@ namespace Volund
     
     VOLUND_USERTYPE_REGISTER(Mesh,
     [](LuaState* state){
-        VOLUND_INFO("TESTTESTTEST");
         state->NewUsertype<Mesh>("Mesh", sol::constructors<>(),
             "new", [state](std::string const& filepath) { return Mesh::Create(state->AbsolutePath(filepath)); }
         );

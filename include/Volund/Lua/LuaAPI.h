@@ -8,7 +8,6 @@
 #define VOLUND_USERTYPE_REGISTER(type, usertypeFunc) \
 struct type##Registrar { \
     type##Registrar() { \
-        VOLUND_INFO("Constructing usertype: {}", #type); \
         LuaAPI::RegisterUsertype(#type, (usertypeFunc), nullptr); \
     } \
 }; \
