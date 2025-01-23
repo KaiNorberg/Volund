@@ -1,9 +1,9 @@
-#include "Rendering/Texture.h"
+#include "Rendering/Texture.hpp"
 
-#include "Rendering/RenderingAPI.h"
-#include "ImageLoader.h"
-#include "Rendering/OpenGL/OpenGLTexture.h"
-#include "Lua/LuaAPI.h"
+#include "Rendering/RenderingAPI.hpp"
+#include "ImageLoader.hpp"
+#include "Rendering/OpenGL/OpenGLTexture.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

@@ -1,7 +1,7 @@
-#include "Dialog.h"
+#include "Dialog.hpp"
 
-#include "tinyfiledialogs/tinyfiledialogs.c"
-#include "tinyfiledialogs/tinyfiledialogs.h"
+#include <tinyfiledialogs/tinyfiledialogs.c>
+#include <tinyfiledialogs/tinyfiledialogs.h>
 
 namespace Volund
 {

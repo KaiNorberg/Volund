@@ -1,4 +1,4 @@
-#include "EditorContext.h"
+#include "EditorContext.hpp"
 
 bool EditorContext::IsPaused()
 {

@@ -1,10 +1,10 @@
 
-#include "Component/PointLight.h"
+#include "Component/PointLight.hpp"
 
-#include "Rendering/Renderer.h"
-#include "Lua/LuaAPI.h"
-#include "Scene.h"
-#include "Component/Transform.h"
+#include "Rendering/Renderer.hpp"
+#include "Lua/LuaAPI.hpp"
+#include "Scene.hpp"
+#include "Component/Transform.hpp"
 
 namespace Volund
 {

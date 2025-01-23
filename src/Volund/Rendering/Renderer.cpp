@@ -1,8 +1,8 @@
-#include "Rendering/Renderer.h"
+#include "Rendering/Renderer.hpp"
 
-#include "Frustum.h"
+#include "Frustum.hpp"
 
-#include "Component/Components.h"
+#include "Component/Components.hpp"
 
 namespace Volund
 {

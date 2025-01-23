@@ -1,8 +1,8 @@
 
-#include "Component/SoundListener.h"
-#include "Component/Transform.h"
-#include "Scene.h"
-#include "Lua/LuaAPI.h"
+#include "Component/SoundListener.hpp"
+#include "Component/Transform.hpp"
+#include "Scene.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

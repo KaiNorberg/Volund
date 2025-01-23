@@ -1,8 +1,8 @@
-#include "Rendering/UniformBufferBackend.h"
+#include "Rendering/UniformBufferBackend.hpp"
 
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/RenderingAPI.hpp"
 
-#include "Rendering/OpenGL/OpenGLUniformBufferBackend.h"
+#include "Rendering/OpenGL/OpenGLUniformBufferBackend.hpp"
 
 namespace Volund
 {

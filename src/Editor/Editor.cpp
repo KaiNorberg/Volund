@@ -1,13 +1,13 @@
-#include "Editor.h"
-#include "ImGuiStyles.h"
-#include "EditorContext.h"
+#include "Editor.hpp"
+#include "ImGuiStyles.hpp"
+#include "EditorContext.hpp"
 
-#include "Panel/Output.h"
-#include "Panel/Viewport.h"
-#include "Panel/Inspector.h"
-#include "Panel/Hierarchy.h"
-#include "Panel/Explorer.h"
-#include "Panel/MaterialEditor.h"
+#include "Panel/Output.hpp"
+#include "Panel/Viewport.hpp"
+#include "Panel/Inspector.hpp"
+#include "Panel/Hierarchy.hpp"
+#include "Panel/Explorer.hpp"
+#include "Panel/MaterialEditor.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -64,6 +64,7 @@ void Editor::Procedure(const VL::Event& e)
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+		this->GetWindow()->Flush();
 	}
 	break;
 	case VOLUND_EVENT_KEY:
@@ -135,7 +136,7 @@ void Editor::Procedure(const VL::Event& e)
 
 		this->m_context->state->LoadScene(filepath + "/new_scene.lua");
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
-		
+
 	}
 	break;
 	case EDITOR_CMD_PLAY:

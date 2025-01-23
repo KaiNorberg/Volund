@@ -1,5 +1,5 @@
-#include "Vector2.h"
-#include "Lua/LuaAPI.h"
+#include "Vector2.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

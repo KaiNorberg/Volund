@@ -1,4 +1,4 @@
-#include "Rendering/TextureSpec.h"
+#include "Rendering/TextureSpec.hpp"
 
 namespace Volund
 {

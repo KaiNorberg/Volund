@@ -1,5 +1,5 @@
 
-#include "Rendering/OpenGL/OpenGLVertexBuffer.h"
+#include "Rendering/OpenGL/OpenGLVertexBuffer.hpp"
 
 #include <glad/glad.h>
 

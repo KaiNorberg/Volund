@@ -1,8 +1,8 @@
-#include "Rendering/Mesh.h"
+#include "Rendering/Mesh.hpp"
 
-#include "Rendering/OpenGL/OpenGLMesh.h"
-#include "ModelLoader.h"
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/OpenGL/OpenGLMesh.hpp"
+#include "ModelLoader.hpp"
+#include "Rendering/RenderingAPI.hpp"
 
 #include <glad/glad.h>
 

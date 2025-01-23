@@ -1,4 +1,4 @@
-#include "Hierarchy.h"
+#include "Hierarchy.hpp"
 
 #include <imgui.h>
 

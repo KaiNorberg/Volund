@@ -1,7 +1,7 @@
 
-#include "Rendering/VertexLayout.h"
+#include "Rendering/VertexLayout.hpp"
 
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/RenderingAPI.hpp"
 
 #include <glad/glad.h>
 

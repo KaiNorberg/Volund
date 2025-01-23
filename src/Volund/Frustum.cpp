@@ -1,6 +1,6 @@
-#include "Frustum.h"
+#include "Frustum.hpp"
 
-#include <Instrumentor.h>
+#include "Instrumentor.hpp"
 
 namespace Volund
 {

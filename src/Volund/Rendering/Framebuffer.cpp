@@ -1,8 +1,8 @@
-#include "Rendering/Framebuffer.h"
+#include "Rendering/Framebuffer.hpp"
 
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/RenderingAPI.hpp"
 
-#include "Rendering/OpenGL/OpenGLFramebuffer.h"
+#include "Rendering/OpenGL/OpenGLFramebuffer.hpp"
 
 namespace Volund
 {

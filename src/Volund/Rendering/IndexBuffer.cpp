@@ -1,9 +1,9 @@
 
-#include "Rendering/IndexBuffer.h"
+#include "Rendering/IndexBuffer.hpp"
 
-#include "Rendering/OpenGL/OpenGLIndexBuffer.h"
+#include "Rendering/OpenGL/OpenGLIndexBuffer.hpp"
 
-#include "Rendering/RenderingAPI.h"
+#include "Rendering/RenderingAPI.hpp"
 
 namespace Volund
 {

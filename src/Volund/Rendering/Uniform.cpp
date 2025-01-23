@@ -1,7 +1,7 @@
 
-#include "Rendering/Uniform.h"
+#include "Rendering/Uniform.hpp"
 
-#include "Rendering/Shader.h"
+#include "Rendering/Shader.hpp"
 
 namespace Volund
 {

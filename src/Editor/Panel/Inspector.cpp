@@ -1,6 +1,6 @@
-#include "Inspector.h"
+#include "Inspector.hpp"
 
-#include "Editor.h"
+#include "Editor.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>

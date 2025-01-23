@@ -1,8 +1,8 @@
-#include "Rendering/OpenGL/OpenGLShader.h"
+#include "Rendering/OpenGL/OpenGLShader.hpp"
 
 #include <glad/glad.h>
 
-#include "Instrumentor.h"
+#include "Instrumentor.hpp"
 
 namespace Volund
 {

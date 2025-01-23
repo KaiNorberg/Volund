@@ -1,12 +1,12 @@
-#include "Lua/LuaAPI.h"
+#include "Lua/LuaAPI.hpp"
 
-#include "Component/Components.h"
+#include "Component/Components.hpp"
 
 namespace Volund
 {
     void LuaAPI::RegisterUsertype(std::string const& name, UsertypeRegisterFunc usertypeFunc, ComponentRegisterFunc componentFunc)
     {    
-        m_records.push_back((UsertypeRecord){name, usertypeFunc, componentFunc});
+        m_records.push_back(UsertypeRecord(name, usertypeFunc, componentFunc));
     }
 
     void LuaAPI::Bind(LuaState* state)

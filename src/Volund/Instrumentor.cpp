@@ -1,4 +1,4 @@
-#include "Instrumentor.h"
+#include "Instrumentor.hpp"
 
 #ifdef VOLUND_ENABLE_PROFILING
 

@@ -1,5 +1,5 @@
 
-#include "Rendering/OpenGL/OpenGLRenderingAPI.h"
+#include "Rendering/OpenGL/OpenGLRenderingAPI.hpp"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>

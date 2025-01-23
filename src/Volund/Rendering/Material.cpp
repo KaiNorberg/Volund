@@ -1,6 +1,6 @@
-#include "Rendering/Material.h"
-#include "Instrumentor.h"
-#include "Lua/LuaAPI.h"
+#include "Rendering/Material.hpp"
+#include "Instrumentor.hpp"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {

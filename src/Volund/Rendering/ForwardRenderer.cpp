@@ -1,6 +1,6 @@
-#include "Rendering/ForwardRenderer.h"
+#include "Rendering/ForwardRenderer.hpp"
 
-#include "Frustum.h"
+#include "Frustum.hpp"
 
 namespace Volund
 {

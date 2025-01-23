@@ -1,6 +1,6 @@
-#include "Input.h"
+#include "Input.hpp"
 
-#include "Instrumentor.h"
+#include "Instrumentor.hpp"
 
 #include <string.h>
 

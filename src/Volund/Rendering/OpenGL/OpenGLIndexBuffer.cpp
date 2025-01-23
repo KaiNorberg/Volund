@@ -1,5 +1,5 @@
 
-#include "Rendering/OpenGL/OpenGLIndexBuffer.h"
+#include "Rendering/OpenGL/OpenGLIndexBuffer.hpp"
 
 #include <glad/glad.h>
 

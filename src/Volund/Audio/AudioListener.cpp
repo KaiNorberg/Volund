@@ -1,6 +1,6 @@
-#include "Audio/AudioListener.h"
+#include "Audio/AudioListener.hpp"
 
-#include "Audio/Audio.h"
+#include "Audio/Audio.hpp"
 
 #include <AL/al.h>
 #include <AL/alext.h>

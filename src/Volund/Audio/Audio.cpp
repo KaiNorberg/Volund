@@ -1,6 +1,6 @@
-#include "Audio/Audio.h"
+#include "Audio/Audio.hpp"
 
-#include "Logger.h"
+#include "Logger.hpp"
 
 #include <AL/al.h>
 #include <AL/alext.h>

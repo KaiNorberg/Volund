@@ -1,9 +1,9 @@
 
-#include "Scene.h"
+#include "Scene.hpp"
 
-#include "Window.h"
+#include "Window.hpp"
 
-#include "Component/Components.h"
+#include "Component/Components.hpp"
 
 namespace Volund
 {
@@ -53,8 +53,8 @@ namespace Volund
 				entity.index = i;
 				entity.generation = this->m_newGeneration++;
 
-				this->m_entites.push_back(EntityEntry(entity));
-				this->m_indirectionTable[i].recordIndex = this->m_entites.size() - 1;
+				this->m_entities.push_back(EntityEntry(entity));
+				this->m_indirectionTable[i].recordIndex = this->m_entities.size() - 1;
 				this->m_indirectionTable[i].generation = entity.generation;
 				this->m_indirectionTable[i].avail = false;
 
@@ -66,8 +66,8 @@ namespace Volund
 		entity.index = this->m_indirectionTable.size();
 		entity.generation = this->m_newGeneration++;
 		
-		this->m_entites.push_back(EntityEntry(entity));
-		this->m_indirectionTable.push_back((IndirectionEntry){this->m_entites.size() - 1, entity.generation, false});
+		this->m_entities.push_back(EntityEntry(entity));
+		this->m_indirectionTable.push_back(IndirectionEntry(this->m_entities.size() - 1, entity.generation, false));
 		return entity;
 	}
 
@@ -80,13 +80,13 @@ namespace Volund
 
     	uint64_t recordIndex = this->m_indirectionTable[entity.index].recordIndex;
 
-		if (recordIndex < this->m_entites.size() - 1)
+		if (recordIndex < this->m_entities.size() - 1)
 		{
-			this->m_entites[recordIndex] = std::move(m_entites.back());
-			this->m_indirectionTable[this->m_entites[recordIndex].m_entity.index].recordIndex = recordIndex;
+			this->m_entities[recordIndex] = std::move(m_entities.back());
+			this->m_indirectionTable[this->m_entities[recordIndex].m_entity.index].recordIndex = recordIndex;
 		}
 		
-		this->m_entites.pop_back();
+		this->m_entities.pop_back();
 		this->m_indirectionTable[entity.index].avail = true;
 	}
 
@@ -97,7 +97,7 @@ namespace Volund
 
 	void Scene::Procedure(const Event& e)
 	{
-		for (auto& entity : this->m_entites)
+		for (auto& entity : this->m_entities)
 		{
 			for (auto& [typeId, component] : entity)
 			{
@@ -108,12 +108,12 @@ namespace Volund
 
 	std::vector<Scene::EntityEntry>::iterator Scene::begin()
 	{
-		return this->m_entites.begin();
+		return this->m_entities.begin();
 	}
 
 	std::vector<Scene::EntityEntry>::iterator Scene::end()
 	{
-		return this->m_entites.end();
+		return this->m_entities.end();
 	}
 
 	Scene::Scene()
@@ -123,7 +123,7 @@ namespace Volund
 
 	Scene::~Scene()
 	{
-		this->m_entites.clear();
+		this->m_entities.clear();
 	}
 
 	bool operator<(const size_t& a, const Scene::ComponentEntry& b)

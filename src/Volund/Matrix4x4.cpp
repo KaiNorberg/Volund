@@ -1,6 +1,6 @@
-#include "Matrix4x4.h"
+#include "Matrix4x4.hpp"
 
-#include "Lua/LuaAPI.h"
+#include "Lua/LuaAPI.hpp"
 
 namespace Volund
 {
