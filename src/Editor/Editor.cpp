@@ -57,7 +57,7 @@ void Editor::Procedure(const VL::Event& e)
 
 			for (auto& panel : this->m_panels)
 			{
-			    //panel->Procedure(e);
+			    panel->Procedure(e);
 			}
 		}
 
@@ -136,7 +136,7 @@ void Editor::Procedure(const VL::Event& e)
 
 		this->m_context->state->LoadScene(filepath + "/new_scene.lua");
 		this->GetDispatcher()->Enqueue(EDITOR_EVENT_RESET);
-		
+
 	}
 	break;
 	case EDITOR_CMD_PLAY:
