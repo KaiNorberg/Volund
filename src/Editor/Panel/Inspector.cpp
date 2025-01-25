@@ -51,16 +51,16 @@ void Inspector::OnProcedure(const VL::Event& e)
 		{
 			auto meshRenderer = scene->GetComponent<VL::MeshRenderer>(selectedEntity, i);
 
-			std::string materialKey = this->m_context->state->GetKey(meshRenderer->GetMaterial());
-			if (ImGuiAsset("Material", materialKey))
+			std::shared_ptr<VL::Material> newMaterial = ImGuiAssetSelector("Material", meshRenderer->GetMaterial(), this->m_context->state);
+			if (newMaterial != nullptr)
 			{
-
+				meshRenderer->SetMaterial(newMaterial);
 			}
 
-			std::string meshKey = this->m_context->state->GetKey(meshRenderer->GetMesh());
-			if (ImGuiAsset("Mesh", meshKey))
+			std::shared_ptr<VL::Mesh> newMesh = ImGuiAssetSelector("Mesh", meshRenderer->GetMesh(), this->m_context->state);
+			if (newMesh != nullptr)
 			{
-
+				meshRenderer->SetMesh(newMesh);
 			}
 		});
 

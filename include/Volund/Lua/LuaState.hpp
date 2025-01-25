@@ -16,7 +16,7 @@ namespace Volund
         std::string GetSceneFilepath();
         sol::protected_function_result Script(std::string const& script);
         sol::protected_function_result ScriptFile(std::string const& file);
-        template <typename T, typename... Args>
+        template<typename T, typename... Args>
 		sol::usertype<T> NewUsertype(Args&&... args) {
 			return this->m_state.new_usertype<T>(std::forward<Args>(args)...);
 		}
@@ -27,18 +27,22 @@ namespace Volund
         std::string RelativePath(std::string const& absolutePath);
         template<typename T>
         std::string GetKey(std::shared_ptr<T> object);
+        template<typename T>
+        void GetObjects(std::vector<std::pair<std::string, std::shared_ptr<T>>>* out);
         LuaState(std::string const& cwd = ".");
         ~LuaState();
+        sol::state m_state;
     private:
         friend LuaAPI;
         std::string m_cwd;
         std::string m_sceneFilepath;
-        sol::state m_state;
         sol::object m_scene;
     };
 
+
+#ifdef VOLUND_BUILD
     template <typename T> 
-    inline std::string LuaState::GetKey(std::shared_ptr<T> object)
+    std::string LuaState::GetKey(std::shared_ptr<T> object)
     {	
         sol::global_table global = this->m_state.globals();
         for (auto& [key, globalObject] : global)
@@ -54,4 +58,20 @@ namespace Volund
 
         return "";
     }
+
+    template<typename T>
+    void LuaState::GetObjects(std::vector<std::pair<std::string, std::shared_ptr<T>>>* out)
+    {
+        sol::global_table globals = this->m_state.globals();
+        for (auto& [key, object] : globals)
+        {
+            if (!object.is<std::shared_ptr<T>>())
+            {
+                continue;
+            }
+
+            out->push_back({key.as<std::string>(), object.as<std::shared_ptr<T>>()});
+        }
+    }
+#endif
 }

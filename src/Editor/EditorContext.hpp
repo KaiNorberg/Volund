@@ -21,12 +21,13 @@ public:
 
     VL::Entity selectedEntity = VOLUND_ENTITY_NULL;
     std::shared_ptr<VL::LuaState> state;
+    std::shared_ptr<VL::Window> window;
 
     bool IsPaused();
 
     void Enqueue(const VL::Event& e);
 
-    EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher);
+    EditorContext(std::shared_ptr<VL::Dispatcher> dispatcher, std::shared_ptr<VL::Window> window);
 
 private:
 

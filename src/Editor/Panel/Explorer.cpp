@@ -69,7 +69,11 @@ void Explorer::Render()
 		}
 		if (ImGui::MenuItem("Import"))
 		{
-			//std::string file = VL::Dialog::OpenFile(this->m_context->);
+			std::string file = VL::Dialog::OpenFile(this->m_context->window);
+			if (file != "")
+			{
+				std::filesystem::copy(file, this->m_cwd);
+			}
 
 			ImGui::CloseCurrentPopup();
 		}

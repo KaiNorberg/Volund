@@ -3,14 +3,18 @@
 #include "Scene.hpp"
 #include "../Lua/LuaState.hpp"
 
-// Note: The scene usertype should not be registered. For the sake of allowing easier component method registration, it is added into the api manually.
-
+// Note: The scene usertype should not be registered. 
+// For the sake of allowing easier component method registration, it is added into the api manually. Registration should only be called once and be in a .cpp file.
+// We are implementing the templated methods of LuaState in order to avoid issues with the shared library RTTI barrier.
+#ifdef VOLUND_BUILD
 #define VOLUND_USERTYPE_REGISTER(type, usertypeFunc) \
 struct type##Registrar { \
     type##Registrar() { \
         LuaAPI::RegisterUsertype(#type, (usertypeFunc), nullptr); \
     } \
 }; \
+template std::string LuaState::GetKey<type>(std::shared_ptr<type> object); \
+template void LuaState::GetObjects<type>(std::vector<std::pair<std::string, std::shared_ptr<type>>>*); \
 static type##Registrar type##Instance;
 
 #define VOLUND_USERTYPE_COMPONENT_REGISTER(type, usertypeFunc, ...) \
@@ -24,6 +28,7 @@ struct type##Registrar { \
     } \
 }; \
 static type##Registrar type##Instance;
+#endif
 
 namespace Volund
 {

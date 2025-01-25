@@ -205,7 +205,7 @@ Editor::Editor()
 	window->ConnectKeyCallback(ImGui_ImplGlfw_KeyCallback);
 	window->ConnectCharCallback(ImGui_ImplGlfw_CharCallback);
 
-	this->m_context = std::make_shared<EditorContext>(this->GetDispatcher());
+	this->m_context = std::make_shared<EditorContext>(this->GetDispatcher(), this->GetWindow());
 
 	this->m_panels.push_back(std::make_shared<Viewport>(this->m_context));
 	this->m_panels.push_back(std::make_shared<Output>(this->m_context));

@@ -46,6 +46,14 @@ namespace Volund
     {
         VOLUND_LOG_LOADING("scene", filepath);
 
+        sol::global_table globals = this->m_state.globals();
+        for (auto& [key, object] : globals) 
+        {
+            if (object.is<sol::userdata>() && !object.is<sol::function>()) 
+            {
+                globals[key] = sol::nil;
+            }
+        }
         std::string oldCwd = this->m_cwd;
         this->m_cwd = std::filesystem::absolute(filepath).parent_path().string();
 
@@ -289,7 +297,6 @@ namespace Volund
 
         return std::filesystem::relative(absolutePath, this->m_cwd).string();
     }
-
 
     LuaState::LuaState(std::string const& cwd)
     {
