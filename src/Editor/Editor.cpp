@@ -8,6 +8,7 @@
 #include "Panel/Hierarchy.hpp"
 #include "Panel/Explorer.hpp"
 #include "Panel/MaterialEditor.hpp"
+#include "Panel/AssetRegistry.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -191,7 +192,7 @@ Editor::Editor()
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
-	io.IniFilename = "data/imgui.ini";
+	io.IniFilename = NULL;
 	io.Fonts->AddFontFromFileTTF("data/fonts/FiraCode-Regular.ttf", 15.5f);
 
 	ImGui_ImplGlfw_InitForOpenGL(window->GetGlfwWindow(), false);
@@ -213,6 +214,7 @@ Editor::Editor()
 	this->m_panels.push_back(std::make_shared<Explorer>(this->m_context));
 	this->m_panels.push_back(std::make_shared<Hierarchy>(this->m_context));
 	this->m_panels.push_back(std::make_shared<MaterialEditor>(this->m_context));
+	this->m_panels.push_back(std::make_shared<AssetRegistry>(this->m_context));
 
 	SetDefaultImGuiStyle();
 
@@ -222,6 +224,11 @@ Editor::Editor()
 Editor::~Editor()
 {
 	ImGui::SaveIniSettingsToDisk("data/imgui.ini");
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+
+	ImGui::DestroyContext();
 }
 
 bool Editor::BeginDockSpace()

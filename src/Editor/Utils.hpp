@@ -53,48 +53,113 @@ template<typename T>
 std::shared_ptr<T> ImGuiAssetSelector(const std::string& name, std::shared_ptr<T> selected, std::shared_ptr<VL::LuaState> state)
 {
     std::shared_ptr<T> output = nullptr;
-
-	ImGui::PushID(name.c_str());
+    static std::string searchBuffer;
+    
+    ImGui::PushID(name.c_str());
     ImGuiStartCombo();
 
-    ImGuiColoredText(name.c_str());
+    ImGuiColoredText(name);
     ImGuiNextColumn();
 
     float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
     ImVec2 buttonSize(-FLT_MIN, lineHeight);
 
-    std::string displayText;
-    if (selected == nullptr)
+    std::string displayText = selected ? state->GetKey(selected) : "Select an asset...";
+    if (selected && displayText.empty())
     {
-        displayText = "Select an asset...";
-    }
-    else
-    {
-        std::string key = state->GetKey(selected);
-        if (key.empty())
-        {
-            displayText = "Invalid asset";
-        }
-        else
-        {
-            displayText = key;
-        }
+        displayText = "Invalid asset";
     }
 
     std::vector<std::pair<std::string, std::shared_ptr<T>>> assets;
     state->GetObjects(&assets);
 
-    ImGui::PushItemWidth(-FLT_MIN); 
+    ImGui::PushItemWidth(-FLT_MIN);
     if (ImGui::BeginCombo("##asset_selector", displayText.c_str()))
     {
+        float searchWidth = ImGui::GetContentRegionAvail().x - 20;
+        
+        ImGui::SetNextItemWidth(searchWidth);
+        bool searchChanged = ImGui::InputText("##search", &searchBuffer, 
+            ImGuiInputTextFlags_AutoSelectAll | ImGuiInputTextFlags_EscapeClearsAll);
+        
+        if (ImGui::IsWindowAppearing())
+        {
+            ImGui::SetKeyboardFocusHere(-1);
+        }
+        
+        if (!searchBuffer.empty())
+        {
+            ImGui::SameLine();
+            if (ImGui::SmallButton("×"))
+            {
+                searchBuffer.clear();
+                searchChanged = true;
+            }
+        }
+        
+        ImGui::Separator();
+
+        bool hasVisibleItems = false;
+        
         for (auto& [key, asset] : assets)
         {
+            if (!searchBuffer.empty())
+            {
+                std::string lowerKey = key;
+                std::string lowerSearch = searchBuffer;
+                std::transform(lowerKey.begin(), lowerKey.end(), lowerKey.begin(), ::tolower);
+                std::transform(lowerSearch.begin(), lowerSearch.end(), lowerSearch.begin(), ::tolower);
+                
+                if (lowerKey.find(lowerSearch) == std::string::npos)
+                {
+                    continue;
+                }
+            }
+            
+            hasVisibleItems = true;
             bool isSelected = (selected == asset);
             
-            if (ImGui::Selectable(key.c_str(), isSelected))
+            if (!searchBuffer.empty())
             {
-                output = asset;
-                break;
+                size_t matchPos = key.find(searchBuffer);
+                if (matchPos != std::string::npos)
+                {
+                    std::string before = key.substr(0, matchPos);
+                    std::string match = key.substr(matchPos, searchBuffer.length());
+                    std::string after = key.substr(matchPos + searchBuffer.length());
+                    
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImGui::GetStyle().Colors[ImGuiCol_TextDisabled]);
+                    ImGui::Selectable(before.c_str(), false, ImGuiSelectableFlags_Disabled);
+                    ImGui::SameLine(0, 0);
+                    
+                    ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(1.0f, 1.0f, 0.0f, 1.0f));
+                    ImGui::Selectable(match.c_str(), false, ImGuiSelectableFlags_Disabled);
+                    ImGui::PopStyleColor();
+                    
+                    ImGui::SameLine(0, 0);
+                    ImGui::Selectable(after.c_str(), false, ImGuiSelectableFlags_Disabled);
+                    ImGui::PopStyleColor();
+                    
+                    ImGui::SetCursorPosY(ImGui::GetCursorPosY() - lineHeight);
+                    if (ImGui::Selectable("##select", isSelected, 0, ImVec2(-1, lineHeight)))
+                    {
+                        output = asset;
+                    }
+                }
+                else
+                {
+                    if (ImGui::Selectable(key.c_str(), isSelected))
+                    {
+                        output = asset;
+                    }
+                }
+            }
+            else
+            {
+                if (ImGui::Selectable(key.c_str(), isSelected))
+                {
+                    output = asset;
+                }
             }
 
             if (isSelected)
@@ -102,7 +167,17 @@ std::shared_ptr<T> ImGuiAssetSelector(const std::string& name, std::shared_ptr<T
                 ImGui::SetItemDefaultFocus();
             }
         }
+        
+        if (!hasVisibleItems && !searchBuffer.empty())
+        {
+            ImGui::TextColored(ImGui::GetStyle().Colors[ImGuiCol_TextDisabled], "No matching assets found");
+        }
+        
         ImGui::EndCombo();
+    }
+    else if (!ImGui::IsPopupOpen(""))
+    {
+        searchBuffer.clear();
     }
     ImGui::PopItemWidth();
 

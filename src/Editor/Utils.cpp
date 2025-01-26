@@ -81,7 +81,7 @@ bool ImGuiString(std::string const& name, std::string& out)
 
 	ImGuiStartCombo();
 
-	ImGuiColoredText(name.data());
+	ImGuiColoredText(name);
 	ImGuiNextColumn();
 
 	std::string newValue = out;
@@ -187,7 +187,7 @@ bool ImGuiVec2(std::string const& name, VL::Vec2& value, float speed, float defa
 	ImGui::Columns(2);
 	ImGui::SetColumnWidth(0, 100);
 
-	ImGuiColoredText(name.data());
+	ImGuiColoredText(name);
 	ImGui::NextColumn();
 
 	float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -249,7 +249,7 @@ bool ImGuiVec3(std::string const& name, VL::Vec3& value, float speed, float defa
 	ImGui::Columns(2);
 	ImGui::SetColumnWidth(0, 100);
 
-	ImGuiColoredText(name.data());
+	ImGuiColoredText(name);
 	ImGui::NextColumn();
 
 	float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;
@@ -329,7 +329,7 @@ bool ImGuiVec4(std::string const& name, VL::Vec4& value, float speed, float defa
 	ImGui::Columns(2);
 	ImGui::SetColumnWidth(0, 100);
 
-	ImGuiColoredText(name.data());
+	ImGuiColoredText(name);
 	ImGui::NextColumn();
 
 	float lineHeight = GImGui->Font->FontSize + GImGui->Style.FramePadding.y * 2.0f;

@@ -12,33 +12,27 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 	{
 	case VOLUND_EVENT_RENDER:
 	{
-		/*auto scene = this->m_context->state->SceneRef();
+		auto scene = this->m_context->state->SceneRef();
 		auto state = this->m_context->state;
 
-		std::string materialPath = scene->FetchFilepath<VL::Material>(this->m_selectedMaterial);
-		if (ImGuiFile("Material/Effect", materialPath))
+		std::shared_ptr<VL::Material> newMaterial = ImGuiAssetSelector("Material", this->m_selectedMaterial, this->m_context->state);
+		if (newMaterial != nullptr)
 		{
-			this->m_selectedMaterial = scene->FetchAsset<VL::Material>(materialPath);
+			this->m_selectedMaterial = newMaterial;
 		}
-		ImGui::Separator();
-		ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 5);
-
 		if (this->m_selectedMaterial == nullptr)
 		{
-			ImGui::Text("Invalid material!");
 			return;
 		}
-
-		bool changed = false;
 
 		ImVec2 listBoxSize = ImVec2(-FLT_MIN, ImGui::GetTextLineHeightWithSpacing() + 10);
 		if (ImGui::BeginListBox("##MaterialEditorShader", listBoxSize))
 		{
-			std::string shaderPath = scene->FetchFilepath<VL::Shader>(this->m_selectedMaterial->GetShader());
-			if (ImGuiFile("Shader", shaderPath))
+			std::shared_ptr<VL::Shader> shader = this->m_selectedMaterial->GetShader();
+			std::shared_ptr<VL::Shader> newShader = ImGuiAssetSelector("Shader", shader, this->m_context->state);
+			if (newShader != nullptr)
 			{
-				changed = true;
-				this->m_selectedMaterial->SetShader(scene->FetchAsset<VL::Shader>(shaderPath));
+				this->m_selectedMaterial->SetShader(newShader);
 			}
 
 			ImGui::EndListBox();
@@ -65,65 +59,58 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 				itemRectMin = ImVec2(ImGui::GetWindowPos().x, ImGui::GetItemRectMin().y);
 				itemRectMax = ImVec2(ImGui::GetWindowPos().x + ImGui::GetWindowSize().x, itemRectMin.y + listBoxSize.y);
 
-				std::string name;
+				std::string coloredName;
 				if (!isInBlueprint)
 				{
-					name = uniformName;
+					coloredName = VOLUND_LOGGERCOLOR_RED + uniformName;
 				}
 				else
 				{
-					name = VOLUND_LOGGERCOLOR_BLUE + uniformName;
+					coloredName = VOLUND_LOGGERCOLOR_BLUE + uniformName;
 				}
 
 				if (uniform->Is<VL::IntUniformType>())
 				{
-					if (ImGuiInt(name, uniform->As<VL::IntUniformType>()))
+					if (ImGuiInt(coloredName, uniform->As<VL::IntUniformType>()))
 					{
-						changed = true;
 					}
 				}
 				else if (uniform->Is<VL::FloatUniformType>())
 				{
-					if (ImGuiFloat(name, uniform->As<VL::FloatUniformType>()))
+					if (ImGuiFloat(coloredName, uniform->As<VL::FloatUniformType>()))
 					{
-						changed = true;
 					}
 				}
 				else if (uniform->Is<VL::DoubleUniformType>())
 				{
-					if (ImGuiDouble(name, uniform->As<VL::DoubleUniformType>()))
+					if (ImGuiDouble(coloredName, uniform->As<VL::DoubleUniformType>()))
 					{
-						changed = true;
 					}
 				}
 				else if (uniform->Is<VL::Vec2UniformType>())
 				{
-					if (ImGuiVec2(name, uniform->As<VL::Vec2UniformType>()))
+					if (ImGuiVec2(coloredName, uniform->As<VL::Vec2UniformType>()))
 					{
-						changed = true;
 					}
 				}
 				else if (uniform->Is<VL::Vec3UniformType>())
 				{
-					if (ImGuiVec3(name, uniform->As<VL::Vec3UniformType>()))
+					if (ImGuiVec3(coloredName, uniform->As<VL::Vec3UniformType>()))
 					{
-						changed = true;
 					}
 				}
 				else if (uniform->Is<VL::Vec4UniformType>())
 				{
-					if (ImGuiVec4(name, uniform->As<VL::Vec4UniformType>()))
+					if (ImGuiVec4(coloredName, uniform->As<VL::Vec4UniformType>()))
 					{
-						changed = true;
 					}
 				}
 				else if (uniform->Is<VL::TextureUniformType>())
 				{
-					std::string texturePath = gameState->FetchFilepath<VL::Texture>(uniform->As<VL::TextureUniformType>());
-					if (ImGuiFile(name, texturePath))
+					std::shared_ptr<VL::Texture> newTexture = ImGuiAssetSelector(coloredName, uniform->As<VL::TextureUniformType>(), this->m_context->state);
+					if (newTexture != nullptr)
 					{
-						this->m_selectedMaterial->Set(uniformName, gameState->FetchAsset<VL::Texture>(texturePath));
-						changed = true;
+						this->m_selectedMaterial->Set(uniformName, newTexture);
 					}
 				}
 				else
@@ -147,7 +134,6 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 				{
 					if (ImGui::MenuItem("Delete"))
 					{
-						changed = true;
 						this->m_selectedMaterial->Erase(uniformName);
 						ImGui::CloseCurrentPopup();
 					}
@@ -157,11 +143,6 @@ void MaterialEditor::OnProcedure(const VL::Event& e)
 
 			ImGui::SetCursorPosY(ImGui::GetCursorPosY() + 2);
 		}
-
-		if (changed && this->m_context->IsPaused())
-		{
-			gameState->Serialize(this->m_selectedMaterial, materialPath);
-		}*/
 	}
 	break;
 	case EDITOR_EVENT_RESET:
