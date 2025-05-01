@@ -2,7 +2,7 @@
 
 Volund is a game engine written in C++ with Lua scripting for Windows and Linux.
 
-**This project is quite old from when i bearly knew how to program, keep that in mind when using it.**
+**OBS! This project is quite old from when i bearly knew how to program, keep that in mind when using it. I am currently considering overhauling it to bring it up to par, maybe I will get around to it one day.**
 
 ![Screenshot_20240914_124423](https://github.com/user-attachments/assets/c5fbc99b-5c8c-4944-8d17-cde5a3df4d6c)
 
